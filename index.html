@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ENN</title>
+<meta name="description" content="Eastlake News Network — student-run broadcast news at Eastlake High School in Chula Vista, CA. Live Monday–Thursday." />
+<meta property="og:title" content="ENN — Eastlake News Network" />
+<meta property="og:description" content="Student-run broadcast news at Eastlake High School. Live Monday–Thursday on YouTube @ennbulletin." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#1A56DB" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="EDIT/07-COLORS.css">
+</head>
+<body>
+
+<!-- ENN WEBSITE — to update content, edit js/config.js only. This file is layout/structure. -->
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <img class="nav-logo" src="data:image/png;base64,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" alt="ENN — Eastlake News Network" />
+  </div>
+  <div class="nav-links" role="tablist">
+    <a class="nav-link active" data-route="home" href="#home">Home</a>
+    <a class="nav-link" data-route="about" href="#about">About</a>
+    <a class="nav-link" data-route="team" href="#team">Team</a>
+    <a class="nav-link" data-route="contact" href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <div class="clock" id="clock"><span class="lbl">PST</span><span id="clock-v">--:--:--</span></div>
+    <div class="onair" id="onair-badge"><span class="pulse" id="onair-dot"></span><span id="onair-txt">On Air</span></div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav menu (shown on small screens via hamburger) -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a class="mobile-link active" data-route="home" href="#home">Home</a>
+  <a class="mobile-link" data-route="about" href="#about">About</a>
+  <a class="mobile-link" data-route="team" href="#team">Team</a>
+  <a class="mobile-link" data-route="contact" href="#contact">Contact</a>
+  <div class="mobile-meta">ENN · Eastlake News Network · @ennbulletin</div>
+</div>
+
+<!-- HOME -->
+<main id="page-home" class="page active">
+  <section class="hero" id="hero">
+    <div class="hero-sticky">
+      <div class="hero-tags">
+        <div><b>EASTLAKE HIGH SCHOOL</b></div>
+        <div>CH · ENN — BULLETIN</div>
+        <div>CHULA VISTA · CA</div>
+      </div>
+
+      <!-- Canvas-based frame playback: ImageBitmap + interpolation for smooth scrubbing -->
+      <canvas id="hero-frame" class="hero-frame" aria-label="ENN broadcast intro"></canvas>
+      <!-- Vignette overlay — blends animation edges into the dark background -->
+      <div class="hero-overlay"></div>
+
+      <div class="tagline" id="tagline">
+        <div class="t1">STUDENT-RUN BROADCAST NEWS</div>
+        <div class="t2">LIVE EVERY MONDAY THROUGH THURSDAY<span class="sep">·</span>@ENNBULLETIN</div>
+      </div>
+
+      <div class="scroll-hint" id="scroll-hint">
+        <div>Scroll</div>
+        <div class="mouse"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div>
+          <div class="eyebrow">On Air Today</div>
+          <div class="sec-title">LATEST BULLETIN</div>
+        </div>
+        <div class="sec-sub">The most recent episode from the @ennbulletin channel. Broadcasts air live Monday through Thursday, 10:31–10:41 AM.</div>
+      </div>
+
+      <div class="broadcast-grid">
+        <div class="card reveal left">
+          <div class="player-head">
+            <div class="meta">
+              <div class="ttl" id="vid-title">Loading latest broadcast…</div>
+              <div class="dt" id="vid-date">FETCHING FROM @ENNBULLETIN</div>
+            </div>
+            <div class="badges">
+              <span class="badge badge-sync"><span class="d"></span>Auto-synced</span>
+              <span class="badge badge-live"><span class="d"></span>Live</span>
+            </div>
+          </div>
+          <div class="player-frame" id="player-frame">
+            <div class="player-loading">
+              <div class="spinner"></div>
+              <div>SYNCING LATEST EPISODE…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal right">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div class="eyebrow" style="margin:0">This Week's Slate</div>
+            <div class="mono" style="font-size:11px;color:var(--muted-2);letter-spacing:.18em" id="slate-week">WK · —</div>
+          </div>
+          <div class="schedule" id="schedule"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 72px" class="reveal">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">Newsroom</div>
+            <div class="sec-title">ON OUR DESK</div>
+          </div>
+          <div class="sec-sub">Stories our student journalists are covering this week — from campus news to sports and student life.</div>
+        </div>
+      </div>
+
+      <div class="news-grid">
+        <div id="news-featured"></div>
+        <div class="news-list" id="news-sidebar"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-meta">
+    <div>ENN · EASTLAKE NEWS NETWORK · EHS CHULA VISTA</div>
+    <div>BROADCASTING M–TH · 10:31–10:41 AM PST · <a href="https://www.youtube.com/@ennbulletin/" target="_blank" rel="noopener">@ENNBULLETIN</a></div>
+    <div>© 2026 ENN · ALL STORIES STUDENT-PRODUCED</div>
+  </div>
+</main>
+
+<!-- ABOUT -->
+<main id="page-about" class="page">
+  <section class="about-hero">
+    <div class="container">
+      <div class="eyebrow reveal">About the Network</div>
+      <h1 class="reveal d1">EASTLAKE'S<br/>OWN<br/>NEWSROOM.</h1>
+      <p class="sub reveal d2">ENN — the Eastlake News Network — is the student-run broadcast news program of Eastlake High School in Chula Vista, California. We report, produce, and air four live shows every week.</p>
+    </div>
+  </section>
+  <section class="about-body">
+    <aside class="mission-box reveal left">
+      <div class="eyebrow">Mission</div>
+      <h3>Stories told by students, for students.</h3>
+      <p>To train the next generation of journalists, producers, and broadcasters — and to give our school a daily record of what matters, who we are, and what's next.</p>
+    </aside>
+    <div class="about-copy reveal right">
+      <p>ENN began as a morning announcement slot and grew into a full daily broadcast. Every weekday morning, our anchors, producers, and camera crew take the school's newsdesk live, covering campus news, sports, student life, and everything in between.</p>
+      <p>Our coverage is reported, written, edited, and delivered entirely by students. Advisors guide — but the stories, the writing, the camerawork, the graphics, and the voice behind the desk all belong to the student journalists of Eastlake.</p>
+      <p>Episodes stream live into every first-period classroom through our closed-circuit broadcast system, then publish to our <a style="text-decoration:underline;text-decoration-color:rgba(255,255,255,.3)" href="https://www.youtube.com/@ennbulletin/" target="_blank" rel="noopener">YouTube channel</a> afterward so the whole community can watch on demand.</p>
+      <p>We cover the Titans. The classrooms. The quad. The bleachers. If it matters at Eastlake, it goes on the bulletin.</p>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stat reveal d1">
+      <div class="meta">Weekly Output</div>
+      <div class="num">4×</div>
+      <div class="lbl">Live broadcasts every week — Monday through Thursday, 10:31–10:41 AM PST.</div>
+    </div>
+    <div class="stat reveal d2">
+      <div class="meta">Production</div>
+      <div class="num">100%</div>
+      <div class="lbl">Student-produced — reporting, writing, directing, editing, and on-air talent.</div>
+    </div>
+    <div class="stat reveal d3">
+      <div class="meta">Home Campus</div>
+      <div class="num" style="font-size:42px;line-height:1.1">Eastlake High</div>
+      <div class="lbl">Based in the Eastlake High School broadcast studio, Chula Vista, California.</div>
+    </div>
+  </section>
+</main>
+
+<!-- TEAM -->
+<main id="page-team" class="page">
+  <section class="team-hero">
+    <div class="container">
+      <div class="eyebrow reveal">The Crew</div>
+      <h1 class="reveal d1">THE TEAM BEHIND<br/>THE BULLETIN.</h1>
+      <p class="sub reveal d2">Anchors, reporters, producers, and the faculty advisor who keep ENN on the air every week.</p>
+    </div>
+  </section>
+  <section class="team-section">
+    <div class="container">
+      <div class="team-sec-head reveal"><h2>ANCHORS & ON-AIR TALENT</h2><span class="count">05 MEMBERS</span></div>
+      <div class="team-grid" id="team-anchors"></div>
+    </div>
+  </section>
+  <section class="team-section">
+    <div class="container">
+      <div class="team-sec-head reveal"><h2>PRODUCTION CREW</h2><span class="count">06 MEMBERS</span></div>
+      <div class="team-grid" id="team-crew"></div>
+    </div>
+  </section>
+  <section class="team-section" style="padding-bottom:80px">
+    <div class="container">
+      <div class="team-sec-head reveal"><h2>FACULTY ADVISOR</h2><span class="count">01 MEMBER</span></div>
+      <div class="team-grid" id="team-advisor"></div>
+    </div>
+  </section>
+</main>
+
+<!-- CONTACT -->
+<main id="page-contact" class="page">
+  <section class="contact-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Coverage Requests</div>
+      <h1 class="reveal d1">PITCH ENN<br/>A STORY.</h1>
+      <p class="sub reveal d2">Teachers, clubs, and departments — if you have an event, announcement, spotlight, or story you'd like on the broadcast, fill out the coverage request below.</p>
+    </div>
+  </section>
+  <section class="contact-body">
+    <div class="form-card reveal left">
+      <h3>COVERAGE REQUEST</h3>
+      <p class="note">Submissions are reviewed every Friday. We'll reach out within one school week to confirm scheduling.</p>
+      <form id="coverage-form" action="https://formspree.io/f/xojydpnd" method="POST" novalidate>
+        <div class="form-row">
+          <div class="field"><label>Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+          <div class="field"><label>Department or Role</label><input type="text" name="dept" required placeholder="e.g. English Dept., ASB Advisor"/></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Request Type</label>
+            <select name="type" required>
+              <option value="">Choose a request type…</option>
+              <option>Event Coverage</option>
+              <option>Student Spotlight</option>
+              <option>Club Feature</option>
+              <option>School Announcement</option>
+              <option>Sports Highlight</option>
+              <option>Teacher Feature</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Preferred Air Date</label><input type="date" name="date"/></div>
+        </div>
+        <div class="field" style="margin-bottom:20px">
+          <label>Story Details</label>
+          <textarea name="details" required placeholder="Tell us about the story — who, what, when, where, why it matters to Eastlake."></textarea>
+        </div>
+        <button type="submit" class="btn" id="submit-btn">Submit Request →</button>
+      </form>
+      <div class="form-success" id="form-success">
+        <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h4>REQUEST SUBMITTED</h4>
+        <p>Thanks! We've received your coverage request. A producer will be in touch within one school week.</p>
+      </div>
+    </div>
+    <aside class="info-stack">
+      <div class="info-card reveal right d1">
+        <div class="ic-head"><div class="ic-icon">📅</div><h4>SUBMISSION DEADLINE</h4></div>
+        <p>Submit your request by <strong>Friday at 3:00 PM</strong> for coverage in the following week. Time-sensitive stories (same-day events) can be emailed directly to the producing team.</p>
+      </div>
+      <div class="info-card reveal right d2">
+        <div class="ic-head"><div class="ic-icon">📺</div><h4>BROADCAST SCHEDULE</h4></div>
+        <p>ENN airs live <strong>Monday through Thursday</strong>, <strong>10:31–10:41 AM PST</strong>. Episodes are uploaded to YouTube @ennbulletin shortly after the broadcast ends.</p>
+      </div>
+      <div class="info-card reveal right d3">
+        <div class="ic-head"><div class="ic-icon">🎙</div><h4>HOW TO JOIN</h4></div>
+        <p>Interested in becoming part of the ENN team? Broadcast Journalism is offered as an elective. See your counselor about enrollment for next semester.</p>
+      </div>
+      <div class="info-card reveal right d4">
+        <div class="ic-head"><div class="ic-icon">💬</div><h4>GENERAL QUESTIONS</h4></div>
+        <p>For general press inquiries, corrections, or archived episodes, reach the studio through the front office or leave a comment on the <strong>@ennbulletin</strong> channel.</p>
+      </div>
+      <div class="info-card reveal right d5">
+        <div class="ic-head"><div class="ic-icon">📲</div><h4>FIND US ONLINE</h4></div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+          <a href="https://www.youtube.com/@ennbulletin" target="_blank" rel="noopener"
+             style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);transition:border-color .18s">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fca5a5"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;color:#fca5a5;letter-spacing:.1em">@ennbulletin</span>
+          </a>
+          <a href="https://www.instagram.com/eastlakenewsnetwork" target="_blank" rel="noopener"
+             style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(131,58,180,0.08);border:1px solid rgba(131,58,180,0.28);transition:border-color .18s">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c084fc" stroke="none"/></svg>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;color:#c084fc;letter-spacing:.1em">@eastlakenewsnetwork</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="tk-label"><span class="d"></span>ENN Breaking</div>
+  <div class="tk-viewport">
+    <div class="tk-track" id="ticker-track"></div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════════════════
+     NEVER EDIT THIS FILE.
+     All content is in the EDIT/ folder.
+     Site logic is in js/main.js.
+═══════════════════════════════════════════════════════════════ -->
+<script src="ANIMATION/frames.js"></script>
+<script src="EDIT/01-CHANNEL.js"></script>
+<script src="EDIT/02-ONAIR.js"></script>
+<script src="EDIT/03-TICKER.js"></script>
+<script src="EDIT/04-SCHEDULE.js"></script>
+<script src="EDIT/05-NEWS.js"></script>
+<script src="EDIT/06-TEAM.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

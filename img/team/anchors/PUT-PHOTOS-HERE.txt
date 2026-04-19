@@ -1,0 +1,22 @@
+ENN TEAM PHOTOS — ANCHORS
+═══════════════════════════════════════════════════════
+
+Drop headshot photos for the anchors section into this folder.
+
+FILE NAMING:
+  Use simple lowercase filenames with no spaces.
+  Examples:
+    jane-smith.jpg
+    john-doe.png
+    anchor1.jpg
+
+PHOTO TIPS:
+  • Square crop works best (1:1 ratio)
+  • Minimum size: 300x300 pixels
+  • JPG or PNG format
+  • Keep file size under 2MB
+
+AFTER UPLOADING:
+  Open  EDIT/06-TEAM.js  and update the photo field
+  for the matching person. Example:
+    photo: 'img/team/anchors/jane-smith.jpg'

@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║              ENN WEBSITE — HERO ANIMATION REPLACEMENT GUIDE          ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+THIS FOLDER CONTAINS:
+  frames.js  →  The hero animation that plays when visitors scroll
+                the home page. It is a sequence of image frames
+                encoded as a single JavaScript file (~5 MB).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO REPLACE THE ANIMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  When you are ready to swap in a new animation, ask Claude Code
+  (or whoever builds your site) to:
+
+    "Replace the hero animation in the ENN website.
+     Here is my new video: [attach or link your file]
+     The animation folder is at  ANIMATION/frames.js"
+
+  They will:
+    1. Export your new video as an image sequence (~120–150 frames)
+    2. Encode the frames into a new frames.js file
+    3. Drop the new frames.js into this folder, replacing the old one
+    4. You commit and push — the new animation goes live
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  WHAT NOT TO TOUCH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Do NOT open or edit frames.js manually.
+  It is a machine-generated file and contains thousands of lines
+  of encoded image data. Editing it by hand will break the animation.
+
+  The only time this folder changes is when you intentionally
+  swap in a new animation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CURRENT ANIMATION INFO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  File:         frames.js
+  Source:       ENN_Intro_02_1.mov
+  Frame count:  144 frames
+  File size:    ~5 MB
+  Format:       Base64-encoded JPEG frames, scroll-scrubbed via canvas

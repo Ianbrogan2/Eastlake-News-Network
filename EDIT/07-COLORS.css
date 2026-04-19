@@ -1,0 +1,36 @@
+/*
+╔══════════════════════════════════════════════════════════════════╗
+║  ENN EDIT FILE  07  —  BRAND COLORS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║  WHAT THIS FILE CONTROLS:                                        ║
+║    The main brand colors used across the entire site             ║
+╠══════════════════════════════════════════════════════════════════╣
+║  HOW TO EDIT:                                                    ║
+║    Change the hex color codes next to the color names below      ║
+║    A hex code looks like:  #1A56DB  or  #16A34A                  ║
+║    You can find hex codes at:  https://htmlcolors.com            ║
+║                                                                  ║
+║  WARNING: Only change the color values — do NOT rename the       ║
+║  variable names (--blue, --green, etc.) or the site will break  ║
+╠══════════════════════════════════════════════════════════════════╣
+║  HOW THIS WORKS:                                                  ║
+║    This file overrides only the colors in the main stylesheet.   ║
+║    Everything else (fonts, layout, spacing) stays the same.      ║
+╚══════════════════════════════════════════════════════════════════╝
+*/
+
+:root {
+
+  /* Primary brand color — used for buttons, highlights, accents */
+  --blue:        #1A56DB;
+
+  /* Hover/bright variant of the primary color */
+  --blue-bright: #2E6BF0;
+
+  /* Secondary brand color — used for live badges, success states */
+  --green:       #16A34A;
+
+  /* Hover/bright variant of the secondary color */
+  --green-bright:#22C55E;
+
+}

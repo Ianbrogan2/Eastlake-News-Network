@@ -1,0 +1,149 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║         ENN WEBSITE — HOW TO UPLOAD TO GITHUB (FULL GUIDE)          ║
+║               For someone who has never used GitHub before           ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 1 — SET UP GITHUB (one time only)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  STEP 1 — Create a free GitHub account
+    1. Go to https://github.com
+    2. Click "Sign up"
+    3. Enter your email, create a password, choose a username
+    4. Verify your email address
+
+  STEP 2 — Download GitHub Desktop
+    1. Go to https://desktop.github.com
+    2. Click "Download for macOS"
+    3. Open the downloaded file and drag GitHub Desktop into Applications
+    4. Open GitHub Desktop
+    5. Click "Sign in to GitHub.com" and log in with your account
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 2 — CREATE YOUR REPOSITORY (one time only)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  A "repository" (or "repo") is just a folder on GitHub that stores
+  your website files and tracks every change you ever make.
+
+  STEP 3 — Add the ENN WEBSITE folder as a repository
+    1. In GitHub Desktop, click "File" in the top menu bar
+    2. Click "Add Local Repository…"
+    3. Click "Choose…" and navigate to your "ENN WEBSITE" folder
+    4. Click "Open"
+    5. GitHub Desktop will say this folder is not a Git repository —
+       click "create a repository" in the blue message that appears
+    6. Name: enn-website  (no spaces)
+    7. Leave everything else as default
+    8. Click "Create Repository"
+
+  STEP 4 — Publish the repository to GitHub
+    1. In the top bar of GitHub Desktop, click "Publish repository"
+    2. Name: enn-website
+    3. UNCHECK "Keep this code private" if you want the site to be
+       publicly accessible (GitHub Pages requires it to be public
+       on a free account)
+    4. Click "Publish repository"
+    5. Your files are now on GitHub at:
+       https://github.com/YOURUSERNAME/enn-website
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 3 — TURN ON GITHUB PAGES (one time only)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  GitHub Pages turns your repository into a live website for free.
+
+  STEP 5 — Enable GitHub Pages
+    1. Go to https://github.com/YOURUSERNAME/enn-website
+    2. Click "Settings" (tab at the top of the repo page)
+    3. In the left sidebar, click "Pages"
+    4. Under "Branch", click the dropdown that says "None"
+       and select "main"
+    5. Make sure the folder dropdown says "/ (root)"
+    6. Click "Save"
+    7. Wait about 60 seconds, then refresh the page
+    8. A green banner will appear with your site URL:
+       https://YOURUSERNAME.github.io/enn-website
+
+  That URL is your live website. Share it with anyone.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 4 — HOW TO EDIT THE SITE AND SEE CHANGES LIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Every time you want to change something on the site:
+
+  METHOD A — Edit on GitHub.com (easiest, no apps needed)
+    1. Go to https://github.com/YOURUSERNAME/enn-website
+    2. Click into the "EDIT" folder
+    3. Click the file you want to edit (e.g. 05-NEWS.js)
+    4. Click the pencil icon (✏) in the top right of the file view
+    5. Make your changes — the instructions are written in the file
+    6. Scroll down to "Commit changes"
+    7. Type a short description of what you changed
+       (e.g. "update news stories")
+    8. Click "Commit changes"
+    9. Wait about 60 seconds — your live site updates automatically
+
+  METHOD B — Edit on your Mac using GitHub Desktop
+    1. Open the file in any text editor (TextEdit, VS Code, etc.)
+    2. Make your changes and save the file
+    3. Open GitHub Desktop — it will show the changed file on the left
+    4. In the "Summary" box (bottom left), type what you changed
+       (e.g. "update schedule")
+    5. Click "Commit to main"
+    6. Click "Push origin" (top right button)
+    7. Wait about 60 seconds — your live site updates automatically
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 5 — YOUR FOLDER STRUCTURE EXPLAINED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ENN WEBSITE/
+  │
+  ├── index.html              ← THE WEBSITE. Never open or edit this.
+  ├── .nojekyll               ← Tells GitHub to serve the site as-is.
+  │                             Never touch this.
+  │
+  ├── EDIT/                   ← ALL YOUR EDITS GO HERE
+  │   ├── 01-CHANNEL.js       ← YouTube channel ID and social handles
+  │   ├── 02-ONAIR.js         ← Broadcast hours (when On Air badge lights up)
+  │   ├── 03-TICKER.js        ← Breaking news ticker at the bottom
+  │   ├── 04-SCHEDULE.js      ← Weekly broadcast schedule on home page
+  │   ├── 05-NEWS.js          ← News stories on the home page
+  │   ├── 06-TEAM.js          ← All team members, bios, and photo paths
+  │   └── 07-COLORS.css       ← Brand colors (blue, green, etc.)
+  │
+  ├── css/
+  │   └── styles.css          ← All visual styling. Do not edit.
+  │
+  ├── js/
+  │   ├── frames.js           ← Hero animation frames. Never edit.
+  │   └── main.js             ← Site logic. Never edit.
+  │
+  └── img/
+      └── team/
+          ├── anchors/        ← Drop anchor headshot photos here
+          ├── crew/           ← Drop crew headshot photos here
+          └── advisor/        ← Drop advisor headshot photos here
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  QUICK REFERENCE — WHAT TO EDIT FOR COMMON TASKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Change a news story          →  EDIT/05-NEWS.js
+  Update the schedule          →  EDIT/04-SCHEDULE.js
+  Add/remove ticker items      →  EDIT/03-TICKER.js
+  Add/edit a team member       →  EDIT/06-TEAM.js
+  Change broadcast hours       →  EDIT/02-ONAIR.js
+  Update YouTube channel       →  EDIT/01-CHANNEL.js
+  Change brand colors          →  EDIT/07-COLORS.css
+  Add a team headshot          →  Upload photo to img/team/anchors/ (or crew/ or advisor/)
+                                  then update photo: field in EDIT/06-TEAM.js
+
