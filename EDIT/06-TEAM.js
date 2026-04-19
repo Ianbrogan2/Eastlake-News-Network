@@ -95,25 +95,25 @@ var ENN_TEAM = {
   crew: [
 
     {
-      n:     'Producer 1',
-      r:     'Executive Producer',
-      grade: '',
+      n:     'Ian Brogan',
+      r:     'P4 - Lead Producer',
+      grade: '11th',
       bio:   '',
-      email: '',
+      email: '1595697@sweetwaterschools.net',
       photo: '',   // e.g. 'img/team/crew/producer1.jpg'
     },
     {
-      n:     'Producer 2',
+      n:     'Cecilia Hettinger',
       r:     'Segment Producer',
-      grade: '',
+      grade: '12th',
       bio:   '',
       email: '',
       photo: '',
     },
     {
-      n:     'Director 1',
+      n:     'Rory Licht',
       r:     'Broadcast Director',
-      grade: '',
+      grade: '12th',
       bio:   '',
       email: '',
       photo: '',
@@ -154,7 +154,7 @@ var ENN_TEAM = {
       r:     'Broadcast Journalism Instructor',
       grade: '',
       bio:   '',
-      email: 'william.nimmo@sweetwaterschools.org',
+      email: 'william.nimmo@sweetwaterschools.net',
       photo: '',   // e.g. 'img/team/advisor/advisor.jpg'
     },
 
