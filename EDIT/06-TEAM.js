@@ -150,11 +150,11 @@ var ENN_TEAM = {
   advisor: [
 
     {
-      n:     'Faculty Advisor',
+      n:     'William Nimmo',
       r:     'Broadcast Journalism Instructor',
       grade: '',
       bio:   '',
-      email: '',
+      email: 'william.nimmo@sweetwaterschools.org',
       photo: '',   // e.g. 'img/team/advisor/advisor.jpg'
     },
 
