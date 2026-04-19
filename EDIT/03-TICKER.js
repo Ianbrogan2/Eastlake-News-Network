@@ -24,7 +24,7 @@
 
 var ENN_TICKER = [
 
-  { k: 'Campus',  t: 'Spring rally pulls record crowd — full recap this week' },
+  { k: 'Brogan',  t: 'Ian Brogan is the COOLEST person on campus' },
   { k: 'Sports',  t: 'Titans volleyball clinches league semifinals berth' },
   { k: 'Arts',    t: 'Senior mural unveiled on the north-hall wall' },
   { k: 'Events',  t: 'Coverage requests open — deadline Friday 3 PM' },

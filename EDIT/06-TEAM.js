@@ -95,49 +95,49 @@ var ENN_TEAM = {
   crew: [
 
     {
-      n:     'Producer 1',
-      r:     'Executive Producer',
-      grade: '',
+      n:     'Ian Brogan',
+      r:     'P4 - Lead Producer',
+      grade: '11th',
       bio:   '',
-      email: '',
+      email: '1595697@sweetwaterschools.net',
       photo: '',   // e.g. 'img/team/crew/producer1.jpg'
     },
     {
-      n:     'Producer 2',
-      r:     'Segment Producer',
+      n:     'Cecilia Hettinger',
+      r:     'P4 - Segment Producer',
+      grade: '12th',
+      bio:   '',
+      email: '',
+      photo: '',
+    },
+    {
+      n:     'Rory Licht',
+      r:     'P4 - Broadcast Director',
+      grade: '12th',
+      bio:   '',
+      email: '',
+      photo: '',
+    },
+    {
+      n:     'Emily Na Sanchez',
+      r:     'P1 - Lead Producer',
       grade: '',
       bio:   '',
       email: '',
       photo: '',
     },
     {
-      n:     'Director 1',
-      r:     'Broadcast Director',
+      n:     'Alejandro Schejola',
+      r:     'P1 - Segment Producer',
       grade: '',
       bio:   '',
       email: '',
       photo: '',
     },
     {
-      n:     'Editor 1',
-      r:     'Lead Video Editor',
-      grade: '',
-      bio:   '',
-      email: '',
-      photo: '',
-    },
-    {
-      n:     'Editor 2',
-      r:     'Graphics & Motion',
-      grade: '',
-      bio:   '',
-      email: '',
-      photo: '',
-    },
-    {
-      n:     'Camera 1',
-      r:     'Studio Camera Operator',
-      grade: '',
+      n:     'Jovani Iglesias',
+      r:     'P1 - Broadcast Director',
+      grade: '10th',
       bio:   '',
       email: '',
       photo: '',
@@ -150,11 +150,11 @@ var ENN_TEAM = {
   advisor: [
 
     {
-      n:     'Faculty Advisor',
+      n:     'William Nimmo',
       r:     'Broadcast Journalism Instructor',
       grade: '',
-      bio:   '',
-      email: '',
+      bio:   'The best teacher on EHS campus',
+      email: 'william.nimmo@sweetwaterschools.net',
       photo: '',   // e.g. 'img/team/advisor/advisor.jpg'
     },
 
