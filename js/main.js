@@ -7,13 +7,15 @@
   'use strict';
 
   /* Pull everything from config */
-  const channel = ENN_CHANNEL;
-  const social = ENN_SOCIAL;
-  const onAir = ENN_ONAIR;
-  const ticker = ENN_TICKER;
+  const channel  = ENN_CHANNEL;
+  const social   = ENN_SOCIAL;
+  const onAir    = ENN_ONAIR;
+  const ticker   = ENN_TICKER;
   const schedule = ENN_SCHEDULE;
-  const news = ENN_NEWS;
-  const team = ENN_TEAM;
+  const news     = ENN_NEWS;
+  const team     = ENN_TEAM;
+  const about    = ENN_ABOUT;
+  const contact  = ENN_CONTACT;
   const CHANNEL_ID     = channel.id;
   const CHANNEL_HANDLE = channel.handle;
 
@@ -256,6 +258,110 @@
       const open = card.classList.toggle('open');
       card.setAttribute('aria-expanded', open);
     });
+  })();
+
+  /* ── About page ─────────────────────────────────────────────── */
+  (function buildAbout(){
+    const root = $('#about-root');
+    if(!root) return;
+    const headline = about.heroHeadline.replace(/\n/g, '<br/>');
+    const paras = about.bodyParagraphs.map(p => `<p>${p}</p>`).join('');
+    const stats = about.stats.map((s, i) => {
+      const smallNum = s.num.length > 5;
+      return `
+      <div class="stat reveal d${i+1}">
+        <div class="meta">${s.meta}</div>
+        <div class="num"${smallNum ? ' style="font-size:42px;line-height:1.1"' : ''}>${s.num}</div>
+        <div class="lbl">${s.lbl}</div>
+      </div>`;
+    }).join('');
+    root.innerHTML = `
+      <section class="about-hero">
+        <div class="container">
+          <div class="eyebrow reveal">${about.heroEyebrow}</div>
+          <h1 class="reveal d1">${headline}</h1>
+          <p class="sub reveal d2">${about.heroSub}</p>
+        </div>
+      </section>
+      <section class="about-body">
+        <aside class="mission-box reveal left">
+          <div class="eyebrow">Mission</div>
+          <h3>${about.missionHeading}</h3>
+          <p>${about.missionBody}</p>
+        </aside>
+        <div class="about-copy reveal right">${paras}</div>
+      </section>
+      <section class="stats">${stats}</section>`;
+  })();
+
+  /* ── Contact page ────────────────────────────────────────────── */
+  (function buildContact(){
+    const root = $('#contact-root');
+    if(!root) return;
+    const headline = contact.heroHeadline.replace(/\n/g, '<br/>');
+    const options  = contact.formRequestTypes.map(t => `<option>${t}</option>`).join('');
+    const cards    = contact.infoCards.map((c, i) => `
+      <div class="info-card reveal right d${i+1}">
+        <div class="ic-head"><div class="ic-icon">${c.icon}</div><h4>${c.heading}</h4></div>
+        <p>${c.body}</p>
+      </div>`).join('');
+    root.innerHTML = `
+      <section class="contact-hero">
+        <div class="container">
+          <div class="eyebrow reveal">${contact.heroEyebrow}</div>
+          <h1 class="reveal d1">${headline}</h1>
+          <p class="sub reveal d2">${contact.heroSub}</p>
+        </div>
+      </section>
+      <section class="contact-body">
+        <div class="form-card reveal left">
+          <h3>${contact.formHeading}</h3>
+          <p class="note">${contact.formNote}</p>
+          <form id="coverage-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+            <div class="form-row">
+              <div class="field"><label>Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+              <div class="field"><label>Department or Role</label><input type="text" name="dept" required placeholder="e.g. English Dept., ASB Advisor"/></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label>Request Type</label>
+                <select name="type" required>
+                  <option value="">Choose a request type…</option>
+                  ${options}
+                </select>
+              </div>
+              <div class="field"><label>Preferred Air Date</label><input type="date" name="date"/></div>
+            </div>
+            <div class="field" style="margin-bottom:20px">
+              <label>Story Details</label>
+              <textarea name="details" required placeholder="Tell us about the story — who, what, when, where, why it matters to Eastlake."></textarea>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Submit Request →</button>
+          </form>
+          <div class="form-success" id="form-success">
+            <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <h4>${contact.successHeading}</h4>
+            <p>${contact.successBody}</p>
+          </div>
+        </div>
+        <aside class="info-stack">
+          ${cards}
+          <div class="info-card reveal right d5">
+            <div class="ic-head"><div class="ic-icon">📲</div><h4>FIND US ONLINE</h4></div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+              <a href="https://www.youtube.com/@${social.youtube}" target="_blank" rel="noopener"
+                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);transition:border-color .18s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fca5a5"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#fca5a5;letter-spacing:.1em">@${social.youtube}</span>
+              </a>
+              <a href="https://www.instagram.com/${social.instagram}" target="_blank" rel="noopener"
+                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(131,58,180,0.08);border:1px solid rgba(131,58,180,0.28);transition:border-color .18s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c084fc" stroke="none"/></svg>
+                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#c084fc;letter-spacing:.1em">@${social.instagram}</span>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </section>`;
   })();
 
   /* ── Ticker ──────────────────────────────────────────────────── */
