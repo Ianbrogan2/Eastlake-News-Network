@@ -296,11 +296,38 @@ img{display:block;max-width:100%}
 /* Schedule */
 .schedule{display:flex;flex-direction:column;gap:14px}
 .sched-row{
-  display:flex;align-items:center;gap:16px;padding:16px 18px;
+  display:flex;flex-direction:column;align-items:stretch;
   background: var(--bg-1);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;
   transition: border-color .2s var(--ease), transform .2s var(--ease);
 }
 .sched-row:hover{border-color:var(--border-hi);transform:translateX(3px)}
+.sched-row-main{display:flex;align-items:center;gap:16px;padding:16px 18px}
+.sched-row.has-links{cursor:pointer}
+.sched-row.has-links .sched-status::after{content:" ▾";font-size:9px;opacity:.7}
+.sched-row.links-open .sched-status::after{content:" ▴"}
+.sched-links{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .35s var(--ease),opacity .3s;
+  opacity:0;
+}
+.sched-row.links-open .sched-links{grid-template-rows:1fr;opacity:1}
+.sched-links-inner{overflow:hidden}
+.sched-links-list{
+  display:flex;flex-direction:column;gap:6px;
+  padding:8px 18px 14px;border-top:1px solid var(--border);
+}
+.sched-link-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:8px;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:background .18s,border-color .18s,color .18s;
+}
+.sched-link-item:hover{background:rgba(26,86,219,0.10);border-color:rgba(26,86,219,0.35);color:#fff}
+.sched-link-icon{font-size:10px;color:var(--cyan);flex-shrink:0}
+.sched-link-lbl{flex:1;font-weight:500}
+.sched-link-arrow{opacity:.45;font-size:11px;flex-shrink:0}
 .sched-day{
   font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;letter-spacing:.08em;
   min-width:72px;flex-shrink:0;color:#fff;
@@ -638,5 +665,87 @@ img{display:block;max-width:100%}
 .tcard-val{color:rgba(242,242,247,0.78);text-align:right}
 a.tcard-val{color:var(--cyan);font-size:12px;font-family:'DM Mono',monospace;letter-spacing:.04em}
 a.tcard-val:hover{text-decoration:underline}
+
+/* --- NAV: tighten at medium widths for 6 nav items --- */
+@media (max-width:1080px){
+  .nav-link{padding:9px 8px;font-size:11.5px;letter-spacing:.12em}
+  .clock{display:none}
+}
+@media (max-width:860px){
+  .nav-link{padding:8px 7px;font-size:11px;letter-spacing:.1em}
+  .onair{padding:6px 9px;font-size:10px}
+}
+
+/* --- STUDIO --- */
+.studio-hero{padding:clamp(60px,8vw,120px) clamp(18px,4.4vw,60px) 32px}
+.studio-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(54px,9vw,140px);line-height:.9;margin-bottom:14px}
+.studio-hero .sub{color:var(--muted);font-size:17px;max-width:640px;line-height:1.5}
+.studio-body{padding:0 clamp(18px,4.4vw,60px) clamp(60px,8vw,100px)}
+.studio-album{margin-bottom:72px}
+.studio-album-head{
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.studio-album-head h2{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:.01em}
+.studio-cat-badge{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  padding:5px 10px;border-radius:6px;flex-shrink:0;
+  background:rgba(0,212,255,0.08);color:#7DD8FF;border:1px solid rgba(0,212,255,0.2);
+}
+.studio-cat-badge.instagram{background:rgba(192,132,252,0.10);color:#c084fc;border-color:rgba(192,132,252,0.28)}
+.studio-cat-badge.vhs{background:rgba(239,68,68,0.08);color:#fca5a5;border-color:rgba(239,68,68,0.22)}
+.studio-album-desc{color:var(--muted);font-size:14px;margin-bottom:18px;max-width:760px}
+.studio-player{
+  width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+  background:var(--bg-1);border:1px solid var(--border);position:relative;
+}
+.studio-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.studio-placeholder{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;text-align:center;padding:32px;
+}
+.studio-placeholder .ph-icon{font-size:40px;opacity:.3}
+.studio-placeholder .ph-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted);letter-spacing:.04em}
+.studio-placeholder .ph-body{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--muted-2);
+  letter-spacing:.08em;line-height:1.75;max-width:380px;
+}
+.studio-placeholder code{
+  background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:4px;
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);
+}
+
+/* --- CALENDAR --- */
+.cal-hero{padding:clamp(60px,8vw,120px) clamp(18px,4.4vw,60px) 32px}
+.cal-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(54px,9vw,140px);line-height:.9;margin-bottom:14px}
+.cal-hero .sub{color:var(--muted);font-size:17px;max-width:640px;line-height:1.5}
+.cal-body{padding:0 clamp(18px,4.4vw,60px) clamp(60px,8vw,100px)}
+.cal-container{
+  width:100%;border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);background:#fff;
+}
+.cal-container iframe{width:100%;height:680px;border:0;display:block}
+@media (max-width:640px){.cal-container iframe{height:520px}}
+.cal-placeholder{
+  min-height:400px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px;text-align:center;padding:40px;
+  background:var(--bg-1);
+}
+.cal-placeholder .ph-icon{font-size:48px;opacity:.28}
+.cal-placeholder h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.01em}
+.cal-placeholder p{color:var(--muted);font-size:14px;line-height:1.75;max-width:500px}
+.cal-placeholder code{
+  background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:4px;
+  font-family:'DM Mono',monospace;font-size:12px;color:var(--cyan);
+}
+.cal-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cal-legend-item{
+  display:flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;
+  color:var(--muted);padding:6px 14px;border-radius:8px;
+  background:var(--bg-1);border:1px solid var(--border);
+}
+.cal-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
 </style>

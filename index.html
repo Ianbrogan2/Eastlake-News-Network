@@ -28,6 +28,8 @@
     <a class="nav-link active" data-route="home" href="#home">Home</a>
     <a class="nav-link" data-route="about" href="#about">About</a>
     <a class="nav-link" data-route="team" href="#team">Team</a>
+    <a class="nav-link" data-route="studio" href="#studio">Studio</a>
+    <a class="nav-link" data-route="calendar" href="#calendar">Calendar</a>
     <a class="nav-link" data-route="contact" href="#contact">Contact</a>
   </div>
   <div class="nav-right">
@@ -44,6 +46,8 @@
   <a class="mobile-link active" data-route="home" href="#home">Home</a>
   <a class="mobile-link" data-route="about" href="#about">About</a>
   <a class="mobile-link" data-route="team" href="#team">Team</a>
+  <a class="mobile-link" data-route="studio" href="#studio">Studio</a>
+  <a class="mobile-link" data-route="calendar" href="#calendar">Calendar</a>
   <a class="mobile-link" data-route="contact" href="#contact">Contact</a>
   <div class="mobile-meta">ENN · Eastlake News Network · @ennbulletin</div>
 </div>
@@ -177,6 +181,34 @@
   <div id="contact-root"></div>
 </main>
 
+<!-- STUDIO — content rendered from EDIT/10-STUDIO.js -->
+<main id="page-studio" class="page">
+  <section class="studio-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Archive</div>
+      <h1 class="reveal d1">THE<br/>STUDIO.</h1>
+      <p class="sub reveal d2">Student-produced pieces, Instagram content, and the full VHS archive — everything ENN has ever put on air.</p>
+    </div>
+  </section>
+  <section class="studio-body">
+    <div class="container" id="studio-root"></div>
+  </section>
+</main>
+
+<!-- CALENDAR — content rendered from EDIT/11-CALENDAR.js -->
+<main id="page-calendar" class="page">
+  <section class="cal-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Events</div>
+      <h1 class="reveal d1">ENN<br/>CALENDAR.</h1>
+      <p class="sub reveal d2">Sports, plays, events, and everything happening at Eastlake — updated live from the ENN Google Calendar.</p>
+    </div>
+  </section>
+  <section class="cal-body">
+    <div class="container" id="calendar-root"></div>
+  </section>
+</main>
+
 <!-- Ticker -->
 <div class="ticker">
   <div class="tk-label"><span class="d"></span>ENN Breaking</div>
@@ -198,6 +230,8 @@
 <script src="EDIT/06-TEAM.js"></script>
 <script src="EDIT/08-ABOUT.js"></script>
 <script src="EDIT/09-CONTACT.js"></script>
+<script src="EDIT/10-STUDIO.js"></script>
+<script src="EDIT/11-CALENDAR.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

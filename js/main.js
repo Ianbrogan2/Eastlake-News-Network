@@ -16,6 +16,8 @@
   const team     = ENN_TEAM;
   const about    = ENN_ABOUT;
   const contact  = ENN_CONTACT;
+  const studio   = ENN_STUDIO;
+  const calendar = ENN_CALENDAR;
   const CHANNEL_ID     = channel.id;
   const CHANNEL_HANDLE = channel.handle;
 
@@ -80,10 +82,12 @@
 
   /* ── Router ──────────────────────────────────────────────────── */
   const pages = {
-    home:    $('#page-home'),
-    about:   $('#page-about'),
-    team:    $('#page-team'),
-    contact: $('#page-contact'),
+    home:     $('#page-home'),
+    about:    $('#page-about'),
+    team:     $('#page-team'),
+    contact:  $('#page-contact'),
+    studio:   $('#page-studio'),
+    calendar: $('#page-calendar'),
   };
   function route(name){
     if(!pages[name]) name='home';
@@ -158,21 +162,46 @@
     host.innerHTML = '';
     const weekend = (dow===0||dow===5||dow===6);
     schedule.forEach(d => {
-      let status='Upcoming', cls='st-soon';
+      let status='Upcoming', cls='st-soon', isAired=false;
       if(!weekend){
-        if(d.idx < dow){ status='Aired'; cls='st-aired'; }
+        if(d.idx < dow){ status='Aired'; cls='st-aired'; isAired=true; }
         else if(d.idx === dow){
           if(mins>=onAir.startH*60+onAir.startM && mins<onAir.endH*60+onAir.endM)
             { status='<span class="d"></span>Live Now'; cls='st-live'; }
-          else if(mins>=onAir.endH*60+onAir.endM){ status='Aired'; cls='st-aired'; }
+          else if(mins>=onAir.endH*60+onAir.endM){ status='Aired'; cls='st-aired'; isAired=true; }
         }
       }
+      const validLinks = isAired ? (d.links||[]).filter(l => l.url && l.url.trim()) : [];
+      const hasLinks = validLinks.length > 0;
+      const linksHtml = hasLinks ? `
+        <div class="sched-links">
+          <div class="sched-links-inner">
+            <div class="sched-links-list">
+              ${validLinks.map(l => `
+                <a class="sched-link-item" href="${l.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+                  <span class="sched-link-icon">▶</span>
+                  <span class="sched-link-lbl">${l.label||'Watch Episode'}</span>
+                  <span class="sched-link-arrow">↗</span>
+                </a>`).join('')}
+            </div>
+          </div>
+        </div>` : '';
       const row = document.createElement('div');
-      row.className = 'sched-row';
+      row.className = 'sched-row' + (hasLinks ? ' has-links' : '');
       row.innerHTML = `
-        <div class="sched-day">${d.key}</div>
-        <div class="sched-mid"><div class="ep">${d.ep}</div><div class="tm">${d.tm}</div></div>
-        <div class="sched-status ${cls}">${status}</div>`;
+        <div class="sched-row-main">
+          <div class="sched-day">${d.key}</div>
+          <div class="sched-mid"><div class="ep">${d.ep}</div><div class="tm">${d.tm}</div></div>
+          <div class="sched-status ${cls}">${status}</div>
+        </div>
+        ${linksHtml}`;
+      if(hasLinks){
+        if(validLinks.length === 1){
+          row.addEventListener('click', () => window.open(validLinks[0].url, '_blank', 'noopener'));
+        } else {
+          row.addEventListener('click', () => row.classList.toggle('links-open'));
+        }
+      }
       host.appendChild(row);
     });
   })();
@@ -362,6 +391,66 @@
           </div>
         </aside>
       </section>`;
+  })();
+
+  /* ── Studio page ─────────────────────────────────────────────── */
+  (function buildStudio(){
+    const root = $('#studio-root');
+    if(!root || !studio) return;
+    const catClass = { student:'student', instagram:'instagram', vhs:'vhs' };
+    const catLabel = { student:'Student Pieces', instagram:'Instagram', vhs:'VHS Archive' };
+    root.innerHTML = (studio.playlists||[]).map((p, i) => {
+      const badge = `<span class="studio-cat-badge ${catClass[p.category]||''}">${catLabel[p.category]||p.category}</span>`;
+      const player = p.playlistId
+        ? `<div class="studio-player reveal">
+             <iframe src="https://www.youtube.com/embed/videoseries?list=${p.playlistId}&rel=0"
+               title="${p.title}" frameborder="0"
+               allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+               allowfullscreen></iframe>
+           </div>`
+        : `<div class="studio-player reveal">
+             <div class="studio-placeholder">
+               <div class="ph-icon">📽</div>
+               <div class="ph-title">Playlist Not Connected Yet</div>
+               <div class="ph-body">Add a YouTube playlist ID to<br><code>EDIT/10-STUDIO.js</code><br>under <code>playlists[${i}].playlistId</code></div>
+             </div>
+           </div>`;
+      return `
+        <div class="studio-album reveal">
+          <div class="studio-album-head">${badge}<h2>${p.title}</h2></div>
+          <p class="studio-album-desc">${p.description}</p>
+          ${player}
+        </div>`;
+    }).join('');
+  })();
+
+  /* ── Calendar page ────────────────────────────────────────────── */
+  (function buildCalendar(){
+    const root = $('#calendar-root');
+    if(!root || !calendar) return;
+    const id = calendar.googleCalendarId||'';
+    const legendHtml = (calendar.legend||[]).map(l =>
+      `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${l.color}"></div>${l.label}</div>`
+    ).join('');
+    if(id){
+      const src = 'https://calendar.google.com/calendar/embed?src=' + encodeURIComponent(id) +
+        '&ctz=America%2FLos_Angeles&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&mode=MONTH';
+      root.innerHTML = `
+        <div class="cal-container reveal">
+          <iframe src="${src}" title="ENN Calendar" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <div class="cal-legend reveal d1">${legendHtml}</div>`;
+    } else {
+      root.innerHTML = `
+        <div class="cal-container reveal">
+          <div class="cal-placeholder">
+            <div class="ph-icon">📅</div>
+            <h3>Calendar Not Connected Yet</h3>
+            <p>Create a public Google Calendar, then paste its Calendar ID into <code>EDIT/11-CALENDAR.js</code> under <code>googleCalendarId</code>.<br><br>Full setup instructions are in that file.</p>
+          </div>
+        </div>
+        <div class="cal-legend reveal d1">${legendHtml}</div>`;
+    }
   })();
 
   /* ── Ticker ──────────────────────────────────────────────────── */
