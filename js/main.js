@@ -107,6 +107,12 @@
     e.preventDefault(); const r = a.dataset.route;
     if(location.hash !== '#'+r) location.hash = r; route(r);
   }));
+  const logoLink = $('.nav-logo-link');
+  if(logoLink) logoLink.addEventListener('click', e => {
+    e.preventDefault();
+    if(location.hash !== '#home') location.hash = 'home';
+    route('home');
+  });
   window.addEventListener('hashchange', () => route((location.hash||'#home').slice(1)));
 
   /* ── Clock ───────────────────────────────────────────────────── */
