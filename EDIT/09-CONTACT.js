@@ -70,7 +70,7 @@ var ENN_CONTACT = {
     {
       icon:    '📅',
       heading: 'SUBMISSION DEADLINE',
-      body:    'Submit your request by <strong>Friday at 3:00 PM</strong> for coverage in the following week. Time-sensitive stories (same-day events) can be emailed directly to the producing team.',
+      body:    'Submit your request atleast <strong>one full week ahead</strong> for coverage in the following week. Time-sensitive stories (same-day events) can be emailed directly to the producing team.',
     },
     {
       icon:    '📺',
@@ -85,7 +85,7 @@ var ENN_CONTACT = {
     {
       icon:    '💬',
       heading: 'GENERAL QUESTIONS',
-      body:    'For general press inquiries, corrections, or archived episodes, reach the studio through the front office or leave a comment on the <strong>@ennbulletin</strong> channel.',
+      body:    'For general press inquiries, corrections, or archived episodes, reach the studio in room 506 or send us an email at <strong>team@eastlakenewsnetwork.com</strong>',
     },
 
   ],
