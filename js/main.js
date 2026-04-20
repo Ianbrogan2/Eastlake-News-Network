@@ -31,11 +31,18 @@
   const heroCanvas = $('#hero-frame');
   const heroCtx = heroCanvas ? heroCanvas.getContext('2d') : null;
   let bitmaps = [], bmReady = false, lastFracPos = 0;
+  let cssW = 0, cssH = 0; /* logical (CSS) pixel dimensions — used for drawing */
 
   function resizeCanvas(){
     if(!heroCanvas) return;
-    heroCanvas.width  = heroCanvas.offsetWidth  || window.innerWidth;
-    heroCanvas.height = heroCanvas.offsetHeight || window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+    cssW = heroCanvas.offsetWidth  || window.innerWidth;
+    cssH = heroCanvas.offsetHeight || window.innerHeight;
+    /* Set physical pixel size to match the display's actual resolution */
+    heroCanvas.width  = Math.round(cssW * dpr);
+    heroCanvas.height = Math.round(cssH * dpr);
+    /* Scale the context so all draw calls use CSS pixel coordinates */
+    heroCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if(bmReady) drawBitmapFrame(lastFracPos);
   }
   window.addEventListener('resize', resizeCanvas);
@@ -46,7 +53,7 @@
     const idx  = Math.min(bitmaps.length - 2, Math.floor(fpos));
     const frac = fpos - idx;
     const bm   = bitmaps[idx];
-    const w = heroCanvas.width, h = heroCanvas.height;
+    const w = cssW, h = cssH; /* draw in CSS pixels — DPR scaling is in the transform */
     const scale = Math.min(w / bm.width, h / bm.height);
     const dw = bm.width * scale, dh = bm.height * scale;
     const dx = (w - dw) / 2, dy = (h - dh) / 2;
@@ -556,18 +563,71 @@
     return null;
   }
 
-  async function fetchLatest(id){
-    const RSS=RSS_FOR(id);
-    const parseRSS=xml=>{
-      const vid=(xml.match(/<yt:videoId>([^<]+)/)||[])[1]; if(!vid) throw 0;
-      return {id:vid, title:(xml.match(/<entry>[\s\S]*?<title>([^<]+)/)||[])[1]||'', published:(xml.match(/<published>([^<]+)/)||[])[1]||''};
-    };
-    const go=fn=>new Promise((res,rej)=>{try{Promise.resolve(fn()).then(res,rej);}catch(e){rej(e);}});
+  /* Returns an array of recent channel uploads (up to ~15) instead of just one.
+     Same three-API race as before — whichever resolves first wins. */
+  async function fetchRecentVideos(id){
+    const RSS = RSS_FOR(id);
+    /* Parse every <entry> block out of the RSS XML */
+    const parseRSSAll = xml => [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map(m => {
+      const e   = m[1];
+      const vid = (e.match(/<yt:videoId>([^<]+)/) || [])[1];
+      if(!vid) return null;
+      return {
+        id:        vid,
+        title:     (e.match(/<title>([^<]+)/)     || [])[1] || '',
+        published: (e.match(/<published>([^<]+)/) || [])[1] || '',
+      };
+    }).filter(Boolean);
+    const go = fn => new Promise((res,rej) => { try{ Promise.resolve(fn()).then(res,rej); }catch(e){ rej(e); } });
     return Promise.any([
-      go(()=>fetch(`https://pipedapi.kavin.rocks/channel/${id}`).then(r=>{if(!r.ok)throw 0;return r.json();}).then(j=>{const v=j.relatedStreams?.[0];if(!v)throw 0;const vid=(v.url||'').match(/v=([A-Za-z0-9_-]+)/)?.[1];if(!vid)throw 0;return{id:vid,title:v.title||'',published:''};})),
-      go(()=>fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(RSS)).then(r=>{if(!r.ok)throw 0;return r.json();}).then(j=>{if(j.status!=='ok'||!j.items?.length)throw 0;const v=j.items[0];const mv=(v.link||'').match(/v=([A-Za-z0-9_-]+)/)|| (v.guid||'').match(/video:([A-Za-z0-9_-]+)/);if(!mv)throw 0;return{id:mv[1],title:v.title||'',published:v.pubDate||''};})),
-      Promise.any(PROXIES.map(prox=>go(()=>fetch(prox(RSS),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text();}).then(parseRSS)))),
-    ]).catch(()=>{throw new Error('all failed');});
+      go(() => fetch(`https://pipedapi.kavin.rocks/channel/${id}`)
+        .then(r => { if(!r.ok) throw 0; return r.json(); })
+        .then(j => {
+          const list = (j.relatedStreams||[]).map(v => {
+            const vid = (v.url||'').match(/v=([A-Za-z0-9_-]+)/)?.[1];
+            return vid ? { id:vid, title:v.title||'', published:'' } : null;
+          }).filter(Boolean);
+          if(!list.length) throw 0;
+          return list;
+        })
+      ),
+      go(() => fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS))
+        .then(r => { if(!r.ok) throw 0; return r.json(); })
+        .then(j => {
+          if(j.status!=='ok' || !j.items?.length) throw 0;
+          return j.items.map(v => {
+            const mv = (v.link||'').match(/v=([A-Za-z0-9_-]+)/) || (v.guid||'').match(/video:([A-Za-z0-9_-]+)/);
+            return mv ? { id:mv[1], title:v.title||'', published:v.pubDate||'' } : null;
+          }).filter(Boolean);
+        })
+      ),
+      Promise.any(PROXIES.map(prox =>
+        go(() => fetch(prox(RSS), {cache:'no-store'})
+          .then(r => { if(!r.ok) throw 0; return r.text(); })
+          .then(parseRSSAll)
+        )
+      )),
+    ]).catch(() => { throw new Error('all failed'); });
+  }
+
+  /* Fetches all video IDs that belong to the Studio playlists so they can
+     be excluded from the "Latest Bulletin" slot on the home page. */
+  async function fetchExcludedVideoIds(){
+    const plIds = (studio.playlists||[]).map(p => p.playlistId).filter(id => id && id.trim());
+    if(!plIds.length) return new Set();
+    const excluded = new Set();
+    await Promise.allSettled(plIds.map(async pid => {
+      try {
+        const r = await fetch(`https://pipedapi.kavin.rocks/playlists/${pid}`);
+        if(!r.ok) return;
+        const j = await r.json();
+        (j.relatedStreams||[]).forEach(v => {
+          const m = (v.url||'').match(/v=([A-Za-z0-9_-]+)/);
+          if(m) excluded.add(m[1]);
+        });
+      } catch(e){/* silently skip — exclusion is best-effort */}
+    }));
+    return excluded;
   }
 
   function fmtDate(iso){
@@ -583,12 +643,22 @@
       $('#player-frame').innerHTML=`<iframe src="https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1" title="ENN Live" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
       return;
     }
+    /* Show the uploads playlist as a loading fallback while we fetch */
     $('#player-frame').innerHTML=`<iframe src="${embedBase}" title="Latest ENN Broadcast" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
     try {
-      const id=await resolveChannelId(); if(!id) return;
-      const v=await fetchLatest(id);
-      if(v.title) $('#vid-title').textContent=v.title;
-      if(v.published) $('#vid-date').textContent=fmtDate(v.published);
+      const id = await resolveChannelId(); if(!id) return;
+      /* Fetch studio exclusion list and recent uploads in parallel */
+      const [excluded, recent] = await Promise.all([
+        fetchExcludedVideoIds().catch(() => new Set()),
+        fetchRecentVideos(id),
+      ]);
+      /* First upload that isn't in any studio playlist; fall back to newest if all match */
+      const v = recent.find(v => !excluded.has(v.id)) || recent[0];
+      if(!v) return;
+      /* Replace placeholder with the specific video */
+      $('#player-frame').innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}?rel=0" title="Latest ENN Broadcast" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+      if(v.title)     $('#vid-title').textContent = v.title;
+      if(v.published) $('#vid-date').textContent  = fmtDate(v.published);
     } catch(e){}
   }
   loadLatestVideo();
