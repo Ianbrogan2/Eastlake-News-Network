@@ -24,26 +24,26 @@ var ENN_NEWS = {
 
   featured: {
     tag:    'Featured',
-    title:  'Homecoming week brings record student turnout and three new spirit traditions',
+    title:  'VAPA ',
     body:   'ASB leaders say this year\'s homecoming pep rally pulled the biggest crowd in Eastlake history, with a first-ever "Class vs. Class" spirit competition set to become an annual fixture.',
-    byline: 'REPORTED BY ENN STAFF · PUBLISHED APRIL 14, 2026',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 20, 2026',
   },
 
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Titans Volleyball Advances to League Semifinals',
-      date:  'APR 15 · 3 MIN READ',
+      title: 'Eastlake Tennis won something',
+      date:  'APR 15',
     },
     {
       cat:   'Campus',
-      title: 'New Engineering Wing Opens to Students Next Monday',
-      date:  'APR 14 · 2 MIN READ',
+      title: 'EHS Art show in the library all week!',
+      date:  'APR 20-24',
     },
     {
       cat:   'Student Life',
-      title: 'Art Club Unveils Senior Mural on North Hall',
-      date:  'APR 13 · 2 MIN READ',
+      title: 'VAPADEMICS Spirit week, Wear red or white to get into the assembly!',
+      date:  'APR 20-24',
     },
   ],
 
