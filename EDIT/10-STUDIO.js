@@ -27,7 +27,7 @@ var ENN_STUDIO = {
       category:   'student',
       // category options: 'student'  'instagram'  'vhs'
       description: 'Original short films, segments, and video pieces produced entirely by ENN students.',
-      playlistId:  '',
+      playlistId:  'PLDT9IjcS3XAKprAwa276Daj1gjfoI6Drp',
       // ↑ Paste your YouTube playlist ID here
     },
 
@@ -35,14 +35,14 @@ var ENN_STUDIO = {
       title:      'Instagram Content',
       category:   'instagram',
       description: 'Short-form reels and posts from @eastlakenewsnetwork — behind-the-scenes and highlights.',
-      playlistId:  '',
+      playlistId:  'PLDT9IjcS3XALsDfgYIAuK8SX96l5AL5sB',
     },
 
     {
       title:      'VHS Archive',
       category:   'vhs',
       description: 'Classic ENN bulletins digitized from the original VHS tapes — the full history of the show.',
-      playlistId:  '',
+      playlistId:  'PLDT9IjcS3XAL7ExMfwDhi7a_kVscMT-o_',
     },
 
   ],
