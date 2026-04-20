@@ -51,6 +51,79 @@ var ENN_TEAM = {
     leaders: [
 
       {
+        n:     'Emily Na Sanchez',
+        r:     'Lead Producer',
+        grade: '11th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'Alejandro Schejola',
+        r:     'Segment Producer',
+        grade: '11th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'Jovani Iglesias',
+        r:     'Broadcast Director',
+        grade: '10th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+
+    ],
+
+    // 4 Anchors for Period 1
+    anchors: [
+
+      {
+        n:     'Rainen Gabriel',
+        r:     'Anchor',
+        grade: '12th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'Maddy Mcgee',
+        r:     'Anchor',
+        grade: '11th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'Christian Stevens',
+        r:     'Anchor',
+        grade: '11th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'Erina Tsuya',
+        r:     'Anchor',
+        grade: '11th',
+        bio:   '',
+        email: '',
+        photo: '',
+      },
+
+    ],
+
+  },
+
+  // ── PERIOD 4 ──────────────────────────────────────────────────────
+  period4: {
+
+    // 3 Leaders for Period 4
+    leaders: [
+
+      {
         n:     'Ian Brogan',
         r:     'Lead Producer',
         grade: '11th',
@@ -77,110 +150,37 @@ var ENN_TEAM = {
 
     ],
 
-    // 4 Anchors for Period 1
-    anchors: [
-
-      {
-        n:     'Anchor 1',
-        r:     'Lead Anchor',
-        grade: '',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-      {
-        n:     'Anchor 2',
-        r:     'Co-Anchor',
-        grade: '',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-      {
-        n:     'Anchor 3',
-        r:     'Field Reporter',
-        grade: '',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-      {
-        n:     'Anchor 4',
-        r:     'Sports Reporter',
-        grade: '',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-
-    ],
-
-  },
-
-  // ── PERIOD 4 ──────────────────────────────────────────────────────
-  period4: {
-
-    // 3 Leaders for Period 4
-    leaders: [
-
-      {
-        n:     'Emily Na Sanchez',
-        r:     'Lead Producer',
-        grade: '',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-      {
-        n:     'Alejandro Schejola',
-        r:     'Segment Producer',
-        grade: '',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-      {
-        n:     'Jovani Iglesias',
-        r:     'Broadcast Director',
-        grade: '10th',
-        bio:   '',
-        email: '',
-        photo: '',
-      },
-
-    ],
-
     // 4 Anchors for Period 4
     anchors: [
 
       {
-        n:     'Anchor 5',
-        r:     'Lead Anchor',
-        grade: '',
+        n:     'Hayden Stolebarger',
+        r:     'Anchor',
+        grade: '11th',
         bio:   '',
         email: '',
         photo: '',
       },
       {
-        n:     'Anchor 6',
-        r:     'Co-Anchor',
-        grade: '',
+        n:     'Sidney Jonason',
+        r:     'Anchor',
+        grade: '11th',
         bio:   '',
         email: '',
         photo: '',
       },
       {
-        n:     'Anchor 7',
-        r:     'Field Reporter',
-        grade: '',
+        n:     'Mia Beas',
+        r:     'Anchor',
+        grade: '11th',
         bio:   '',
         email: '',
         photo: '',
       },
       {
-        n:     'Anchor 8',
-        r:     'Entertainment Reporter',
-        grade: '',
+        n:     'Alyssa Lagler',
+        r:     'Anchor',
+        grade: '12th',
         bio:   '',
         email: '',
         photo: '',
@@ -196,7 +196,7 @@ var ENN_TEAM = {
     n:     'William Nimmo',
     r:     'Broadcast Journalism Instructor',
     grade: '',
-    bio:   'The best teacher on EHS campus',
+    bio:   '',
     email: 'william.nimmo@sweetwaterschools.net',
     photo: '',   // e.g. 'img/team/william-nimmo.jpg'
   },
