@@ -25,7 +25,7 @@ var ENN_ABOUT = {
   heroHeadline: 'EASTLAKE\'S\nOWN\nNEWSROOM.',
 
   // The sentence just below the headline
-  heroSub: 'ENN — the Eastlake News Network — #1 in the United States of America, discover why ENN is the best r preparing for the ever changing media industry. ENN is the student-run broadcast news program of Eastlake High School in Chula Vista, California. We report, produce, and air four live shows every week.',
+  heroSub: 'ENN — the Eastlake News Network — #1 in the United States of America, discover why ENN is the best at preparing for the ever changing media industry. ENN is the student-run broadcast news program of Eastlake High School in Chula Vista, California. We report, produce, and air four live shows every week.',
 
 
   // ── MISSION BOX ──────────────────────────────────────────────────
