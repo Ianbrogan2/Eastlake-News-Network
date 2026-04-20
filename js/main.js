@@ -243,11 +243,12 @@
     }
   })();
 
-  /* ── Team cards (cinematic expand) ──────────────────────────── */
+  /* ── Team cards (Period 1 / Period 4 tabs + cinematic expand) ── */
   (function buildTeam(){
-    const make = (list, tag, kind) => list.map((m, i) => {
-      const init = m.n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
-      const avatar = m.photo
+    /* Build a card for a single person */
+    const card = (m, tag, kind, i) => {
+      const init    = m.n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+      const avatar  = m.photo
         ? `<img class="avatar" src="${m.photo}" alt="${m.n}" onerror="this.outerHTML='<div class=\\'avatar\\'>${init}</div>'">`
         : `<div class="avatar">${init}</div>`;
       const bioText  = m.bio   || '';
@@ -274,31 +275,55 @@
           </div>
         </div>
       </div>`;
-    }).join('');
+    };
+    const make = (list, tag, kind) => list.map((m, i) => card(m, tag, kind, i)).join('');
+    const cnt  = n => String(n).padStart(2,'0') + (n === 1 ? ' MEMBER' : ' MEMBERS');
 
-    $('#team-anchors').innerHTML = make(team.anchors, 'ON AIR',  'anchor');
-    $('#team-crew').innerHTML    = make(team.crew,    'CREW',    'crew');
-    $('#team-advisor').innerHTML = make(team.advisor, 'ADVISOR', 'advisor');
+    /* Fill Period 1 */
+    const p1 = team.period1;
+    $('#team-p1-leaders').innerHTML = make(p1.leaders, 'LEADER',  'crew');
+    $('#team-p1-anchors').innerHTML = make(p1.anchors, 'ON AIR',  'anchor');
+    $('#team-p1-advisor').innerHTML = card(team.advisor, 'ADVISOR', 'advisor', 0);
+    $('#p1-leader-count').textContent = cnt(p1.leaders.length);
+    $('#p1-anchor-count').textContent = cnt(p1.anchors.length);
 
-    /* Cinematic expand: click to open, click again or click outside to close */
+    /* Fill Period 4 */
+    const p4 = team.period4;
+    $('#team-p4-leaders').innerHTML = make(p4.leaders, 'LEADER',  'crew');
+    $('#team-p4-anchors').innerHTML = make(p4.anchors, 'ON AIR',  'anchor');
+    $('#team-p4-advisor').innerHTML = card(team.advisor, 'ADVISOR', 'advisor', 0);
+    $('#p4-leader-count').textContent = cnt(p4.leaders.length);
+    $('#p4-anchor-count').textContent = cnt(p4.anchors.length);
+
+    /* Tab switching */
+    $$('.team-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('.team-tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        $$('.team-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        $('#team-panel-' + btn.dataset.period).classList.add('active');
+      });
+    });
+
+    /* Cinematic expand: click to open, click again to close */
     document.addEventListener('click', e => {
-      const card = e.target.closest('.tcard');
-      if(card){
-        const open = card.classList.toggle('open');
-        card.setAttribute('aria-expanded', open);
-        /* Close siblings in the same grid */
-        card.closest('.team-grid')?.querySelectorAll('.tcard.open').forEach(c => {
-          if(c !== card){ c.classList.remove('open'); c.setAttribute('aria-expanded','false'); }
+      const c = e.target.closest('.tcard');
+      if(c){
+        const open = c.classList.toggle('open');
+        c.setAttribute('aria-expanded', open);
+        c.closest('.team-grid')?.querySelectorAll('.tcard.open').forEach(o => {
+          if(o !== c){ o.classList.remove('open'); o.setAttribute('aria-expanded','false'); }
         });
       }
     });
     document.addEventListener('keydown', e => {
       if(e.key !== 'Enter' && e.key !== ' ') return;
-      const card = e.target.closest('.tcard');
-      if(!card) return;
+      const c = e.target.closest('.tcard');
+      if(!c) return;
       e.preventDefault();
-      const open = card.classList.toggle('open');
-      card.setAttribute('aria-expanded', open);
+      const open = c.classList.toggle('open');
+      c.setAttribute('aria-expanded', open);
     });
   })();
 

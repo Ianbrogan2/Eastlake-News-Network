@@ -158,24 +158,60 @@
       <p class="sub reveal d2">Anchors, reporters, producers, and the faculty advisor who keep ENN on the air every week.</p>
     </div>
   </section>
-  <section class="team-section">
+
+  <!-- Period tab switcher -->
+  <div class="team-tabs-wrap">
     <div class="container">
-      <div class="team-sec-head reveal"><h2>ANCHORS & ON-AIR TALENT</h2><span class="count">05 MEMBERS</span></div>
-      <div class="team-grid" id="team-anchors"></div>
+      <div class="team-tabs" role="tablist">
+        <button class="team-tab-btn active" role="tab" aria-selected="true"  aria-controls="team-panel-1" data-period="1">Period 1</button>
+        <button class="team-tab-btn"        role="tab" aria-selected="false" aria-controls="team-panel-4" data-period="4">Period 4</button>
+      </div>
     </div>
-  </section>
-  <section class="team-section">
-    <div class="container">
-      <div class="team-sec-head reveal"><h2>PRODUCTION CREW</h2><span class="count">06 MEMBERS</span></div>
-      <div class="team-grid" id="team-crew"></div>
-    </div>
-  </section>
-  <section class="team-section" style="padding-bottom:80px">
-    <div class="container">
-      <div class="team-sec-head reveal"><h2>FACULTY ADVISOR</h2><span class="count">01 MEMBER</span></div>
-      <div class="team-grid" id="team-advisor"></div>
-    </div>
-  </section>
+  </div>
+
+  <!-- Period 1 panel -->
+  <div id="team-panel-1" class="team-tab-panel active" role="tabpanel">
+    <section class="team-section">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>LEADERS</h2><span class="count" id="p1-leader-count"></span></div>
+        <div class="team-grid" id="team-p1-leaders"></div>
+      </div>
+    </section>
+    <section class="team-section">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>ANCHORS</h2><span class="count" id="p1-anchor-count"></span></div>
+        <div class="team-grid" id="team-p1-anchors"></div>
+      </div>
+    </section>
+    <section class="team-section" style="padding-bottom:80px">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>FACULTY ADVISOR</h2><span class="count">01 MEMBER</span></div>
+        <div class="team-grid" id="team-p1-advisor"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Period 4 panel -->
+  <div id="team-panel-4" class="team-tab-panel" role="tabpanel">
+    <section class="team-section">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>LEADERS</h2><span class="count" id="p4-leader-count"></span></div>
+        <div class="team-grid" id="team-p4-leaders"></div>
+      </div>
+    </section>
+    <section class="team-section">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>ANCHORS</h2><span class="count" id="p4-anchor-count"></span></div>
+        <div class="team-grid" id="team-p4-anchors"></div>
+      </div>
+    </section>
+    <section class="team-section" style="padding-bottom:80px">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>FACULTY ADVISOR</h2><span class="count">01 MEMBER</span></div>
+        <div class="team-grid" id="team-p4-advisor"></div>
+      </div>
+    </section>
+  </div>
 </main>
 
 <!-- CONTACT — content rendered from EDIT/09-CONTACT.js -->

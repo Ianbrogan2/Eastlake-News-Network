@@ -139,14 +139,9 @@ img{display:block;max-width:100%}
 .mobile-link:hover,.mobile-link.active{color:#fff;padding-left:10px}
 .mobile-meta{margin-top:auto;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--muted-2);text-transform:uppercase}
 
-@media (max-width:860px){
-  .nav-title small, .clock, .nav-title .dot{display:none}
-  .nav-link{padding:9px 10px;font-size:12px}
-}
 @media (max-width:620px){
   .nav-links{display:none}
   .hamburger{display:flex}
-  .nav-title{font-size:16px}
 }
 
 /* --- PAGE WRAPPER --- */
@@ -444,6 +439,22 @@ img{display:block;max-width:100%}
 .team-hero{padding: clamp(60px,8vw,120px) clamp(18px,4.4vw,60px) 32px}
 .team-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(54px,9vw,140px);line-height:.9;margin-bottom:14px}
 .team-hero .sub{color:var(--muted);font-size:17px;max-width:640px}
+
+/* Period tab bar */
+.team-tabs-wrap{padding:0 clamp(18px,4.4vw,60px)}
+.team-tabs{display:flex;gap:4px;border-bottom:2px solid var(--border)}
+.team-tab-btn{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.4vw,28px);letter-spacing:.08em;
+  padding:14px 36px;background:none;border:none;border-bottom:3px solid transparent;
+  margin-bottom:-2px;color:var(--muted);cursor:pointer;
+  transition:color .22s var(--ease),border-color .22s var(--ease),background .18s;
+  border-radius:8px 8px 0 0;
+}
+.team-tab-btn:hover{color:#fff;background:rgba(255,255,255,0.04)}
+.team-tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.team-tab-panel{display:none}
+.team-tab-panel.active{display:block}
+
 .team-section{padding: 32px clamp(18px,4.4vw,60px)}
 .team-sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border)}
 .team-sec-head h2{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.02em}
@@ -674,8 +685,8 @@ a.tcard-val:hover{text-decoration:underline}
   .clock{display:none}
 }
 @media (max-width:860px){
-  .nav-link{padding:8px 7px;font-size:11px;letter-spacing:.1em}
-  .onair{padding:6px 9px;font-size:10px}
+  .nav-link{padding:8px 6px;font-size:11px;letter-spacing:.08em}
+  .onair{padding:6px 9px;font-size:10px;letter-spacing:.16em}
 }
 
 /* --- STUDIO --- */
@@ -729,6 +740,7 @@ a.tcard-val:hover{text-decoration:underline}
 }
 .cal-container iframe{width:100%;height:680px;border:0;display:block}
 @media (max-width:640px){.cal-container iframe{height:520px}}
+@media (max-width:480px){.cal-container iframe{height:440px}}
 .cal-placeholder{
   min-height:400px;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:14px;text-align:center;padding:40px;
@@ -750,4 +762,49 @@ a.tcard-val:hover{text-decoration:underline}
 }
 .cal-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
-</style>
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE & RESPONSIVE — additional breakpoints
+══════════════════════════════════════════════════════════════════ */
+
+/* Touch-action: eliminate 300ms tap delay on mobile for all interactive elements */
+.btn, .team-tab-btn, .hamburger, .mobile-link, .nav-link,
+.sched-row.has-links, .tcard, .news-item, .sched-link-item {
+  touch-action: manipulation;
+}
+
+/* news-feat card: reduce min-height on single-column mobile */
+@media (max-width:860px){
+  .news-feat{min-height:320px}
+}
+@media (max-width:480px){
+  .news-feat{min-height:260px;padding:20px}
+}
+
+/* Team tabs: reduce padding on small phones */
+@media (max-width:540px){
+  .team-tab-btn{padding:12px 20px;font-size:clamp(18px,5vw,24px)}
+}
+
+/* Hero tagline: cover landscape phones (601–767px, not portrait) */
+@media (max-width:767px) and (orientation:landscape){
+  .tagline{width:88vw}
+  .tagline .t1{font-size:clamp(13px,3.2vw,20px);letter-spacing:.2em}
+  .tagline .t2{font-size:10px;letter-spacing:.14em;white-space:normal;line-height:1.5}
+}
+
+/* Footer meta: shrink mono font on very narrow screens */
+@media (max-width:480px){
+  .footer-meta{font-size:9px;letter-spacing:.12em;gap:10px;padding-bottom:32px}
+}
+
+/* Broadcast grid side-panel: don't get crushed between 621–1039px */
+@media (max-width:1039px) and (min-width:621px){
+  .broadcast-grid > .reveal.right{padding-top:4px}
+}
+
+/* Schedule: prevent status badge overflow on tiny phones */
+@media (max-width:380px){
+  .sched-day{font-size:20px;min-width:54px}
+  .sched-mid .ep{font-size:13px}
+  .sched-status{font-size:9px;padding:4px 7px;letter-spacing:.15em}
+}
