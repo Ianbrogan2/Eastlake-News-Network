@@ -40,7 +40,7 @@
 
 var ENN_CALENDAR = {
 
-  googleCalendarId: '',
+  googleCalendarId: '47edd2e5ee3df3afc3d3f0f0780b4b66edd0a514fe14c62adebcd56fbdb0f469@group.calendar.google.com',
   // ↑ Paste your Google Calendar ID here (see setup instructions above)
 
   // Color legend shown below the calendar on the site.
