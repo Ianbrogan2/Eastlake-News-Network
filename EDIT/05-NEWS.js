@@ -24,16 +24,16 @@ var ENN_NEWS = {
 
   featured: {
     tag:    'Featured',
-    title:  'VAPA ',
-    body:   'ASB leaders say this year\'s homecoming pep rally pulled the biggest crowd in Eastlake history, with a first-ever "Class vs. Class" spirit competition set to become an annual fixture.',
+    title:  'VAPADEMICS Assembly is this friday!',
+    body:   'Students can expect games, performances, and class competitions as the school gathers Friday for the VAPADEMICS Assembly — don\'t miss it.',
     byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 20, 2026',
   },
 
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Eastlake Tennis won something',
-      date:  'APR 15',
+      title: 'Eastlake Boys LAX plays home against Bonita Vista HS at 5:30 PM',
+      date:  'APR 27',
     },
     {
       cat:   'Campus',
