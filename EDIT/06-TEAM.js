@@ -51,7 +51,7 @@ var ENN_TEAM = {
     leaders: [
 
       {
-        n:     'Ian Brogan',
+        n:     'Emily Na Sanchez',
         r:     'Lead Producer',
         grade: '11th',
         bio:   '',
@@ -59,17 +59,17 @@ var ENN_TEAM = {
         photo: '',
       },
       {
-        n:     'Cecilia Hettinger',
+        n:     'Alejandro Schejola',
         r:     'Segment Producer',
-        grade: '12th',
+        grade: '11th',
         bio:   '',
         email: '',
         photo: '',
       },
       {
-        n:     'Rory Licht',
+        n:     'Jovani Iglesias',
         r:     'Broadcast Director',
-        grade: '12th',
+        grade: '10th',
         bio:   '',
         email: '',
         photo: '',
@@ -124,25 +124,25 @@ var ENN_TEAM = {
     leaders: [
 
       {
-        n:     'Emily Na Sanchez',
+        n:     'Ian Brogan',
         r:     'Lead Producer',
-        grade: '',
+        grade: '11th',
         bio:   '',
         email: '',
         photo: '',
       },
       {
-        n:     'Alejandro Schejola',
+        n:     'Cecilia Hettinger',
         r:     'Segment Producer',
-        grade: '',
+        grade: '12th',
         bio:   '',
         email: '',
         photo: '',
       },
       {
-        n:     'Jovani Iglesias',
+        n:     'Rory Licht',
         r:     'Broadcast Director',
-        grade: '10th',
+        grade: '12th',
         bio:   '',
         email: '',
         photo: '',
@@ -196,7 +196,7 @@ var ENN_TEAM = {
     n:     'William Nimmo',
     r:     'Broadcast Journalism Instructor',
     grade: '',
-    bio:   'The best teacher on EHS campus',
+    bio:   '',
     email: 'william.nimmo@sweetwaterschools.net',
     photo: '',   // e.g. 'img/team/william-nimmo.jpg'
   },
