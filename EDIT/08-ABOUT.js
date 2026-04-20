@@ -25,7 +25,7 @@ var ENN_ABOUT = {
   heroHeadline: 'EASTLAKE\'S\nOWN\nNEWSROOM.',
 
   // The sentence just below the headline
-  heroSub: 'ENN — the Eastlake News Network — is the student-run broadcast news program of Eastlake High School in Chula Vista, California. We report, produce, and air four live shows every week.',
+  heroSub: 'ENN — the Eastlake News Network — #1 in the United States of America, discover why ENN is the best at preparing for the ever changing media industry. ENN is the student-run broadcast news program of Eastlake High School in Chula Vista, California. We report, produce, and air four live shows every week.',
 
 
   // ── MISSION BOX ──────────────────────────────────────────────────
@@ -46,7 +46,7 @@ var ENN_ABOUT = {
 
     'Our coverage is reported, written, edited, and delivered entirely by students. Advisors guide — but the stories, the writing, the camerawork, the graphics, and the voice behind the desk all belong to the student journalists of Eastlake.',
 
-    'Episodes stream live into every first-period classroom through our closed-circuit broadcast system, then publish to our YouTube channel afterward so the whole community can watch on demand.',
+    'Episodes stream every morning into every first & fourth period classroom through our closed-circuit broadcast system, then publish to our YouTube channel afterward so the whole community can watch on demand.',
 
     'We cover the Titans. The classrooms. The quad. The bleachers. If it matters at Eastlake, it goes on the bulletin.',
 
