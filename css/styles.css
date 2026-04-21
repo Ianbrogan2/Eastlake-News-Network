@@ -224,12 +224,12 @@ img{display:block;max-width:100%}
   writing-mode:vertical-rl;
 }
 
-/* Skip-intro button — bottom-left of the hero sticky area */
+/* Skip-intro button — fixed to viewport, floats above the news ticker */
 .hero-skip{
-  position:absolute;
+  position:fixed;
   bottom:clamp(56px,7vh,80px);
   left:clamp(22px,2.5vw,44px);
-  z-index:4;
+  z-index:95;
   display:inline-flex;align-items:center;gap:8px;
   padding:9px 16px 9px 14px;
   border-radius:999px;
