@@ -43,15 +43,7 @@ var ENN_CALENDAR = {
   googleCalendarId: '7dc14ca9f0616b86aff7d058fbf3f8e8a851f80aa3f6d000106341194d1d4562@group.calendar.google.com',
   // ↑ Paste your Google Calendar ID here (see setup instructions above)
 
-  // Color legend shown below the calendar on the site.
-  // Match these to the event colors you use in Google Calendar.
-  legend: [
-    { color: '#EF4444', label: 'Sports'          },
-    { color: '#1A56DB', label: 'Events'           },
-    { color: '#9333EA', label: 'Arts & Plays'     },
-    { color: '#16A34A', label: 'Academics'        },
-    { color: '#F59E0B', label: 'School Holidays'  },
-    { color: '#00D4FF', label: 'ENN Coverage'     },
-  ],
+  // Color legend shown below the calendar — leave empty to hide it.
+  legend: [],
 
 };

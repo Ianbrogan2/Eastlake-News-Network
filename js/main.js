@@ -710,7 +710,7 @@
         <div class="cal-container reveal">
           <iframe src="${src}" title="ENN Calendar" frameborder="0" scrolling="no"></iframe>
         </div>
-        <div class="cal-legend reveal d1">${legendHtml}</div>`;
+        ${legendHtml ? `<div class="cal-legend reveal d1">${legendHtml}</div>` : ''}`;
     } else {
       root.innerHTML = `
         <div class="cal-container reveal">
@@ -720,7 +720,7 @@
             <p>Create a public Google Calendar, then paste its Calendar ID into <code>EDIT/11-CALENDAR.js</code> under <code>googleCalendarId</code>.<br><br>Full setup instructions are in that file.</p>
           </div>
         </div>
-        <div class="cal-legend reveal d1">${legendHtml}</div>`;
+        ${legendHtml ? `<div class="cal-legend reveal d1">${legendHtml}</div>` : ''}`;
     }
   })();
 
