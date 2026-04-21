@@ -194,9 +194,9 @@ var ENN_TEAM = {
   // William appears at the bottom of BOTH period tabs automatically
   advisor: {
     n:     'William Nimmo',
-    r:     'Broadcast Journalism Instructor',
+    r:     'Film Television Digital Media Instructor',
     grade: '',
-    bio:   '',
+    bio:   'Mr. Nimmo is an industry leader, bringing the standards of contemporary filmmaking qand television production to the state-of-the-art programs at Eastlake High.',
     email: 'william.nimmo@sweetwaterschools.org',
     photo: '',   // e.g. 'img/team/william-nimmo.jpg'
   },
