@@ -66,8 +66,8 @@
   if(heroCtx) heroCtx.imageSmoothingEnabled = false;
 
   const LERP        = 0.10;   // lerp coefficient — 0.08 smoother, 0.12 snappier
-  const UNLOCK_PCT  = 0.30;   // unlock scrubbing once this fraction decoded
-  const CHUNK_SIZE  = 20;     // parallel fetches per chunk
+  const UNLOCK_PCT  = 0.10;   // unlock scrubbing once this fraction decoded (was 0.30)
+  const CHUNK_SIZE  = 8;      // parallel fetches per chunk — fewer = less network congestion
 
   /* On mobile/tablet: loading 480 frames (~3–4 GB decoded) crashes the browser tab.
      Instead we load only the first visible frame as a static background image.
