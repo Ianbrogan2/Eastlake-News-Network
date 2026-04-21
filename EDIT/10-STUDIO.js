@@ -32,13 +32,6 @@ var ENN_STUDIO = {
     },
 
     {
-      title:      'Instagram Content',
-      category:   'instagram',
-      description: 'Short-form reels and posts from @eastlakenewsnetwork — behind-the-scenes and highlights.',
-      playlistId:  'PLDT9IjcS3XALsDfgYIAuK8SX96l5AL5sB',
-    },
-
-    {
       title:      'VHS Archive',
       category:   'vhs',
       description: 'Classic ENN bulletins digitized from the original VHS tapes — the full history of the show.',
