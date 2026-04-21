@@ -307,12 +307,27 @@
   const scrollProg  = $('#scroll-progress');
   const heroSkip    = $('#hero-skip');
 
-  /* Skip-intro button: scroll to the section immediately after the hero */
+  /* Skip-intro button ─────────────────────────────────────────────
+     Visible immediately on load.
+     Hides when: user clicks it  OR  hero scroll passes 92 %.
+     Reappears when: user scrolls back to the top (p < 2 %).          */
+  let skipDismissed = false;
+
+  function updateSkipBtn(p){
+    if(!heroSkip) return;
+    if(p < 0.02) skipDismissed = false;          // reset at top
+    heroSkip.classList.toggle('hidden', skipDismissed || p > 0.92);
+  }
+
   if(heroSkip){
     heroSkip.addEventListener('click', () => {
+      skipDismissed = true;
+      heroSkip.classList.add('hidden');
       const target = hero ? hero.offsetTop + hero.offsetHeight : window.innerHeight;
       window.scrollTo({ top: target, behavior: 'smooth' });
     });
+    /* Show immediately — don't wait for first scroll event */
+    heroSkip.classList.remove('hidden');
   }
 
   let lastScrollP   = -1;     // last seen scroll progress value
@@ -342,8 +357,8 @@
     if(scrollFill) scrollFill.style.height = (p * 100) + '%';
     if(scrollProg) scrollProg.style.opacity = p > 0.96 ? '0' : '1';
 
-    /* Skip button: hide once hero is nearly done (no longer useful) */
-    if(heroSkip) heroSkip.classList.toggle('hidden', p > 0.92);
+    /* Skip button visibility */
+    updateSkipBtn(p);
 
     /* Nav: transparent glass over hero, solid once hero scrolls away */
     const navEl = $('.nav');
