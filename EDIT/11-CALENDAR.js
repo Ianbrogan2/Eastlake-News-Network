@@ -40,7 +40,7 @@
 
 var ENN_CALENDAR = {
 
-  googleCalendarId: 'team@eastlakenewsnetwork.com',
+  googleCalendarId: '7dc14ca9f0616b86aff7d058fbf3f8e8a851f80aa3f6d000106341194d1d4562@group.calendar.google.com',
   // ↑ Paste your Google Calendar ID here (see setup instructions above)
 
   // Color legend shown below the calendar on the site.
