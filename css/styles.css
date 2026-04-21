@@ -266,6 +266,17 @@ img{display:block;max-width:100%}
 .hero-skip:hover .hero-skip-arrow{
   transform:translateY(2px);
 }
+@media (max-width:600px){
+  /* On mobile: smaller padding, hide the text label, just show the arrow icon */
+  .hero-skip{
+    padding:8px 10px;
+    gap:0;
+    bottom:20px;
+    left:18px;
+  }
+  .hero-skip-label{ display:none; }
+  .hero-skip-arrow{ width:16px; height:16px; }
+}
 
 /* --- SECTION --- */
 .section{padding: clamp(48px, 7vw, 96px) clamp(18px, 4.4vw, 60px)}
