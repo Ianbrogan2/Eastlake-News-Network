@@ -20,8 +20,11 @@
   const calendar = ENN_CALENDAR;
   const heroConf = (typeof ENN_HERO !== 'undefined') ? ENN_HERO : {};
 
-  /* Apply hero scroll height from EDIT/12-HERO.js
-     70% of desktop value on mobile for a natural phone feel */
+  /* Detect mobile/tablet up-front — used by hero height and frame loader */
+  const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+                    || window.innerWidth <= 900;
+
+  /* Apply hero scroll height from EDIT/12-HERO.js */
   (function applyHeroHeight(){
     /* Mobile gets 100vh (static single frame) — set by loadAllFramesChunked */
     if(IS_MOBILE) return;
@@ -71,9 +74,8 @@
 
   /* On mobile/tablet: loading 480 frames (~3–4 GB decoded) crashes the browser tab.
      Instead we load only the first visible frame as a static background image.
-     Scroll scrubbing is disabled; the hero shows a clean static frame.           */
-  const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-                    || window.innerWidth <= 900;
+     Scroll scrubbing is disabled; the hero shows a clean static frame.
+     IS_MOBILE is declared earlier in the file (before applyHeroHeight).          */
 
   let bitmaps       = [];     // ImageBitmap|HTMLImageElement|null, indexed by frame
   let loadedCount   = 0;
