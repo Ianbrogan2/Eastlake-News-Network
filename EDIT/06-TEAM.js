@@ -127,7 +127,7 @@ var ENN_TEAM = {
         n:     'Ian Brogan',
         r:     'Lead Producer',
         grade: '11th',
-        bio:   '',
+        bio:   'Ian Brogan is ENNs Lead Producer, responsible for all graphics, logos, animations, and the complete production of every broadcast.',
         email: '',
         photo: '',
       },
