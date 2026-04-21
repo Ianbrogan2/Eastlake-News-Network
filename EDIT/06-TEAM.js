@@ -143,7 +143,7 @@ var ENN_TEAM = {
         n:     'Rory Licht',
         r:     'Broadcast Director',
         grade: '12th',
-        bio:   '',
+        bio:   'Rory Licht is the period 4, Broadcast Director and an emerging filmmaker, bringing the ambition and discipline to every project he helps build at Eastlake High.',
         email: '',
         photo: '',
       },
