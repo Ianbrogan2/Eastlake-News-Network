@@ -914,9 +914,34 @@
   /* Clear any stale cached channel ID on every load */
   try { localStorage.removeItem('enn_ch_v1'); } catch(e){}
 
+  /* Extract a bare video ID from any YouTube URL format or raw ID */
+  function extractVideoId(raw){
+    if(!raw || !raw.trim()) return null;
+    const s = raw.trim();
+    // youtu.be/ID
+    const short = s.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+    if(short) return short[1];
+    // ?v=ID or &v=ID
+    const long = s.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+    if(long) return long[1];
+    // bare 11-char ID
+    if(/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+    return null;
+  }
+
   async function loadLatestVideo(){
     const uploadsPlaylist = CHANNEL_ID.replace(/^UC/,'UU');
     const embedBase = `https://www.youtube.com/embed/videoseries?list=${uploadsPlaylist}&rel=0&index=1`;
+
+    /* ── Override check: if EDIT/13-OVERRIDE.js has a video, use it ── */
+    const overrideRaw = (typeof ENN_OVERRIDE !== 'undefined') ? ENN_OVERRIDE.video : '';
+    const overrideId  = extractVideoId(overrideRaw);
+    if(overrideId){
+      $('#player-frame').innerHTML = `<iframe src="https://www.youtube.com/embed/${overrideId}?rel=0" title="ENN Bulletin" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+      $('#vid-date').textContent = 'PINNED EPISODE';
+      return;
+    }
+
     if(isOnAir()){
       $('#vid-title').textContent='ENN — Live Broadcast';
       $('#vid-date').textContent=`LIVE NOW · ${onAir.startH}:${String(onAir.startM).padStart(2,'0')}–${onAir.endH}:${String(onAir.endM).padStart(2,'0')} AM PST`;
