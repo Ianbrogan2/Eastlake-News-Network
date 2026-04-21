@@ -40,7 +40,7 @@
 
 var ENN_CALENDAR = {
 
-  googleCalendarId: 'https://calendar.google.com/calendar/embed?src=team%40eastlakenewsnetwork.com&ctz=America%2FLos_Angeles',
+  googleCalendarId: 'team@eastlakenewsnetwork.com',
   // ↑ Paste your Google Calendar ID here (see setup instructions above)
 
   // Color legend shown below the calendar on the site.
