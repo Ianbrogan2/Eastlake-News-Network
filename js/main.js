@@ -131,8 +131,12 @@
     if(!bm) return;
 
     const w = cssW, h = cssH;
-    /* Cover-scale: fill viewport, crops edges, never letterboxes */
-    const scale = Math.max(w / bm.width, h / bm.height);
+    /* Desktop: cover-scale (fills viewport, crops edges).
+       Mobile:  contain-scale (shows full frame, background fills the rest —
+                prevents the heavy horizontal crop on portrait screens).    */
+    const scale = IS_MOBILE
+      ? Math.min(w / bm.width, h / bm.height)
+      : Math.max(w / bm.width, h / bm.height);
     const dw = bm.width  * scale, dh = bm.height * scale;
     const dx = (w - dw) * 0.5,   dy = (h - dh)  * 0.5;
 
