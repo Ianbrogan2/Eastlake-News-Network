@@ -197,7 +197,7 @@ var ENN_TEAM = {
     r:     'Broadcast Journalism Instructor',
     grade: '',
     bio:   '',
-    email: 'william.nimmo@sweetwaterschools.net',
+    email: 'william.nimmo@sweetwaterschools.org',
     photo: '',   // e.g. 'img/team/william-nimmo.jpg'
   },
 
