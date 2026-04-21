@@ -26,11 +26,13 @@
 
   /* Apply hero scroll height from EDIT/12-HERO.js */
   (function applyHeroHeight(){
-    /* Mobile gets 100vh (static single frame) — set by loadAllFramesChunked */
-    if(IS_MOBILE) return;
-    const vh   = heroConf.scrollVH || 410;
     const hero = document.getElementById('hero');
     if(!hero) return;
+    if(IS_MOBILE){
+      hero.style.height = '180vh'; // mobile: shorter scroll, every-4th-frame animation
+      return;
+    }
+    const vh = heroConf.scrollVH || 410;
     hero.style.height = vh + 'vh';
   })();
   const CHANNEL_ID     = channel.id;
@@ -108,7 +110,17 @@
   function drawAtPos(fpos){
     if(!heroCtx || bitmaps.length < 1) return;
     const clamped = clamp(fpos, 0, bitmaps.length - 1);
-    const lo  = Math.floor(clamped);
+    let lo = Math.floor(clamped);
+    /* Sparse-bitmap fallback: mobile loads every 4th frame, so nearby slots
+       are null. Walk outward to find the nearest loaded frame (max ±8 steps). */
+    if(!bitmaps[lo]){
+      let found = false;
+      for(let d = 1; d <= 8; d++){
+        if(lo - d >= 0              && bitmaps[lo - d]){ lo = lo - d; found = true; break; }
+        if(lo + d < bitmaps.length  && bitmaps[lo + d]){ lo = lo + d; found = true; break; }
+      }
+      if(!found) return;
+    }
     const hi  = Math.min(bitmaps.length - 1, lo + 1);
     const t   = clamped - lo;   // sub-frame blend factor [0, 1)
     const bm  = bitmaps[lo];
@@ -204,14 +216,18 @@
     bitmaps     = new Array(totalFrames).fill(null);
 
     if(IS_MOBILE){
-      /* Mobile: load only the first visible frame — avoids the ~3–4 GB
-         decoded memory that 480 full-res bitmaps would require.
-         The hero shows a clean static frame; scroll scrubbing stays off. */
+      /* Mobile: load every 4th frame (120 frames × ~40 KB = ~5 MB).
+         Gives smooth-enough scroll animation without crashing the tab.
+         Frame 210 loads first so the canvas shows immediately.          */
+      const MOBILE_STEP = 4;
       await loadFrameAt(210);
-      /* Collapse the hero to a single viewport height so the user
-         doesn't have to scroll through 287 empty viewport-heights */
-      const heroEl = document.getElementById('hero');
-      if(heroEl) heroEl.style.height = '100vh';
+      scrubUnlocked = true;   // start scrubbing as soon as first frame is ready
+      const mobileIndices = [];
+      for(let i = 210 + MOBILE_STEP; i < totalFrames; i += MOBILE_STEP) mobileIndices.push(i);
+      for(let s = 0; s < mobileIndices.length; s += CHUNK_SIZE){
+        const chunk = mobileIndices.slice(s, s + CHUNK_SIZE).map(i => loadFrameAt(i));
+        await Promise.allSettled(chunk);
+      }
       return;
     }
 

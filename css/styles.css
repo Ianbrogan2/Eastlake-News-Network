@@ -266,16 +266,21 @@ img{display:block;max-width:100%}
 .hero-skip:hover .hero-skip-arrow{
   transform:translateY(2px);
 }
-@media (max-width:600px){
-  /* On mobile: smaller padding, hide the text label, just show the arrow icon */
+@media (max-width:900px){
+  /* On mobile: circle button, bottom-left corner */
   .hero-skip{
-    padding:8px 10px;
+    top:auto;
+    bottom:24px;
+    left:24px;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    padding:0;
     gap:0;
-    bottom:20px;
-    left:18px;
+    justify-content:center;
   }
   .hero-skip-label{ display:none; }
-  .hero-skip-arrow{ width:16px; height:16px; }
+  .hero-skip-arrow{ width:18px; height:18px; }
 }
 
 /* --- SECTION --- */
@@ -674,9 +679,9 @@ img{display:block;max-width:100%}
 }
 
 /* ── Portrait / narrow screens ───────────────────────────────────── */
-@media (orientation:portrait),(max-width:600px){
-  /* Proportionally shorter on mobile (410vh → ~290vh) */
-  .hero{height:290vh}
+@media (orientation:portrait),(max-width:900px){
+  /* Mobile animation is shorter — JS sets 180vh; this is the CSS fallback */
+  .hero{height:180vh}
 }
 
 /* ── Single-column about: disable sticky so text doesn't stack over box */
