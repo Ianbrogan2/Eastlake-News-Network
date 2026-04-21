@@ -161,8 +161,11 @@
         decode.then(bm => {
           bitmaps[i] = bm;
           loadedCount++;
-          /* First frame in → paint it immediately so canvas isn't blank */
-          if(i === 0){ dirtyFrame = true; startHeroLoop(); }
+          /* Paint the first content frame (210) as soon as it arrives
+             so the canvas shows the animation start, not a blank slate */
+          if(i === 210){ targetFrame = 210; currentFrame = 210; dirtyFrame = true; startHeroLoop(); }
+          /* Fallback: if frame 0 arrives before 210, still start the loop */
+          if(i === 0 && !bitmaps[210]){ dirtyFrame = true; startHeroLoop(); }
           /* Unlock scroll scrubbing once 30 % of frames are decoded */
           if(!scrubUnlocked && loadedCount / totalFrames >= UNLOCK_PCT){
             scrubUnlocked = true;
@@ -292,9 +295,12 @@
     hudDirty    = true;
 
     if(scrubUnlocked && totalFrames > 1){
-      /* LINEAR mapping — easing lives in the lerp, NOT in the progress curve.
-         Remapping p here would desync the animation from the user's finger. */
-      targetFrame = p * (totalFrames - 1);
+      /* Skip the ~210 fully-transparent lead-in frames so content appears
+         immediately on scroll. FIRST_FRAME = first frame with visible pixels.
+         LINEAR mapping from there to the last frame — easing lives in the
+         lerp, NOT here. Remapping p would desync from the user's finger. */
+      const FIRST_FRAME = 210;
+      targetFrame = FIRST_FRAME + p * (totalFrames - 1 - FIRST_FRAME);
       startHeroLoop();
     }
   }

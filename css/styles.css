@@ -155,9 +155,9 @@ img{display:block;max-width:100%}
 /* --- HERO: canvas PNG frame sequence with alpha, scrubbed by scroll --- */
 .hero{
   position:relative;
-  /* 550vh = comfortable scroll distance through ~350 frames.
-     Adjust up (600vh) for a slower reveal or down (400vh) to speed it up. */
-  height:550vh;
+  /* 410vh = ~25% faster than the original 550vh.
+     Adjust up for a slower reveal or down to speed it up further. */
+  height:410vh;
   background:transparent; /* alpha frames reveal the dark site bg beneath */
 }
 .hero-sticky{
@@ -621,8 +621,8 @@ img{display:block;max-width:100%}
 
 /* ── Portrait / narrow screens ───────────────────────────────────── */
 @media (orientation:portrait),(max-width:600px){
-  /* Give a bit less scroll on mobile — full 550vh feels too long on phones */
-  .hero{height:380vh}
+  /* Proportionally shorter on mobile (410vh → ~290vh) */
+  .hero{height:290vh}
 }
 
 /* ── Single-column about: disable sticky so text doesn't stack over box */
