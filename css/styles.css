@@ -73,10 +73,14 @@ img{display:block;max-width:100%}
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   border-bottom:1px solid var(--border);
 }
+.nav.transparent{background:transparent;border-bottom-color:transparent}
 .nav-left{display:flex;align-items:center;gap:14px;min-width:0}
-.nav-logo-link{display:flex;align-items:center;cursor:pointer;flex-shrink:0}
-.nav-logo{height:30px;width:auto;display:block;filter:drop-shadow(0 0 8px rgba(26,86,219,0.35));transition:filter .18s var(--ease)}
-.nav-logo-link:hover .nav-logo{filter:drop-shadow(0 0 14px rgba(26,86,219,0.7))}
+.nav-logo-link{display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;flex-shrink:0}
+.nav-logo-img{width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(26,86,219,0.35));transition:filter .18s var(--ease),transform .18s var(--ease)}
+.nav-logo-link:hover .nav-logo-img{filter:drop-shadow(0 0 14px rgba(26,86,219,0.7));transform:scale(1.06)}
+.logo-text-wrap{line-height:1.2}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--text);letter-spacing:1px}
+.logo-school{font-size:10px;color:var(--muted-2);font-weight:400;letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
 .nav-links{display:flex;gap:4px}
 .nav-link{
   font-size:13px;letter-spacing:.16em;text-transform:uppercase;
@@ -148,78 +152,76 @@ img{display:block;max-width:100%}
 .page{display:none;min-height:100vh;padding-top:var(--nav-h)}
 .page.active{display:block}
 
-/* --- HERO: frame-by-frame video playback, scrubbed by scroll --- */
+/* --- HERO: canvas PNG frame sequence with alpha, scrubbed by scroll --- */
 .hero{
   position:relative;
-  height:calc(100vh + 570px);
-  background:#000;
+  /* 550vh = comfortable scroll distance through ~350 frames.
+     Adjust up (600vh) for a slower reveal or down (400vh) to speed it up. */
+  height:550vh;
+  background:transparent; /* alpha frames reveal the dark site bg beneath */
 }
 .hero-sticky{
   position:sticky;top:0;
   height:100vh;width:100%;
-  overflow:hidden;background:#000;
-}
-/* Vignette overlay — blends bright animation edges into the dark site bg */
-.hero-overlay{
-  position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:
-    radial-gradient(ellipse 60% 52% at 50% 48%, transparent 22%, rgba(3,3,6,0.92) 72%, rgba(3,3,6,1) 100%),
-    linear-gradient(to bottom, rgba(3,3,6,0.80) 0%, transparent 14%, transparent 55%, rgba(3,3,6,1) 100%),
-    linear-gradient(to right,  rgba(3,3,6,0.96) 0%, transparent 14%, transparent 86%, rgba(3,3,6,0.96) 100%);
-  box-shadow: inset 0 0 110px 64px rgba(3,3,6,0.98);
+  overflow:hidden;
+  background:var(--bg-0); /* dark base shows through alpha areas */
 }
 .hero-frame{
   position:absolute;inset:0;
   width:100%;height:100%;
-  background:#000;
-  user-select:none;pointer-events:none;display:block;
+  display:block;
+  user-select:none;pointer-events:none;
 }
-.hero-tags{
-  position:absolute;left:clamp(18px,3vw,38px);top:calc(var(--nav-h) + 24px);
-  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;
-  display:flex;flex-direction:column;gap:6px;z-index:3;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+/* Subtle gradient — softens the bottom edge into the section below */
+.hero-overlay{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    linear-gradient(to bottom,
+      rgba(3,3,6,0.18) 0%,
+      transparent 12%,
+      transparent 68%,
+      rgba(3,3,6,0.7) 88%,
+      rgba(3,3,6,1) 100%
+    );
 }
-.hero-tags b{color:var(--cyan);font-weight:500;letter-spacing:.3em}
-.tagline{
-  position:absolute;left:50%;top:74%;
-  transform:translate(-50%,18px);
-  text-align:center;opacity:0;
-  will-change:opacity,transform;z-index:4;pointer-events:none;
-  width:max-content;
+/* Tagline — fades in near the end of the animation */
+.hero-tagline{
+  position:absolute;bottom:clamp(72px,9vh,110px);left:50%;transform:translateX(-50%);
+  font-family:'DM Mono',monospace;font-size:clamp(9px,1vw,12px);
+  letter-spacing:.3em;color:rgba(255,255,255,0.75);text-transform:uppercase;
+  text-align:center;white-space:nowrap;
+  z-index:4;pointer-events:none;
+  opacity:0;transition:opacity .9s ease;
 }
-.tagline .t1{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.3vw,30px);
-  letter-spacing:.32em;color:#fff;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+.hero-tagline.show{opacity:1}
+.hero-subline{
+  position:absolute;bottom:clamp(38px,4.5vh,58px);left:50%;transform:translateX(-50%);
+  font-family:'DM Mono',monospace;font-size:clamp(8px,.9vw,10px);
+  letter-spacing:.28em;color:rgba(255,255,255,0.38);text-transform:uppercase;
+  white-space:nowrap;text-align:center;
+  z-index:4;pointer-events:none;
+  opacity:0;transition:opacity .9s ease .25s;
 }
-.tagline .t2{
-  display:block;margin-top:10px;
-  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.28em;
-  color:rgba(255,255,255,0.7);text-transform:uppercase;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+.hero-subline.show{opacity:1}
+/* Scroll progress — thin vertical bar, bottom-right */
+.scroll-progress{
+  position:absolute;bottom:clamp(24px,3.5vh,44px);right:clamp(22px,2.5vw,44px);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  pointer-events:none;z-index:4;
+  transition:opacity .5s ease;
 }
-.tagline .t2 .sep{color:var(--blue-bright);margin:0 10px}
-
-.scroll-hint{
-  position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--muted-2);text-transform:uppercase;
-  opacity:1;transition:opacity .3s;z-index:3;
+.scroll-progress-bar{
+  width:1px;height:52px;
+  background:rgba(255,255,255,0.10);position:relative;overflow:hidden;
 }
-.scroll-hint.hide{opacity:0}
-.scroll-hint .mouse{
-  width:20px;height:32px;border:1.5px solid var(--muted-2);border-radius:12px;position:relative;
+.scroll-progress-fill{
+  position:absolute;top:0;left:0;right:0;height:0%;
+  background:linear-gradient(to bottom,var(--blue-bright),var(--green-bright));
 }
-.scroll-hint .mouse::after{
-  content:"";position:absolute;left:50%;top:7px;width:2px;height:6px;background:var(--muted);border-radius:1px;
-  transform:translateX(-50%);
-  animation: wheel 1.6s infinite var(--ease);
-}
-@keyframes wheel{
-  0%{opacity:1;transform:translate(-50%,0)}
-  80%{opacity:0;transform:translate(-50%,10px)}
-  100%{opacity:0}
+.scroll-progress-text{
+  font-family:'DM Mono',monospace;font-size:8px;
+  color:rgba(255,255,255,0.30);letter-spacing:.22em;text-transform:uppercase;
+  writing-mode:vertical-rl;
 }
 
 /* --- SECTION --- */
@@ -610,26 +612,17 @@ img{display:block;max-width:100%}
 .footer-meta a:hover{color:#fff}
 
 @media (prefers-reduced-motion: reduce){
+  /* Collapse scroll space so the hero doesn't pin for 5+ screen-heights */
   .hero{height:100vh}
   .hero-sticky{position:relative}
-  .tagline{opacity:1 !important;transform:translate(-50%,0) !important}
-  .scroll-hint{display:none}
+  .hero-tagline,.hero-subline{opacity:1 !important}
+  .scroll-progress{display:none}
 }
 
-/* ── Portrait / narrow screen fixes ─────────────────────────────── */
+/* ── Portrait / narrow screens ───────────────────────────────────── */
 @media (orientation:portrait),(max-width:600px){
-  /* Heavier horizontal vignette to kill colour fringing on narrow screens */
-  .hero-overlay{
-    background:
-      radial-gradient(ellipse 52% 48% at 50% 48%, transparent 18%, rgba(3,3,6,0.93) 68%, rgba(3,3,6,1) 100%),
-      linear-gradient(to bottom, rgba(3,3,6,0.75) 0%, transparent 15%, transparent 55%, rgba(3,3,6,1) 100%),
-      linear-gradient(to right,  rgba(3,3,6,0.98) 0%, transparent 9%,  transparent 91%, rgba(3,3,6,0.98) 100%);
-    box-shadow: inset 0 0 120px 72px rgba(3,3,6,0.98);
-  }
-  /* Tagline: stop text getting clipped at screen edges */
-  .tagline{width:92vw}
-  .tagline .t1{font-size:clamp(14px,5.5vw,22px);letter-spacing:.18em}
-  .tagline .t2{font-size:10px;letter-spacing:.14em;white-space:normal;line-height:1.6}
+  /* Give a bit less scroll on mobile — full 550vh feels too long on phones */
+  .hero{height:380vh}
 }
 
 /* ── Single-column about: disable sticky so text doesn't stack over box */
@@ -785,11 +778,10 @@ a.tcard-val:hover{text-decoration:underline}
   .team-tab-btn{padding:12px 20px;font-size:clamp(18px,5vw,24px)}
 }
 
-/* Hero tagline: cover landscape phones (601–767px, not portrait) */
+/* Hero overlay text: landscape phones */
 @media (max-width:767px) and (orientation:landscape){
-  .tagline{width:88vw}
-  .tagline .t1{font-size:clamp(13px,3.2vw,20px);letter-spacing:.2em}
-  .tagline .t2{font-size:10px;letter-spacing:.14em;white-space:normal;line-height:1.5}
+  .hero-tagline{font-size:10px;letter-spacing:.18em}
+  .hero-subline{font-size:12px}
 }
 
 /* Footer meta: shrink mono font on very narrow screens */

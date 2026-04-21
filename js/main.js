@@ -27,57 +27,166 @@
   const clamp = (v,a=0,b=1) => Math.min(b, Math.max(a, v));
   const ease  = t => t<0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
 
-  /* ── Canvas hero: ImageBitmap + sub-frame interpolation ──────── */
-  const heroCanvas = $('#hero-frame');
-  const heroCtx = heroCanvas ? heroCanvas.getContext('2d') : null;
-  let bitmaps = [], bmReady = false, lastFracPos = 0;
-  let cssW = 0, cssH = 0; /* logical (CSS) pixel dimensions — used for drawing */
+  /* ── Canvas hero: physics-perfect ImageBitmap scroll sequence ── */
+  /*
+   * Architecture:
+   *   targetFrame  — where scroll WANTS the animation to be (set in onScroll)
+   *   currentFrame — where it actually IS  (lerps toward targetFrame in RAF)
+   *   dirtyFrame   — set true whenever a redraw is needed (resize, first load)
+   *   RAF loop runs only while converging; goes idle once settled
+   *
+   * Physics reference:
+   *   Lerp α = 0.10  →  ~22-frame half-life @ 60 fps  (Apple-style deceleration)
+   *   Linear scroll mapping  →  NO easing on progress (easing disconnects from
+   *   the user's finger; smooth feel comes from lerp, not from remapping p)
+   *   Sub-frame α-blend between consecutive bitmaps  →  eliminates stutter at
+   *   low frame-rates and on trackpad micro-scrolls
+   *   createImageBitmap({colorSpaceConversion:'none', premultiplyAlpha:'none'})
+   *   →  decode off main thread, skip redundant color ops, preserve alpha fidelity
+   *   Chunked loader (20 parallel) unlocks scrubbing at 30 % loaded
+   *   document.hidden guard  →  zero GPU burn when tab is in background
+   */
 
+  const heroCanvas  = $('#hero-frame');
+  const heroCtx     = heroCanvas
+    ? heroCanvas.getContext('2d', {alpha: true, desynchronized: true})
+    : null;
+  if(heroCtx) heroCtx.imageSmoothingEnabled = false;
+
+  const LERP        = 0.10;   // lerp coefficient — 0.08 smoother, 0.12 snappier
+  const UNLOCK_PCT  = 0.30;   // unlock scrubbing once this fraction decoded
+  const CHUNK_SIZE  = 20;     // parallel fetches per chunk
+
+  let bitmaps       = [];     // ImageBitmap|HTMLImageElement|null, indexed by frame
+  let loadedCount   = 0;
+  let totalFrames   = 0;
+  let scrubUnlocked = false;
+
+  let cssW          = 0, cssH = 0;
+  let targetFrame   = 0;      // desired frame position (float)
+  let currentFrame  = 0;      // rendered frame position (float, lerps toward target)
+  let heroRafId     = null;   // null = loop idle
+  let dirtyFrame    = false;  // force a redraw even when converged (resize / first load)
+
+  /* ── Resize ──────────────────────────────────────────────────── */
   function resizeCanvas(){
     if(!heroCanvas) return;
     const dpr = window.devicePixelRatio || 1;
     cssW = heroCanvas.offsetWidth  || window.innerWidth;
     cssH = heroCanvas.offsetHeight || window.innerHeight;
-    /* Set physical pixel size to match the display's actual resolution */
     heroCanvas.width  = Math.round(cssW * dpr);
     heroCanvas.height = Math.round(cssH * dpr);
-    /* Scale the context so all draw calls use CSS pixel coordinates */
     heroCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if(bmReady) drawBitmapFrame(lastFracPos);
+    heroCtx.imageSmoothingEnabled = false;
+    dirtyFrame = true;
+    startHeroLoop();
   }
-  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', resizeCanvas, {passive: true});
   resizeCanvas();
 
-  function drawBitmapFrame(fpos){
-    if(!heroCtx || !bmReady) return;
-    const idx  = Math.min(bitmaps.length - 2, Math.floor(fpos));
-    const frac = fpos - idx;
-    const bm   = bitmaps[idx];
-    const w = cssW, h = cssH; /* draw in CSS pixels — DPR scaling is in the transform */
-    const scale = Math.min(w / bm.width, h / bm.height);
-    const dw = bm.width * scale, dh = bm.height * scale;
-    const dx = (w - dw) / 2, dy = (h - dh) / 2;
+  /* ── Draw a (possibly fractional) frame position ─────────────── */
+  function drawAtPos(fpos){
+    if(!heroCtx || bitmaps.length < 1) return;
+    const clamped = clamp(fpos, 0, bitmaps.length - 1);
+    const lo  = Math.floor(clamped);
+    const hi  = Math.min(bitmaps.length - 1, lo + 1);
+    const t   = clamped - lo;   // sub-frame blend factor [0, 1)
+    const bm  = bitmaps[lo];
+    if(!bm) return;
+
+    const w = cssW, h = cssH;
+    /* Cover-scale: fill viewport, crops edges, never letterboxes */
+    const scale = Math.max(w / bm.width, h / bm.height);
+    const dw = bm.width  * scale, dh = bm.height * scale;
+    const dx = (w - dw) * 0.5,   dy = (h - dh)  * 0.5;
+
     heroCtx.clearRect(0, 0, w, h);
     heroCtx.drawImage(bm, dx, dy, dw, dh);
-    if(frac > 0.005 && bitmaps[idx + 1]){
-      const bm2 = bitmaps[idx + 1];
-      const s2  = Math.min(w / bm2.width, h / bm2.height);
-      heroCtx.globalAlpha = frac;
-      heroCtx.drawImage(bm2, (w-bm2.width*s2)/2, (h-bm2.height*s2)/2, bm2.width*s2, bm2.height*s2);
+
+    /* Sub-frame alpha blend — eliminates stutter on trackpad micro-scrolls */
+    if(t > 0.005 && bitmaps[hi]){
+      const bm2 = bitmaps[hi];
+      const s2  = Math.max(w / bm2.width, h / bm2.height);
+      const dw2 = bm2.width * s2, dh2 = bm2.height * s2;
+      heroCtx.globalAlpha = t;
+      heroCtx.drawImage(bm2, (w - dw2) * 0.5, (h - dh2) * 0.5, dw2, dh2);
       heroCtx.globalAlpha = 1;
     }
   }
 
-  Promise.all(FRAMES.map(src => new Promise((res, rej) => {
-    const img = new Image();
-    img.onload = () => (typeof createImageBitmap === 'function'
-      ? createImageBitmap(img).then(res).catch(rej) : res(img));
-    img.onerror = rej;
-    img.src = src;
-  }))).then(bms => {
-    bitmaps = bms; bmReady = true;
-    drawBitmapFrame(0); applyFrame();
-  }).catch(e => console.warn('[ENN] frame decode failed', e));
+  /* ── RAF loop — lerps currentFrame → targetFrame ─────────────── */
+  function startHeroLoop(){
+    if(!heroRafId) heroRafId = requestAnimationFrame(heroTick);
+  }
+
+  function heroTick(){
+    heroRafId = null;
+
+    /* Zero GPU burn when tab is backgrounded */
+    if(document.hidden) return;
+
+    const delta  = targetFrame - currentFrame;
+    const settled = Math.abs(delta) < 0.008;
+
+    if(!settled){
+      currentFrame += delta * LERP;
+    } else {
+      currentFrame = targetFrame;   // snap to exact value once close enough
+    }
+
+    if(dirtyFrame || !settled){
+      drawAtPos(currentFrame);
+      dirtyFrame = false;
+    }
+
+    updateHeroHUD();
+
+    /* Keep ticking until converged */
+    if(!settled) heroRafId = requestAnimationFrame(heroTick);
+  }
+
+  /* Resume loop when tab becomes visible again */
+  document.addEventListener('visibilitychange', () => {
+    if(!document.hidden && Math.abs(targetFrame - currentFrame) > 0.008) startHeroLoop();
+  });
+
+  /* ── Chunked parallel loader ─────────────────────────────────── */
+  function loadFrameAt(i){
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const decode = (typeof createImageBitmap === 'function')
+          ? createImageBitmap(img, {colorSpaceConversion: 'none', premultiplyAlpha: 'none'})
+          : Promise.resolve(img);
+        decode.then(bm => {
+          bitmaps[i] = bm;
+          loadedCount++;
+          /* First frame in → paint it immediately so canvas isn't blank */
+          if(i === 0){ dirtyFrame = true; startHeroLoop(); }
+          /* Unlock scroll scrubbing once 30 % of frames are decoded */
+          if(!scrubUnlocked && loadedCount / totalFrames >= UNLOCK_PCT){
+            scrubUnlocked = true;
+          }
+          resolve();
+        }).catch(() => { loadedCount++; resolve(); });
+      };
+      img.onerror = () => { loadedCount++; resolve(); };
+      img.src = FRAMES[i];
+    });
+  }
+
+  async function loadAllFramesChunked(){
+    if(typeof FRAMES === 'undefined' || !FRAMES.length) return;
+    totalFrames = FRAMES.length;
+    bitmaps     = new Array(totalFrames).fill(null);
+    for(let start = 0; start < totalFrames; start += CHUNK_SIZE){
+      const end   = Math.min(start + CHUNK_SIZE, totalFrames);
+      const chunk = [];
+      for(let i = start; i < end; i++) chunk.push(loadFrameAt(i));
+      await Promise.allSettled(chunk);
+    }
+  }
+  loadAllFramesChunked();
 
   /* ── PST helpers ─────────────────────────────────────────────── */
   function pstNow(){ return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'})); }
@@ -134,32 +243,65 @@
   setInterval(updateOnAirBadge, 20000); updateOnAirBadge();
 
   /* ── Hero scroll scrubbing ───────────────────────────────────── */
-  const hero = $('#hero'), tagline = $('#tagline'), scrollHint = $('#scroll-hint');
-  let lastProgress = -1, rafId = null;
+  const hero        = $('#hero');
+  const heroTagline = $('#hero-tagline');
+  const heroSubline = $('#hero-subline');
+  const scrollFill  = $('#scroll-fill');
+  const scrollProg  = $('#scroll-progress');
+
+  let lastScrollP   = -1;     // last seen scroll progress value
+  let hudDirty      = false;  // true when HUD elements need a DOM update
 
   function heroProgress(){
-    if(!$('#page-home').classList.contains('active')) return 0;
-    const rect = hero.getBoundingClientRect();
+    if(!$('#page-home')?.classList.contains('active')) return 0;
+    if(!hero) return 0;
+    const rect  = hero.getBoundingClientRect();
     const total = hero.offsetHeight - window.innerHeight;
     if(total <= 0) return 0;
     return clamp(-rect.top / total, 0, 1);
   }
-  function applyFrame(){
-    rafId = null;
-    const p = heroProgress();
-    if(Math.abs(p - lastProgress) < 0.0002 && p !== 0 && p !== 1) return;
-    lastProgress = p;
-    lastFracPos = Math.pow(clamp(p / 0.86, 0, 1), 1.7) * (FRAMES.length - 1);
-    drawBitmapFrame(lastFracPos);
-    const tE = ease(clamp((p - 0.86) / 0.14, 0, 1));
-    tagline.style.opacity = tE.toFixed(3);
-    tagline.style.transform = `translate(-50%, ${(18*(1-tE)).toFixed(1)}px)`;
-    scrollHint.classList.toggle('hide', p > 0.02);
+
+  /* Called inside the RAF loop so DOM writes are batched with canvas draws */
+  function updateHeroHUD(){
+    if(!hudDirty) return;
+    hudDirty = false;
+    const p = lastScrollP;
+
+    /* Tagline + subline: fade in during the last 12 % of scroll */
+    const show = p > 0.88;
+    if(heroTagline) heroTagline.classList.toggle('show', show);
+    if(heroSubline) heroSubline.classList.toggle('show', show);
+
+    /* Vertical progress bar */
+    if(scrollFill) scrollFill.style.height = (p * 100) + '%';
+    if(scrollProg) scrollProg.style.opacity = p > 0.96 ? '0' : '1';
+
+    /* Nav: transparent glass over hero, solid once hero scrolls away */
+    const navEl = $('.nav');
+    if(navEl){
+      const onHome = $('#page-home')?.classList.contains('active');
+      navEl.classList.toggle('transparent', !!onHome && p < 0.98);
+    }
   }
-  function onScroll(){ if(!rafId) rafId = requestAnimationFrame(applyFrame); }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll);
-  applyFrame();
+
+  function onScroll(){
+    const p = heroProgress();
+    /* Sub-pixel noise gate — skip if nothing meaningful changed */
+    if(Math.abs(p - lastScrollP) < 0.00015) return;
+    lastScrollP = p;
+    hudDirty    = true;
+
+    if(scrubUnlocked && totalFrames > 1){
+      /* LINEAR mapping — easing lives in the lerp, NOT in the progress curve.
+         Remapping p here would desync the animation from the user's finger. */
+      targetFrame = p * (totalFrames - 1);
+      startHeroLoop();
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, {passive: true});
+  window.addEventListener('resize', () => { onScroll(); }, {passive: true});
+  onScroll();   // establish initial state (nav transparency, HUD)
 
   /* ── Schedule ────────────────────────────────────────────────── */
   (function buildSchedule(){
