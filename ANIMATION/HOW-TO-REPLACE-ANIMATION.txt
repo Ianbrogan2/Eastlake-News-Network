@@ -3,9 +3,13 @@
 ╚══════════════════════════════════════════════════════════════════════╝
 
 THIS FOLDER CONTAINS:
-  frames.js  →  The hero animation that plays when visitors scroll
-                the home page. It is a sequence of image frames
-                encoded as a single JavaScript file (~5 MB).
+  frames/      →  480 WebP image files (f0000.webp … f0479.webp)
+                  These are the frames of the hero animation, served
+                  individually so the browser can cache and stream them.
+  frames.js    →  Auto-generated list of frame paths. Loaded by the site
+                  to know which images to fetch. Do NOT edit by hand.
+  convert.sh   →  Bash script to re-convert PNG frames → WebP using FFmpeg.
+                  Run this when you have a new animation to swap in.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   HOW TO REPLACE THE ANIMATION
@@ -15,32 +19,32 @@ THIS FOLDER CONTAINS:
   (or whoever builds your site) to:
 
     "Replace the hero animation in the ENN website.
-     Here is my new video: [attach or link your file]
-     The animation folder is at  ANIMATION/frames.js"
+     Here is my new source: [attach file or link your frames folder]
+     The animation lives in  ANIMATION/frames/"
 
   They will:
-    1. Export your new video as an image sequence (~120–150 frames)
-    2. Encode the frames into a new frames.js file
-    3. Drop the new frames.js into this folder, replacing the old one
-    4. You commit and push — the new animation goes live
+    1. Export the source as a PNG sequence (ideally 300–500 frames @ 4K)
+    2. Run  ANIMATION/convert.sh  to convert → 1920×1080 WebP quality 92
+       (or run the Python converter if FFmpeg is not installed)
+    3. The script regenerates  ANIMATION/frames.js  automatically
+    4. You delete the old frames/ folder, copy in the new one, commit & push
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   WHAT NOT TO TOUCH
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Do NOT open or edit frames.js manually.
-  It is a machine-generated file and contains thousands of lines
-  of encoded image data. Editing it by hand will break the animation.
-
-  The only time this folder changes is when you intentionally
-  swap in a new animation.
+  • Do NOT edit frames.js by hand — it is machine-generated.
+  • Do NOT rename the webp files — names must stay f0000.webp, f0001.webp…
+  • Do NOT delete .nojekyll from the repo root — it is required for
+    GitHub Pages to serve binary files correctly.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   CURRENT ANIMATION INFO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  File:         frames.js
-  Source:       ENN_Intro_02_1.mov
-  Frame count:  144 frames
-  File size:    ~5 MB
-  Format:       Base64-encoded JPEG frames, scroll-scrubbed via canvas
+  Frames:       480  (f0000.webp – f0479.webp)
+  Resolution:   1920 × 1080  (converted from 3840 × 2160 source)
+  Format:       WebP, quality 92, alpha-preserved
+  Total size:   ~63 MB
+  Source:       After Effects PNG sequence from USB drive
+  Scroll map:   Linear — 550 vh hero height, full 480 frames on scroll

@@ -49,7 +49,7 @@
 
   const heroCanvas  = $('#hero-frame');
   const heroCtx     = heroCanvas
-    ? heroCanvas.getContext('2d', {alpha: true, desynchronized: true})
+    ? (heroCanvas.getContext('2d', {alpha: true}) || heroCanvas.getContext('2d'))
     : null;
   if(heroCtx) heroCtx.imageSmoothingEnabled = false;
 
@@ -70,7 +70,7 @@
 
   /* ── Resize ──────────────────────────────────────────────────── */
   function resizeCanvas(){
-    if(!heroCanvas) return;
+    if(!heroCanvas || !heroCtx) return;
     const dpr = window.devicePixelRatio || 1;
     cssW = heroCanvas.offsetWidth  || window.innerWidth;
     cssH = heroCanvas.offsetHeight || window.innerHeight;
