@@ -265,6 +265,15 @@
   const heroSubline = $('#hero-subline');
   const scrollFill  = $('#scroll-fill');
   const scrollProg  = $('#scroll-progress');
+  const heroSkip    = $('#hero-skip');
+
+  /* Skip-intro button: scroll to the section immediately after the hero */
+  if(heroSkip){
+    heroSkip.addEventListener('click', () => {
+      const target = hero ? hero.offsetTop + hero.offsetHeight : window.innerHeight;
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    });
+  }
 
   let lastScrollP   = -1;     // last seen scroll progress value
   let hudDirty      = false;  // true when HUD elements need a DOM update
@@ -292,6 +301,9 @@
     /* Vertical progress bar */
     if(scrollFill) scrollFill.style.height = (p * 100) + '%';
     if(scrollProg) scrollProg.style.opacity = p > 0.96 ? '0' : '1';
+
+    /* Skip button: hide once hero is nearly done (no longer useful) */
+    if(heroSkip) heroSkip.classList.toggle('hidden', p > 0.92);
 
     /* Nav: transparent glass over hero, solid once hero scrolls away */
     const navEl = $('.nav');
