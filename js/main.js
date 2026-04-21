@@ -23,14 +23,12 @@
   /* Apply hero scroll height from EDIT/12-HERO.js
      70% of desktop value on mobile for a natural phone feel */
   (function applyHeroHeight(){
+    /* Mobile gets 100vh (static single frame) — set by loadAllFramesChunked */
+    if(IS_MOBILE) return;
     const vh   = heroConf.scrollVH || 410;
     const hero = document.getElementById('hero');
     if(!hero) return;
-    const mq = window.matchMedia('(max-width:600px),(orientation:portrait)');
-    hero.style.height = (mq.matches ? Math.round(vh * 0.70) : vh) + 'vh';
-    mq.addEventListener('change', () => {
-      hero.style.height = (mq.matches ? Math.round(vh * 0.70) : vh) + 'vh';
-    });
+    hero.style.height = vh + 'vh';
   })();
   const CHANNEL_ID     = channel.id;
   const CHANNEL_HANDLE = channel.handle;
@@ -70,6 +68,12 @@
   const LERP        = 0.10;   // lerp coefficient — 0.08 smoother, 0.12 snappier
   const UNLOCK_PCT  = 0.30;   // unlock scrubbing once this fraction decoded
   const CHUNK_SIZE  = 20;     // parallel fetches per chunk
+
+  /* On mobile/tablet: loading 480 frames (~3–4 GB decoded) crashes the browser tab.
+     Instead we load only the first visible frame as a static background image.
+     Scroll scrubbing is disabled; the hero shows a clean static frame.           */
+  const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+                    || window.innerWidth <= 900;
 
   let bitmaps       = [];     // ImageBitmap|HTMLImageElement|null, indexed by frame
   let loadedCount   = 0;
@@ -196,6 +200,20 @@
     if(typeof FRAMES === 'undefined' || !FRAMES.length) return;
     totalFrames = FRAMES.length;
     bitmaps     = new Array(totalFrames).fill(null);
+
+    if(IS_MOBILE){
+      /* Mobile: load only the first visible frame — avoids the ~3–4 GB
+         decoded memory that 480 full-res bitmaps would require.
+         The hero shows a clean static frame; scroll scrubbing stays off. */
+      await loadFrameAt(210);
+      /* Collapse the hero to a single viewport height so the user
+         doesn't have to scroll through 287 empty viewport-heights */
+      const heroEl = document.getElementById('hero');
+      if(heroEl) heroEl.style.height = '100vh';
+      return;
+    }
+
+    /* Desktop: full chunked load */
     for(let start = 0; start < totalFrames; start += CHUNK_SIZE){
       const end   = Math.min(start + CHUNK_SIZE, totalFrames);
       const chunk = [];
