@@ -94,8 +94,11 @@
   function resizeCanvas(){
     if(!heroCanvas || !heroCtx) return;
     const dpr = window.devicePixelRatio || 1;
-    cssW = heroCanvas.offsetWidth  || window.innerWidth;
-    cssH = heroCanvas.offsetHeight || window.innerHeight;
+    /* visualViewport gives the true visible area on iOS Safari (excludes
+       address bar chrome). Falls back to offsetWidth/innerWidth on desktop. */
+    const vvp = window.visualViewport;
+    cssW = vvp ? vvp.width  : (heroCanvas.offsetWidth  || window.innerWidth);
+    cssH = vvp ? vvp.height : (heroCanvas.offsetHeight || window.innerHeight);
     heroCanvas.width  = Math.round(cssW * dpr);
     heroCanvas.height = Math.round(cssH * dpr);
     heroCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -104,6 +107,7 @@
     startHeroLoop();
   }
   window.addEventListener('resize', resizeCanvas, {passive: true});
+  if(window.visualViewport) window.visualViewport.addEventListener('resize', resizeCanvas, {passive: true});
   resizeCanvas();
 
   /* ── Draw a (possibly fractional) frame position ─────────────── */
@@ -216,27 +220,27 @@
     bitmaps     = new Array(totalFrames).fill(null);
 
     if(IS_MOBILE){
-      /* Mobile: load every 4th frame (120 frames × ~40 KB = ~5 MB).
-         Gives smooth-enough scroll animation without crashing the tab.
-         Frame 210 loads first so the canvas shows immediately.          */
-      const MOBILE_STEP = 4;
+      /* Mobile: every 3rd frame (~160 frames × ~40 KB ≈ 6 MB).
+         Frame 210 loads first so the canvas shows immediately.   */
+      const STEP = 3;
       await loadFrameAt(210);
-      scrubUnlocked = true;   // start scrubbing as soon as first frame is ready
-      const mobileIndices = [];
-      for(let i = 210 + MOBILE_STEP; i < totalFrames; i += MOBILE_STEP) mobileIndices.push(i);
-      for(let s = 0; s < mobileIndices.length; s += CHUNK_SIZE){
-        const chunk = mobileIndices.slice(s, s + CHUNK_SIZE).map(i => loadFrameAt(i));
-        await Promise.allSettled(chunk);
+      scrubUnlocked = true;
+      const indices = [];
+      for(let i = 210 + STEP; i < totalFrames; i += STEP) indices.push(i);
+      for(let s = 0; s < indices.length; s += CHUNK_SIZE){
+        await Promise.allSettled(indices.slice(s, s + CHUNK_SIZE).map(i => loadFrameAt(i)));
       }
       return;
     }
 
-    /* Desktop: full chunked load */
-    for(let start = 0; start < totalFrames; start += CHUNK_SIZE){
-      const end   = Math.min(start + CHUNK_SIZE, totalFrames);
-      const chunk = [];
-      for(let i = start; i < end; i++) chunk.push(loadFrameAt(i));
-      await Promise.allSettled(chunk);
+    /* Desktop: every 2nd frame (~240 frames × ~40 KB ≈ 9.6 MB — half the data). */
+    const STEP = 2;
+    await loadFrameAt(210);
+    scrubUnlocked = true;
+    const indices = [];
+    for(let i = 0; i < totalFrames; i += STEP) if(i !== 210) indices.push(i);
+    for(let s = 0; s < indices.length; s += CHUNK_SIZE){
+      await Promise.allSettled(indices.slice(s, s + CHUNK_SIZE).map(i => loadFrameAt(i)));
     }
   }
   loadAllFramesChunked();
