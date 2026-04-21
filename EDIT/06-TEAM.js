@@ -62,7 +62,7 @@ var ENN_TEAM = {
         n:     'Alejandro Schejola',
         r:     'Segment Producer',
         grade: '11th',
-        bio:   '',
+        bio:   'Alejandro Schejola is ENNs period 1 directive head, in charge of maintaining a balance, cultivating cooperation, and progressing the capabilities of students. ',
         email: '',
         photo: '',
       },
