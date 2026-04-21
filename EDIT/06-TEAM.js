@@ -135,7 +135,7 @@ var ENN_TEAM = {
         n:     'Cecilia Hettinger',
         r:     'Segment Producer',
         grade: '12th',
-        bio:   '',
+        bio:   'Cecilia Hettinger is a senior at Eastlake High School and the period 4, ENN segment manager, bringing creativity, organization, and a passion for storytelling to every broadcast.',
         email: '',
         photo: '',
       },
