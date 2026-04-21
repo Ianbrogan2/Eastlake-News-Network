@@ -24,7 +24,7 @@ var ENN_NEWS = {
 
   featured: {
     tag:    'Featured',
-    title:  'VAPADEMICS Assembly is this friday!',
+    title:  'VAPADEMICS Assembly, friday 04/24!',
     body:   'Students can expect games, performances, and class competitions as the school gathers Friday for the VAPADEMICS Assembly — don\'t miss it.',
     byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 20, 2026',
   },
