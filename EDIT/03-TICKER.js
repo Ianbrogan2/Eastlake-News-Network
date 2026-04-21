@@ -24,11 +24,9 @@
 
 var ENN_TICKER = [
 
-  { k: 'Brogan',  t: 'Ian Brogan is the COOLEST person on campus' },
-  { k: 'Sports',  t: 'Titans volleyball clinches league semifinals berth' },
-  { k: 'Arts',    t: 'Senior mural unveiled on the north-hall wall' },
-  { k: 'Events',  t: 'Coverage requests open — deadline Friday 3 PM' },
-  { k: 'Admin',   t: 'New engineering wing opens to students next Monday' },
-  { k: 'Alerts',  t: 'Weather advisory — minimum day schedule this Thursday' },
+  { k: 'Sports',  t: 'Varsity baseball enters conference game schedule - Check eastlakeathletics.com for more' },
+  { k: 'Arts',    t: 'EHS Art Show in library all week! - Voting closes Wednesday!' },
+  { k: 'ENN',  t: 'Coverage requests open — deadline Friday 3 PM' },
+  { k: 'Events',  t: 'Prom taking place Saturday 04/25 @ Bloom Nightclub 6:00PM' },
 
 ];
