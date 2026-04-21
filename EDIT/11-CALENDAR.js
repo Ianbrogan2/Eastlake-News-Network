@@ -45,13 +45,13 @@ var ENN_CALENDAR = {
 
   // Color legend shown below the calendar on the site.
   // Match these to the event colors you use in Google Calendar.
-//   legend: [
-//     { color: '#EF4444', label: 'Sports'          },
-//     { color: '#1A56DB', label: 'Events'           },
-//     { color: '#9333EA', label: 'Arts & Plays'     },
-//     { color: '#16A34A', label: 'Academics'        },
-//     { color: '#F59E0B', label: 'School Holidays'  },
-//     { color: '#00D4FF', label: 'ENN Coverage'     },
-//   ],
+  legend: [
+    { color: '#EF4444', label: 'Sports'          },
+    { color: '#1A56DB', label: 'Events'           },
+    { color: '#9333EA', label: 'Arts & Plays'     },
+    { color: '#16A34A', label: 'Academics'        },
+    { color: '#F59E0B', label: 'School Holidays'  },
+    { color: '#00D4FF', label: 'ENN Coverage'     },
+  ],
 
-// };
+};
