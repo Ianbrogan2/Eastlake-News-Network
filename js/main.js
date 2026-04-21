@@ -18,6 +18,20 @@
   const contact  = ENN_CONTACT;
   const studio   = ENN_STUDIO;
   const calendar = ENN_CALENDAR;
+  const heroConf = (typeof ENN_HERO !== 'undefined') ? ENN_HERO : {};
+
+  /* Apply hero scroll height from EDIT/12-HERO.js
+     70% of desktop value on mobile for a natural phone feel */
+  (function applyHeroHeight(){
+    const vh   = heroConf.scrollVH || 410;
+    const hero = document.getElementById('hero');
+    if(!hero) return;
+    const mq = window.matchMedia('(max-width:600px),(orientation:portrait)');
+    hero.style.height = (mq.matches ? Math.round(vh * 0.70) : vh) + 'vh';
+    mq.addEventListener('change', () => {
+      hero.style.height = (mq.matches ? Math.round(vh * 0.70) : vh) + 'vh';
+    });
+  })();
   const CHANNEL_ID     = channel.id;
   const CHANNEL_HANDLE = channel.handle;
 

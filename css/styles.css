@@ -155,8 +155,8 @@ img{display:block;max-width:100%}
 /* --- HERO: canvas PNG frame sequence with alpha, scrubbed by scroll --- */
 .hero{
   position:relative;
-  /* 410vh = ~25% faster than the original 550vh.
-     Adjust up for a slower reveal or down to speed it up further. */
+  /* Height is set dynamically from EDIT/12-HERO.js (scrollVH value).
+     This fallback only shows briefly before JS runs. */
   height:410vh;
   background:transparent; /* alpha frames reveal the dark site bg beneath */
 }
