@@ -806,11 +806,20 @@
     u => 'https://corsproxy.io/?' + encodeURIComponent(u),
     u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
     u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+    u => 'https://corsproxy.org/?' + encodeURIComponent(u),
+    u => 'https://thingproxy.freeboard.io/fetch/' + encodeURIComponent(u),
+  ];
+  /* Multiple Piped instances — races them, uses first to respond */
+  const PIPED = [
+    'https://pipedapi.kavin.rocks',
+    'https://piped-api.garudalinux.org',
+    'https://api.piped.projectsegfau.lt',
+    'https://pipedapi.in.projectsegfau.lt',
   ];
 
   async function resolveChannelId(){
+    /* Channel ID is hardcoded in config — always use it directly, never cache */
     if(CHANNEL_ID) return CHANNEL_ID;
-    try { const c=localStorage.getItem('enn_ch_v1'); if(c&&/^UC[\w-]+$/.test(c)) return c; } catch(e){}
     try {
       const r=await fetch(`https://pipedapi.kavin.rocks/c/${CHANNEL_HANDLE}`);
       if(r.ok){ const j=await r.json(), id=j.id||'';
@@ -844,18 +853,21 @@
     }).filter(Boolean);
     const go = fn => new Promise((res,rej) => { try{ Promise.resolve(fn()).then(res,rej); }catch(e){ rej(e); } });
     return Promise.any([
-      go(() => fetch(`https://pipedapi.kavin.rocks/channel/${id}`)
-        .then(r => { if(!r.ok) throw 0; return r.json(); })
-        .then(j => {
-          const list = (j.relatedStreams||[]).map(v => {
-            const vid = (v.url||'').match(/v=([A-Za-z0-9_-]+)/)?.[1];
-            return vid ? { id:vid, title:v.title||'', published:'' } : null;
-          }).filter(Boolean);
-          if(!list.length) throw 0;
-          return list;
-        })
-      ),
-      go(() => fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS))
+      /* Race all Piped instances — whichever responds first wins */
+      Promise.any(PIPED.map(base =>
+        go(() => fetch(`${base}/channel/${id}`, {cache:'no-store'})
+          .then(r => { if(!r.ok) throw 0; return r.json(); })
+          .then(j => {
+            const list = (j.relatedStreams||[]).map(v => {
+              const vid = (v.url||'').match(/v=([A-Za-z0-9_-]+)/)?.[1];
+              return vid ? { id:vid, title:v.title||'', published:'' } : null;
+            }).filter(Boolean);
+            if(!list.length) throw 0;
+            return list;
+          })
+        )
+      )),
+      go(() => fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS) + '&api_key=&count=10', {cache:'no-store'})
         .then(r => { if(!r.ok) throw 0; return r.json(); })
         .then(j => {
           if(j.status!=='ok' || !j.items?.length) throw 0;
@@ -865,13 +877,14 @@
           }).filter(Boolean);
         })
       ),
+      /* Race all CORS proxies for the raw RSS feed */
       Promise.any(PROXIES.map(prox =>
         go(() => fetch(prox(RSS), {cache:'no-store'})
           .then(r => { if(!r.ok) throw 0; return r.text(); })
-          .then(parseRSSAll)
+          .then(t => { const res = parseRSSAll(t); if(!res.length) throw 0; return res; })
         )
       )),
-    ]).catch(() => { throw new Error('all failed'); });
+    ]).catch(() => { throw new Error('all sources failed'); });
   }
 
   /* Fetches all video IDs that belong to the Studio playlists so they can
@@ -897,6 +910,9 @@
   function fmtDate(iso){
     try{const d=new Date(iso);return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Los_Angeles'}).toUpperCase();}catch(e){return '';}
   }
+
+  /* Clear any stale cached channel ID on every load */
+  try { localStorage.removeItem('enn_ch_v1'); } catch(e){}
 
   async function loadLatestVideo(){
     const uploadsPlaylist = CHANNEL_ID.replace(/^UC/,'UU');
