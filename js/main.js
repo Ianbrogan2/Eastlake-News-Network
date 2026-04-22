@@ -670,14 +670,14 @@
     if(!root || !studio) return;
     const catClass = { student:'student', instagram:'instagram', vhs:'vhs' };
     const catLabel = { student:'Student Pieces', instagram:'Instagram', vhs:'VHS Archive' };
+    const ALLOW = 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+
     root.innerHTML = (studio.playlists||[]).map((p, i) => {
       const badge = `<span class="studio-cat-badge ${catClass[p.category]||''}">${catLabel[p.category]||p.category}</span>`;
       const player = p.playlistId
-        ? `<div class="studio-player reveal">
-             <iframe src="https://www.youtube.com/embed/videoseries?list=${p.playlistId}&rel=0"
-               title="${p.title}" frameborder="0"
-               allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-               allowfullscreen></iframe>
+        ? `<div class="studio-player reveal" data-playlist="${p.playlistId}" data-title="${p.title}">
+             <iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=${p.playlistId}&rel=0&modestbranding=1"
+               title="${p.title}" frameborder="0" allow="${ALLOW}" allowfullscreen></iframe>
            </div>`
         : `<div class="studio-player reveal">
              <div class="studio-placeholder">
@@ -693,6 +693,41 @@
           ${player}
         </div>`;
     }).join('');
+
+    /* Retry logic — same pattern as the home player.
+       Each studio iframe gets 5 s to load on youtube-nocookie.com,
+       then retries on youtube.com, then shows a Watch button.       */
+    $$('.studio-player[data-playlist]', root).forEach(wrap => {
+      const pid   = wrap.dataset.playlist;
+      const title = wrap.dataset.title || 'ENN Playlist';
+      const nocookie = `https://www.youtube-nocookie.com/embed/videoseries?list=${pid}&rel=0&modestbranding=1`;
+      const regular  = `https://www.youtube.com/embed/videoseries?list=${pid}&rel=0&modestbranding=1`;
+      const watchUrl = `https://www.youtube.com/playlist?list=${pid}`;
+      const mkIframe = src => `<iframe src="${src}" title="${title}" frameborder="0" allow="${ALLOW}" allowfullscreen></iframe>`;
+      const fallbackBtn = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;background:#0a0a0a;border-radius:8px;">
+          <svg width="48" height="34" viewBox="0 0 48 34" fill="none"><rect width="48" height="34" rx="8" fill="#FF0000"/><path d="M19 10l14 7-14 7V10z" fill="#fff"/></svg>
+          <a href="${watchUrl}" target="_blank" rel="noopener"
+             style="font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;color:#fff;text-decoration:none;padding:10px 22px;border:1px solid rgba(255,255,255,0.25);border-radius:999px;background:rgba(255,255,255,0.07);">
+            WATCH ON YOUTUBE ↗
+          </a>
+        </div>`;
+
+      function armRetry(iframe, onFail){
+        let loaded = false;
+        iframe.addEventListener('load', () => { loaded = true; });
+        setTimeout(() => { if(!loaded) onFail(); }, 5000);
+      }
+
+      const iframe1 = wrap.querySelector('iframe');
+      if(iframe1){
+        armRetry(iframe1, () => {
+          wrap.innerHTML = mkIframe(regular);
+          const iframe2 = wrap.querySelector('iframe');
+          if(iframe2) armRetry(iframe2, () => { wrap.innerHTML = fallbackBtn; });
+        });
+      }
+    });
   })();
 
   /* ── Calendar page ────────────────────────────────────────────── */
