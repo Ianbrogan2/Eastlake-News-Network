@@ -27,6 +27,6 @@ var ENN_OVERRIDE = {
   // ─── PASTE A YOUTUBE LINK HERE TO PIN A SPECIFIC VIDEO ───────────
   // Leave blank  →  auto-sync to latest upload
   // Add a link   →  always show that video
-  video: 'https://youtu.be/Bqgfy1uUwz4?si=lV5z2kf8xCyB3cPi',
+  video: 'https://youtu.be/3yF3UnIQVuo?si=NFtrGhyV9eb9jsZn',
 
 };
