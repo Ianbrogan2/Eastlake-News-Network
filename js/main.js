@@ -918,53 +918,108 @@
   function extractVideoId(raw){
     if(!raw || !raw.trim()) return null;
     const s = raw.trim();
-    // youtu.be/ID
     const short = s.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
     if(short) return short[1];
-    // ?v=ID or &v=ID
     const long = s.match(/[?&]v=([A-Za-z0-9_-]{11})/);
     if(long) return long[1];
-    // bare 11-char ID
     if(/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
     return null;
   }
 
+  /* Robust player — tries youtube-nocookie first, retries with youtube.com,
+     then falls back to a direct-link button so the video is always reachable */
+  function buildPlayer(videoId, playlistFallback){
+    const frame = $('#player-frame');
+    if(!frame) return;
+
+    const ALLOW = 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+    const params = 'rel=0&modestbranding=1';
+
+    const iframeSrc = id => id
+      ? `https://www.youtube-nocookie.com/embed/${id}?${params}`
+      : `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistFallback}&${params}`;
+
+    const fallbackSrc = id => id
+      ? `https://www.youtube.com/embed/${id}?${params}`
+      : `https://www.youtube.com/embed/videoseries?list=${playlistFallback}&${params}`;
+
+    let attempt = 0;
+    function inject(src){
+      frame.innerHTML = `<iframe src="${src}" title="ENN Bulletin" frameborder="0" allow="${ALLOW}" allowfullscreen></iframe>`;
+    }
+
+    inject(iframeSrc(videoId));
+
+    /* If iframe doesn't fire load within 5 s, retry with regular youtube.com.
+       If that also fails after another 5 s, show a direct-link fallback.      */
+    const iframe = frame.querySelector('iframe');
+    let loaded = false;
+    if(iframe){
+      iframe.addEventListener('load', () => { loaded = true; });
+      setTimeout(() => {
+        if(loaded) return;
+        attempt = 1;
+        inject(fallbackSrc(videoId));
+        const iframe2 = frame.querySelector('iframe');
+        if(iframe2){
+          iframe2.addEventListener('load', () => { loaded = true; });
+          setTimeout(() => {
+            if(loaded) return;
+            /* Both domains failed — show a tap-to-watch button */
+            const watchUrl = videoId
+              ? `https://www.youtube.com/watch?v=${videoId}`
+              : `https://www.youtube.com/@${CHANNEL_HANDLE}`;
+            frame.innerHTML = `
+              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;background:#0a0a0a;border-radius:8px;">
+                <svg width="48" height="34" viewBox="0 0 48 34" fill="none"><rect width="48" height="34" rx="8" fill="#FF0000"/><path d="M19 10l14 7-14 7V10z" fill="#fff"/></svg>
+                <a href="${watchUrl}" target="_blank" rel="noopener"
+                   style="font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;color:#fff;text-decoration:none;padding:10px 22px;border:1px solid rgba(255,255,255,0.25);border-radius:999px;background:rgba(255,255,255,0.07);">
+                  WATCH ON YOUTUBE ↗
+                </a>
+              </div>`;
+          }, 5000);
+        }
+      }, 5000);
+    }
+  }
+
   async function loadLatestVideo(){
     const uploadsPlaylist = CHANNEL_ID.replace(/^UC/,'UU');
-    const embedBase = `https://www.youtube.com/embed/videoseries?list=${uploadsPlaylist}&rel=0&index=1`;
 
-    /* ── Override check: if EDIT/13-OVERRIDE.js has a video, use it ── */
+    /* ── Override check ── */
     const overrideRaw = (typeof ENN_OVERRIDE !== 'undefined') ? ENN_OVERRIDE.video : '';
     const overrideId  = extractVideoId(overrideRaw);
     if(overrideId){
-      $('#player-frame').innerHTML = `<iframe src="https://www.youtube.com/embed/${overrideId}?rel=0" title="ENN Bulletin" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+      buildPlayer(overrideId, uploadsPlaylist);
       $('#vid-date').textContent = 'PINNED EPISODE';
       return;
     }
 
     if(isOnAir()){
-      $('#vid-title').textContent='ENN — Live Broadcast';
-      $('#vid-date').textContent=`LIVE NOW · ${onAir.startH}:${String(onAir.startM).padStart(2,'0')}–${onAir.endH}:${String(onAir.endM).padStart(2,'0')} AM PST`;
-      $('#player-frame').innerHTML=`<iframe src="https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1" title="ENN Live" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+      $('#vid-title').textContent = 'ENN — Live Broadcast';
+      $('#vid-date').textContent  = `LIVE NOW · ${onAir.startH}:${String(onAir.startM).padStart(2,'0')}–${onAir.endH}:${String(onAir.endM).padStart(2,'0')} AM PST`;
+      const frame = $('#player-frame');
+      if(frame) frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1" title="ENN Live" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
       return;
     }
-    /* Show the uploads playlist as a loading fallback while we fetch */
-    $('#player-frame').innerHTML=`<iframe src="${embedBase}" title="Latest ENN Broadcast" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+
+    /* Show uploads playlist immediately while we resolve the exact video */
+    buildPlayer(null, uploadsPlaylist);
+
     try {
       const id = await resolveChannelId(); if(!id) return;
-      /* Fetch studio exclusion list and recent uploads in parallel */
       const [excluded, recent] = await Promise.all([
         fetchExcludedVideoIds().catch(() => new Set()),
         fetchRecentVideos(id),
       ]);
-      /* First upload that isn't in any studio playlist; fall back to newest if all match */
       const v = recent.find(v => !excluded.has(v.id)) || recent[0];
       if(!v) return;
-      /* Replace placeholder with the specific video */
-      $('#player-frame').innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}?rel=0" title="Latest ENN Broadcast" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+      buildPlayer(v.id, uploadsPlaylist);
       if(v.title)     $('#vid-title').textContent = v.title;
       if(v.published) $('#vid-date').textContent  = fmtDate(v.published);
-    } catch(e){}
+    } catch(e){
+      /* All APIs failed — uploads playlist is already showing, leave it */
+    }
   }
   loadLatestVideo();
 
