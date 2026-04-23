@@ -24,7 +24,7 @@ var ENN_NEWS = {
 
   featured: {
     tag:    'Featured',
-    title:  'VAPADEMICS Assembly, friday 04/24!',
+    title:  'VAPADEMICS Assembly is tomorrow!',
     body:   'Students can expect games, performances, and class competitions as the school gathers Friday for the VAPADEMICS Assembly — don\'t miss it.',
     byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 20, 2026',
   },
@@ -32,8 +32,8 @@ var ENN_NEWS = {
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Eastlake Boys LAX plays home against Bonita Vista HS at 5:30 PM',
-      date:  'APR 27',
+      title: 'Eastlake varsity boys baseball playing at Otay Ranch High School @3:30PM ',
+      date:  'APR 23',
     },
     {
       cat:   'Campus',
@@ -42,7 +42,7 @@ var ENN_NEWS = {
     },
     {
       cat:   'Student Life',
-      title: 'VAPADEMICS Spirit week, Wear red or white to get into the assembly!',
+      title: 'VAPADEMICS Spirit week, Wear red or white tomorrow, to get into the assembly!',
       date:  'APR 20-24',
     },
   ],
