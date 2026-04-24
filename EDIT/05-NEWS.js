@@ -24,16 +24,16 @@ var ENN_NEWS = {
 
   featured: {
     tag:    'Featured',
-    title:  'VAPADEMICS Assembly is tomorrow!',
-    body:   'Students can expect games, performances, and class competitions as the school gathers Friday for the VAPADEMICS Assembly — don\'t miss it.',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 20, 2026',
+    title:  'VAPADEMICS Assembly is officially finished!',
+    body:   'A huge shoutout to our fellow EHS community members for putting on incredible shows, and a special thank you to our friends at EHS Campus Culture — you all knocked it out of the park! ',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 24, 2026',
   },
 
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Eastlake varsity boys baseball playing at Otay Ranch High School @3:30PM ',
-      date:  'APR 23',
+      title: 'Varsity girls beach volleyball @ Helix high school today @3:45PM',
+      date:  'APR 24',
     },
     {
       cat:   'Campus',
@@ -41,9 +41,9 @@ var ENN_NEWS = {
       date:  'APR 20-24',
     },
     {
-      cat:   'Student Life',
-      title: 'VAPADEMICS Spirit week, Wear red or white tomorrow, to get into the assembly!',
-      date:  'APR 20-24',
+      cat:   'Grades',
+      title: 'Progress reports released today on infinite campus!',
+      date:  'APR 24',
     },
   ],
 
