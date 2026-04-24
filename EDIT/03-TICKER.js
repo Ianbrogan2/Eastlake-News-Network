@@ -25,9 +25,9 @@
 var ENN_TICKER = [
 
   { k: 'Sports',  t: 'Varsity baseball enters conference game schedule - Check eastlakeathletics.com for more' },
-  { k: 'Arts',    t: 'EHS Art Show in library all week! - Check out your fellow Titans creativity!' },
-  { k: 'ENN',  t: 'Coverage requests open — submit atleas one week before!' },
-  { k: 'Events',  t: 'Prom taking place Saturday 04/25 @ Bloom Nightclub @ 6:00PM' },
-  { k: 'Schedule',  t: 'Vapademics Assembly directly after your second period tomorrow @ 10:07AM' },
+  { k: 'Seniors',    t: 'Senior decision day is friday may 1st.' },
+  { k: 'ENN',  t: 'Coverage requests open — submit atleast one week before!' },
+  { k: 'Events',  t: 'Prom taking place tomorrow 04/25 @ Bloom Nightclub @ 6:00PM' },
+  { k: 'Theater',  t: 'Congratulations to both casts of theater for their wonderful production, Wizard of Oz' },
 
 ];
