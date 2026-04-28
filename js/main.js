@@ -834,23 +834,88 @@
   }
 
   /* ── Song request form → Formspree ──────────────────────────── */
+  /* Uses the iTunes Search API (no key required) to verify the song
+     isn't marked explicit before allowing submission.
+     If the API is unreachable, submission is still allowed —
+     the checkbox acts as the fallback confirmation.               */
+  async function checkSongExplicit(query){
+    try {
+      const url = 'https://itunes.apple.com/search?media=music&entity=song&limit=5&term=' + encodeURIComponent(query);
+      const r   = await fetch(url);
+      if(!r.ok) return { status: 'unknown' };
+      const j   = await r.json();
+      if(!j.results?.length) return { status: 'not_found' };
+      /* Find the closest match — prefer an exact title match */
+      const best = j.results[0];
+      const explicit = best.trackExplicitness === 'explicit' || best.collectionExplicitness === 'explicit';
+      return {
+        status:   explicit ? 'explicit' : 'clean',
+        matched:  `${best.trackName} — ${best.artistName}`,
+        explicit,
+      };
+    } catch(e){
+      return { status: 'unknown' };
+    }
+  }
+
   const songForm = $('#song-form');
+  const songErrEl = document.createElement('p');
+  songErrEl.style.cssText = 'color:#f87171;font-size:13px;margin-top:10px;display:none;';
+  const songSubmitBtn = $('#song-submit-btn');
+  if(songSubmitBtn) songSubmitBtn.parentNode.insertBefore(songErrEl, songSubmitBtn);
+
   if(songForm){
     songForm.addEventListener('submit', async e => {
       e.preventDefault();
       const nameF  = songForm.elements['name'];
       const songF  = songForm.elements['song'];
       const checkF = songForm.elements['verified_clean'];
+      songErrEl.style.display = 'none';
+
       if(!nameF?.value.trim()){ nameF?.focus(); return; }
       if(!songF?.value.trim()){ songF?.focus(); return; }
-      if(!checkF?.checked){ alert('Please confirm the song is clean before submitting.'); return; }
+      if(!checkF?.checked){
+        songErrEl.textContent = 'Please confirm you have verified the song is clean.';
+        songErrEl.style.display = 'block';
+        return;
+      }
+
       const btn = $('#song-submit-btn');
-      btn.disabled = true; btn.textContent = 'Submitting…';
+      btn.disabled = true; btn.textContent = 'Checking song…';
+
+      /* Verify with iTunes */
+      const result = await checkSongExplicit(songF.value.trim());
+
+      if(result.status === 'explicit'){
+        songErrEl.textContent = `"${result.matched}" is marked explicit on iTunes and cannot be submitted.`;
+        songErrEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Submit Song →';
+        return;
+      }
+
+      /* Show what was matched so the submitter can see it was checked */
+      if(result.status === 'clean'){
+        const hiddenMatch = songForm.querySelector('[name="itunes_match"]') || document.createElement('input');
+        hiddenMatch.type = 'hidden'; hiddenMatch.name = 'itunes_match'; hiddenMatch.value = result.matched;
+        songForm.appendChild(hiddenMatch);
+      }
+
+      btn.textContent = 'Submitting…';
       try {
         const r = await fetch(songForm.action, {method:'POST', body:new FormData(songForm), headers:{'Accept':'application/json'}});
-        if(r.ok){ songForm.style.display='none'; $('#song-form-success').classList.add('active'); }
-        else { btn.disabled=false; btn.textContent='Submit Song →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
-      } catch(err){ btn.disabled=false; btn.textContent='Submit Song →'; alert('Network error — check your connection.'); }
+        if(r.ok){
+          songForm.style.display = 'none';
+          $('#song-form-success').classList.add('active');
+        } else {
+          btn.disabled = false; btn.textContent = 'Submit Song →';
+          songErrEl.textContent = 'Submission failed — try again or reach us at @ennbulletin.';
+          songErrEl.style.display = 'block';
+        }
+      } catch(err){
+        btn.disabled = false; btn.textContent = 'Submit Song →';
+        songErrEl.textContent = 'Network error — check your connection.';
+        songErrEl.style.display = 'block';
+      }
     });
   }
 
