@@ -22,9 +22,9 @@
 var ENN_NEWS = {
   featured: {
     tag:    'Featured',
-    title:  'VAPADEMICS Assembly is officially finished!',
-    body:   'A huge shoutout to our fellow EHS community members for putting on incredible shows, and a special thank you to our friends at EHS Campus Culture — you all knocked it out of the park!',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 24, 2026',
+    title:  'Eastlake Disney Trip is Coming Up!',
+    body:   'The Eastlake High School senior disney trip is coming up, Monday May 18th, check Eastlake ASB for more info!',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 28, 2026',
   },
   sidebar: [
     {
@@ -33,14 +33,14 @@ var ENN_NEWS = {
       date:  'APR 29',
     },
     {
-      cat:   'Campus',
-      title: 'EHS Art Show in the library all week!',
-      date:  'APR 20-24',
+      cat:   'AP Testing',
+      title: 'Bio, Latin, Euro, and Micro, are the first AP Tests',
+      date:  'May 4',
     },
     {
       cat:   'Grades',
-      title: 'Progress reports released today on Infinite Campus!',
-      date:  'APR 24',
+      title: 'Final grades are only a month away! LOCK IN!',
+      date:  'June 5th',
     },
   ],
 };
