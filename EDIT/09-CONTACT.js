@@ -58,6 +58,15 @@ var ENN_CONTACT = {
   successBody: 'Thanks! We\'ve received your coverage request. A producer will be in touch within one school week.',
 
 
+  // ── SONG REQUEST FORM ────────────────────────────────────────────
+  // The second form card for song requests
+
+  songHeading: 'SONG REQUEST',
+  songNote: 'Want to hear a song on the broadcast? Submit it here. All songs must be verified clean before submission.',
+  songSuccessHeading: 'SONG SUBMITTED',
+  songSuccessBody: 'Thanks! We\'ll review your request and add it to the rotation if it makes the cut.',
+
+
   // ── INFO CARDS ────────────────────────────────────────────────────
   // The cards stacked on the right side of the page.
   // Each card has:

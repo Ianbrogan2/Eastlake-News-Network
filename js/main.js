@@ -643,6 +643,30 @@
             <p>${contact.successBody}</p>
           </div>
         </div>
+        <div class="form-card reveal left" style="margin-top:32px">
+          <h3>${contact.songHeading}</h3>
+          <p class="note">${contact.songNote}</p>
+          <form id="song-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+            <input type="hidden" name="form_type" value="Song Request"/>
+            <div class="form-row">
+              <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+              <div class="field"><label>Song &amp; Artist</label><input type="text" name="song" required placeholder="e.g. Espresso — Sabrina Carpenter"/></div>
+            </div>
+            <div class="field" style="margin-bottom:20px">
+              <label class="checkbox-label" style="display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px;color:var(--muted);">
+                <input type="checkbox" name="verified_clean" value="Yes" id="clean-check" required
+                  style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;"/>
+                I have verified this song is clean
+              </label>
+            </div>
+            <button type="submit" class="btn" id="song-submit-btn">Submit Song →</button>
+          </form>
+          <div class="form-success" id="song-form-success">
+            <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <h4>${contact.songSuccessHeading}</h4>
+            <p>${contact.songSuccessBody}</p>
+          </div>
+        </div>
         <aside class="info-stack">
           ${cards}
           <div class="info-card reveal right d5">
@@ -804,6 +828,27 @@
         if(r.ok){ form.style.display='none'; $('#form-success').classList.add('active'); }
         else { btn.disabled=false; btn.textContent='Submit Request →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
       } catch(err){ btn.disabled=false; btn.textContent='Submit Request →'; alert('Network error — check your connection.'); }
+    });
+  }
+
+  /* ── Song request form → Formspree ──────────────────────────── */
+  const songForm = $('#song-form');
+  if(songForm){
+    songForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const nameF  = songForm.elements['name'];
+      const songF  = songForm.elements['song'];
+      const checkF = songForm.elements['verified_clean'];
+      if(!nameF?.value.trim()){ nameF?.focus(); return; }
+      if(!songF?.value.trim()){ songF?.focus(); return; }
+      if(!checkF?.checked){ alert('Please confirm the song is clean before submitting.'); return; }
+      const btn = $('#song-submit-btn');
+      btn.disabled = true; btn.textContent = 'Submitting…';
+      try {
+        const r = await fetch(songForm.action, {method:'POST', body:new FormData(songForm), headers:{'Accept':'application/json'}});
+        if(r.ok){ songForm.style.display='none'; $('#song-form-success').classList.add('active'); }
+        else { btn.disabled=false; btn.textContent='Submit Song →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
+      } catch(err){ btn.disabled=false; btn.textContent='Submit Song →'; alert('Network error — check your connection.'); }
     });
   }
 
