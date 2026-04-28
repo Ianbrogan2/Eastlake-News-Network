@@ -614,57 +614,59 @@
         </div>
       </section>
       <section class="contact-body">
-        <div class="form-card reveal left">
-          <h3>${contact.formHeading}</h3>
-          <p class="note">${contact.formNote}</p>
-          <form id="coverage-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
-            <div class="form-row">
-              <div class="field"><label>Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
-              <div class="field"><label>Department or Role</label><input type="text" name="dept" required placeholder="e.g. English Dept., ASB Advisor"/></div>
-            </div>
-            <div class="form-row">
-              <div class="field"><label>Request Type</label>
-                <select name="type" required>
-                  <option value="">Choose a request type…</option>
-                  ${options}
-                </select>
+        <div style="display:flex;flex-direction:column;gap:28px;">
+          <div class="form-card reveal left">
+            <h3>${contact.formHeading}</h3>
+            <p class="note">${contact.formNote}</p>
+            <form id="coverage-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+              <div class="form-row">
+                <div class="field"><label>Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+                <div class="field"><label>Department or Role</label><input type="text" name="dept" required placeholder="e.g. English Dept., ASB Advisor"/></div>
               </div>
-              <div class="field"><label>Preferred Air Date</label><input type="date" name="date"/></div>
+              <div class="form-row">
+                <div class="field"><label>Request Type</label>
+                  <select name="type" required>
+                    <option value="">Choose a request type…</option>
+                    ${options}
+                  </select>
+                </div>
+                <div class="field"><label>Preferred Air Date</label><input type="date" name="date"/></div>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label>Story Details</label>
+                <textarea name="details" required placeholder="Tell us about the story — who, what, when, where, why it matters to Eastlake."></textarea>
+              </div>
+              <button type="submit" class="btn" id="submit-btn">Submit Request →</button>
+            </form>
+            <div class="form-success" id="form-success">
+              <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4>${contact.successHeading}</h4>
+              <p>${contact.successBody}</p>
             </div>
-            <div class="field" style="margin-bottom:20px">
-              <label>Story Details</label>
-              <textarea name="details" required placeholder="Tell us about the story — who, what, when, where, why it matters to Eastlake."></textarea>
-            </div>
-            <button type="submit" class="btn" id="submit-btn">Submit Request →</button>
-          </form>
-          <div class="form-success" id="form-success">
-            <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <h4>${contact.successHeading}</h4>
-            <p>${contact.successBody}</p>
           </div>
-        </div>
-        <div class="form-card reveal left" style="margin-top:32px">
-          <h3>${contact.songHeading}</h3>
-          <p class="note">${contact.songNote}</p>
-          <form id="song-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
-            <input type="hidden" name="form_type" value="Song Request"/>
-            <div class="form-row">
-              <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
-              <div class="field"><label>Song &amp; Artist</label><input type="text" name="song" required placeholder="e.g. Espresso — Sabrina Carpenter"/></div>
+          <div class="form-card reveal left">
+            <h3>${contact.songHeading}</h3>
+            <p class="note">${contact.songNote}</p>
+            <form id="song-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="Song Request"/>
+              <div class="form-row">
+                <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+                <div class="field"><label>Song &amp; Artist</label><input type="text" name="song" required placeholder="e.g. Espresso — Sabrina Carpenter"/></div>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px;color:var(--muted);">
+                  <input type="checkbox" name="verified_clean" value="Yes" id="clean-check" required
+                    style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;"/>
+                  I have verified this song is clean
+                </label>
+              </div>
+              <button type="submit" class="btn" id="song-submit-btn">Submit Song →</button>
+            </form>
+            <div class="form-success" id="song-form-success">
+              <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4>${contact.songSuccessHeading}</h4>
+              <p>${contact.songSuccessBody}</p>
             </div>
-            <div class="field" style="margin-bottom:20px">
-              <label class="checkbox-label" style="display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px;color:var(--muted);">
-                <input type="checkbox" name="verified_clean" value="Yes" id="clean-check" required
-                  style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;"/>
-                I have verified this song is clean
-              </label>
-            </div>
-            <button type="submit" class="btn" id="song-submit-btn">Submit Song →</button>
-          </form>
-          <div class="form-success" id="song-form-success">
-            <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <h4>${contact.songSuccessHeading}</h4>
-            <p>${contact.songSuccessBody}</p>
           </div>
         </div>
         <aside class="info-stack">
