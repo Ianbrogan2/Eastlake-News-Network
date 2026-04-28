@@ -27,7 +27,7 @@ var ENN_SCHEDULE = [
 
   { key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Monday Episode', url: 'https://www.youtube.com/watch?v=bRhsWI_SI60' },
+      { label: 'Monday Episode', url: 'https://www.youtube.com/watch?v=pLp06KHY3YU' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
@@ -36,7 +36,7 @@ var ENN_SCHEDULE = [
 
   { key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Tuesday Episode', url: 'https://youtu.be/Bqgfy1uUwz4' },
+      { label: 'Tuesday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
@@ -45,7 +45,7 @@ var ENN_SCHEDULE = [
 
   { key: 'WED', idx: 3, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Wednesday Episode', url: 'https://youtu.be/3yF3UnIQVuo?si=EEVSiyAmkS09wBMz' },
+      { label: 'Wednesday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
@@ -54,7 +54,7 @@ var ENN_SCHEDULE = [
 
   { key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Thursday Episode', url: 'https://youtu.be/T4BhfxHf2QY?si=L5QiYp20Pv8n1MbY' },
+      { label: 'Thursday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
