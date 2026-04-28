@@ -29,8 +29,8 @@ var ENN_NEWS = {
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Varsity Girls Beach Volleyball @ Helix High School today @ 3:45 PM',
-      date:  'APR 24',
+      title: 'Eastlake girls varsity lacrosse plays Castle Park High school @ Home',
+      date:  'APR 29',
     },
     {
       cat:   'Campus',
