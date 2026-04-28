@@ -27,7 +27,7 @@ var ENN_STUDIO = {
       category:   'student',
       // category options: 'student'  'instagram'  'vhs'
       description: 'Original short films, segments, and video pieces produced entirely by ENN students.',
-      playlistId:  'PLDT9IjcS3XAKprAwa276Daj1gjfoI6Drp',
+      playlistId:  'PLT5DUIPkiaHErv9n3CX0FZ2p7kgmKDjMq',
       // ↑ Paste your YouTube playlist ID here
     },
 
@@ -35,7 +35,7 @@ var ENN_STUDIO = {
       title:      'VHS Archive',
       category:   'vhs',
       description: 'Classic ENN bulletins digitized from the original VHS tapes — the full history of the show.',
-      playlistId:  'PLDT9IjcS3XAL7ExMfwDhi7a_kVscMT-o_',
+      playlistId:  'PLT5DUIPkiaHEMBSupwNE-AbT9tgDKntfA',
     },
 
   ],
