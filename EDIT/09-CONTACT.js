@@ -67,6 +67,16 @@ var ENN_CONTACT = {
   songSuccessBody: 'Thanks! We\'ll review your request and add it to the rotation if it makes the cut.',
 
 
+  // ── LOVE LINES FORM ──────────────────────────────────────────────
+  // The third form card — the Love Lines segment
+
+  loveHeading: 'LOVE LINES',
+  loveEyebrow: 'Back by popular demand',
+  loveDesc: 'Send a shoutout, thank you, or message to someone at Eastlake — student to student, student to faculty, faculty to student, or faculty to faculty. Submissions may be read live on the ENN bulletin, so keep an ear open.',
+  loveSuccessHeading: 'MESSAGE RECEIVED 💌',
+  loveSuccessBody: 'Your Love Line has been submitted. Tune in to the bulletin — you might just hear it on air.',
+
+
   // ── INFO CARDS ────────────────────────────────────────────────────
   // The cards stacked on the right side of the page.
   // Each card has:

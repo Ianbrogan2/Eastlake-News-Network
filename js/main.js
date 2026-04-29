@@ -668,6 +668,48 @@
               <p>${contact.songSuccessBody}</p>
             </div>
           </div>
+          <div class="form-card reveal left" style="border-color:rgba(239,68,68,0.35);background:linear-gradient(135deg,rgba(239,68,68,0.06) 0%,var(--bg-1) 60%);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px;">
+              <span style="font-size:22px;line-height:1;">💌</span>
+              <div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:#f87171;text-transform:uppercase;margin-bottom:2px;">${contact.loveEyebrow}</div>
+                <h3 style="margin:0;color:#fca5a5;letter-spacing:.06em;">${contact.loveHeading}</h3>
+              </div>
+            </div>
+            <p class="note" style="margin-top:12px;margin-bottom:24px;">${contact.loveDesc}</p>
+            <form id="love-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="Love Lines"/>
+              <div class="form-row">
+                <div class="field">
+                  <label>To</label>
+                  <input type="text" name="to" required placeholder="Who is this for?"/>
+                </div>
+                <div class="field">
+                  <label style="display:flex;align-items:center;justify-content:space-between;">
+                    <span>From</span>
+                    <button type="button" id="anon-toggle"
+                      style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;padding:3px 10px;border-radius:999px;border:1px solid rgba(239,68,68,0.4);background:transparent;color:#f87171;cursor:pointer;transition:all .18s;">
+                      STAY ANONYMOUS
+                    </button>
+                  </label>
+                  <input type="text" name="from" id="love-from" required placeholder="Your name"/>
+                </div>
+              </div>
+              <div class="field" style="margin-bottom:20px;">
+                <label>Message</label>
+                <textarea name="message" required placeholder="Write your message here — shoutout, thank you, compliment, or anything from the heart. It may be read live on ENN ❤️" style="min-height:110px;"></textarea>
+              </div>
+              <button type="submit" class="btn" id="love-submit-btn"
+                style="background:linear-gradient(90deg,#dc2626,#f87171);border:none;">
+                Send Love Lines →
+              </button>
+            </form>
+            <div class="form-success" id="love-form-success">
+              <div class="check" style="background:rgba(239,68,68,0.25);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4 style="color:#fca5a5;">${contact.loveSuccessHeading}</h4>
+              <p>${contact.loveSuccessBody}</p>
+            </div>
+          </div>
         </div>
         <aside class="info-stack">
           ${cards}
@@ -915,6 +957,59 @@
         btn.disabled = false; btn.textContent = 'Submit Song →';
         songErrEl.textContent = 'Network error — check your connection.';
         songErrEl.style.display = 'block';
+      }
+    });
+  }
+
+  /* ── Love Lines form → Formspree ────────────────────────────── */
+  const loveForm   = $('#love-form');
+  const anonToggle = $('#anon-toggle');
+  const loveFrom   = $('#love-from');
+  let   isAnon     = false;
+
+  if(anonToggle && loveFrom){
+    anonToggle.addEventListener('click', () => {
+      isAnon = !isAnon;
+      if(isAnon){
+        loveFrom.value       = 'Anonymous';
+        loveFrom.disabled    = true;
+        loveFrom.style.opacity = '0.4';
+        anonToggle.textContent  = 'USE MY NAME';
+        anonToggle.style.background = 'rgba(239,68,68,0.18)';
+        anonToggle.style.borderColor = '#f87171';
+      } else {
+        loveFrom.value       = '';
+        loveFrom.disabled    = false;
+        loveFrom.style.opacity = '1';
+        anonToggle.textContent  = 'STAY ANONYMOUS';
+        anonToggle.style.background = 'transparent';
+        anonToggle.style.borderColor = 'rgba(239,68,68,0.4)';
+        loveFrom.focus();
+      }
+    });
+  }
+
+  if(loveForm){
+    loveForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const toF   = loveForm.elements['to'];
+      const fromF = loveForm.elements['from'];
+      const msgF  = loveForm.elements['message'];
+      if(!toF?.value.trim()){ toF?.focus(); return; }
+      if(!isAnon && !fromF?.value.trim()){ fromF?.focus(); return; }
+      if(!msgF?.value.trim()){ msgF?.focus(); return; }
+      const btn = $('#love-submit-btn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const r = await fetch(loveForm.action, {method:'POST', body:new FormData(loveForm), headers:{'Accept':'application/json'}});
+        if(r.ok){
+          loveForm.style.display = 'none';
+          $('#love-form-success').classList.add('active');
+        } else {
+          btn.disabled = false; btn.textContent = 'Send Love Lines →';
+        }
+      } catch(err){
+        btn.disabled = false; btn.textContent = 'Send Love Lines →';
       }
     });
   }
