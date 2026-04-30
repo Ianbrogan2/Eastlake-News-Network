@@ -24,6 +24,51 @@
   const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
                     || window.innerWidth <= 900;
 
+  /* ── Silent submission metadata collector ───────────────────── */
+  /* Pre-fetches IP/geo on page load; cached for instant use at submit time.
+     All fields are appended as hidden FormData keys — never shown to submitter. */
+  let _sInfo = null;
+  async function getSubmitterInfo(){
+    if(_sInfo) return _sInfo;
+    const d = {
+      _timestamp:  new Date().toISOString(),
+      _useragent:  navigator.userAgent,
+      _screen:     screen.width + 'x' + screen.height,
+      _window:     window.innerWidth + 'x' + window.innerHeight,
+      _timezone:   Intl.DateTimeFormat().resolvedOptions().timeZone,
+      _language:   navigator.language,
+      _referrer:   document.referrer || 'direct',
+      _platform:   navigator.platform,
+      _touch:      String(navigator.maxTouchPoints > 0),
+      _connection: (navigator.connection && navigator.connection.effectiveType) || 'unknown',
+      _memory:     String(navigator.deviceMemory || 'unknown'),
+      _cores:      String(navigator.hardwareConcurrency || 'unknown'),
+    };
+    try {
+      const r = await fetch('https://ipapi.co/json/', {cache:'no-store'});
+      const j = await r.json();
+      if(j && j.ip){
+        d._ip      = j.ip;
+        d._city    = j.city    || '';
+        d._region  = j.region  || '';
+        d._country = j.country_name || '';
+        d._isp     = j.org     || '';
+        d._geo     = (j.latitude || '') + ',' + (j.longitude || '');
+        d._postal  = j.postal  || '';
+      }
+    } catch(e){
+      try {
+        const r2 = await fetch('https://api64.ipify.org?format=json');
+        const j2 = await r2.json();
+        d._ip = (j2 && j2.ip) ? j2.ip : 'unavailable';
+      } catch(e2){ d._ip = 'unavailable'; }
+    }
+    _sInfo = d;
+    return _sInfo;
+  }
+  /* Pre-fetch so geo data is ready by the time the user hits submit */
+  getSubmitterInfo();
+
   /* Apply hero scroll height from EDIT/12-HERO.js */
   (function applyHeroHeight(){
     const hero = document.getElementById('hero');
@@ -868,7 +913,10 @@
       const btn = $('#submit-btn');
       btn.disabled = true; btn.textContent = 'Submitting…';
       try {
-        const r = await fetch(form.action, {method:'POST', body:new FormData(form), headers:{'Accept':'application/json'}});
+        const fd = new FormData(form);
+        const meta = await getSubmitterInfo();
+        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+        const r = await fetch(form.action, {method:'POST', body:fd, headers:{'Accept':'application/json'}});
         if(r.ok){ form.style.display='none'; $('#form-success').classList.add('active'); }
         else { btn.disabled=false; btn.textContent='Submit Request →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
       } catch(err){ btn.disabled=false; btn.textContent='Submit Request →'; alert('Network error — check your connection.'); }
@@ -944,7 +992,10 @@
 
       btn.textContent = 'Submitting…';
       try {
-        const r = await fetch(songForm.action, {method:'POST', body:new FormData(songForm), headers:{'Accept':'application/json'}});
+        const fd2 = new FormData(songForm);
+        const meta2 = await getSubmitterInfo();
+        Object.entries(meta2).forEach(([k,v]) => fd2.append(k, v));
+        const r = await fetch(songForm.action, {method:'POST', body:fd2, headers:{'Accept':'application/json'}});
         if(r.ok){
           songForm.style.display = 'none';
           $('#song-form-success').classList.add('active');
@@ -1001,7 +1052,10 @@
       const btn = $('#love-submit-btn');
       btn.disabled = true; btn.textContent = 'Sending…';
       try {
-        const r = await fetch(loveForm.action, {method:'POST', body:new FormData(loveForm), headers:{'Accept':'application/json'}});
+        const fd3 = new FormData(loveForm);
+        const meta3 = await getSubmitterInfo();
+        Object.entries(meta3).forEach(([k,v]) => fd3.append(k, v));
+        const r = await fetch(loveForm.action, {method:'POST', body:fd3, headers:{'Accept':'application/json'}});
         if(r.ok){
           loveForm.style.display = 'none';
           $('#love-form-success').classList.add('active');
