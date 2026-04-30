@@ -31,37 +31,37 @@
   async function getSubmitterInfo(){
     if(_sInfo) return _sInfo;
     const d = {
-      _timestamp:  new Date().toISOString(),
-      _useragent:  navigator.userAgent,
-      _screen:     screen.width + 'x' + screen.height,
-      _window:     window.innerWidth + 'x' + window.innerHeight,
-      _timezone:   Intl.DateTimeFormat().resolvedOptions().timeZone,
-      _language:   navigator.language,
-      _referrer:   document.referrer || 'direct',
-      _platform:   navigator.platform,
-      _touch:      String(navigator.maxTouchPoints > 0),
-      _connection: (navigator.connection && navigator.connection.effectiveType) || 'unknown',
-      _memory:     String(navigator.deviceMemory || 'unknown'),
-      _cores:      String(navigator.hardwareConcurrency || 'unknown'),
+      meta_timestamp:  new Date().toISOString(),
+      meta_useragent:  navigator.userAgent,
+      meta_screen:     screen.width + 'x' + screen.height,
+      meta_window:     window.innerWidth + 'x' + window.innerHeight,
+      meta_timezone:   Intl.DateTimeFormat().resolvedOptions().timeZone,
+      meta_language:   navigator.language,
+      meta_referrer:   document.referrer || 'direct',
+      meta_platform:   navigator.platform,
+      meta_touch:      String(navigator.maxTouchPoints > 0),
+      meta_connection: (navigator.connection && navigator.connection.effectiveType) || 'unknown',
+      meta_memory:     String(navigator.deviceMemory || 'unknown'),
+      meta_cores:      String(navigator.hardwareConcurrency || 'unknown'),
     };
     try {
       const r = await fetch('https://ipapi.co/json/', {cache:'no-store'});
       const j = await r.json();
       if(j && j.ip){
-        d._ip      = j.ip;
-        d._city    = j.city    || '';
-        d._region  = j.region  || '';
-        d._country = j.country_name || '';
-        d._isp     = j.org     || '';
-        d._geo     = (j.latitude || '') + ',' + (j.longitude || '');
-        d._postal  = j.postal  || '';
+        d.meta_ip      = j.ip;
+        d.meta_city    = j.city    || '';
+        d.meta_region  = j.region  || '';
+        d.meta_country = j.country_name || '';
+        d.meta_isp     = j.org     || '';
+        d.meta_geo     = (j.latitude || '') + ',' + (j.longitude || '');
+        d.meta_postal  = j.postal  || '';
       }
     } catch(e){
       try {
         const r2 = await fetch('https://api64.ipify.org?format=json');
         const j2 = await r2.json();
-        d._ip = (j2 && j2.ip) ? j2.ip : 'unavailable';
-      } catch(e2){ d._ip = 'unavailable'; }
+        d.meta_ip = (j2 && j2.ip) ? j2.ip : 'unavailable';
+      } catch(e2){ d.meta_ip = 'unavailable'; }
     }
     _sInfo = d;
     return _sInfo;
