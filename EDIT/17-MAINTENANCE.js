@@ -2,16 +2,15 @@
 // ║  ENN EDIT FILE  17  —  MAINTENANCE MODE                         ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  WHAT THIS FILE CONTROLS:                                        ║
-// ║    A full-screen "temporarily off air" page that replaces the    ║
-// ║    entire site when maintenance mode is ON.                      ║
-// ║    Visitors see the message, return time, and a Did You Know     ║
-// ║    fact. Nothing else on the site loads.                         ║
+// ║    When enabled is true, all visitors are immediately            ║
+// ║    redirected to a "We'll Be Right Back" page.                   ║
+// ║    The site is completely inaccessible until you set it back.    ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  HOW TO USE:                                                     ║
 // ║                                                                  ║
 // ║  ▶ TO TAKE THE SITE DOWN:                                       ║
 // ║      1. Set   enabled: true                                      ║
-// ║      2. Fill in returnDate and returnTime below                  ║
+// ║      2. Fill in returnDate and returnTime (optional)             ║
 // ║      3. Save, commit, and push to GitHub                        ║
 // ║                                                                  ║
 // ║  ▶ TO BRING THE SITE BACK:                                      ║
@@ -37,3 +36,11 @@ var ENN_MAINTENANCE = {
   message: '',
 
 };
+
+/* ── Redirect logic — do not edit below this line ── */
+(function(){
+  if(!ENN_MAINTENANCE.enabled) return;
+  // Avoid an infinite redirect loop if already on the maintenance page
+  if(window.location.pathname.indexOf('maintenance') !== -1) return;
+  window.location.replace('maintenance.html');
+})();
