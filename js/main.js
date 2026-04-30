@@ -364,8 +364,21 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     const live = isOnAir();
     badge.classList.toggle('offair', !live);
     if(txt) txt.textContent = live ? 'On Air' : 'Off Air';
+    /* Update the href so it always points to the right destination */
+    badge.dataset.href = live
+      ? `https://www.youtube.com/@${CHANNEL_HANDLE}/live`
+      : `https://www.youtube.com/@${CHANNEL_HANDLE}`;
   }
   setInterval(updateOnAirBadge, 20000); updateOnAirBadge();
+
+  /* Make the badge clickable */
+  const _onairBadge = $('#onair-badge');
+  if(_onairBadge){
+    _onairBadge.style.cursor = 'pointer';
+    _onairBadge.addEventListener('click', () => {
+      window.open(_onairBadge.dataset.href, '_blank', 'noopener');
+    });
+  }
 
   /* ── Hero scroll scrubbing ───────────────────────────────────── */
   const hero        = $('#hero');
@@ -1511,6 +1524,32 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     if(overrideId){
       buildPlayer(overrideId, uploadsPlaylist);
       $('#vid-date').textContent = 'PINNED EPISODE';
+
+      /* Swap "Auto-synced" badge to "Pinned" */
+      const syncBadge = $('.badge-sync');
+      if(syncBadge){
+        syncBadge.innerHTML = '<span class="d"></span>Pinned';
+        syncBadge.classList.add('badge-pinned');
+      }
+
+      /* Fetch the real video title via YouTube oEmbed (no proxy needed — CORS-enabled) */
+      fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${overrideId}&format=json`)
+        .then(r => r.ok ? r.json() : null)
+        .then(j => { if(j && j.title) $('#vid-title').textContent = j.title; })
+        .catch(() => { $('#vid-title').textContent = 'Pinned Bulletin'; });
+
+      /* "Open in new tab" button — injected directly below the player */
+      const frame = $('#player-frame');
+      if(frame && !$('#vid-newtab-btn')){
+        const btn = document.createElement('a');
+        btn.id        = 'vid-newtab-btn';
+        btn.className = 'vid-newtab-btn';
+        btn.href      = `https://www.youtube.com/watch?v=${overrideId}`;
+        btn.target    = '_blank';
+        btn.rel       = 'noopener';
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8M8 1h4m0 0v4m0-4L5.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Click to open in new tab`;
+        frame.after(btn);
+      }
       return;
     }
 

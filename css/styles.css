@@ -96,7 +96,14 @@ img{display:block;max-width:100%}
   padding:7px 12px;border-radius:999px;
   background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.28);
   font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;color:#FCA5A5;text-transform:uppercase;
-  transition:background .4s, border-color .4s, color .4s;
+  transition:background .2s, border-color .2s, color .2s, opacity .2s;
+  cursor:pointer;user-select:none;
+}
+.onair:hover{
+  background:rgba(239,68,68,0.18);border-color:rgba(239,68,68,0.5);
+}
+.onair.offair:hover{
+  background:rgba(255,255,255,0.07);border-color:var(--border-hi);color:var(--muted);
 }
 .onair.offair{
   background:rgba(255,255,255,0.04);border-color:var(--border);color:var(--muted-2);
@@ -325,6 +332,27 @@ img{display:block;max-width:100%}
 .badge-live .d{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:pulse 1.6s infinite}
 .badge-sync{background:rgba(0,212,255,0.10);color:#7DD8FF;border:1px solid rgba(0,212,255,0.25)}
 .badge-sync .d{width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+.badge-pinned{background:rgba(26,86,219,0.12)!important;color:#93b4f8!important;border-color:rgba(26,86,219,0.3)!important}
+.badge-pinned .d{background:#1A56DB!important;animation:none!important}
+
+/* ── Open-in-new-tab button (shows below player when a video is pinned) ── */
+.vid-newtab-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  margin:12px 22px 18px;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted-2);
+  text-decoration:none;
+  padding:9px 16px;
+  border:1px solid var(--border);border-radius:6px;
+  background:transparent;
+  transition:color .15s,border-color .15s,background .15s;
+}
+.vid-newtab-btn:hover{
+  color:var(--text);
+  border-color:var(--border-hi);
+  background:rgba(255,255,255,0.03);
+}
+.vid-newtab-btn svg{flex-shrink:0;opacity:.7}
 
 .player-frame{
   position:relative;aspect-ratio: 16 / 9;background:#000;
