@@ -46,6 +46,7 @@
     <a class="nav-link" data-route="studio" href="#studio">Studio</a>
     <a class="nav-link" data-route="calendar" href="#calendar">Calendar</a>
     <a class="nav-link" data-route="contact" href="#contact">Contact</a>
+    <a class="nav-link" data-route="bullpen" href="#bullpen">Games</a>
   </div>
   <div class="nav-right">
     <div class="clock" id="clock"><span class="lbl">PST</span><span id="clock-v">--:--:--</span></div>
@@ -64,6 +65,7 @@
   <a class="mobile-link" data-route="studio" href="#studio">Studio</a>
   <a class="mobile-link" data-route="calendar" href="#calendar">Calendar</a>
   <a class="mobile-link" data-route="contact" href="#contact">Contact</a>
+  <a class="mobile-link" data-route="bullpen" href="#bullpen">Games</a>
   <div class="mobile-meta">ENN · Eastlake News Network · @ennbulletin</div>
 </div>
 
@@ -249,6 +251,22 @@
   </section>
 </main>
 
+<!-- GAMES — Broadcast Bingo + trivia, rendered from EDIT/15-BINGO.js -->
+<main id="page-bullpen" class="page">
+  <section class="bullpen-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Games &amp; Trivia</div>
+      <h1 class="reveal d1">ENN<br/>GAMES.</h1>
+      <p class="sub reveal d2">The unofficial off-air hangout. Broadcast Bingo refreshes every Monday — same card for the whole school, all week long.</p>
+    </div>
+  </section>
+  <section class="bullpen-body">
+    <div class="container">
+      <div id="bingo-root"></div>
+    </div>
+  </section>
+</main>
+
 <!-- Skip-intro button — fixed, floats above the ticker, isolated from hero -->
 <button class="hero-skip" id="hero-skip" aria-label="Skip intro">
   <span class="hero-skip-label">Skip intro</span>
@@ -282,6 +300,9 @@
 <script src="EDIT/11-CALENDAR.js"></script>
 <script src="EDIT/12-HERO.js"></script>
 <script src="EDIT/13-OVERRIDE.js"></script>
+<script src="EDIT/14-FACTS.js"></script>
+<script src="EDIT/15-BINGO.js"></script>
+<script src="EDIT/16-CHANGELOG.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

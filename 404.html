@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Signal Lost — ENN</title>
+<link rel="icon" type="image/png" href="enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:        #1A56DB;
+    --blue-bright: #2E6BF0;
+    --green:       #16A34A;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #000;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── TV Static canvas ─────────────────────────────────────────── */
+  #static-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0.18;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  /* ── Scanlines overlay ────────────────────────────────────────── */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.18) 2px,
+      rgba(0,0,0,0.18) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── Vignette ─────────────────────────────────────────────────── */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.82) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ── Main content ─────────────────────────────────────────────── */
+  .stage {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px 24px;
+    text-align: center;
+    gap: 0;
+  }
+
+  /* ── Logo bar ─────────────────────────────────────────────────── */
+  .logo-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    opacity: 0.55;
+  }
+  .logo-bar img {
+    width: 36px; height: 36px;
+    filter: brightness(0) invert(1);
+  }
+  .logo-bar-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  /* ── Error code ───────────────────────────────────────────────── */
+  .broadcast-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .broadcast-code::before,
+  .broadcast-code::after {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--blue);
+    opacity: 0.5;
+  }
+
+  /* ── No signal graphic ────────────────────────────────────────── */
+  .no-signal-wrap {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  /* Color bars — classic broadcast test card */
+  .color-bars {
+    display: flex;
+    width: 160px;
+    height: 90px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 auto 0;
+    box-shadow: 0 0 40px rgba(26,86,219,0.25);
+  }
+  .color-bars span {
+    flex: 1;
+    display: block;
+  }
+
+  /* ── "NO SIGNAL" overlay on the bars ─────────────────────────── */
+  .bars-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: #fff;
+    background: rgba(0,0,0,0.52);
+    border-radius: 4px;
+  }
+
+  /* ── Big headline ─────────────────────────────────────────────── */
+  .headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 12vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.03em;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .headline em {
+    font-style: normal;
+    color: var(--blue);
+  }
+
+  /* ── Subhead ──────────────────────────────────────────────────── */
+  .subhead {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(10px, 2vw, 13px);
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* ── Copy ─────────────────────────────────────────────────────── */
+  .copy {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    max-width: 420px;
+    line-height: 1.65;
+    margin-bottom: 40px;
+  }
+  .copy strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+  /* ── CTA buttons ──────────────────────────────────────────────── */
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--blue-bright); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 6px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+
+  /* ── Ticker-style footer ──────────────────────────────────────── */
+  .bottom-ticker {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 20;
+    height: 34px;
+    background: var(--blue);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #fff;
+  }
+  .ticker-label {
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.25);
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .ticker-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #fff;
+    animation: pulse-dot 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.3; transform: scale(0.7); }
+  }
+  .ticker-scroll-wrap { overflow: hidden; flex: 1; }
+  .ticker-scroll {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker-move 22s linear infinite;
+    padding-left: 100%;
+    opacity: 0.85;
+  }
+  @keyframes ticker-move {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+  }
+
+  /* ── Glitch flicker on headline ───────────────────────────────── */
+  @keyframes glitch {
+    0%   { clip-path: inset(40% 0 50% 0); transform: translate(-4px, 0); opacity: 0.8; }
+    20%  { clip-path: inset(10% 0 85% 0); transform: translate(4px,  0); }
+    40%  { clip-path: inset(70% 0 5%  0); transform: translate(-2px, 0); }
+    60%  { clip-path: inset(30% 0 60% 0); transform: translate(3px,  0); }
+    80%  { clip-path: inset(80% 0 3%  0); transform: translate(-3px, 0); }
+    100% { clip-path: inset(40% 0 50% 0); transform: translate(0,    0); opacity: 0; }
+  }
+  .headline-wrap { position: relative; display: inline-block; }
+  .headline-glitch {
+    position: absolute;
+    inset: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 12vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.03em;
+    color: var(--blue);
+    pointer-events: none;
+    animation: glitch 3.5s steps(1) infinite;
+    animation-delay: 1.2s;
+  }
+
+  /* ── Responsive ───────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .copy { font-size: 14px; }
+    .cta-row { flex-direction: column; align-items: center; }
+    .btn-primary, .btn-ghost { width: 100%; max-width: 280px; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="static-canvas"></canvas>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<div class="stage">
+
+  <div class="logo-bar">
+    <img src="enn-logo.png" alt="ENN" />
+    <div class="logo-bar-text">Eastlake News Network</div>
+  </div>
+
+  <div class="broadcast-code">ERROR 404 · SIGNAL INTERRUPTED</div>
+
+  <div class="no-signal-wrap">
+    <div class="color-bars">
+      <span style="background:#fff"></span>
+      <span style="background:#ff0"></span>
+      <span style="background:#0ff"></span>
+      <span style="background:#0f0"></span>
+      <span style="background:#f0f"></span>
+      <span style="background:#f00"></span>
+      <span style="background:#00f"></span>
+      <span style="background:#000"></span>
+    </div>
+    <div class="bars-label">NO SIGNAL</div>
+  </div>
+
+  <div style="height:24px"></div>
+
+  <div class="headline-wrap">
+    <div class="headline">SIGNAL<br/><em>LOST.</em></div>
+    <div class="headline-glitch" aria-hidden="true">SIGNAL<br/>LOST.</div>
+  </div>
+
+  <div class="subhead">Broadcast interrupted · ENN · @ennbulletin</div>
+
+  <p class="copy">
+    The anchor stepped away from the desk.<br/>
+    <strong>This page doesn't exist</strong> — but the bulletin is still running.
+    Head back to the studio and we'll get you back on air.
+  </p>
+
+  <div class="cta-row">
+    <a class="btn-primary" href="/">↩ Return to Homepage</a>
+    <a class="btn-ghost" href="/#about">About ENN</a>
+    <a class="btn-ghost" href="/#team">The Team</a>
+    <a class="btn-ghost" href="/#contact">Contact</a>
+  </div>
+
+</div>
+
+<!-- Ticker -->
+<div class="bottom-ticker">
+  <div class="ticker-label">
+    <span class="ticker-dot"></span>
+    ENN Breaking
+  </div>
+  <div class="ticker-scroll-wrap">
+    <span class="ticker-scroll">
+      THIS PAGE HAS GONE OFF THE AIR &nbsp;·&nbsp; PAGE NOT FOUND &nbsp;·&nbsp; THE TELEPROMPTER IS BLANK &nbsp;·&nbsp; OUR REPORTER IS CURRENTLY LOST IN THE B-ROLL ARCHIVE &nbsp;·&nbsp; PLEASE STAND BY &nbsp;·&nbsp; WE ARE EXPERIENCING TECHNICAL DIFFICULTIES &nbsp;·&nbsp; THE ANCHOR WILL RETURN AFTER A WORD FROM OUR SPONSORS &nbsp;·&nbsp; ERROR 404 — BROADCAST SIGNAL LOST &nbsp;·&nbsp; EASTLAKE NEWS NETWORK · @ENNBULLETIN &nbsp;·&nbsp;
+    </span>
+  </div>
+</div>
+
+<script>
+  /* ── TV Static ──────────────────────────────────────────────────
+     Render noise at a very low resolution and scale up with CSS
+     for chunky pixel effect. Runs at ~15 fps to stay light.      */
+  (function(){
+    const canvas = document.getElementById('static-canvas');
+    const ctx    = canvas.getContext('2d');
+    const W = 240, H = 135; // low-res source — CSS stretches it
+    canvas.width  = W;
+    canvas.height = H;
+    canvas.style.width  = '100vw';
+    canvas.style.height = '100vh';
+
+    const img = ctx.createImageData(W, H);
+    const d   = img.data;
+
+    let lastTime = 0;
+    const FPS = 15;
+    const interval = 1000 / FPS;
+
+    function drawStatic(ts){
+      requestAnimationFrame(drawStatic);
+      if(ts - lastTime < interval) return;
+      lastTime = ts;
+
+      for(let i = 0; i < d.length; i += 4){
+        /* Mostly grey noise with occasional color speckle */
+        const v = (Math.random() * 255) | 0;
+        const isColor = Math.random() < 0.04;
+        d[i]   = isColor ? ((Math.random() * 255)|0) : v;
+        d[i+1] = isColor ? ((Math.random() * 255)|0) : v;
+        d[i+2] = isColor ? ((Math.random() * 255)|0) : v;
+        d[i+3] = 255;
+      }
+
+      /* Occasional horizontal roll bar */
+      if(Math.random() < 0.08){
+        const y = (Math.random() * H) | 0;
+        const barH = ((Math.random() * 6) + 1) | 0;
+        for(let row = y; row < Math.min(y + barH, H); row++){
+          for(let x = 0; x < W; x++){
+            const i = (row * W + x) * 4;
+            const bright = Math.random() > 0.5 ? 255 : 200;
+            d[i] = d[i+1] = d[i+2] = bright;
+          }
+        }
+      }
+
+      ctx.putImageData(img, 0, 0);
+    }
+
+    requestAnimationFrame(drawStatic);
+  })();
+</script>
+
+</body>
+</html>

@@ -328,6 +328,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     contact:  $('#page-contact'),
     studio:   $('#page-studio'),
     calendar: $('#page-calendar'),
+    bullpen:  $('#page-bullpen'),
   };
   function route(name){
     if(!pages[name]) name='home';
@@ -536,6 +537,23 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <h4>${s.title}</h4>
           <div class="m">${s.date}</div>
         </article>`).join('');
+
+      /* ── Fact of the Day card ───────────────────────────────────
+         Picks one fact per day based on Pacific-time day-of-year.
+         Cycles through all 365 facts across the year.            */
+      if(typeof ENN_FACTS !== 'undefined' && ENN_FACTS.length){
+        const pacificDate = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'}));
+        const yearStart   = new Date(pacificDate.getFullYear(), 0, 1);
+        const dayOfYear   = Math.floor((pacificDate - yearStart) / 864e5);
+        const fact        = ENN_FACTS[dayOfYear % ENN_FACTS.length];
+        const factCard    = document.createElement('article');
+        factCard.className = 'news-item news-item--fact reveal right';
+        factCard.innerHTML = `
+          <div class="cat cat--fact">📡 Did You Know?</div>
+          <h4 class="fact-text">${fact}</h4>
+          <div class="m">Updates every night at midnight PT</div>`;
+        sidebarEl.appendChild(factCard);
+      }
     }
   })();
 
@@ -657,6 +675,219 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       <section class="stats">${stats}</section>`;
   })();
 
+  /* ── Changelog (appended to About page) ─────────────────────── */
+  (function buildChangelog(){
+    const root = $('#about-root');
+    if(!root) return;
+    const entries = (typeof ENN_CHANGELOG !== 'undefined') ? ENN_CHANGELOG : [];
+    if(!entries.length) return;
+
+    /* Live "time since deploy" counter on the newest entry */
+    const deployTime = new Date(entries[0].timestamp).getTime();
+    function fmtElapsed(){
+      const s  = Math.floor((Date.now() - deployTime) / 1000);
+      const d  = Math.floor(s / 86400);
+      const h  = Math.floor((s % 86400) / 3600);
+      const m  = Math.floor((s % 3600) / 60);
+      const sc = s % 60;
+      if(d > 0) return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(sc).padStart(2,'0')}s`;
+      if(h > 0) return `${h}h ${String(m).padStart(2,'0')}m ${String(sc).padStart(2,'0')}s`;
+      return `${String(m).padStart(2,'0')}m ${String(sc).padStart(2,'0')}s`;
+    }
+
+    const rows = entries.map((e, i) => {
+      const ts  = e.timestamp.replace('T', ' · ');
+      const live = i === 0
+        ? `<span class="cl-live"><span class="cl-dot"></span><span id="cl-elapsed">${fmtElapsed()}</span> ago</span>`
+        : '';
+      return `
+      <div class="cl-row reveal">
+        <div class="cl-left">
+          <span class="cl-ver">${e.version}</span>
+          ${live}
+        </div>
+        <div class="cl-right">
+          <div class="cl-ts">${ts}</div>
+          <div class="cl-desc">${e.description}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const section = document.createElement('section');
+    section.className = 'changelog-section';
+    section.innerHTML = `
+      <div class="container">
+        <div class="cl-head reveal">
+          <div class="eyebrow">Build Log</div>
+          <div class="sec-title">SITE CHANGELOG</div>
+        </div>
+        <div class="cl-log">${rows}</div>
+      </div>`;
+    root.appendChild(section);
+
+    /* Tick the elapsed counter every second */
+    setInterval(() => {
+      const el = $('#cl-elapsed');
+      if(el) el.textContent = fmtElapsed();
+    }, 1000);
+  })();
+
+  /* ── Broadcast Bingo ──────────────────────────────────────────── */
+  (function buildBingo(){
+    const root = $('#bingo-root');
+    if(!root) return;
+    const cfg = (typeof ENN_BINGO !== 'undefined') ? ENN_BINGO : {};
+    const allSquares = cfg.squares || [];
+    if(!allSquares.length) return;
+
+    /* ── Week / date helpers (Pacific time) ── */
+    function getPacificDate(){
+      return new Date(new Date().toLocaleString('en-US', {timeZone:'America/Los_Angeles'}));
+    }
+    function getISOWeekInfo(date){
+      const d   = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const day = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - day);
+      const yr  = d.getUTCFullYear();
+      const wk  = Math.ceil(((d - new Date(Date.UTC(yr,0,1))) / 86400000 + 1) / 7);
+      return { week: wk, year: yr };
+    }
+
+    const pacific    = getPacificDate();
+    const { week, year } = getISOWeekInfo(pacific);
+    const dayOfWeek  = pacific.getDay(); // 0=Sun,1=Mon..6=Sat
+    const isBroadcastDay = dayOfWeek >= 1 && dayOfWeek <= 4;
+
+    /* ── Off-air message for Fri–Sun ── */
+    if(!isBroadcastDay){
+      root.innerHTML = `
+        <div class="bingo-offair reveal">
+          <div class="bingo-offair-icon">📺</div>
+          <div class="bingo-offair-title">NEXT BROADCAST: MONDAY</div>
+          <div class="bingo-offair-sub">The Bingo card refreshes with the new week's broadcast.</div>
+        </div>`;
+      return;
+    }
+
+    /* ── Deterministic seeded shuffle (Mulberry32 PRNG) ── */
+    function mulberry32(seed){
+      return function(){
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    function seededShuffle(arr, seed){
+      const rng = mulberry32(seed);
+      const a   = arr.slice();
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(rng() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    /* Unique seed per week — same week always produces same card */
+    const SEED    = year * 1000 + week;
+    const cardKey = `enn_bingo_v1_${year}w${week}`;
+    const squares = seededShuffle(allSquares, SEED).slice(0, 16);
+
+    /* ── Persisted flip state ── */
+    let flipped = [];
+    try { flipped = JSON.parse(localStorage.getItem(cardKey)) || []; } catch(e){}
+    function saveFlipped(){ try{ localStorage.setItem(cardKey, JSON.stringify(flipped)); }catch(e){} }
+
+    /* ── Bingo win detection (rows, cols, diagonals) ── */
+    const WIN_LINES = [
+      [0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],   // rows
+      [0,4,8,12],[1,5,9,13],[2,6,10,14],[3,7,11,15],   // cols
+      [0,5,10,15],[3,6,9,12],                            // diagonals
+    ];
+    function checkBingo(f){ return WIN_LINES.some(line => line.every(i => f.includes(i))); }
+
+    /* ── Bingo celebration banner ── */
+    function triggerBingo(){
+      if($('#bingo-banner')) return; // don't double-fire
+      const banner = document.createElement('div');
+      banner.id = 'bingo-banner';
+      banner.className = 'bingo-banner';
+      banner.innerHTML = `
+        <span class="bingo-banner-dot"></span>
+        <span class="bingo-banner-text">${cfg.bingoMsg||'BINGO'} · ENN · WEEK ${week}</span>
+        <span class="bingo-banner-dot"></span>`;
+      document.body.appendChild(banner);
+      setTimeout(() => banner.classList.add('bingo-banner--in'), 20);
+      setTimeout(() => {
+        banner.classList.remove('bingo-banner--in');
+        setTimeout(() => banner.remove(), 600);
+      }, 4500);
+    }
+
+    /* ── Render card ── */
+    const weekLabel = `WK ${String(week).padStart(2,'0')} · ${year}`;
+    root.innerHTML = `
+      <div class="bingo-wrap reveal">
+        <div class="bingo-header">
+          <div>
+            <div class="eyebrow" style="margin-bottom:6px">Broadcast Bingo</div>
+            <div class="bingo-title">${cfg.heading||'BROADCAST BINGO'}</div>
+            <div class="bingo-sub">${cfg.subhead||''}</div>
+          </div>
+          <div class="bingo-week-badge">
+            <div class="bingo-week-label">THIS WEEK</div>
+            <div class="bingo-week-num">${weekLabel}</div>
+          </div>
+        </div>
+
+        <div class="bingo-letters">
+          <span>B</span><span>I</span><span>N</span><span>G</span>
+        </div>
+        <div class="bingo-grid" id="bingo-grid"></div>
+
+        <div class="bingo-footer">
+          <button class="bingo-reset-btn" id="bingo-reset">↺ Reset Card</button>
+          <div class="bingo-hint">Flip squares as they happen. Get 4 in a row to win.</div>
+        </div>
+      </div>`;
+
+    /* Render cells */
+    const grid = $('#bingo-grid');
+    squares.forEach((text, idx) => {
+      const cell = document.createElement('div');
+      cell.className = 'bingo-cell' + (flipped.includes(idx) ? ' flipped' : '');
+      cell.innerHTML = `
+        <div class="bingo-cell-inner">
+          <div class="bingo-cell-front"><span>${text}</span></div>
+          <div class="bingo-cell-back"><img src="enn-logo.png" alt="ENN" /></div>
+        </div>`;
+      cell.addEventListener('click', () => {
+        if(flipped.includes(idx)){
+          flipped = flipped.filter(i => i !== idx);
+          cell.classList.remove('flipped');
+        } else {
+          flipped.push(idx);
+          cell.classList.add('flipped');
+          if(checkBingo(flipped)) setTimeout(triggerBingo, 350);
+        }
+        saveFlipped();
+      });
+      grid.appendChild(cell);
+    });
+
+    /* Show bingo banner immediately on load if already won */
+    if(checkBingo(flipped)) setTimeout(triggerBingo, 800);
+
+    /* Reset button */
+    $('#bingo-reset').addEventListener('click', () => {
+      flipped = [];
+      saveFlipped();
+      $$('.bingo-cell', grid).forEach(c => c.classList.remove('flipped'));
+      const b = $('#bingo-banner');
+      if(b) b.remove();
+    });
+  })();
+
   /* ── Contact page ────────────────────────────────────────────── */
   (function buildContact(){
     const root = $('#contact-root');
@@ -682,6 +913,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
             <h3>${contact.formHeading}</h3>
             <p class="note">${contact.formNote}</p>
             <form id="coverage-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="Coverage Request"/>
               <div class="form-row">
                 <div class="field"><label>Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
                 <div class="field"><label>Department or Role</label><input type="text" name="dept" required placeholder="e.g. English Dept., ASB Advisor"/></div>

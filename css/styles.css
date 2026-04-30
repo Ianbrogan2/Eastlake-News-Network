@@ -143,7 +143,7 @@ img{display:block;max-width:100%}
 .mobile-link:hover,.mobile-link.active{color:#fff;padding-left:10px}
 .mobile-meta{margin-top:auto;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--muted-2);text-transform:uppercase}
 
-@media (max-width:620px){
+@media (max-width:900px){
   .nav-links{display:none}
   .hamburger{display:flex}
 }
@@ -455,6 +455,12 @@ img{display:block;max-width:100%}
 }
 .news-item h4{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.01em;color:#fff;margin-bottom:6px;line-height:1.05}
 .news-item .m{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.12em}
+
+/* Fact of the Day card */
+.news-item--fact{border-color:rgba(26,86,219,0.35);background:linear-gradient(135deg,var(--bg-1) 0%,rgba(26,86,219,0.07) 100%);cursor:default;}
+.news-item--fact:hover{border-color:rgba(26,86,219,0.7);transform:none;}
+.cat--fact{color:#60a5fa !important;letter-spacing:.18em !important;}
+.fact-text{font-family:'DM Sans',sans-serif !important;font-size:13px !important;font-weight:500;line-height:1.6 !important;letter-spacing:0 !important;color:rgba(255,255,255,0.85) !important;}
 
 /* --- ABOUT --- */
 .about-hero{padding: clamp(80px,10vw,140px) clamp(18px,4.4vw,60px) clamp(48px,6vw,80px)}
@@ -857,4 +863,247 @@ a.tcard-val:hover{text-decoration:underline}
   .sched-day{font-size:20px;min-width:54px}
   .sched-mid .ep{font-size:13px}
   .sched-status{font-size:9px;padding:4px 7px;letter-spacing:.15em}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GAMES (OFF AIR) — Broadcast Bingo
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Hero ── */
+.bullpen-hero{padding:clamp(80px,10vw,140px) clamp(18px,4.4vw,60px) clamp(48px,6vw,80px)}
+.bullpen-body{padding-bottom:80px}
+
+/* ── Bingo wrapper ── */
+.bingo-wrap{max-width:640px;margin:0 auto}
+
+.bingo-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;margin-bottom:28px;
+}
+.bingo-title{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,42px);
+  letter-spacing:.04em;color:var(--text);line-height:1;margin-bottom:6px;
+}
+.bingo-sub{font-size:13px;color:var(--muted);line-height:1.5}
+
+.bingo-week-badge{
+  flex-shrink:0;text-align:right;
+  padding:10px 14px;border:1px solid var(--border);border-radius:8px;
+  background:var(--bg-2);
+}
+.bingo-week-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--muted-2);text-transform:uppercase;margin-bottom:3px}
+.bingo-week-num{font-family:'DM Mono',monospace;font-size:14px;color:var(--cyan);letter-spacing:.12em}
+
+/* ── BINGO letter header row (B I N G — one per column) ── */
+.bingo-letters{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+  margin-bottom:6px;
+}
+.bingo-letters span{
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.12em;
+  color:var(--blue);opacity:.7;
+}
+
+/* ── Grid ── */
+.bingo-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin-bottom:20px;
+}
+
+/* ── Individual cell — 3D flip card ── */
+.bingo-cell{
+  aspect-ratio:1;
+  perspective:600px;
+  cursor:pointer;
+  touch-action:manipulation; /* eliminate 300ms tap delay on iOS */
+  -webkit-tap-highlight-color:transparent;
+}
+.bingo-cell-inner{
+  position:relative;
+  width:100%;height:100%;min-height:0; /* anchor height% inside aspect-ratio parent */
+  transform-style:preserve-3d;
+  transition:transform 0.45s cubic-bezier(.22,.61,.36,1);
+  border-radius:10px;
+}
+.bingo-cell.flipped .bingo-cell-inner{
+  transform:rotateY(180deg);
+}
+.bingo-cell-front,
+.bingo-cell-back{
+  position:absolute;inset:0;
+  border-radius:10px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:8px;
+}
+/* Front face */
+.bingo-cell-front{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  transition:border-color .2s var(--ease),background .2s var(--ease);
+  text-align:center;
+}
+.bingo-cell:hover .bingo-cell-front{
+  border-color:rgba(26,86,219,0.45);
+  background:var(--bg-3);
+}
+.bingo-cell-front span{
+  font-size:clamp(9px,2vw,12px); /* 9px floor → 12px cap; 2vw hits 12px at 600px */
+  font-family:'DM Sans',sans-serif;
+  font-weight:500;
+  color:var(--text);
+  line-height:1.35;
+  text-align:center;
+  pointer-events:none;
+  user-select:none;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:5;
+  -webkit-box-orient:vertical;
+}
+/* Back face */
+.bingo-cell-back{
+  background:linear-gradient(135deg,var(--bg-2),rgba(26,86,219,0.18));
+  border:1px solid rgba(26,86,219,0.5);
+  transform:rotateY(180deg);
+}
+.bingo-cell-back img{
+  width:52%;height:52%;object-fit:contain;
+  opacity:.85;
+  filter:drop-shadow(0 0 8px rgba(26,86,219,0.5));
+}
+
+/* ── Footer row ── */
+.bingo-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;
+}
+.bingo-reset-btn{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;
+  color:var(--muted-2);background:transparent;
+  border:1px solid var(--border);border-radius:6px;
+  padding:8px 14px;cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s,border-color .15s;
+}
+.bingo-reset-btn:hover{color:var(--text);border-color:var(--border-hi)}
+.bingo-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.12em}
+
+/* ── Off-air message (Fri–Sun) ── */
+.bingo-offair{
+  text-align:center;padding:80px 20px;
+}
+.bingo-offair-icon{font-size:40px;margin-bottom:16px;opacity:.4}
+.bingo-offair-title{
+  font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.06em;
+  color:var(--text);margin-bottom:10px;
+}
+.bingo-offair-sub{font-size:14px;color:var(--muted);max-width:360px;margin:0 auto;line-height:1.6}
+
+/* ── BINGO celebration banner — slides in just below the nav ── */
+.bingo-banner{
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:9999;
+  height:44px;
+  background:var(--blue);
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.28em;
+  color:#fff;text-transform:uppercase;
+  transform:translateY(-100%);
+  opacity:0;                          /* invisible when off-position */
+  pointer-events:none;
+  transition:transform 0.4s cubic-bezier(.22,.61,.36,1), opacity 0.3s;
+  box-shadow:0 2px 20px rgba(26,86,219,0.5);
+}
+.bingo-banner--in{transform:translateY(0);opacity:1;pointer-events:auto}
+.bingo-banner-dot{
+  width:8px;height:8px;border-radius:50%;background:#fff;
+  animation:bingo-pulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes bingo-pulse{from{opacity:.3;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.bingo-banner-text{letter-spacing:.3em}
+
+/* ─── Responsive bingo ─── */
+@media (max-width:600px){
+  .bingo-header{flex-direction:column;gap:12px}
+  .bingo-week-badge{text-align:left;align-self:flex-start}
+  .bingo-footer{flex-direction:column;align-items:flex-start;gap:8px}
+}
+@media (max-width:480px){
+  .bingo-grid{gap:4px}
+  .bingo-letters{gap:4px}
+  .bingo-cell-front span{font-size:9px;line-height:1.25;-webkit-line-clamp:4}
+  .bingo-cell-back img{width:44%;height:44%}
+  .bingo-cell-front,.bingo-cell-back{padding:6px}
+  .bingo-banner{font-size:11px;letter-spacing:.18em}
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SITE CHANGELOG — About page build log
+═══════════════════════════════════════════════════════════════ */
+
+.changelog-section{
+  padding:clamp(48px,6vw,80px) clamp(18px,4.4vw,60px);
+  border-top:1px solid var(--border);
+}
+.cl-head{margin-bottom:32px}
+.cl-log{display:flex;flex-direction:column;gap:0}
+
+.cl-row{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:16px 24px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+  align-items:start;
+}
+.cl-row:last-child{border-bottom:none}
+
+.cl-left{
+  display:flex;flex-direction:column;gap:6px;
+  padding-top:2px;
+}
+.cl-ver{
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.18em;color:var(--blue);
+  background:rgba(26,86,219,0.12);
+  border:1px solid rgba(26,86,219,0.25);
+  border-radius:4px;padding:3px 8px;
+  display:inline-block;width:fit-content;
+}
+.cl-live{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.12em;color:var(--muted-2);
+  white-space:nowrap;
+}
+.cl-dot{
+  width:5px;height:5px;border-radius:50%;background:#22C55E;
+  flex-shrink:0;
+  animation:cl-blink 1.4s ease-in-out infinite;
+}
+@keyframes cl-blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.cl-right{
+  border-left:2px solid rgba(26,86,219,0.2);
+  padding-left:16px;
+}
+.cl-ts{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.14em;color:var(--muted-2);
+  margin-bottom:6px;
+}
+.cl-desc{
+  font-size:13px;color:var(--muted);
+  line-height:1.55;
+}
+
+@media (max-width:600px){
+  .cl-row{grid-template-columns:1fr;gap:8px}
+  .cl-right{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:8px}
 }
