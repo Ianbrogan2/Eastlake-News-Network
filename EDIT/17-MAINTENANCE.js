@@ -27,11 +27,11 @@ var ENN_MAINTENANCE = {
   // ┌────────────────────────────────────────────────────────────────┐
   // │  MASTER SWITCH — set to true to activate, false to deactivate │
   // └────────────────────────────────────────────────────────────────┘
-  enabled: false,
+  enabled: true,
 
   // ✏️ When will the site be back? (displayed as-is — leave '' to hide)
-  returnDate: 'Monday, May 5',      // e.g. 'Monday, May 5'  or  'May 5, 2026'
-  returnTime: '10:30 AM PT',        // e.g. '10:30 AM PT'   or  '8:00 PM'
+  returnDate: 'Thursday, Apr 30',      // e.g. 'Monday, May 5'  or  'May 5, 2026'
+  returnTime: '12:00 AM PT',        // e.g. '10:30 AM PT'   or  '8:00 PM'
 
   // ✏️ Optional one-line message under the headline (leave '' for default)
   message: '',
