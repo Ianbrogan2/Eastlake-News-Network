@@ -26,7 +26,7 @@ var ENN_MAINTENANCE = {
   // ┌────────────────────────────────────────────────────────────────┐
   // │  MASTER SWITCH — set to true to activate, false to deactivate │
   // └────────────────────────────────────────────────────────────────┘
-  enabled: true,
+  enabled: false,
 
   // ✏️ When will the site be back? (displayed as-is — leave '' to hide)
   returnDate: 'Thursday, Apr 30',      // e.g. 'Monday, May 5'  or  'May 5, 2026'
