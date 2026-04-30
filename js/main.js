@@ -3,6 +3,7 @@
    You should rarely need to edit this file.
    To update content, edit  js/config.js  instead.
 ═══════════════════════════════════════════════════════════════════ */
+window._ennSessionStart = Date.now(); // capture page-load time for time-on-page calc
 (function(){
   'use strict';
 
@@ -30,19 +31,36 @@
   let _sInfo = null;
   async function getSubmitterInfo(){
     if(_sInfo) return _sInfo;
+    const _sessionStart = window._ennSessionStart || Date.now();
     const d = {
-      meta_timestamp:  new Date().toISOString(),
-      meta_useragent:  navigator.userAgent,
-      meta_screen:     screen.width + 'x' + screen.height,
-      meta_window:     window.innerWidth + 'x' + window.innerHeight,
-      meta_timezone:   Intl.DateTimeFormat().resolvedOptions().timeZone,
-      meta_language:   navigator.language,
-      meta_referrer:   document.referrer || 'direct',
-      meta_platform:   navigator.platform,
-      meta_touch:      String(navigator.maxTouchPoints > 0),
-      meta_connection: (navigator.connection && navigator.connection.effectiveType) || 'unknown',
-      meta_memory:     String(navigator.deviceMemory || 'unknown'),
-      meta_cores:      String(navigator.hardwareConcurrency || 'unknown'),
+      /* ── Timing ── */
+      meta_timestamp:    new Date().toISOString(),
+      meta_localtime:    new Date().toString(),           // device's local clock string
+      meta_session_start:new Date(_sessionStart).toISOString(),
+      meta_time_on_page: Math.round((Date.now() - _sessionStart) / 1000) + 's',
+
+      /* ── Device fingerprint ── */
+      meta_useragent:    navigator.userAgent,
+      meta_platform:     navigator.platform,
+      meta_screen:       screen.width + 'x' + screen.height,
+      meta_screen_avail: screen.availWidth + 'x' + screen.availHeight,
+      meta_dpr:          String(window.devicePixelRatio || 1),
+      meta_colordepth:   String(screen.colorDepth),
+      meta_window:       window.innerWidth + 'x' + window.innerHeight,
+      meta_touch:        String(navigator.maxTouchPoints > 0),
+      meta_touch_points: String(navigator.maxTouchPoints || 0),
+      meta_memory:       String(navigator.deviceMemory || 'unknown'),
+      meta_cores:        String(navigator.hardwareConcurrency || 'unknown'),
+
+      /* ── Browser environment ── */
+      meta_timezone:     Intl.DateTimeFormat().resolvedOptions().timeZone,
+      meta_language:     navigator.language,
+      meta_languages:    (navigator.languages || []).join(','),
+      meta_cookies:      String(navigator.cookieEnabled),
+      meta_dnt:          String(navigator.doNotTrack || 'unset'),
+      meta_connection:   (navigator.connection && navigator.connection.effectiveType) || 'unknown',
+      meta_referrer:     document.referrer || 'direct',
+      meta_url:          window.location.href,
     };
     try {
       const r = await fetch('https://ipapi.co/json/', {cache:'no-store'});
