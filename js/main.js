@@ -87,6 +87,46 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   /* Pre-fetch so geo data is ready by the time the user hits submit */
   getSubmitterInfo();
 
+  /* ── Maintenance mode (EDIT/17-MAINTENANCE.js) ──────────────── */
+  if(typeof ENN_MAINTENANCE !== 'undefined' && ENN_MAINTENANCE.enabled){
+    /* Hide nav, ticker, skip button — show only maintenance screen */
+    $$('.nav, .ticker, .hero-skip, .mobile-menu').forEach(el => el.style.display = 'none');
+    $$('.page').forEach(el => el.style.display = 'none');
+    document.body.style.overflow = 'hidden';
+
+    /* Pick today's Did You Know fact (Pacific day-of-year, same rotation as home page) */
+    const facts = (typeof ENN_FACTS !== 'undefined') ? ENN_FACTS : [];
+    let factText = '';
+    if(facts.length){
+      const pt  = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'}));
+      const doy = Math.floor((pt - new Date(pt.getFullYear(),0,0)) / 86400000);
+      factText  = facts[(doy - 1 + facts.length) % facts.length];
+    }
+
+    const maint = ENN_MAINTENANCE;
+    const returnLine = [maint.returnDate, maint.returnTime].filter(Boolean).join(' · ');
+    const msgLine    = maint.message || 'We\'re making updates and will be back shortly.';
+
+    const screen = document.createElement('div');
+    screen.className = 'maint-screen';
+    screen.innerHTML = `
+      <div class="maint-inner">
+        <img class="maint-logo" src="enn-logo.png" alt="ENN" />
+        <div class="eyebrow maint-eyebrow">Temporarily Off Air</div>
+        <h1 class="maint-title">WE'LL BE<br/>RIGHT BACK.</h1>
+        <p class="maint-msg">${msgLine}</p>
+        ${returnLine ? `<div class="maint-return"><span class="maint-return-label">Back online</span><span class="maint-return-time">${returnLine}</span></div>` : ''}
+        ${factText ? `
+        <div class="maint-fact">
+          <div class="maint-fact-label"><span class="maint-fact-dot"></span>Did You Know</div>
+          <div class="maint-fact-text">${factText}</div>
+        </div>` : ''}
+        <div class="maint-sig">ENN · Eastlake News Network · @ennbulletin</div>
+      </div>`;
+    document.body.appendChild(screen);
+    return; /* Stop all further rendering */
+  }
+
   /* Apply hero scroll height from EDIT/12-HERO.js */
   (function applyHeroHeight(){
     const hero = document.getElementById('hero');
