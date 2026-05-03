@@ -101,6 +101,11 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   const CHANNEL_ID     = channel.id;
   const CHANNEL_HANDLE = channel.handle;
 
+  /* Unified form endpoint — Google Sheets if set, Formspree as fallback */
+  const FORM_ENDPOINT = social.sheetsEndpoint && social.sheetsEndpoint.trim()
+    ? social.sheetsEndpoint.trim()
+    : `https://formspree.io/f/${social.formspreeId}`;
+
   /* Utilities */
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -898,7 +903,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <div class="form-card reveal left">
             <h3>${contact.formHeading}</h3>
             <p class="note">${contact.formNote}</p>
-            <form id="coverage-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+            <form id="coverage-form" action="${FORM_ENDPOINT}" method="POST" novalidate>
               <input type="hidden" name="form_type" value="Coverage Request"/>
               <div class="form-row">
                 <div class="field"><label>Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
@@ -928,7 +933,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <div class="form-card reveal left">
             <h3>${contact.songHeading}</h3>
             <p class="note">${contact.songNote}</p>
-            <form id="song-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+            <form id="song-form" action="${FORM_ENDPOINT}" method="POST" novalidate>
               <input type="hidden" name="form_type" value="Song Request"/>
               <div class="form-row">
                 <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
@@ -958,7 +963,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               </div>
             </div>
             <p class="note" style="margin-top:12px;margin-bottom:24px;">${contact.loveDesc}</p>
-            <form id="love-form" action="https://formspree.io/f/${social.formspreeId}" method="POST" novalidate>
+            <form id="love-form" action="${FORM_ENDPOINT}" method="POST" novalidate>
               <input type="hidden" name="form_type" value="Love Lines"/>
               <div class="form-row">
                 <div class="field">
@@ -1139,7 +1144,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   /* ── Contact form → Formspree ────────────────────────────────── */
   const form = $('#coverage-form');
   if(form){
-    form.action = `https://formspree.io/f/${social.formspreeId}`;
+    form.action = FORM_ENDPOINT;
     form.addEventListener('submit', async e => {
       e.preventDefault();
       for(const k of ['name','dept','type','details']){
@@ -1152,7 +1157,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         const fd = new FormData(form);
         const meta = await getSubmitterInfo();
         Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
-        const r = await fetch(form.action, {method:'POST', body:fd, headers:{'Accept':'application/json'}});
+        const r = await fetch(form.action, {method:'POST', body:fd});
         if(r.ok){ form.style.display='none'; $('#form-success').classList.add('active'); }
         else { btn.disabled=false; btn.textContent='Submit Request →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
       } catch(err){ btn.disabled=false; btn.textContent='Submit Request →'; alert('Network error — check your connection.'); }
@@ -1231,7 +1236,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         const fd2 = new FormData(songForm);
         const meta2 = await getSubmitterInfo();
         Object.entries(meta2).forEach(([k,v]) => fd2.append(k, v));
-        const r = await fetch(songForm.action, {method:'POST', body:fd2, headers:{'Accept':'application/json'}});
+        const r = await fetch(songForm.action, {method:'POST', body:fd2});
         if(r.ok){
           songForm.style.display = 'none';
           $('#song-form-success').classList.add('active');
@@ -1291,7 +1296,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         const fd3 = new FormData(loveForm);
         const meta3 = await getSubmitterInfo();
         Object.entries(meta3).forEach(([k,v]) => fd3.append(k, v));
-        const r = await fetch(loveForm.action, {method:'POST', body:fd3, headers:{'Accept':'application/json'}});
+        const r = await fetch(loveForm.action, {method:'POST', body:fd3});
         if(r.ok){
           loveForm.style.display = 'none';
           $('#love-form-success').classList.add('active');

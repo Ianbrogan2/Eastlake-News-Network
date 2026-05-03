@@ -4,7 +4,7 @@
 // ║  WHAT THIS FILE CONTROLS:                                        ║
 // ║    • YouTube channel (used for the auto-synced latest video)     ║
 // ║    • YouTube & Instagram handles shown in the Contact section    ║
-// ║    • Formspree ID for the coverage request form                  ║
+// ║    • Form submission endpoint (Google Sheets or Formspree)       ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  HOW TO EDIT:                                                    ║
 // ║    1. Find the field you want to change below                    ║
@@ -37,9 +37,13 @@ var ENN_SOCIAL = {
   // Instagram handle WITHOUT the @ symbol
   instagram: 'eastlakenewsnetwork',
 
-  // Formspree form ID — the last part of your Formspree URL
-  // Example: https://formspree.io/f/xojydpnd  →  id is  xojydpnd
-  // Do NOT change this unless you create a new Formspree form
+  // ── Google Sheets endpoint (replaces Formspree — free, no limits) ──
+  // After deploying the Apps Script, paste the URL here.
+  // Leave blank to keep using Formspree as a fallback.
+  // Example: 'https://script.google.com/macros/s/XXXXX/exec'
+  sheetsEndpoint: 'https://script.google.com/macros/s/AKfycbz1333uoBX_jdc8D7RdvTroha3S26tyufYPnaZsAwBJz2Q36gg8VJ2Pc7ei6x-2I0rL/exec',
+
+  // Formspree fallback — used only when sheetsEndpoint is blank above
   formspreeId: 'mpqkyzzl',
 
 };
