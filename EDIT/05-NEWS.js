@@ -29,8 +29,8 @@ var ENN_NEWS = {
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Eastlake girls varsity lacrosse plays Castle Park High school @ Home',
-      date:  'APR 29',
+      title: 'Eastlake boys varsity volleyball plays Mater Dei High School @ Home',
+      date:  'APR 30',
     },
     {
       cat:   'AP Testing',
