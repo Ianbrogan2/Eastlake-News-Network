@@ -29,13 +29,13 @@ var ENN_NEWS = {
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Eastlake boys varsity volleyball plays Mater Dei High School @ Home',
-      date:  'APR 30',
+      title: 'Eastlake boys varsity LAX wins league!',
+      date:  'APR 29',
     },
     {
       cat:   'AP Testing',
-      title: 'Bio, Latin, Euro, and Micro, are the first AP Tests',
-      date:  'May 4',
+      title: 'CHEM, HUG, and APUSH, are tomorrow!',
+      date:  'May 5',
     },
     {
       cat:   'Grades',
