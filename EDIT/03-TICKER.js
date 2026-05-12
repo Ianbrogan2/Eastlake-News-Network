@@ -22,9 +22,9 @@
 // ║    { k: 'Sports', t: 'Titans win league championship' },        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_TICKER = [
-  { k: 'Sports',  t: 'Varsity baseball enters conference game schedule — check eastlakeathletics.com for more' },
-  { k: 'Seniors', t: 'Senior Decision Day is Friday, May 1st.' },
+  { k: 'Sports',  t: 'Varsity baseball senior night @ 3:00PM— check eastlakeathletics.com for more' },
+  { k: 'Seniors', t: 'Senior\'s if you are attending disney next week, you already had your last monday!.' },
   { k: 'ENN',     t: 'Coverage requests open — submit at least one week before!' },
-  { k: 'AP', t: 'Goodluck to all of our AP students in the following weeks!' },
+  { k: 'AP', t: 'Goodluck to all of our AP students in the las week of AP testing!' },
   
 ];
