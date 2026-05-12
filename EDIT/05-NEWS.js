@@ -29,13 +29,13 @@ var ENN_NEWS = {
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Eastlake boys varsity LAX wins league!',
-      date:  'APR 29',
+      title: 'Today is eastlake boys varsity baseball senior night!',
+      date:  'May 12',
     },
     {
       cat:   'AP Testing',
-      title: 'CHEM, HUG, and APUSH, are tomorrow!',
-      date:  'May 5',
+      title: 'LANG, PHYSICS C, and Spanish LIT, are tomorrow!',
+      date:  'May 13',
     },
     {
       cat:   'Grades',
