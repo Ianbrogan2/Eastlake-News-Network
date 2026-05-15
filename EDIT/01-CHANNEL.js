@@ -41,7 +41,7 @@ var ENN_SOCIAL = {
   // After deploying the Apps Script, paste the URL here.
   // Leave blank to keep using Formspree as a fallback.
   // Example: 'https://script.google.com/macros/s/XXXXX/exec'
-  sheetsEndpoint: 'https://script.google.com/macros/s/AKfycbz1333uoBX_jdc8D7RdvTroha3S26tyufYPnaZsAwBJz2Q36gg8VJ2Pc7ei6x-2I0rL/exec',
+  sheetsEndpoint: 'https://script.google.com/macros/s/AKfycbyjpyOsAi_VcG_Zyc3Ix-CJICNEin9QZZxQxX2gMluRwSaZVvfHbfjX40Y02GZGP3_D/exec',
 
   // Formspree fallback — used only when sheetsEndpoint is blank above
   formspreeId: 'mpqkyzzl',
