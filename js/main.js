@@ -1480,17 +1480,23 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           reader.readAsDataURL(audioBlob);
         });
 
-        const fd = new FormData();
-        fd.append('form_type',       'Love Lines (Audio)');
-        fd.append('to',              toVal);
-        fd.append('from',            isAnon ? 'Anonymous' : fromVal);
-        fd.append('audio_data',      base64);
-        fd.append('audio_mime',      recordedMime);
-        fd.append('audio_duration',  fmt(secs));
         const meta = await getSubmitterInfo();
-        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+        /* Send as text/plain JSON — avoids CORS preflight and e.parameter
+           truncation that drops large base64 audio fields in Apps Script */
+        const payload = Object.assign({
+          form_type:      'Love Lines (Audio)',
+          to:             toVal,
+          from:           isAnon ? 'Anonymous' : fromVal,
+          audio_data:     base64,
+          audio_mime:     recordedMime,
+          audio_duration: fmt(secs)
+        }, meta);
 
-        const r = await fetch(FORM_ENDPOINT, {method:'POST', body:fd});
+        const r = await fetch(FORM_ENDPOINT, {
+          method:  'POST',
+          headers: {'Content-Type': 'text/plain;charset=utf-8'},
+          body:    JSON.stringify(payload)
+        });
         if(r.ok){
           if(formWrap) formWrap.style.display = 'none';
           if(successEl) successEl.classList.add('active');
