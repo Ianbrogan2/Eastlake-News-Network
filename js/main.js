@@ -996,6 +996,61 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               <p>${contact.loveSuccessBody}</p>
             </div>
           </div>
+
+          <!-- ── Audio Love Lines card ── -->
+          <div class="form-card reveal left" style="border-color:rgba(239,68,68,0.35);background:linear-gradient(135deg,rgba(239,68,68,0.06) 0%,var(--bg-1) 60%);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px;">
+              <span style="font-size:22px;line-height:1;">🎙️</span>
+              <div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:#f87171;text-transform:uppercase;margin-bottom:2px;">LOVE LINES</div>
+                <h3 style="margin:0;color:#fca5a5;letter-spacing:.06em;">AUDIO MESSAGE</h3>
+              </div>
+            </div>
+            <p class="note" style="margin-top:12px;margin-bottom:24px;">Record a voice message to be played live on ENN. Max 60 seconds.</p>
+            <div id="audio-love-form-wrap">
+              <div class="form-row">
+                <div class="field">
+                  <label>To</label>
+                  <input type="text" id="aud-to" placeholder="Who is this for?" />
+                </div>
+                <div class="field">
+                  <label style="display:flex;align-items:center;justify-content:space-between;">
+                    <span>From</span>
+                    <button type="button" id="aud-anon-btn" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;padding:3px 10px;border-radius:999px;border:1px solid rgba(239,68,68,0.4);background:transparent;color:#f87171;cursor:pointer;transition:all .18s;">STAY ANONYMOUS</button>
+                  </label>
+                  <input type="text" id="aud-from" placeholder="Your name" />
+                </div>
+              </div>
+              <div class="aud-rec-wrap">
+                <div class="aud-idle" id="aud-idle">
+                  <button class="aud-rec-btn" id="aud-record-btn" type="button" aria-label="Start recording">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+                  </button>
+                  <div class="aud-rec-hint">Tap to record · max 60 sec</div>
+                </div>
+                <div class="aud-recording" id="aud-recording" style="display:none">
+                  <div class="aud-pulse-ring"><div class="aud-pulse-dot"></div></div>
+                  <div class="aud-timer" id="aud-timer">0:00</div>
+                  <button class="aud-stop-btn" id="aud-stop-btn" type="button">■ Stop</button>
+                </div>
+                <div class="aud-preview" id="aud-preview" style="display:none">
+                  <audio id="aud-playback" controls></audio>
+                  <button class="aud-rerecord-btn" id="aud-rerecord-btn" type="button">↺ Re-record</button>
+                </div>
+              </div>
+              <div id="aud-browser-err" style="display:none;color:#f87171;font-size:12px;margin-bottom:12px;font-family:'DM Mono',monospace;letter-spacing:.06em;">Your browser doesn't support recording. Please use Chrome or Safari.</div>
+              <button type="button" class="btn" id="aud-submit-btn" disabled
+                style="background:linear-gradient(90deg,#dc2626,#f87171);border:none;opacity:.45;transition:opacity .2s;">
+                Send Audio Love Lines →
+              </button>
+            </div>
+            <div class="form-success" id="audio-love-success">
+              <div class="check" style="background:rgba(239,68,68,0.25);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4 style="color:#fca5a5;">Audio received!</h4>
+              <p>Your voice message was sent to ENN. We'll play it during the next broadcast ❤️</p>
+            </div>
+          </div>
+
         </div>
         <aside class="info-stack">
           ${cards}
@@ -1308,6 +1363,147 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       }
     });
   }
+
+  /* ── Audio Love Lines recorder ──────────────────────────────── */
+  (function buildAudioLovelines(){
+    const toEl      = $('#aud-to');
+    const fromEl    = $('#aud-from');
+    const anonBtn   = $('#aud-anon-btn');
+    const idleEl    = $('#aud-idle');
+    const recEl     = $('#aud-recording');
+    const prevEl    = $('#aud-preview');
+    const recBtn    = $('#aud-record-btn');
+    const stopBtn   = $('#aud-stop-btn');
+    const rerecBtn  = $('#aud-rerecord-btn');
+    const submitBtn = $('#aud-submit-btn');
+    const timerEl   = $('#aud-timer');
+    const playback  = $('#aud-playback');
+    const errEl     = $('#aud-browser-err');
+    const formWrap  = $('#audio-love-form-wrap');
+    const successEl = $('#audio-love-success');
+    if(!recBtn) return;
+
+    /* Check browser support */
+    if(!window.MediaRecorder || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      if(errEl)  errEl.style.display  = 'block';
+      if(recBtn) recBtn.disabled = true;
+      return;
+    }
+
+    let recorder, chunks = [], audioBlob, recordedMime, timerInt, secs = 0, isAnon = false;
+
+    /* Anonymous toggle */
+    if(anonBtn && fromEl){
+      anonBtn.addEventListener('click', () => {
+        isAnon = !isAnon;
+        if(isAnon){
+          fromEl.value = 'Anonymous'; fromEl.disabled = true; fromEl.style.opacity = '.4';
+          anonBtn.textContent = 'USE MY NAME';
+          anonBtn.style.background = 'rgba(239,68,68,0.18)'; anonBtn.style.borderColor = '#f87171';
+        } else {
+          fromEl.value = ''; fromEl.disabled = false; fromEl.style.opacity = '1';
+          anonBtn.textContent = 'STAY ANONYMOUS';
+          anonBtn.style.background = 'transparent'; anonBtn.style.borderColor = 'rgba(239,68,68,0.4)';
+          fromEl.focus();
+        }
+      });
+    }
+
+    function showState(s){
+      idleEl.style.display  = s === 'idle'      ? '' : 'none';
+      recEl.style.display   = s === 'recording' ? '' : 'none';
+      prevEl.style.display  = s === 'preview'   ? '' : 'none';
+      if(submitBtn){ submitBtn.disabled = s !== 'preview'; submitBtn.style.opacity = s === 'preview' ? '1' : '.45'; }
+    }
+    function fmt(s){ return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+
+    /* Start recording */
+    recBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+        const mime = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4']
+          .find(t => MediaRecorder.isTypeSupported(t)) || '';
+        recorder = mime ? new MediaRecorder(stream, {mimeType:mime}) : new MediaRecorder(stream);
+        recordedMime = recorder.mimeType || 'audio/webm';
+        chunks = []; secs = 0;
+
+        recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+        recorder.onstop = () => {
+          audioBlob = new Blob(chunks, {type: recordedMime});
+          if(playback) playback.src = URL.createObjectURL(audioBlob);
+          showState('preview');
+          stream.getTracks().forEach(t => t.stop());
+        };
+
+        recorder.start(100);
+        showState('recording');
+        if(timerEl) timerEl.textContent = '0:00';
+        timerInt = setInterval(() => {
+          secs++;
+          if(timerEl) timerEl.textContent = fmt(secs);
+          if(secs >= 60){ clearInterval(timerInt); if(recorder.state !== 'inactive') recorder.stop(); }
+        }, 1000);
+      } catch(err){
+        alert('Could not access your microphone. Please allow microphone access and try again.');
+      }
+    });
+
+    /* Stop */
+    if(stopBtn) stopBtn.addEventListener('click', () => {
+      clearInterval(timerInt);
+      if(recorder && recorder.state !== 'inactive') recorder.stop();
+    });
+
+    /* Re-record */
+    if(rerecBtn) rerecBtn.addEventListener('click', () => {
+      audioBlob = null; chunks = [];
+      if(playback) playback.src = '';
+      showState('idle');
+    });
+
+    /* Submit */
+    if(submitBtn) submitBtn.addEventListener('click', async () => {
+      const toVal   = toEl?.value.trim();
+      const fromVal = fromEl?.value.trim();
+      if(!toVal){ toEl?.focus(); return; }
+      if(!isAnon && !fromVal){ fromEl?.focus(); return; }
+      if(!audioBlob){ alert('Please record a message first.'); return; }
+
+      submitBtn.disabled = true; submitBtn.textContent = 'Uploading…';
+
+      try {
+        /* Convert blob to base64 */
+        const base64 = await new Promise((res, rej) => {
+          const reader = new FileReader();
+          reader.onloadend = () => res(reader.result.split(',')[1]);
+          reader.onerror = rej;
+          reader.readAsDataURL(audioBlob);
+        });
+
+        const fd = new FormData();
+        fd.append('form_type',       'Love Lines (Audio)');
+        fd.append('to',              toVal);
+        fd.append('from',            isAnon ? 'Anonymous' : fromVal);
+        fd.append('audio_data',      base64);
+        fd.append('audio_mime',      recordedMime);
+        fd.append('audio_duration',  fmt(secs));
+        const meta = await getSubmitterInfo();
+        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+
+        const r = await fetch(FORM_ENDPOINT, {method:'POST', body:fd});
+        if(r.ok){
+          if(formWrap) formWrap.style.display = 'none';
+          if(successEl) successEl.classList.add('active');
+        } else {
+          submitBtn.disabled = false; submitBtn.textContent = 'Send Audio Love Lines →'; submitBtn.style.opacity = '1';
+          alert('Submission failed — try again or reach us at @ennbulletin.');
+        }
+      } catch(err){
+        submitBtn.disabled = false; submitBtn.textContent = 'Send Audio Love Lines →'; submitBtn.style.opacity = '1';
+        alert('Network error — check your connection.');
+      }
+    });
+  })();
 
   /* ── Hamburger / mobile menu ─────────────────────────────────── */
   const hamburger = $('#hamburger'), mobileMenu = $('#mobile-menu');

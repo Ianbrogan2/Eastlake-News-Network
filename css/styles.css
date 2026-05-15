@@ -1133,3 +1133,78 @@ a.tcard-val:hover{text-decoration:underline}
   padding:0 clamp(18px,4.4vw,60px) 52px;
   user-select:none;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   AUDIO LOVE LINES — voice message recorder
+═══════════════════════════════════════════════════════════════ */
+
+.aud-rec-wrap{
+  background:var(--bg-3);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:32px 20px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+/* Idle: mic button */
+.aud-idle{display:flex;flex-direction:column;align-items:center;gap:14px}
+.aud-rec-btn{
+  width:76px;height:76px;border-radius:50%;
+  background:var(--blue);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:transform .15s,box-shadow .15s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.aud-rec-btn:hover{
+  transform:scale(1.07);
+  box-shadow:0 0 0 10px rgba(26,86,219,0.14);
+}
+.aud-rec-hint{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2);
+}
+
+/* Recording state */
+.aud-recording{display:flex;flex-direction:column;align-items:center;gap:14px}
+.aud-pulse-ring{
+  width:76px;height:76px;border-radius:50%;
+  background:rgba(239,68,68,0.10);
+  border:2px solid rgba(239,68,68,0.35);
+  display:flex;align-items:center;justify-content:center;
+  animation:aud-ring 1.2s ease-in-out infinite;
+}
+@keyframes aud-ring{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,0.45)}
+  70%{box-shadow:0 0 0 16px rgba(239,68,68,0)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+.aud-pulse-dot{width:28px;height:28px;border-radius:50%;background:#ef4444}
+.aud-timer{
+  font-family:'DM Mono',monospace;
+  font-size:36px;letter-spacing:.06em;
+  color:var(--text);line-height:1;
+}
+.aud-stop-btn{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text);
+  background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.28);
+  border-radius:6px;padding:9px 22px;cursor:pointer;
+  touch-action:manipulation;
+  transition:background .15s,border-color .15s;
+}
+.aud-stop-btn:hover{background:rgba(239,68,68,0.2);border-color:rgba(239,68,68,0.5)}
+
+/* Preview state */
+.aud-preview{display:flex;flex-direction:column;gap:12px;align-items:flex-start;width:100%}
+.aud-preview audio{width:100%;border-radius:8px;accent-color:var(--blue)}
+.aud-rerecord-btn{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted-2);
+  background:transparent;border:1px solid var(--border);
+  border-radius:6px;padding:8px 14px;cursor:pointer;
+  touch-action:manipulation;
+  transition:color .15s,border-color .15s;
+}
+.aud-rerecord-btn:hover{color:var(--text);border-color:var(--border-hi)}
