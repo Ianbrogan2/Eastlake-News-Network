@@ -22,25 +22,25 @@
 var ENN_NEWS = {
   featured: {
     tag:    'Featured',
-    title:  'Eastlake Disney Trip is Coming Up!',
-    body:   'The Eastlake High School senior disney trip is coming up, Monday May 18th, check Eastlake ASB for more info!',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED APRIL 28, 2026',
+    title:  '',
+    body:   '',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 19, 2026',
   },
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Today is eastlake boys varsity baseball senior night!',
-      date:  'May 12',
+      title: 'Today there is an Eastlake boys varsity volleyball game in the gym @ 6:00PM !',
+      date:  'May 19',
     },
     {
-      cat:   'AP Testing',
-      title: 'LANG, PHYSICS C, and Spanish LIT, are tomorrow!',
-      date:  'May 13',
+      cat:   '',
+      title: '',
+      date:  '',
     },
     {
-      cat:   'Grades',
-      title: 'Final grades are only a month away! LOCK IN!',
-      date:  'June 5th',
+      cat:   '',
+      title: '',
+      date:  '',
     },
   ],
 };
