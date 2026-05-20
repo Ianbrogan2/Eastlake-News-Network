@@ -23,7 +23,7 @@ var ENN_NEWS = {
   featured: {
     tag:    'Featured',
     title:  'Final Grades',
-    body:   'Final Grades are 14 days away! Focus on your studies!',
+    body:   'Final Grades are 13 days away! Focus on your studies!',
     byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 19, 2026',
   },
   sidebar: [
