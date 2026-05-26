@@ -1141,7 +1141,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       /* ── Top row: category + badge + optional logo mark ── */
       let logoMark = '';
       if(card.theme === 'gta'){
-        logoMark = `<div class="snews-rstar">R★</div>`;
+        logoMark = `<div class="snews-gta-logo"><div class="snews-gta-gta">GTA</div><div class="snews-gta-vi">VI</div></div>`;
       } else if(card.theme === 'red' && card.badge && card.badge.toUpperCase().includes('NETFLIX')){
         logoMark = `<div class="snews-netflix-n"><span>N</span></div>`;
       }

@@ -1018,14 +1018,23 @@ a.tcard-val:hover{text-decoration:underline}
 .snews-card--gta .snews-headline{ color:#fff; }
 .snews-card--gta .snews-link{ color:#FF6B35; }
 
-/* Rockstar "R*" logo mark */
-.snews-rstar{
-  font-family:'Bebas Neue',sans-serif;font-size:28px;
-  width:44px;height:44px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.25);
-  color:#FF6B35;letter-spacing:0;flex-shrink:0;
-  margin-left:auto;
+/* GTA VI logo mark */
+.snews-gta-logo{
+  flex-shrink:0;margin-left:auto;
+  display:flex;flex-direction:column;align-items:center;
+  line-height:1;user-select:none;
+}
+.snews-gta-gta{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;letter-spacing:.06em;
+  color:#FF6B35;
+  text-shadow:0 0 18px rgba(255,107,53,.55);
+}
+.snews-gta-vi{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:42px;letter-spacing:.04em;
+  color:#fff;line-height:.85;
+  text-shadow:0 0 24px rgba(255,255,255,.18);
 }
 
 /* ── Countdown display ── */

@@ -37,11 +37,11 @@ var ENN_STUDIO_NEWS = {
       headline: 'GRAND THEFT AUTO VI',
 
       // Smaller text below the headline
-      subhead:  'The most anticipated game in history.',
+      subhead:  'The most anticipated game in history returns to Vice City.',
 
       // ISO date string — the moment the countdown targets
       // When this date passes the card automatically flips to "OUT NOW"
-      countdownTarget: '2026-05-26T00:00:00',
+      countdownTarget: '2026-11-19T00:00:00',
 
       // Label shown beneath the timer blocks
       countdownLabel: 'Until Launch',
@@ -60,11 +60,11 @@ var ENN_STUDIO_NEWS = {
       category: 'ANIMATION',
       badge:    'PIXAR · DISNEY',
 
-      headline: 'Inside Out 3 Officially in Production',
+      headline: 'Toy Story 5 Wraps Principal Photography',
 
-      subhead:  'Director Kelsey Mann returns as Pixar greenlit a third chapter.',
+      subhead:  'Woody and Buzz are back — Pixar confirms post-production has begun.',
 
-      body: 'Following a $1.6B global run for Inside Out 2, Disney-Pixar has confirmed the third installment is in active development — targeting a 2028 theatrical release window.',
+      body: 'After years of development, Toy Story 5 has officially wrapped shooting at Pixar Animation Studios. The film is targeting a summer 2027 theatrical release.',
 
       link: 'https://variety.com',
 
@@ -75,18 +75,18 @@ var ENN_STUDIO_NEWS = {
     {
       type:     'news',
 
-      category: 'STREAMING',
-      badge:    'NETFLIX',
+      category: 'FILM',
+      badge:    'DREAMWORKS · UNIVERSAL',
 
-      headline: 'Stranger Things S5 Breaks Pre-Save Record',
+      headline: 'How to Train Your Dragon Sequel Greenlit',
 
-      subhead:  'The Duffer Brothers\' final season is the most pre-saved show in Netflix history.',
+      subhead:  'Universal greenlights a fourth chapter following the live-action reboot\'s success.',
 
-      body: 'With over 140M households hitting the pre-save button, Season 5 of Stranger Things is on track to be the biggest streaming event of the decade before a single frame airs.',
+      body: 'Riding the wave of the live-action How to Train Your Dragon\'s global box office run, DreamWorks and Universal have fast-tracked a sequel with the original creative team returning.',
 
       link: 'https://deadline.com',
 
-      theme: 'red',
+      theme: 'green',
     },
 
   ],

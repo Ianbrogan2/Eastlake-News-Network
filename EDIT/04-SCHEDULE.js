@@ -34,22 +34,21 @@
 
 var ENN_SCHEDULE_COUNTDOWN = {
 
-  enabled: true,
+  enabled: false,   // ← set to true and fill in the fields below to show a countdown
 
-  // Short label above the timer
-  label: 'GTA VI',
+  // Short label shown on the left of the card
+  label: '',
 
-  // Sub-label below the timer
-  sublabel: 'Rockstar Games',
+  // Smaller text underneath the label
+  sublabel: '',
 
-  // ISO date — when to count down to
-  // When this moment passes it shows "OUT NOW" automatically
-  target: '2026-05-26T00:00:00',
+  // ISO date — when to count down to (passes → shows "OUT NOW" automatically)
+  target: '',
 
-  // Optional link when clicked
-  link: 'https://www.rockstargames.com/VI',
+  // Optional link when clicked (leave blank for no link)
+  link: '',
 
-  // Colour theme
+  // Colour theme: 'orange'  'blue'  'red'  'green'  'purple'
   theme: 'orange',
 
 };
