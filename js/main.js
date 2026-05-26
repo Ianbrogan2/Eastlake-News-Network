@@ -1199,9 +1199,9 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
 
     const [hero, c2, c3] = cfg.cards;
-    const section = document.createElement('div');
-    section.className = 'snews reveal';
-    section.innerHTML = `
+    const inner = document.createElement('div');
+    inner.className = 'snews';
+    inner.innerHTML = `
       <div class="sec-head reveal" style="margin-bottom:28px">
         <div>
           <div class="eyebrow">${cfg.eyebrow||'What\'s Happening'}</div>
@@ -1214,7 +1214,14 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         ${c3   ? renderCard(c3,   false) : ''}
       </div>`;
 
-    root.prepend(section);
+    const section = document.createElement('div');
+    section.className = 'snews-section-wrap reveal';
+    section.appendChild(inner);
+
+    /* Insert as a sibling BEFORE .studio-body so buildStudio()'s
+       root.innerHTML = ... can't wipe it out */
+    const studioBody = root.closest('.studio-body') || root.parentElement;
+    studioBody.parentElement.insertBefore(section, studioBody);
 
     /* ── Live countdown tickers ── */
     cfg.cards.filter(c => c.type === 'countdown' && c.countdownTarget).forEach(card => {

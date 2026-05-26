@@ -927,6 +927,10 @@ a.tcard-val:hover{text-decoration:underline}
 }
 
 /* --- STUDIO NEWS CARDS --- */
+.snews-section-wrap{
+  padding:0 clamp(18px,4.4vw,60px);
+  margin-bottom:0;
+}
 .snews{ margin-bottom:72px; }
 .snews-head{ margin-bottom:28px; }
 
