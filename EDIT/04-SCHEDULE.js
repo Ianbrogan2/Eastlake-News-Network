@@ -68,7 +68,7 @@ var ENN_SCHEDULE = [
 
   { on: 'T', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Tuesday Episode', url: '' },
+      { label: 'Tuesday Episode', url: 'https://youtu.be/uSfjef6umlk?si=vsGj9VAxfp8Fk3bP' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
