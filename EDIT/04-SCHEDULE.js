@@ -59,7 +59,7 @@ var ENN_SCHEDULE = [
 
   { on: 'F', key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Monday Episode', url: 'https://youtu.be/1xi80dzSSrA?si=Rs-7Mdms_ERenAHC' },
+      { label: 'Monday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
@@ -68,7 +68,7 @@ var ENN_SCHEDULE = [
 
   { on: 'T', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Tuesday Episode', url: 'https://youtu.be/iNlYswdG_hE?si=wprA1jy-AdFOrcmi' },
+      { label: 'Tuesday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
