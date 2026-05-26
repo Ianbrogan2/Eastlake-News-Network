@@ -23,6 +23,38 @@
 // ║    If 2–4 links are set, a dropdown appears with all options.    ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  OPTIONAL — COUNTDOWN CARD                                       ║
+// ║  Appears below the schedule rows on the home page                ║
+// ║                                                                  ║
+// ║  Set  enabled: true  to show it, false to hide it               ║
+// ║                                                                  ║
+// ║  theme options:  'orange'  'blue'  'red'  'green'  'purple'     ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+var ENN_SCHEDULE_COUNTDOWN = {
+
+  enabled: true,
+
+  // Short label above the timer
+  label: 'GTA VI',
+
+  // Sub-label below the timer
+  sublabel: 'Rockstar Games',
+
+  // ISO date — when to count down to
+  // When this moment passes it shows "OUT NOW" automatically
+  target: '2026-05-26T00:00:00',
+
+  // Optional link when clicked
+  link: 'https://www.rockstargames.com/VI',
+
+  // Colour theme
+  theme: 'orange',
+
+};
+
+// ─────────────────────────────────────────────────────────────────────
 var ENN_SCHEDULE = [
 
   { key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',

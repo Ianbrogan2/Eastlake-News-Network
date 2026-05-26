@@ -532,6 +532,57 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       }
       host.appendChild(row);
     });
+
+    /* ── Optional schedule countdown card ── */
+    const cdCfg = (typeof ENN_SCHEDULE_COUNTDOWN !== 'undefined') ? ENN_SCHEDULE_COUNTDOWN : null;
+    if(cdCfg && cdCfg.enabled){
+      const theme   = cdCfg.theme || 'orange';
+      const target  = cdCfg.target ? new Date(cdCfg.target).getTime() : 0;
+      const isLive  = target <= Date.now();
+      const timerHtml = isLive
+        ? `<div class="sched-cd-outnow">OUT NOW</div>`
+        : `<div class="sched-cd-timer" id="sched-cd-timer">
+             <div class="sched-cd-block"><div class="sched-cd-num" id="scd-d">--</div><div class="sched-cd-lbl">Days</div></div>
+             <div class="sched-cd-sep">:</div>
+             <div class="sched-cd-block"><div class="sched-cd-num" id="scd-h">--</div><div class="sched-cd-lbl">Hrs</div></div>
+             <div class="sched-cd-sep">:</div>
+             <div class="sched-cd-block"><div class="sched-cd-num" id="scd-m">--</div><div class="sched-cd-lbl">Min</div></div>
+             <div class="sched-cd-sep">:</div>
+             <div class="sched-cd-block"><div class="sched-cd-num" id="scd-s">--</div><div class="sched-cd-lbl">Sec</div></div>
+           </div>`;
+      const tag   = cdCfg.link ? 'a' : 'div';
+      const attrs = cdCfg.link ? ` href="${cdCfg.link}" target="_blank" rel="noopener"` : '';
+      const cdEl  = document.createElement('div');
+      cdEl.innerHTML = `
+        <${tag} class="sched-countdown sched-countdown--${theme}"${attrs}>
+          <div class="sched-cd-inner">
+            <div class="sched-cd-labels">
+              <div class="sched-cd-name">${cdCfg.label||'Countdown'}</div>
+              ${cdCfg.sublabel ? `<div class="sched-cd-sub">${cdCfg.sublabel}</div>` : ''}
+            </div>
+            ${timerHtml}
+          </div>
+        </${tag}>`;
+      host.appendChild(cdEl.firstElementChild);
+
+      if(!isLive){
+        const dEl = $('#scd-d'), hEl = $('#scd-h'), mEl = $('#scd-m'), sEl = $('#scd-s');
+        function schedTick(){
+          const diff = target - Date.now();
+          if(diff <= 0){
+            const timer = $('#sched-cd-timer');
+            if(timer) timer.outerHTML = `<div class="sched-cd-outnow">OUT NOW</div>`;
+            return;
+          }
+          if(dEl) dEl.textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+          if(hEl) hEl.textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+          if(mEl) mEl.textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+          if(sEl) sEl.textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+        }
+        schedTick();
+        setInterval(schedTick, 1000);
+      }
+    }
   })();
 
   /* ── News stories ────────────────────────────────────────────── */
@@ -1071,6 +1122,130 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           </div>
         </aside>
       </section>`;
+  })();
+
+  /* ── Studio News Cards ───────────────────────────────────────── */
+  (function buildStudioNews(){
+    const cfg = (typeof ENN_STUDIO_NEWS !== 'undefined') ? ENN_STUDIO_NEWS : null;
+    if(!cfg || !cfg.cards || !cfg.cards.length) return;
+
+    const root = $('#studio-root');
+    if(!root) return;
+
+    const themeClass = t => `snews-card--${t || 'blue'}`;
+
+    function renderCard(card, isHero){
+      const tc = themeClass(card.theme);
+      const heroClass = isHero ? ' snews-card-hero' : '';
+
+      /* ── Top row: category + badge + optional logo mark ── */
+      let logoMark = '';
+      if(card.theme === 'gta'){
+        logoMark = `<div class="snews-rstar">R★</div>`;
+      } else if(card.theme === 'red' && card.badge && card.badge.toUpperCase().includes('NETFLIX')){
+        logoMark = `<div class="snews-netflix-n"><span>N</span></div>`;
+      }
+
+      const topRow = `
+        <div class="snews-top-row">
+          <span class="snews-cat">${card.category||''}</span>
+          <span class="snews-badge">${card.badge||''}</span>
+          ${logoMark}
+        </div>`;
+
+      /* ── Countdown vs news body ── */
+      let bodyHtml = '';
+      if(card.type === 'countdown'){
+        const targetMs = card.countdownTarget ? new Date(card.countdownTarget).getTime() : 0;
+        const now = Date.now();
+        const isLive = targetMs <= now;
+
+        const cdHtml = isLive
+          ? `<div class="snews-outnow">OUT NOW</div>`
+          : `<div class="snews-countdown-wrap">
+               <div class="snews-countdown" id="snews-cd-${card.id||'gta'}">
+                 <div class="snews-cd-block"><div class="snews-cd-num" id="sncd-d-${card.id}">--</div><div class="snews-cd-lbl">Days</div></div>
+                 <div class="snews-cd-block"><div class="snews-cd-num" id="sncd-h-${card.id}">--</div><div class="snews-cd-lbl">Hrs</div></div>
+                 <div class="snews-cd-block"><div class="snews-cd-num" id="sncd-m-${card.id}">--</div><div class="snews-cd-lbl">Min</div></div>
+                 <div class="snews-cd-block"><div class="snews-cd-num" id="sncd-s-${card.id}">--</div><div class="snews-cd-lbl">Sec</div></div>
+               </div>
+               <div class="snews-cd-label">${card.countdownLabel||'Until Launch'}</div>
+             </div>`;
+
+        bodyHtml = `
+          <div class="snews-headline">${card.headline||''}</div>
+          <div class="snews-subhead">${card.subhead||''}</div>
+          ${cdHtml}
+          <span class="snews-link">Visit Rockstar Games ↗</span>`;
+
+      } else {
+        bodyHtml = `
+          <div class="snews-headline">${card.headline||''}</div>
+          <div class="snews-subhead">${card.subhead||''}</div>
+          ${card.body ? `<div class="snews-body">${card.body}</div>` : ''}
+          <span class="snews-link">Read more ↗</span>`;
+      }
+
+      const href = card.link ? ` href="${card.link}" target="_blank" rel="noopener"` : '';
+      return `
+        <div class="${heroClass}">
+          <a class="snews-card ${tc}"${href}>
+            <div class="snews-card-inner">
+              ${topRow}
+              ${bodyHtml}
+            </div>
+          </a>
+        </div>`;
+    }
+
+    const [hero, c2, c3] = cfg.cards;
+    const section = document.createElement('div');
+    section.className = 'snews reveal';
+    section.innerHTML = `
+      <div class="sec-head reveal" style="margin-bottom:28px">
+        <div>
+          <div class="eyebrow">${cfg.eyebrow||'What\'s Happening'}</div>
+          <div class="sec-title">${cfg.sectionTitle||'INDUSTRY NEWS'}</div>
+        </div>
+      </div>
+      <div class="snews-grid">
+        ${hero ? renderCard(hero, true) : ''}
+        ${c2   ? renderCard(c2,   false) : ''}
+        ${c3   ? renderCard(c3,   false) : ''}
+      </div>`;
+
+    root.prepend(section);
+
+    /* ── Live countdown tickers ── */
+    cfg.cards.filter(c => c.type === 'countdown' && c.countdownTarget).forEach(card => {
+      const target = new Date(card.countdownTarget).getTime();
+      const dEl = $(`#sncd-d-${card.id}`);
+      const hEl = $(`#sncd-h-${card.id}`);
+      const mEl = $(`#sncd-m-${card.id}`);
+      const sEl = $(`#sncd-s-${card.id}`);
+      if(!dEl) return; // already showing OUT NOW
+
+      function tick(){
+        const diff = target - Date.now();
+        if(diff <= 0){
+          const wrap = $(`#snews-cd-${card.id}`);
+          if(wrap && wrap.parentNode){
+            wrap.parentNode.innerHTML = `<div class="snews-outnow">OUT NOW</div>`;
+          }
+          return;
+        }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        if(dEl) dEl.textContent = String(d).padStart(2,'0');
+        if(hEl) hEl.textContent = String(h).padStart(2,'0');
+        if(mEl) mEl.textContent = String(m).padStart(2,'0');
+        if(sEl) sEl.textContent = String(s).padStart(2,'0');
+      }
+      tick();
+      setInterval(tick, 1000);
+    });
   })();
 
   /* ── Studio page ─────────────────────────────────────────────── */
