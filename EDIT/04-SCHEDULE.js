@@ -7,6 +7,7 @@
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  HOW TO EDIT:                                                    ║
 // ║    Each row is one broadcast day. The fields are:                ║
+// ║      on    → 'T' = airing this week  |  'F' = no broadcast      ║
 // ║      key   → the day label shown on the card  (MON, TUE, etc.) ║
 // ║      idx   → day number  (1=Mon 2=Tue 3=Wed 4=Thu 5=Fri)       ║
 // ║      ep    → the episode or show name for that day              ║
@@ -56,7 +57,7 @@ var ENN_SCHEDULE_COUNTDOWN = {
 // ─────────────────────────────────────────────────────────────────────
 var ENN_SCHEDULE = [
 
-  { key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'F', key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Monday Episode', url: 'https://youtu.be/1xi80dzSSrA?si=Rs-7Mdms_ERenAHC' },
       { label: '', url: '' },
@@ -65,7 +66,7 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Tuesday Episode', url: 'https://youtu.be/iNlYswdG_hE?si=wprA1jy-AdFOrcmi' },
       { label: '', url: '' },
@@ -74,7 +75,7 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { key: 'WED', idx: 3, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'WED', idx: 3, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Wednesday Episode', url: '' },
       { label: '', url: '' },
@@ -83,7 +84,7 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'F', key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Thursday Episode', url: '' },
       { label: '', url: '' },

@@ -490,6 +490,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     host.innerHTML = '';
     const weekend = (dow===0||dow===5||dow===6);
     schedule.forEach(d => {
+      if(d.on === 'F') return;   // not airing this week — skip the row
       let status='Upcoming', cls='st-soon', isAired=false;
       if(!weekend){
         if(d.idx < dow){ status='Aired'; cls='st-aired'; isAired=true; }
