@@ -23,24 +23,24 @@ var ENN_NEWS = {
   featured: {
     tag:    'Featured',
     title:  'Final Grades',
-    body:   'Final Grades are 13 days away! Focus on your studies!',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 20, 2026',
+    body:   'Final Grades are 9 days away! Focus on your studies!',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 26, 2026',
   },
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Today there is an Eastlake boys varsity volleyball game in the gym @ 6:00PM !',
-      date:  'May 19',
+      title: 'Today there is an Eastlake boys varsity baseball game @ Home @ 4:00PM !',
+      date:  'May 26',
+    },
+    {
+      cat:   'Seniors',
+      title: 'Seniors last school day is tomorrow! ',
+      date:  'May 27',
     },
     {
       cat:   'Dance',
-      title: 'Eastlake All Female workshops are today and tomorrow. Mandatory to Audition',
-      date:  'May 19',
-    },
-    {
-      cat:   'Baseball',
-      title: 'Eastlake Varsity baseball plays home tomorrow @ 4:00PM!',
-      date:  'May 19',
+      title: 'All Female make up auditions are this friday!',
+      date:  'May 29',
     },
   ],
 };
