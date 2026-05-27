@@ -23,18 +23,18 @@ var ENN_NEWS = {
   featured: {
     tag:    'Featured',
     title:  'Final Grades',
-    body:   'Final Grades are 9 days away! Focus on your studies!',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 26, 2026',
+    body:   'Final Grades are 8 days away! Focus on your studies!',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 27, 2026',
   },
   sidebar: [
     {
       cat:   'Sports',
-      title: 'Today there is an Eastlake boys varsity baseball game @ Home @ 4:00PM !',
-      date:  'May 26',
+      title: 'This saturday there is an Eastlake boys varsity baseball game @ USD @ 6:00PM !',
+      date:  'May 30',
     },
     {
       cat:   'Seniors',
-      title: 'Seniors last school day is tomorrow! ',
+      title: 'Seniors last school day is today! ',
       date:  'May 27',
     },
     {
