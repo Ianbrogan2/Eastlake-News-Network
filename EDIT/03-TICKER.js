@@ -22,8 +22,8 @@
 // ║    { k: 'Sports', t: 'Titans win league championship' },        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_TICKER = [
-  { k: 'Sports',  t: 'Varsity boys Baseball tonight @ 4:00PM— check eastlakeathletics.com for more' },
-  { k: 'Schedule', t: 'Only 9 days left of school!' },
+  { k: 'Sports',  t: 'Varsity boys Baseball this saturday @ 6:00PM— check eastlakeathletics.com for more' },
+  { k: 'Schedule', t: 'Only 8 days left of school!' },
   { k: 'ENN',     t: 'Coverage requests open — submit at least one week before!' },
   { k: 'AP', t: 'AP Testing is over! Scores are released on July 6th.' },
   
