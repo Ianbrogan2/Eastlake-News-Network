@@ -60,6 +60,36 @@ var ENN_CONTACT = {
   successBody: 'Thanks! We\'ve received your coverage request. A producer will be in touch within one school week.',
 
 
+  // ── SCHEDULING & ACCESS REQUEST FORM ─────────────────────────────
+  // The crew-only form for special filming access — field passes,
+  // assembly floor access, backstage, off-campus events.
+  // Requests go to the scheduling desk (submissions land in the
+  // Google Sheet under their own "Scheduling Request" tab).
+
+  schedHeading: 'SCHEDULING & ACCESS REQUEST',
+
+  // Small label above the heading
+  schedEyebrow: 'ENN Crew Only',
+
+  // The sentence describing what this form is for
+  schedNote: 'Filming certain events requires an approved pass — football sidelines, assemblies, rallies, backstage, and off-campus coverage. Submit your request below and the scheduling desk will confirm your approval before the event. No approval, no access.',
+
+  // The dropdown options for the "Access Needed" field.
+  // Add or remove options by adding/removing lines inside the [ ].
+  schedAccessTypes: [
+    'Field Pass — Football',
+    'Sideline — Other Sports',
+    'Assembly / Rally Floor',
+    'Backstage — Performances & Theater',
+    'Off-Campus Event',
+    'Other Special Access',
+  ],
+
+  // Message shown after the form is submitted successfully
+  schedSuccessHeading: 'REQUEST SENT',
+  schedSuccessBody: 'Your scheduling request is in. The scheduling desk will confirm your approval before the event — keep an eye out and don\'t film without it.',
+
+
   // ── SONG REQUEST FORM ────────────────────────────────────────────
   // The second form card for song requests
 

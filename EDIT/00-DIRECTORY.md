@@ -46,6 +46,7 @@ eastlakenewsnetwork.com, and exactly which file to open to change it.
 | On Air badge broadcast hours | `02-ONAIR.js` |
 | About page text & stats | `08-ABOUT.js` |
 | Contact page forms & info cards | `09-CONTACT.js` |
+| Crew scheduling / field-pass request form | `09-CONTACT.js` |
 | Studio playlists | `10-STUDIO.js` |
 | Studio news cards (GTA countdown, etc.) | `18-STUDIONEWS.js` |
 | Calendar | `11-CALENDAR.js` — but usually just add events in Google Calendar |
@@ -150,6 +151,10 @@ eastlakenewsnetwork.com, and exactly which file to open to change it.
 - Page header: `heroEyebrow`, `heroHeadline`, `heroSub`
 - Coverage Request form: `formHeading`, `formNote`, `formRequestTypes`
   (the dropdown list), `successHeading`, `successBody`
+- Scheduling & Access Request (crew field passes): `schedHeading`, `schedEyebrow`,
+  `schedNote`, `schedAccessTypes` (the access dropdown — field pass, sideline,
+  assembly floor, backstage, off-campus), `schedSuccessHeading`, `schedSuccessBody`
+  — submissions land in their own "Scheduling Request" tab in the Google Sheet
 - Song Request form: `songHeading`, `songNote`, `songSuccessHeading`, `songSuccessBody`
 - Love Lines (text + audio): `loveHeading`, `loveEyebrow`, `loveDesc`,
   `loveSuccessHeading`, `loveSuccessBody`

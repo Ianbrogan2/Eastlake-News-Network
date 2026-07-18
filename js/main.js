@@ -1034,6 +1034,47 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     if(!root) return;
     const headline = contact.heroHeadline.replace(/\n/g, '<br/>');
     const options  = contact.formRequestTypes.map(t => `<option>${t}</option>`).join('');
+    const schedOptions = (contact.schedAccessTypes || []).map(t => `<option>${t}</option>`).join('');
+
+    /* Scheduling & Access Request card — crew-only special-access approvals.
+       Guarded so the page still builds if the config block is missing. */
+    const schedCard = contact.schedHeading ? `
+          <div class="form-card reveal left" style="border-color:rgba(0,212,255,0.30);background:linear-gradient(135deg,rgba(0,212,255,0.05) 0%,var(--bg-1) 60%);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px;">
+              <span style="font-size:22px;line-height:1;">🎫</span>
+              <div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:2px;">${contact.schedEyebrow || 'ENN Crew Only'}</div>
+                <h3 style="margin:0;letter-spacing:.06em;">${contact.schedHeading}</h3>
+              </div>
+            </div>
+            <p class="note" style="margin-top:12px;margin-bottom:24px;">${contact.schedNote || ''}</p>
+            <form id="sched-form" action="${FORM_ENDPOINT}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="Scheduling Request"/>
+              <div class="form-row">
+                <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+                <div class="field"><label>Event or Game</label><input type="text" name="event_name" required placeholder="e.g. Varsity Football vs. Otay Ranch"/></div>
+              </div>
+              <div class="form-row">
+                <div class="field"><label>Event Date</label><input type="date" name="event_date" required/></div>
+                <div class="field"><label>Access Needed</label>
+                  <select name="access" required>
+                    <option value="">Choose access type…</option>
+                    ${schedOptions}
+                  </select>
+                </div>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label>Reason for Filming</label>
+                <textarea name="reason" required placeholder="What are you covering and why — the segment or story this footage is for, and where you need to be to get it."></textarea>
+              </div>
+              <button type="submit" class="btn" id="sched-submit-btn">Request Approval →</button>
+            </form>
+            <div class="form-success" id="sched-form-success">
+              <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4>${contact.schedSuccessHeading || 'REQUEST SENT'}</h4>
+              <p>${contact.schedSuccessBody || ''}</p>
+            </div>
+          </div>` : '';
     const cards    = contact.infoCards.map((c, i) => `
       <div class="info-card reveal right d${i+1}">
         <div class="ic-head"><div class="ic-icon">${c.icon}</div><h4>${c.heading}</h4></div>
@@ -1079,6 +1120,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               <p>${contact.successBody}</p>
             </div>
           </div>
+          ${schedCard}
           <div class="form-card reveal left">
             <h3>${contact.songHeading}</h3>
             <p class="note">${contact.songNote}</p>
@@ -1496,6 +1538,31 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         if(r.ok){ form.style.display='none'; $('#form-success').classList.add('active'); }
         else { btn.disabled=false; btn.textContent='Submit Request →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
       } catch(err){ btn.disabled=false; btn.textContent='Submit Request →'; alert('Network error — check your connection.'); }
+    });
+  }
+
+  /* ── Scheduling & Access Request form (crew field passes) ────── */
+  const schedForm = $('#sched-form');
+  if(schedForm){
+    schedForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      for(const k of ['name','event_name','event_date','access','reason']){
+        const f = schedForm.elements[k];
+        if(!f?.value.trim()){ f?.focus(); return; }
+      }
+      const btn = $('#sched-submit-btn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const fd = new FormData(schedForm);
+        /* Mirror access + reason into the sheet's Message column so the
+           whole request reads in one cell alongside event name/date */
+        fd.append('message', `[${fd.get('access')}] ${fd.get('reason')}`);
+        const meta = await getSubmitterInfo();
+        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+        const r = await fetch(schedForm.action, {method:'POST', body:fd});
+        if(r.ok){ schedForm.style.display='none'; $('#sched-form-success').classList.add('active'); }
+        else { btn.disabled=false; btn.textContent='Request Approval →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
+      } catch(err){ btn.disabled=false; btn.textContent='Request Approval →'; alert('Network error — check your connection.'); }
     });
   }
 
