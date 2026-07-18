@@ -2262,43 +2262,19 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
 
     frame.innerHTML = `
       <div class="csoon">
-        <div class="csoon-leader" aria-hidden="true">
-          <svg viewBox="0 0 200 200" fill="none">
-            <circle cx="100" cy="100" r="96" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
-            <circle cx="100" cy="100" r="72" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-            <line x1="100" y1="0" x2="100" y2="200" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-            <line x1="0" y1="100" x2="200" y2="100" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          </svg>
-          <div class="csoon-sweep"></div>
-          <div class="csoon-nums"><span>3</span><span>2</span><span>1</span></div>
-        </div>
+        <div class="csoon-glow" aria-hidden="true"></div>
+        <div class="csoon-sweep" aria-hidden="true"></div>
         <div class="csoon-inner">
           <img class="csoon-logo" src="enn-logo.png" alt="" aria-hidden="true"/>
           <div class="csoon-title">FIRST BULLETIN</div>
           <div class="csoon-sub">COMING SOON</div>
+          <div class="csoon-load" aria-hidden="true"><span></span></div>
           <div class="csoon-season">SEASON 2026–2027 · PREMIERE DATE TBA</div>
         </div>
-        <div class="csoon-chip"><span class="csoon-dot"></span>STAND BY</div>
-        <div class="csoon-tc" id="csoon-tc">00:00:00:00</div>
-        <div class="csoon-sig">ENN · SIGNAL 01</div>
-        <div class="csoon-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="csoon-scan" aria-hidden="true"></div>
+        <div class="csoon-chip"><span class="csoon-dot"></span>STANDBY</div>
+        <div class="csoon-sig">ENN · EASTLAKE NEWS NETWORK</div>
+        <div class="csoon-grain" aria-hidden="true"></div>
       </div>`;
-
-    /* Ticking SMPTE-style timecode (24 fps) */
-    const tcEl = $('#csoon-tc');
-    if(tcEl){
-      const t0 = Date.now();
-      const p2 = n => String(n).padStart(2,'0');
-      setInterval(() => {
-        const ms = Date.now() - t0;
-        const f  = Math.floor((ms % 1000) / (1000/24));
-        const s  = Math.floor(ms/1000) % 60;
-        const m  = Math.floor(ms/60000) % 60;
-        const h  = Math.floor(ms/3600000);
-        tcEl.textContent = `${p2(h)}:${p2(m)}:${p2(s)}:${p2(f)}`;
-      }, 1000/24);
-    }
   }
 
   async function loadLatestVideo(){
