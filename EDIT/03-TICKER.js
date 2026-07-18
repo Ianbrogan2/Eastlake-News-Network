@@ -22,9 +22,8 @@
 // ║    { k: 'Sports', t: 'Titans win league championship' },        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_TICKER = [
-  { k: 'Sports',  t: 'Varsity boys Volleyball tonight @ 6:00PM— check eastlakeathletics.com for more' },
-  { k: 'Schedule', t: 'Only 13 days left of school!' },
-  { k: 'ENN',     t: 'Coverage requests open — submit at least one week before!' },
-  { k: 'AP', t: 'AP Testing is over! Scores are released on July 6th.' },
-  
+  { k: 'Welcome',  t: 'Welcome back Titans — first day of school is Wednesday, July 22!' },
+  { k: 'ENN',      t: 'ENN broadcasts return for the 2026–2027 school year — live M–TH, 10:31 AM' },
+  { k: 'Events',   t: 'Open House is Thursday, August 13 — come see the ENN studio!' },
+  { k: 'ENN',      t: 'Coverage requests open — submit at least one week before your event!' },
 ];

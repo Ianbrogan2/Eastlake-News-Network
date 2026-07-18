@@ -22,25 +22,25 @@
 var ENN_NEWS = {
   featured: {
     tag:    'Featured',
-    title:  'Final Grades',
-    body:   'Final Grades are 13 days away! Focus on your studies!',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED MAY 20, 2026',
+    title:  'ENN Returns for the 2026–2027 School Year',
+    body:   'The bulletin is back. School starts Wednesday, July 22 — and ENN goes live with the first broadcasts of the new year that same week.',
+    byline: 'REPORTED BY TEAM ENN · PUBLISHED JULY 17, 2026',
   },
   sidebar: [
     {
-      cat:   'Sports',
-      title: 'Today there is an Eastlake boys varsity volleyball game in the gym @ 6:00PM !',
-      date:  'May 19',
+      cat:   'Campus',
+      title: 'First day of the 2026–2027 school year is Wednesday, July 22 — welcome back, Titans!',
+      date:  'Jul 17',
     },
     {
-      cat:   'Dance',
-      title: 'Eastlake All Female workshops are today and tomorrow. Mandatory to Audition',
-      date:  'May 19',
+      cat:   'Freshmen',
+      title: '9th Grade Orientation ran Friday, July 17 with Link Crew in the ELH Gym & Theater.',
+      date:  'Jul 17',
     },
     {
-      cat:   'Baseball',
-      title: 'Eastlake Varsity baseball plays home tomorrow @ 4:00PM!',
-      date:  'May 19',
+      cat:   'Events',
+      title: 'Open House is Thursday, August 13 — families can tour campus and visit the ENN studio.',
+      date:  'Jul 17',
     },
   ],
 };
