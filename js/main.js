@@ -391,6 +391,73 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   const _footerYear = $('#footer-year');
   if(_footerYear) _footerYear.textContent = new Date().getFullYear();
 
+  /* ── Custom ENN cursor — sleek dot + trailing ring ───────────────
+     Performance notes (why it never lags):
+       • The dot's transform is written straight in the mousemove
+         handler → pixel-perfect, zero perceived latency.
+       • The ring eases toward the pointer inside a self-terminating
+         requestAnimationFrame loop that stops the instant it catches
+         up, so there is no idle CPU burn.
+       • Both layers use translate3d (own GPU layer) + pointer-events:
+         none, so they never block clicks or trigger reflow.
+       • Only runs on real mouse pointers; touch devices are skipped. */
+  (function ennCursor(){
+    const fine = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+    if(!fine) return;                       // touch / stylus → keep native cursor
+
+    const dot  = document.createElement('div');
+    const ring = document.createElement('div');
+    dot.className  = 'enn-cur enn-cur-dot';
+    ring.className = 'enn-cur enn-cur-ring';
+    document.body.appendChild(ring);
+    document.body.appendChild(dot);
+    document.documentElement.classList.add('enn-cursor-on');
+
+    let mx = -100, my = -100;               // live pointer
+    let rx = mx, ry = my;                    // eased ring position
+    let rafId = null, seen = false;
+
+    const HOVER_SEL = 'a,button,[role="button"],input,textarea,select,label,.tcard,.sw-card,.snews-card,summary,.hamburger';
+    /* fields + embedded frames → step aside and let the native cursor show */
+    const TEXT_SEL  = 'input,textarea,[contenteditable="true"],iframe,embed,video';
+
+    function ringLoop(){
+      rx += (mx - rx) * 0.22;
+      ry += (my - ry) * 0.22;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+      if(Math.abs(mx - rx) > 0.4 || Math.abs(my - ry) > 0.4){
+        rafId = requestAnimationFrame(ringLoop);
+      } else { rafId = null; }
+    }
+
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      if(!seen){ document.documentElement.classList.add('enn-cursor-ready'); seen = true; }
+      if(rafId === null) rafId = requestAnimationFrame(ringLoop);
+    }, {passive:true});
+
+    /* Hover feedback (event-delegated, cheap) */
+    document.addEventListener('mouseover', e => {
+      const t = e.target;
+      if(t.closest && t.closest(TEXT_SEL)){ document.documentElement.classList.add('enn-cursor-text'); }
+      else if(t.closest && t.closest(HOVER_SEL)){ document.documentElement.classList.add('enn-cursor-hover'); }
+    }, {passive:true});
+    document.addEventListener('mouseout', e => {
+      const t = e.target;
+      if(t.closest && t.closest(TEXT_SEL)){ document.documentElement.classList.remove('enn-cursor-text'); }
+      if(t.closest && t.closest(HOVER_SEL)){ document.documentElement.classList.remove('enn-cursor-hover'); }
+    }, {passive:true});
+
+    /* Click pulse */
+    window.addEventListener('mousedown', () => document.documentElement.classList.add('enn-cursor-down'), {passive:true});
+    window.addEventListener('mouseup',   () => document.documentElement.classList.remove('enn-cursor-down'), {passive:true});
+
+    /* Hide when the pointer leaves the window entirely */
+    document.addEventListener('mouseleave', () => document.documentElement.classList.add('enn-cursor-out'), {passive:true});
+    document.addEventListener('mouseenter', () => document.documentElement.classList.remove('enn-cursor-out'), {passive:true});
+  })();
+
   /* ── Hero scroll scrubbing ───────────────────────────────────── */
   const hero        = $('#hero');
   const heroTagline = $('#hero-tagline');
@@ -674,9 +741,16 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     const cards = cfg.days.map((d, i) => {
       const dt      = parseDay(d.date);
       const isToday = d.date === todayKey;
+      /* A photo (if provided) overrides the themed CSS art entirely */
+      const hasPhoto = d.photo && d.photo.trim();
+      const photoClass = hasPhoto ? ' sw-card--photo' : '';
+      const art = hasPhoto
+        ? `<div class="sw-art" aria-hidden="true" style="background-image:url('${d.photo.trim()}')"></div>
+           <div class="sw-photo-scrim" aria-hidden="true"></div>`
+        : `<div class="sw-art" aria-hidden="true"></div>`;
       return `
-        <div class="sw-card sw-card--${d.theme||'home'} reveal d${Math.min(6,i+1)}${isToday ? ' sw-card--today' : ''}">
-          <div class="sw-art" aria-hidden="true"></div>
+        <div class="sw-card sw-card--${d.theme||'home'}${photoClass} reveal d${Math.min(6,i+1)}${isToday ? ' sw-card--today' : ''}">
+          ${art}
           <div class="sw-card-top">
             <span class="sw-chip">${fmtChip(dt)}</span>
             ${isToday ? '<span class="sw-today"><span class="d"></span>TODAY</span>' : ''}

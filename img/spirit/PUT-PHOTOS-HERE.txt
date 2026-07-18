@@ -1,0 +1,2 @@
+Upload spirit week background photos here (JPG or PNG).
+Then set  photo: 'img/spirit/your-file.jpg'  on a day in EDIT/19-SPIRITWEEK.js
