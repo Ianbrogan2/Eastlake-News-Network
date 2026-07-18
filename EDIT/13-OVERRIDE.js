@@ -27,6 +27,13 @@ var ENN_OVERRIDE = {
   // ─── PASTE A YOUTUBE LINK HERE TO PIN A SPECIFIC VIDEO ───────────
   // Leave blank  →  auto-sync to latest upload
   // Add a link   →  always show that video
-  video: 'https://youtu.be/nMPJXzjsKDQ?si=3cV6rO3i5nXfxWRa',
+  video: '',
+
+  // ─── FIRST BULLETIN COMING SOON MODE ─────────────────────────────
+  // 'T' → replaces the video player with a cinematic
+  //        "First Bulletin Coming Soon" standby screen
+  //        (use between seasons, before the first episode airs)
+  // 'F' → normal player (auto-sync latest video, or pinned video above)
+  comingSoon: 'T',
 
 };

@@ -23,7 +23,7 @@ var ENN_NEWS = {
   featured: {
     tag:    'Featured',
     title:  'ENN Returns for the 2026–2027 School Year',
-    body:   'The bulletin is back. School starts Wednesday, July 22 — and ENN goes live with the first broadcasts of the new year that same week.',
+    body:   'School starts Wednesday, July 22 — and the ENN crew is gearing up for a new season of the bulletin. Premiere date announced soon.',
     byline: 'REPORTED BY TEAM ENN · PUBLISHED JULY 17, 2026',
   },
   sidebar: [
