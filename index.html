@@ -135,6 +135,9 @@
         </div>
       </div>
 
+      <!-- Spirit Week — rendered from EDIT/19-SPIRITWEEK.js (hidden when disabled) -->
+      <div id="spiritweek-root"></div>
+
       <div style="margin-top: 72px" class="reveal">
         <div class="sec-head">
           <div>
@@ -180,6 +183,7 @@
       <div class="team-tabs" role="tablist">
         <button class="team-tab-btn active" role="tab" aria-selected="true"  aria-controls="team-panel-1" data-period="1">Period 1</button>
         <button class="team-tab-btn"        role="tab" aria-selected="false" aria-controls="team-panel-4" data-period="4">Period 4</button>
+        <button class="team-tab-btn"        role="tab" aria-selected="false" aria-controls="team-panel-6" data-period="6">Period 6</button>
       </div>
     </div>
   </div>
@@ -224,6 +228,28 @@
       <div class="container">
         <div class="team-sec-head reveal"><h2>FACULTY ADVISOR</h2><span class="count">01 MEMBER</span></div>
         <div class="team-grid" id="team-p4-advisor"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Period 6 panel -->
+  <div id="team-panel-6" class="team-tab-panel" role="tabpanel">
+    <section class="team-section">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>LEADERS</h2><span class="count" id="p6-leader-count"></span></div>
+        <div class="team-grid" id="team-p6-leaders"></div>
+      </div>
+    </section>
+    <section class="team-section">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>ANCHORS</h2><span class="count" id="p6-anchor-count"></span></div>
+        <div class="team-grid" id="team-p6-anchors"></div>
+      </div>
+    </section>
+    <section class="team-section" style="padding-bottom:80px">
+      <div class="container">
+        <div class="team-sec-head reveal"><h2>FACULTY ADVISOR</h2><span class="count">01 MEMBER</span></div>
+        <div class="team-grid" id="team-p6-advisor"></div>
       </div>
     </section>
   </div>
@@ -316,6 +342,7 @@
 <script src="EDIT/16-CHANGELOG.js"></script>
 <script src="EDIT/17-MAINTENANCE.js"></script>
 <script src="EDIT/18-STUDIONEWS.js"></script>
+<script src="EDIT/19-SPIRITWEEK.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

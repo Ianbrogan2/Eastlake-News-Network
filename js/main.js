@@ -646,7 +646,65 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
   })();
 
-  /* ── Team cards (Period 1 / Period 4 tabs + cinematic expand) ── */
+  /* ── Spirit Week (home page, from EDIT/19-SPIRITWEEK.js) ──────── */
+  (function buildSpiritWeek(){
+    const cfg  = (typeof ENN_SPIRIT !== 'undefined') ? ENN_SPIRIT : null;
+    const root = $('#spiritweek-root');
+    if(!root || !cfg || cfg.enabled !== 'T' || !cfg.days || !cfg.days.length) return;
+
+    const DAY_NAMES = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const MONTHS    = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+    /* Parse 'YYYY-MM-DD' as a local date (avoids UTC off-by-one) */
+    const parseDay = str => {
+      const [y,m,d] = String(str).split('-').map(Number);
+      return new Date(y, m-1, d);
+    };
+    const fmtChip = dt => `${DAY_NAMES[dt.getDay()]} · ${MONTHS[dt.getMonth()]} ${dt.getDate()}`;
+
+    /* Today in Pacific time, midnight-normalized */
+    const nowPT  = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Los_Angeles'}));
+    const todayKey = `${nowPT.getFullYear()}-${String(nowPT.getMonth()+1).padStart(2,'0')}-${String(nowPT.getDate()).padStart(2,'0')}`;
+
+    /* Date-range chip for the header */
+    const first = parseDay(cfg.days[0].date);
+    const last  = parseDay(cfg.days[cfg.days.length-1].date);
+    const range = `${MONTHS[first.getMonth()]} ${first.getDate()} – ${MONTHS[last.getMonth()]} ${last.getDate()}`;
+
+    const cards = cfg.days.map((d, i) => {
+      const dt      = parseDay(d.date);
+      const isToday = d.date === todayKey;
+      return `
+        <div class="sw-card sw-card--${d.theme||'home'} reveal d${Math.min(6,i+1)}${isToday ? ' sw-card--today' : ''}">
+          <div class="sw-art" aria-hidden="true"></div>
+          <div class="sw-card-top">
+            <span class="sw-chip">${fmtChip(dt)}</span>
+            ${isToday ? '<span class="sw-today"><span class="d"></span>TODAY</span>' : ''}
+          </div>
+          <div class="sw-card-body">
+            <div class="sw-title">${d.title}</div>
+            <div class="sw-dress">${d.dress}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    root.innerHTML = `
+      <div class="spiritweek reveal">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">${cfg.eyebrow||'Spirit Week'}</div>
+            <div class="sec-title">${cfg.title||'SPIRIT WEEK'}</div>
+          </div>
+          <div class="sw-head-right">
+            <div class="sw-range mono">${range}</div>
+            ${cfg.sub ? `<div class="sec-sub">${cfg.sub}</div>` : ''}
+          </div>
+        </div>
+        <div class="sw-grid sw-grid--${cfg.days.length}">${cards}</div>
+      </div>`;
+  })();
+
+  /* ── Team cards (Period 1 / 4 / 6 tabs + cinematic expand) ───── */
   (function buildTeam(){
     /* Build a card for a single person */
     const card = (m, tag, kind, i) => {
@@ -697,6 +755,16 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     $('#team-p4-advisor').innerHTML = card(team.advisor, 'ADVISOR', 'advisor', 0);
     $('#p4-leader-count').textContent = cnt(p4.leaders.length);
     $('#p4-anchor-count').textContent = cnt(p4.anchors.length);
+
+    /* Fill Period 6 */
+    const p6 = team.period6;
+    if(p6 && $('#team-p6-leaders')){
+      $('#team-p6-leaders').innerHTML = make(p6.leaders, 'LEADER',  'crew');
+      $('#team-p6-anchors').innerHTML = make(p6.anchors, 'ON AIR',  'anchor');
+      $('#team-p6-advisor').innerHTML = card(team.advisor, 'ADVISOR', 'advisor', 0);
+      $('#p6-leader-count').textContent = cnt(p6.leaders.length);
+      $('#p6-anchor-count').textContent = cnt(p6.anchors.length);
+    }
 
     /* Tab switching */
     $$('.team-tab-btn').forEach(btn => {

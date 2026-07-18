@@ -197,8 +197,81 @@ var ENN_TEAM = {
 
   },
 
+  // ── PERIOD 6 ──────────────────────────────────────────────────────
+  period6: {
+
+    // 3 Leaders for Period 6
+    leaders: [
+
+      {
+        n:     'TBD',
+        r:     'Lead Producer',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Segment Producer',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Broadcast Director',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+
+    ],
+
+    // 4 Anchors for Period 6
+    anchors: [
+
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+
+    ],
+
+  },
+
   // ── FACULTY ADVISOR ───────────────────────────────────────────────
-  // The advisor appears at the bottom of BOTH period tabs automatically
+  // The advisor appears at the bottom of ALL period tabs automatically
   advisor: {
     n:     'TBD',
     r:     'Faculty Advisor',

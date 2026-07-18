@@ -539,6 +539,268 @@ img{display:block;max-width:100%}
 }
 .sched-empty-s{font-size:12px;color:var(--muted-2)}
 
+/* ══════════════════════════════════════════════════════════════════
+   SPIRIT WEEK — themed day cards on the home page
+══════════════════════════════════════════════════════════════════ */
+.spiritweek{margin-top:72px}
+.sw-head-right{text-align:right}
+.sw-range{
+  font-size:11px;color:var(--muted-2);letter-spacing:.18em;
+  margin-bottom:6px;text-transform:uppercase;
+}
+.sw-grid{
+  display:grid;gap:14px;margin-top:32px;
+  grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
+}
+@media (max-width:640px){.sw-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:440px){.sw-grid{grid-template-columns:1fr}}
+
+/* ── Base card ── */
+.sw-card{
+  position:relative;overflow:hidden;border-radius:16px;
+  min-height:225px;padding:16px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--border);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s;
+  cursor:default;
+}
+.sw-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 24px 48px -16px rgba(0,0,0,.75);
+  border-color:var(--border-hi);
+}
+.sw-art{position:absolute;inset:0;pointer-events:none}
+.sw-card-top{
+  position:relative;z-index:2;display:flex;align-items:center;
+  justify-content:space-between;gap:8px;
+}
+.sw-chip{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;
+  padding:4px 10px;border-radius:999px;
+  background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.75);backdrop-filter:blur(4px);
+}
+.sw-today{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;
+  padding:4px 10px;border-radius:999px;
+  background:rgba(0,212,255,.14);border:1px solid rgba(0,212,255,.45);
+  color:var(--cyan);font-weight:600;
+}
+.sw-today .d{
+  width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  animation:pulse 1.4s infinite;
+}
+.sw-card--today{
+  border-color:rgba(0,212,255,.5);
+  box-shadow:0 0 0 1px rgba(0,212,255,.28), 0 0 34px -6px rgba(0,212,255,.35);
+}
+.sw-card-body{position:relative;z-index:2}
+.sw-title{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,2.4vw,30px);
+  line-height:.98;letter-spacing:.02em;color:#fff;
+  text-shadow:0 2px 18px rgba(0,0,0,.55);
+  margin-bottom:6px;
+}
+.sw-dress{
+  font-size:12px;line-height:1.4;color:rgba(255,255,255,.82);
+  text-shadow:0 1px 10px rgba(0,0,0,.6);
+}
+
+/* ═══════ THEME: BEACH — Malibu sunset ═══════ */
+.sw-card--beach{
+  background:linear-gradient(180deg,#2b1055 0%,#7b2452 34%,#e2554b 62%,#f79f4d 82%,#3a76a8 82.5%,#2b5f8e 100%);
+}
+.sw-card--beach .sw-art::before{           /* setting sun */
+  content:'';position:absolute;left:50%;top:52%;
+  width:74px;height:74px;margin-left:-37px;border-radius:50%;
+  background:radial-gradient(circle,#ffe9a8 0%,#ffb85c 55%,rgba(255,160,60,0) 72%);
+  animation:sw-sun 5s ease-in-out infinite;
+}
+@keyframes sw-sun{
+  0%,100%{transform:scale(1);opacity:.9}
+  50%{transform:scale(1.12);opacity:1}
+}
+.sw-card--beach .sw-art::after{            /* rolling waves */
+  content:'';position:absolute;left:-60%;right:-60%;bottom:0;height:20%;
+  background:
+    repeating-radial-gradient(ellipse 26px 12px at 50% 0%, rgba(255,255,255,.28) 0 2px, transparent 2px 26px),
+    linear-gradient(180deg, rgba(255,255,255,.10), transparent);
+  animation:sw-waves 7s linear infinite;
+}
+@keyframes sw-waves{ to{transform:translateX(52px)} }
+
+/* ═══════ THEME: OCEAN — deep sea + clownfish stripes ═══════ */
+.sw-card--ocean{
+  background:linear-gradient(180deg,#052d4d 0%,#04202e 55%,#02141f 100%);
+}
+.sw-card--ocean .sw-art::before{           /* rising bubbles */
+  content:'';position:absolute;left:22px;bottom:-12px;
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(160,220,255,.4);
+  box-shadow:
+    46px -30px 0 -2px rgba(160,220,255,.30),
+    98px -8px 0 -1px rgba(160,220,255,.36),
+    132px -44px 0 -3px rgba(160,220,255,.26),
+    74px -70px 0 -2px rgba(160,220,255,.22),
+    22px -104px 0 -3px rgba(160,220,255,.18),
+    118px -120px 0 -4px rgba(160,220,255,.15);
+  animation:sw-bubbles 6s linear infinite;
+}
+@keyframes sw-bubbles{
+  0%{transform:translateY(0);opacity:0}
+  12%{opacity:1}
+  100%{transform:translateY(-190px);opacity:0}
+}
+.sw-card--ocean .sw-art::after{            /* clownfish stripe band */
+  content:'';position:absolute;top:0;right:14px;bottom:0;width:26px;
+  background:linear-gradient(180deg,
+    #ff7a1f 0 26%, #0c0c0c 26% 29%, #fff 29% 40%, #0c0c0c 40% 43%,
+    #ff7a1f 43% 62%, #0c0c0c 62% 65%, #fff 65% 76%, #0c0c0c 76% 79%, #ff7a1f 79% 100%);
+  opacity:.32;border-radius:0 0 8px 8px;
+  animation:sw-sway 5s ease-in-out infinite;
+}
+@keyframes sw-sway{
+  0%,100%{transform:skewX(0deg)}
+  50%{transform:skewX(-3deg)}
+}
+
+/* ═══════ THEME: CALI — golden state ═══════ */
+.sw-card--cali{
+  background:linear-gradient(180deg,#3d2506 0%,#7c5310 45%,#b8811f 100%);
+}
+.sw-card--cali .sw-art::before{            /* lone star */
+  content:'';position:absolute;top:18%;left:50%;width:88px;height:88px;margin-left:-44px;
+  background:rgba(255,240,200,.16);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  animation:sw-star 8s ease-in-out infinite;
+}
+@keyframes sw-star{
+  0%,100%{transform:rotate(-6deg) scale(1);opacity:.7}
+  50%{transform:rotate(6deg) scale(1.08);opacity:1}
+}
+.sw-card--cali .sw-art::after{             /* golden hills */
+  content:'';position:absolute;left:0;right:0;bottom:-40px;height:90px;
+  background:
+    radial-gradient(ellipse 65% 100% at 22% 100%, #8a5f13 0 60%, transparent 61%),
+    radial-gradient(ellipse 70% 90% at 82% 100%, #6e4a0e 0 62%, transparent 63%);
+}
+
+/* ═══════ THEME: TROPIC — ohana island ═══════ */
+.sw-card--tropic{
+  background:linear-gradient(160deg,#0d5c63 0%,#1b3a6b 55%,#4a2d7a 100%);
+}
+.sw-card--tropic .sw-art::before{
+  content:'🌺';position:absolute;top:26%;right:-14px;
+  font-size:92px;opacity:.24;filter:saturate(1.3);
+  animation:sw-flower 7s ease-in-out infinite;
+}
+@keyframes sw-flower{
+  0%,100%{transform:rotate(-8deg) translateY(0)}
+  50%{transform:rotate(6deg) translateY(-8px)}
+}
+.sw-card--tropic .sw-art::after{
+  content:'🌺';position:absolute;bottom:-8px;left:-10px;
+  font-size:56px;opacity:.16;
+  animation:sw-flower 7s ease-in-out 1.2s infinite;
+}
+
+/* ═══════ THEME: HOME — ENN school colors ═══════ */
+.sw-card--home{
+  background:
+    linear-gradient(135deg, rgba(26,86,219,.30) 0%, transparent 55%),
+    linear-gradient(315deg, rgba(22,163,74,.26) 0%, transparent 55%),
+    #07090f;
+}
+.sw-card--home .sw-art::before{            /* stadium beams */
+  content:'';position:absolute;inset:-60%;
+  background:conic-gradient(from 200deg at 50% 50%,
+    transparent 0deg, rgba(26,86,219,.14) 12deg, transparent 26deg,
+    transparent 160deg, rgba(22,163,74,.12) 176deg, transparent 190deg);
+  animation:sw-beams 14s linear infinite;
+}
+@keyframes sw-beams{ to{transform:rotate(360deg)} }
+.sw-card--home .sw-art::after{             /* ENN watermark */
+  content:'ENN';position:absolute;bottom:-14px;right:-4px;
+  font-family:'Bebas Neue',sans-serif;font-size:88px;line-height:1;
+  color:rgba(255,255,255,.05);letter-spacing:.02em;
+}
+
+/* ═══════ THEME: NIGHT — starry sky ═══════ */
+.sw-card--night{
+  background:linear-gradient(180deg,#0a0e2a 0%,#05071a 100%);
+}
+.sw-card--night .sw-art::before{           /* star field */
+  content:'';position:absolute;top:14px;left:18px;width:3px;height:3px;border-radius:50%;
+  background:rgba(255,255,255,.8);
+  box-shadow:
+    52px 22px 0 0 rgba(255,255,255,.55), 118px 6px 0 -1px rgba(255,255,255,.4),
+    160px 40px 0 0 rgba(255,255,255,.65), 30px 74px 0 -1px rgba(255,255,255,.35),
+    96px 92px 0 0 rgba(255,255,255,.5), 150px 118px 0 -1px rgba(255,255,255,.3),
+    64px 128px 0 0 rgba(255,255,255,.45), 10px 118px 0 -1px rgba(255,255,255,.35);
+  animation:sw-twinkle 3.4s ease-in-out infinite;
+}
+@keyframes sw-twinkle{
+  0%,100%{opacity:.6}
+  50%{opacity:1}
+}
+.sw-card--night .sw-art::after{            /* crescent moon */
+  content:'';position:absolute;top:20px;right:22px;width:34px;height:34px;border-radius:50%;
+  background:radial-gradient(circle at 62% 40%, #f5f0dc 0 98%, transparent 100%);
+  -webkit-mask:radial-gradient(circle at 30% 34%, transparent 0 58%, #000 60%);
+  mask:radial-gradient(circle at 30% 34%, transparent 0 58%, #000 60%);
+  opacity:.75;
+}
+
+/* ═══════ THEME: NEON — electric glow ═══════ */
+.sw-card--neon{
+  background:#08040d;
+}
+.sw-card--neon .sw-art::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(60% 45% at 12% 0%, rgba(255,45,150,.30) 0%, transparent 60%),
+    radial-gradient(60% 45% at 88% 100%, rgba(0,212,255,.30) 0%, transparent 60%);
+  animation:sw-neonpulse 3.2s ease-in-out infinite;
+}
+@keyframes sw-neonpulse{
+  0%,100%{opacity:.7}
+  50%{opacity:1}
+}
+.sw-card--neon .sw-art::after{             /* horizon grid */
+  content:'';position:absolute;left:0;right:0;bottom:0;height:42%;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,45,150,.18) 0 1px, transparent 1px 11px),
+    repeating-linear-gradient(90deg, rgba(0,212,255,.14) 0 1px, transparent 1px 22px);
+  transform:perspective(120px) rotateX(38deg);transform-origin:bottom;
+  opacity:.5;
+}
+
+/* ═══════ THEME: GOLD — hollywood shimmer ═══════ */
+.sw-card--gold{
+  background:linear-gradient(160deg,#1a1206 0%,#0e0a04 100%);
+}
+.sw-card--gold .sw-art::before{            /* shimmer sweep */
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(115deg,
+    transparent 30%, rgba(251,191,36,.16) 46%, rgba(255,235,170,.30) 50%,
+    rgba(251,191,36,.16) 54%, transparent 70%);
+  background-size:280% 100%;
+  animation:sw-goldsweep 4.2s ease-in-out infinite;
+}
+@keyframes sw-goldsweep{
+  0%{background-position:120% 0}
+  60%,100%{background-position:-80% 0}
+}
+.sw-card--gold .sw-art::after{             /* sparkles */
+  content:'';position:absolute;top:24px;right:30px;width:4px;height:4px;border-radius:50%;
+  background:#ffe9a8;
+  box-shadow:
+    -46px 34px 0 -1px rgba(255,233,168,.7), 18px 76px 0 0 rgba(255,233,168,.5),
+    -90px 96px 0 -1px rgba(255,233,168,.6), 34px 128px 0 -2px rgba(255,233,168,.4);
+  animation:sw-twinkle 2.6s ease-in-out infinite;
+}
+
 /* Schedule */
 .schedule{display:flex;flex-direction:column;gap:14px}
 .sched-row{
