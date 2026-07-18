@@ -58,7 +58,7 @@ var ENN_SCHEDULE_COUNTDOWN = {
 var ENN_SCHEDULE = [
 
   // First week of the 2026–2027 school year — school starts Wednesday, July 22
-  { on: 'F', key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Monday Episode', url: '' },
       { label: '', url: '' },
@@ -67,7 +67,7 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { on: 'F', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Tuesday Episode', url: '' },
       { label: '', url: '' },
