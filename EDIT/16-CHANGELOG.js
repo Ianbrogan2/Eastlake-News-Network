@@ -19,6 +19,11 @@ var ENN_CHANGELOG = [
   /* ✏️ CHANGELOG ENTRIES — add new entries at the top ──────────── */
 
   {
+    version:     'v2.7',
+    timestamp:   '2026-07-17T00:00:00',
+    description: '2026–2027 school year refresh: new-year content, team roster reset, first-day countdown, accessibility fixes.',
+  },
+  {
     version:     'v2.6',
     timestamp:   '2026-04-29T00:00:00',
     description: 'Added Broadcast Bingo (The Bullpen) and Site Changelog; silent form metadata collection.',

@@ -376,14 +376,20 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   }
   setInterval(updateOnAirBadge, 20000); updateOnAirBadge();
 
-  /* Make the badge clickable */
+  /* Make the badge clickable (mouse + keyboard) */
   const _onairBadge = $('#onair-badge');
   if(_onairBadge){
     _onairBadge.style.cursor = 'pointer';
-    _onairBadge.addEventListener('click', () => {
-      window.open(_onairBadge.dataset.href, '_blank', 'noopener');
+    const openBadge = () => window.open(_onairBadge.dataset.href, '_blank', 'noopener');
+    _onairBadge.addEventListener('click', openBadge);
+    _onairBadge.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openBadge(); }
     });
   }
+
+  /* Self-updating footer copyright year */
+  const _footerYear = $('#footer-year');
+  if(_footerYear) _footerYear.textContent = new Date().getFullYear();
 
   /* ── Hero scroll scrubbing ───────────────────────────────────── */
   const hero        = $('#hero');
@@ -894,21 +900,31 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     squares.forEach((text, idx) => {
       const cell = document.createElement('div');
       cell.className = 'bingo-cell' + (flipped.includes(idx) ? ' flipped' : '');
+      cell.setAttribute('role', 'button');
+      cell.setAttribute('tabindex', '0');
+      cell.setAttribute('aria-pressed', flipped.includes(idx) ? 'true' : 'false');
+      cell.setAttribute('aria-label', `Bingo square: ${text}`);
       cell.innerHTML = `
         <div class="bingo-cell-inner">
           <div class="bingo-cell-front"><span>${text}</span></div>
           <div class="bingo-cell-back"><img src="enn-logo.png" alt="ENN" /></div>
         </div>`;
-      cell.addEventListener('click', () => {
+      const toggleCell = () => {
         if(flipped.includes(idx)){
           flipped = flipped.filter(i => i !== idx);
           cell.classList.remove('flipped');
+          cell.setAttribute('aria-pressed', 'false');
         } else {
           flipped.push(idx);
           cell.classList.add('flipped');
+          cell.setAttribute('aria-pressed', 'true');
           if(checkBingo(flipped)) setTimeout(triggerBingo, 350);
         }
         saveFlipped();
+      };
+      cell.addEventListener('click', toggleCell);
+      cell.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleCell(); }
       });
       grid.appendChild(cell);
     });
@@ -927,7 +943,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         if(ov) ov.remove();
       }
       /* Un-flip all cells */
-      $$('.bingo-cell').forEach(c => c.classList.remove('flipped'));
+      $$('.bingo-cell').forEach(c => { c.classList.remove('flipped'); c.setAttribute('aria-pressed','false'); });
     });
   })();
 

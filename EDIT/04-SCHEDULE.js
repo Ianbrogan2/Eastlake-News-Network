@@ -35,28 +35,29 @@
 
 var ENN_SCHEDULE_COUNTDOWN = {
 
-  enabled: false,   // ← set to true and fill in the fields below to show a countdown
+  enabled: true,   // ← set to false to hide the countdown card
 
   // Short label shown on the left of the card
-  label: '',
+  label: 'First Day of School',
 
   // Smaller text underneath the label
-  sublabel: '',
+  sublabel: 'Welcome Back Titans · Jul 22',
 
   // ISO date — when to count down to (passes → shows "OUT NOW" automatically)
-  target: '',
+  target: '2026-07-22T00:00:00',
 
   // Optional link when clicked (leave blank for no link)
-  link: '',
+  link: 'https://elh.sweetwaterschools.org/',
 
   // Colour theme: 'orange'  'blue'  'red'  'green'  'purple'
-  theme: 'orange',
+  theme: 'green',
 
 };
 
 // ─────────────────────────────────────────────────────────────────────
 var ENN_SCHEDULE = [
 
+  // First week of the 2026–2027 school year — school starts Wednesday, July 22
   { on: 'F', key: 'MON', idx: 1, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Monday Episode', url: '' },
@@ -66,9 +67,9 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { on: 'T', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'F', key: 'TUE', idx: 2, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Tuesday Episode', url: 'https://youtu.be/uSfjef6umlk?si=vsGj9VAxfp8Fk3bP' },
+      { label: 'Tuesday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
@@ -77,14 +78,14 @@ var ENN_SCHEDULE = [
 
   { on: 'T', key: 'WED', idx: 3, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
-      { label: 'Wednesday Episode', url: 'https://youtu.be/nMPJXzjsKDQ?si=3cV6rO3i5nXfxWRa' },
+      { label: 'Wednesday Episode', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
       { label: '', url: '' },
     ],
   },
 
-  { on: 'F', key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Thursday Episode', url: '' },
       { label: '', url: '' },
