@@ -29,4 +29,11 @@ var ENN_OVERRIDE = {
   // Add a link   →  always show that video
   video: '',
 
+  // ─── FIRST BULLETIN COMING SOON MODE ─────────────────────────────
+  // 'T' → replaces the video player with a cinematic
+  //        "First Bulletin Coming Soon" standby screen
+  //        (use between seasons, before the first episode airs)
+  // 'F' → normal player (auto-sync latest video, or pinned video above)
+  comingSoon: 'T',
+
 };

@@ -1,9 +1,10 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ENN EDIT FILE  06  —  TEAM MEMBERS  (Period 1 & Period 4)      ║
+// ║  ENN EDIT FILE  06  —  TEAM MEMBERS  (Periods 1, 4 & 6)         ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  WHAT THIS FILE CONTROLS:                                        ║
-// ║    Everyone shown on the Team page — split into Period 1 and     ║
-// ║    Period 4 tabs, each with Leaders, Anchors, and the Advisor.   ║
+// ║    Everyone shown on the Team page — split into Period 1,        ║
+// ║    Period 4, and Period 6 tabs, each with Leaders, Anchors,      ║
+// ║    and the Advisor (the advisor shows on every tab).             ║
 // ║    Each person's card expands when clicked to show their bio.    ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  FIELDS FOR EACH PERSON:                                         ║
@@ -197,8 +198,81 @@ var ENN_TEAM = {
 
   },
 
+  // ── PERIOD 6 ──────────────────────────────────────────────────────
+  period6: {
+
+    // 3 Leaders for Period 6
+    leaders: [
+
+      {
+        n:     'TBD',
+        r:     'Lead Producer',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Segment Producer',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Broadcast Director',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+
+    ],
+
+    // 4 Anchors for Period 6
+    anchors: [
+
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+      {
+        n:     'TBD',
+        r:     'Anchor',
+        grade: '',
+        bio:   'Coming Soon',
+        email: '',
+        photo: '',
+      },
+
+    ],
+
+  },
+
   // ── FACULTY ADVISOR ───────────────────────────────────────────────
-  // The advisor appears at the bottom of BOTH period tabs automatically
+  // The advisor appears at the bottom of ALL period tabs automatically
   advisor: {
     n:     'TBD',
     r:     'Faculty Advisor',

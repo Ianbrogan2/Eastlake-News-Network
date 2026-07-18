@@ -23,7 +23,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_TICKER = [
   { k: 'Welcome',  t: 'Welcome back Titans — first day of school is Wednesday, July 22!' },
-  { k: 'ENN',      t: 'ENN broadcasts return for the 2026–2027 school year — live M–TH, 10:31 AM' },
+  { k: 'ENN',      t: 'The new season of the bulletin is in production — premiere date coming soon' },
   { k: 'Events',   t: 'Open House is Thursday, August 13 — come see the ENN studio!' },
   { k: 'ENN',      t: 'Coverage requests open — submit at least one week before your event!' },
 ];

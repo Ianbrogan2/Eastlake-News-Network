@@ -14,11 +14,22 @@
 // ║    the quotes, then commit the file.                             ║
 // ║    Do NOT delete quotes, commas, or colons.                      ║
 // ║                                                                  ║
-// ║  NOTE: The social links (YouTube / Instagram) and the           ║
-// ║  Formspree form ID are controlled in EDIT/01-CHANNEL.js.        ║
+// ║  NOTE: The social links (YouTube / Instagram) and the form      ║
+// ║  submission endpoint (Google Sheets) are controlled in           ║
+// ║  EDIT/01-CHANNEL.js — form submissions land in the Google        ║
+// ║  Sheet and email team@eastlakenewsnetwork.com automatically.     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 var ENN_CONTACT = {
+
+  // ── PAGE TABS ─────────────────────────────────────────────────────
+  // The Contact page is split into two tabs (like the Team page):
+  //   Tab 1 — the public forms everyone uses (coverage, songs, love lines)
+  //   Tab 2 — the ENN crew desk (field passes, crew questions)
+
+  tabEveryone: 'For Everyone',
+  tabCrew:     'ENN Crew Desk',
+
 
   // ── TOP HERO SECTION ─────────────────────────────────────────────
   // The big text that appears at the top of the Contact page
@@ -58,6 +69,36 @@ var ENN_CONTACT = {
   successBody: 'Thanks! We\'ve received your coverage request. A producer will be in touch within one school week.',
 
 
+  // ── SCHEDULING & ACCESS REQUEST FORM ─────────────────────────────
+  // The crew-only form for special filming access — field passes,
+  // assembly floor access, backstage, off-campus events.
+  // Requests go to the scheduling desk (submissions land in the
+  // Google Sheet under their own "Scheduling Request" tab).
+
+  schedHeading: 'SCHEDULING & ACCESS REQUEST',
+
+  // Small label above the heading
+  schedEyebrow: 'ENN Crew Only',
+
+  // The sentence describing what this form is for
+  schedNote: 'Filming certain events requires an approved pass — football sidelines, assemblies, rallies, backstage, and off-campus coverage. Submit your request below and the scheduling desk will confirm your approval before the event. No approval, no access.',
+
+  // The dropdown options for the "Access Needed" field.
+  // Add or remove options by adding/removing lines inside the [ ].
+  schedAccessTypes: [
+    'Field Pass — Football',
+    'Sideline — Other Sports',
+    'Assembly / Rally Floor',
+    'Backstage — Performances & Theater',
+    'Off-Campus Event',
+    'Other Special Access',
+  ],
+
+  // Message shown after the form is submitted successfully
+  schedSuccessHeading: 'REQUEST SENT',
+  schedSuccessBody: 'Your scheduling request is in. The scheduling desk will confirm your approval before the event — keep an eye out and don\'t film without it.',
+
+
   // ── SONG REQUEST FORM ────────────────────────────────────────────
   // The second form card for song requests
 
@@ -75,6 +116,45 @@ var ENN_CONTACT = {
   loveDesc: 'Send a shoutout, thank you, or message to someone at Eastlake — student to student, student to faculty, faculty to student, or faculty to faculty. Submissions may be read live on the ENN bulletin, so keep an ear open.',
   loveSuccessHeading: 'MESSAGE RECEIVED 💌',
   loveSuccessBody: 'Your Love Line has been submitted. Tune in to the bulletin — you might just hear it on air.',
+
+
+  // ── MISC QUESTIONS FORM — "For Everyone" tab ─────────────────────
+  // The catch-all questions form at the bottom of the public tab.
+  // Asks for name + email so you can reply.
+
+  miscHeading: 'OTHER QUESTIONS',
+  miscNote: 'Something that doesn\'t fit the forms above? Ask here — include your email and we\'ll get back to you.',
+  miscSuccessHeading: 'QUESTION RECEIVED',
+  miscSuccessBody: 'Thanks! We\'ve got your question and will reply to the email you provided.',
+
+
+  // ── MISC QUESTIONS FORM — "ENN Crew Desk" tab ────────────────────
+  // The catch-all questions form for ENN students only.
+
+  crewMiscHeading: 'CREW QUESTIONS',
+  crewMiscNote: 'For ENN students — scheduling conflicts, equipment, shoot logistics, or anything else for the desk. Include your email so we can get back to you.',
+  crewMiscSuccessHeading: 'QUESTION RECEIVED',
+  crewMiscSuccessBody: 'Got it. The desk will reply to the email you provided.',
+
+
+  // ── CREW INFO CARDS ──────────────────────────────────────────────
+  // The cards on the right side of the ENN Crew Desk tab.
+  // Same format as infoCards below.
+
+  crewInfoCards: [
+
+    {
+      icon:    '⏱',
+      heading: 'APPROVAL TIMELINE',
+      body:    'Submit access requests at least <strong>one week before the event</strong>. You\'ll get a confirmation from the scheduling desk before game day.',
+    },
+    {
+      icon:    '🎫',
+      heading: 'PASS RULES',
+      body:    'Approval is <strong>per event</strong> — one request per game, assembly, or shoot. No confirmed approval means no field, floor, or backstage access.',
+    },
+
+  ],
 
 
   // ── INFO CARDS ────────────────────────────────────────────────────

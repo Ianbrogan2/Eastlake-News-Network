@@ -378,6 +378,429 @@ img{display:block;max-width:100%}
 }
 .player-fallback a:hover{transform:translateY(-2px)}
 
+/* ── "First Bulletin Coming Soon" cinematic standby screen ─────────── */
+.csoon{
+  position:absolute;inset:0;overflow:hidden;border-radius:8px;
+  background:
+    radial-gradient(120% 90% at 50% 30%, rgba(26,86,219,0.14) 0%, transparent 55%),
+    radial-gradient(90% 90% at 50% 110%, rgba(22,163,74,0.08) 0%, transparent 55%),
+    #050508;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Film-leader circle — full-frame, faint, behind everything */
+.csoon-leader{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.csoon-leader svg{
+  height:135%;aspect-ratio:1;position:absolute;
+  animation:csoon-leader-breathe 6s ease-in-out infinite;
+}
+@keyframes csoon-leader-breathe{
+  0%,100%{opacity:.75;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.02)}
+}
+/* Rotating radar sweep — one revolution per second, like a countdown leader */
+.csoon-sweep{
+  position:absolute;height:135%;aspect-ratio:1;border-radius:50%;
+  background:conic-gradient(from 0deg,
+    rgba(0,212,255,0.10) 0deg, rgba(0,212,255,0.028) 26deg, transparent 60deg, transparent 360deg);
+  animation:csoon-sweep-rot 1s linear infinite;
+}
+@keyframes csoon-sweep-rot{ to{transform:rotate(360deg)} }
+/* Giant faint 3 → 2 → 1, one per sweep revolution */
+.csoon-nums{position:absolute;inset:0;pointer-events:none}
+.csoon-nums span{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(160px,42vw,340px);
+  color:rgba(255,255,255,0.05);opacity:0;
+}
+.csoon-nums span:nth-child(1){animation:csoon-num 3s linear infinite}
+.csoon-nums span:nth-child(2){animation:csoon-num 3s linear 1s infinite}
+.csoon-nums span:nth-child(3){animation:csoon-num 3s linear 2s infinite}
+@keyframes csoon-num{
+  0%{opacity:0}
+  2%,30%{opacity:1}
+  33.33%,100%{opacity:0}
+}
+
+/* Center content */
+.csoon-inner{
+  position:relative;z-index:2;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:0 24px;
+  animation:csoon-glitch 7s steps(1) infinite;
+}
+@keyframes csoon-glitch{
+  0%,96%{transform:none;filter:none}
+  96.5%{transform:translateX(-3px) skewX(-1.5deg);filter:hue-rotate(18deg)}
+  97%{transform:translateX(2px);filter:none}
+  97.5%{transform:translateX(-1px) skewX(.8deg)}
+  98%,100%{transform:none;filter:none}
+}
+.csoon-logo{
+  width:clamp(52px,9vw,76px);margin-bottom:6px;
+  animation:csoon-glow 3.2s ease-in-out infinite;
+}
+@keyframes csoon-glow{
+  0%,100%{filter:drop-shadow(0 0 10px rgba(26,86,219,0.35))}
+  50%{filter:drop-shadow(0 0 26px rgba(0,212,255,0.55))}
+}
+.csoon-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(34px,6.4vw,64px);line-height:.95;letter-spacing:.04em;
+  color:#fff;text-shadow:0 0 34px rgba(26,86,219,0.4);
+}
+.csoon-sub{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(20px,3.6vw,32px);letter-spacing:.34em;text-indent:.34em;
+  background:linear-gradient(110deg,
+    rgba(255,255,255,0.28) 20%, #7DD8FF 38%, #fff 50%, #7DD8FF 62%, rgba(255,255,255,0.28) 80%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:csoon-shimmer 3.4s ease-in-out infinite;
+}
+@keyframes csoon-shimmer{
+  0%{background-position:130% 0}
+  60%,100%{background-position:-70% 0}
+}
+.csoon-season{
+  font-family:'DM Mono',monospace;font-size:clamp(8px,1.3vw,10px);
+  letter-spacing:.26em;color:rgba(255,255,255,0.34);margin-top:8px;
+}
+
+/* Broadcast HUD corners */
+.csoon-chip{
+  position:absolute;top:14px;left:16px;z-index:3;
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;
+  color:#FBBF24;padding:5px 11px;border-radius:999px;
+  border:1px solid rgba(251,191,36,0.30);background:rgba(251,191,36,0.07);
+}
+.csoon-dot{
+  width:6px;height:6px;border-radius:50%;background:#FBBF24;
+  animation:csoon-blink 1.1s steps(2,start) infinite;
+}
+@keyframes csoon-blink{ to{visibility:hidden} }
+.csoon-tc{
+  position:absolute;top:16px;right:18px;z-index:3;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;
+  color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;
+}
+.csoon-sig{
+  position:absolute;bottom:14px;left:18px;z-index:3;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;
+  color:rgba(255,255,255,0.28);
+}
+.csoon-bars{
+  position:absolute;bottom:14px;right:18px;z-index:3;
+  display:flex;align-items:flex-end;gap:3px;height:16px;
+}
+.csoon-bars i{
+  width:3px;border-radius:1px;background:var(--cyan);opacity:.55;
+  animation:csoon-bar 1.6s ease-in-out infinite;
+}
+.csoon-bars i:nth-child(1){height:5px;animation-delay:0s}
+.csoon-bars i:nth-child(2){height:9px;animation-delay:.15s}
+.csoon-bars i:nth-child(3){height:13px;animation-delay:.3s}
+.csoon-bars i:nth-child(4){height:9px;animation-delay:.45s}
+.csoon-bars i:nth-child(5){height:6px;animation-delay:.6s}
+@keyframes csoon-bar{
+  0%,100%{transform:scaleY(.5);opacity:.35}
+  50%{transform:scaleY(1);opacity:.85}
+}
+
+/* Drifting scanlines over everything */
+.csoon-scan{
+  position:absolute;inset:-100% 0 0 0;z-index:4;pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    transparent 0 3px, rgba(0,0,0,0.16) 3px 4px);
+  animation:csoon-scan-drift 9s linear infinite;
+}
+@keyframes csoon-scan-drift{ to{transform:translateY(50%)} }
+
+/* Standby badge (amber) in the player header */
+.badge-standby{background:rgba(251,191,36,0.10)!important;color:#FBBF24!important;border-color:rgba(251,191,36,0.30)!important}
+.badge-standby .d{background:#FBBF24!important}
+
+/* Schedule empty state — all days switched off */
+.sched-empty{
+  display:flex;align-items:center;gap:16px;
+  padding:22px 20px;border-radius:12px;
+  border:1px dashed rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.02);
+}
+.sched-empty-icon{font-size:22px;opacity:.5}
+.sched-empty-t{
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.18em;
+  color:var(--muted);margin-bottom:3px;
+}
+.sched-empty-s{font-size:12px;color:var(--muted-2)}
+
+/* ══════════════════════════════════════════════════════════════════
+   SPIRIT WEEK — themed day cards on the home page
+══════════════════════════════════════════════════════════════════ */
+.spiritweek{margin-top:72px}
+.sw-head-right{text-align:right}
+.sw-range{
+  font-size:11px;color:var(--muted-2);letter-spacing:.18em;
+  margin-bottom:6px;text-transform:uppercase;
+}
+.sw-grid{
+  display:grid;gap:14px;margin-top:32px;
+  grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
+}
+@media (max-width:640px){.sw-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:440px){.sw-grid{grid-template-columns:1fr}}
+
+/* ── Base card ── */
+.sw-card{
+  position:relative;overflow:hidden;border-radius:16px;
+  min-height:225px;padding:16px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--border);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s;
+  cursor:default;
+}
+.sw-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 24px 48px -16px rgba(0,0,0,.75);
+  border-color:var(--border-hi);
+}
+.sw-art{position:absolute;inset:0;pointer-events:none}
+.sw-card-top{
+  position:relative;z-index:2;display:flex;align-items:center;
+  justify-content:space-between;gap:8px;
+}
+.sw-chip{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;
+  padding:4px 10px;border-radius:999px;
+  background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.75);backdrop-filter:blur(4px);
+}
+.sw-today{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;
+  padding:4px 10px;border-radius:999px;
+  background:rgba(0,212,255,.14);border:1px solid rgba(0,212,255,.45);
+  color:var(--cyan);font-weight:600;
+}
+.sw-today .d{
+  width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  animation:pulse 1.4s infinite;
+}
+.sw-card--today{
+  border-color:rgba(0,212,255,.5);
+  box-shadow:0 0 0 1px rgba(0,212,255,.28), 0 0 34px -6px rgba(0,212,255,.35);
+}
+.sw-card-body{position:relative;z-index:2}
+.sw-title{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,2.4vw,30px);
+  line-height:.98;letter-spacing:.02em;color:#fff;
+  text-shadow:0 2px 18px rgba(0,0,0,.55);
+  margin-bottom:6px;
+}
+.sw-dress{
+  font-size:12px;line-height:1.4;color:rgba(255,255,255,.82);
+  text-shadow:0 1px 10px rgba(0,0,0,.6);
+}
+
+/* ═══════ THEME: BEACH — Malibu sunset ═══════ */
+.sw-card--beach{
+  background:linear-gradient(180deg,#2b1055 0%,#7b2452 34%,#e2554b 62%,#f79f4d 82%,#3a76a8 82.5%,#2b5f8e 100%);
+}
+.sw-card--beach .sw-art::before{           /* setting sun */
+  content:'';position:absolute;left:50%;top:52%;
+  width:74px;height:74px;margin-left:-37px;border-radius:50%;
+  background:radial-gradient(circle,#ffe9a8 0%,#ffb85c 55%,rgba(255,160,60,0) 72%);
+  animation:sw-sun 5s ease-in-out infinite;
+}
+@keyframes sw-sun{
+  0%,100%{transform:scale(1);opacity:.9}
+  50%{transform:scale(1.12);opacity:1}
+}
+.sw-card--beach .sw-art::after{            /* rolling waves */
+  content:'';position:absolute;left:-60%;right:-60%;bottom:0;height:20%;
+  background:
+    repeating-radial-gradient(ellipse 26px 12px at 50% 0%, rgba(255,255,255,.28) 0 2px, transparent 2px 26px),
+    linear-gradient(180deg, rgba(255,255,255,.10), transparent);
+  animation:sw-waves 7s linear infinite;
+}
+@keyframes sw-waves{ to{transform:translateX(52px)} }
+
+/* ═══════ THEME: OCEAN — deep sea + clownfish stripes ═══════ */
+.sw-card--ocean{
+  background:linear-gradient(180deg,#052d4d 0%,#04202e 55%,#02141f 100%);
+}
+.sw-card--ocean .sw-art::before{           /* rising bubbles */
+  content:'';position:absolute;left:22px;bottom:-12px;
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(160,220,255,.4);
+  box-shadow:
+    46px -30px 0 -2px rgba(160,220,255,.30),
+    98px -8px 0 -1px rgba(160,220,255,.36),
+    132px -44px 0 -3px rgba(160,220,255,.26),
+    74px -70px 0 -2px rgba(160,220,255,.22),
+    22px -104px 0 -3px rgba(160,220,255,.18),
+    118px -120px 0 -4px rgba(160,220,255,.15);
+  animation:sw-bubbles 6s linear infinite;
+}
+@keyframes sw-bubbles{
+  0%{transform:translateY(0);opacity:0}
+  12%{opacity:1}
+  100%{transform:translateY(-190px);opacity:0}
+}
+.sw-card--ocean .sw-art::after{            /* clownfish stripe band */
+  content:'';position:absolute;top:0;right:14px;bottom:0;width:26px;
+  background:linear-gradient(180deg,
+    #ff7a1f 0 26%, #0c0c0c 26% 29%, #fff 29% 40%, #0c0c0c 40% 43%,
+    #ff7a1f 43% 62%, #0c0c0c 62% 65%, #fff 65% 76%, #0c0c0c 76% 79%, #ff7a1f 79% 100%);
+  opacity:.32;border-radius:0 0 8px 8px;
+  animation:sw-sway 5s ease-in-out infinite;
+}
+@keyframes sw-sway{
+  0%,100%{transform:skewX(0deg)}
+  50%{transform:skewX(-3deg)}
+}
+
+/* ═══════ THEME: CALI — golden state ═══════ */
+.sw-card--cali{
+  background:linear-gradient(180deg,#3d2506 0%,#7c5310 45%,#b8811f 100%);
+}
+.sw-card--cali .sw-art::before{            /* lone star */
+  content:'';position:absolute;top:18%;left:50%;width:88px;height:88px;margin-left:-44px;
+  background:rgba(255,240,200,.16);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  animation:sw-star 8s ease-in-out infinite;
+}
+@keyframes sw-star{
+  0%,100%{transform:rotate(-6deg) scale(1);opacity:.7}
+  50%{transform:rotate(6deg) scale(1.08);opacity:1}
+}
+.sw-card--cali .sw-art::after{             /* golden hills */
+  content:'';position:absolute;left:0;right:0;bottom:-40px;height:90px;
+  background:
+    radial-gradient(ellipse 65% 100% at 22% 100%, #8a5f13 0 60%, transparent 61%),
+    radial-gradient(ellipse 70% 90% at 82% 100%, #6e4a0e 0 62%, transparent 63%);
+}
+
+/* ═══════ THEME: TROPIC — ohana island ═══════ */
+.sw-card--tropic{
+  background:linear-gradient(160deg,#0d5c63 0%,#1b3a6b 55%,#4a2d7a 100%);
+}
+.sw-card--tropic .sw-art::before{
+  content:'🌺';position:absolute;top:26%;right:-14px;
+  font-size:92px;opacity:.24;filter:saturate(1.3);
+  animation:sw-flower 7s ease-in-out infinite;
+}
+@keyframes sw-flower{
+  0%,100%{transform:rotate(-8deg) translateY(0)}
+  50%{transform:rotate(6deg) translateY(-8px)}
+}
+.sw-card--tropic .sw-art::after{
+  content:'🌺';position:absolute;bottom:-8px;left:-10px;
+  font-size:56px;opacity:.16;
+  animation:sw-flower 7s ease-in-out 1.2s infinite;
+}
+
+/* ═══════ THEME: HOME — ENN school colors ═══════ */
+.sw-card--home{
+  background:
+    linear-gradient(135deg, rgba(26,86,219,.30) 0%, transparent 55%),
+    linear-gradient(315deg, rgba(22,163,74,.26) 0%, transparent 55%),
+    #07090f;
+}
+.sw-card--home .sw-art::before{            /* stadium beams */
+  content:'';position:absolute;inset:-60%;
+  background:conic-gradient(from 200deg at 50% 50%,
+    transparent 0deg, rgba(26,86,219,.14) 12deg, transparent 26deg,
+    transparent 160deg, rgba(22,163,74,.12) 176deg, transparent 190deg);
+  animation:sw-beams 14s linear infinite;
+}
+@keyframes sw-beams{ to{transform:rotate(360deg)} }
+.sw-card--home .sw-art::after{             /* ENN watermark */
+  content:'ENN';position:absolute;bottom:-14px;right:-4px;
+  font-family:'Bebas Neue',sans-serif;font-size:88px;line-height:1;
+  color:rgba(255,255,255,.05);letter-spacing:.02em;
+}
+
+/* ═══════ THEME: NIGHT — starry sky ═══════ */
+.sw-card--night{
+  background:linear-gradient(180deg,#0a0e2a 0%,#05071a 100%);
+}
+.sw-card--night .sw-art::before{           /* star field */
+  content:'';position:absolute;top:14px;left:18px;width:3px;height:3px;border-radius:50%;
+  background:rgba(255,255,255,.8);
+  box-shadow:
+    52px 22px 0 0 rgba(255,255,255,.55), 118px 6px 0 -1px rgba(255,255,255,.4),
+    160px 40px 0 0 rgba(255,255,255,.65), 30px 74px 0 -1px rgba(255,255,255,.35),
+    96px 92px 0 0 rgba(255,255,255,.5), 150px 118px 0 -1px rgba(255,255,255,.3),
+    64px 128px 0 0 rgba(255,255,255,.45), 10px 118px 0 -1px rgba(255,255,255,.35);
+  animation:sw-twinkle 3.4s ease-in-out infinite;
+}
+@keyframes sw-twinkle{
+  0%,100%{opacity:.6}
+  50%{opacity:1}
+}
+.sw-card--night .sw-art::after{            /* crescent moon */
+  content:'';position:absolute;top:20px;right:22px;width:34px;height:34px;border-radius:50%;
+  background:radial-gradient(circle at 62% 40%, #f5f0dc 0 98%, transparent 100%);
+  -webkit-mask:radial-gradient(circle at 30% 34%, transparent 0 58%, #000 60%);
+  mask:radial-gradient(circle at 30% 34%, transparent 0 58%, #000 60%);
+  opacity:.75;
+}
+
+/* ═══════ THEME: NEON — electric glow ═══════ */
+.sw-card--neon{
+  background:#08040d;
+}
+.sw-card--neon .sw-art::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(60% 45% at 12% 0%, rgba(255,45,150,.30) 0%, transparent 60%),
+    radial-gradient(60% 45% at 88% 100%, rgba(0,212,255,.30) 0%, transparent 60%);
+  animation:sw-neonpulse 3.2s ease-in-out infinite;
+}
+@keyframes sw-neonpulse{
+  0%,100%{opacity:.7}
+  50%{opacity:1}
+}
+.sw-card--neon .sw-art::after{             /* horizon grid */
+  content:'';position:absolute;left:0;right:0;bottom:0;height:42%;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,45,150,.18) 0 1px, transparent 1px 11px),
+    repeating-linear-gradient(90deg, rgba(0,212,255,.14) 0 1px, transparent 1px 22px);
+  transform:perspective(120px) rotateX(38deg);transform-origin:bottom;
+  opacity:.5;
+}
+
+/* ═══════ THEME: GOLD — hollywood shimmer ═══════ */
+.sw-card--gold{
+  background:linear-gradient(160deg,#1a1206 0%,#0e0a04 100%);
+}
+.sw-card--gold .sw-art::before{            /* shimmer sweep */
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(115deg,
+    transparent 30%, rgba(251,191,36,.16) 46%, rgba(255,235,170,.30) 50%,
+    rgba(251,191,36,.16) 54%, transparent 70%);
+  background-size:280% 100%;
+  animation:sw-goldsweep 4.2s ease-in-out infinite;
+}
+@keyframes sw-goldsweep{
+  0%{background-position:120% 0}
+  60%,100%{background-position:-80% 0}
+}
+.sw-card--gold .sw-art::after{             /* sparkles */
+  content:'';position:absolute;top:24px;right:30px;width:4px;height:4px;border-radius:50%;
+  background:#ffe9a8;
+  box-shadow:
+    -46px 34px 0 -1px rgba(255,233,168,.7), 18px 76px 0 0 rgba(255,233,168,.5),
+    -90px 96px 0 -1px rgba(255,233,168,.6), 34px 128px 0 -2px rgba(255,233,168,.4);
+  animation:sw-twinkle 2.6s ease-in-out infinite;
+}
+
 /* Schedule */
 .schedule{display:flex;flex-direction:column;gap:14px}
 .sched-row{
@@ -702,6 +1125,24 @@ img{display:block;max-width:100%}
 .contact-body{padding: 24px clamp(18px,4.4vw,60px) clamp(60px,8vw,100px);
   display:grid;grid-template-columns: 1.7fr 1fr;gap:32px;align-items:start}
 @media (max-width:980px){.contact-body{grid-template-columns:1fr}}
+
+/* ── Contact page tabs (same look as the Team page tabs) ── */
+.contact-tabs-wrap{padding:0 clamp(18px,4.4vw,60px);margin-top:8px}
+.contact-tabs{display:flex;gap:4px;border-bottom:2px solid var(--border)}
+.contact-tab-btn{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.4vw,28px);letter-spacing:.08em;
+  padding:14px 36px;background:none;border:none;border-bottom:3px solid transparent;
+  margin-bottom:-2px;color:var(--muted);cursor:pointer;
+  transition:color .22s var(--ease),border-color .22s var(--ease),background .18s;
+  border-radius:8px 8px 0 0;
+}
+.contact-tab-btn:hover{color:#fff;background:rgba(255,255,255,0.04)}
+.contact-tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.contact-tab-panel{display:none}
+.contact-tab-panel.active{display:block}
+@media (max-width:640px){
+  .contact-tab-btn{padding:12px 18px;font-size:clamp(17px,4.6vw,22px)}
+}
 .form-card{padding:32px;background:var(--bg-1);border:1px solid var(--border);border-radius:14px}
 .form-card h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.01em;margin-bottom:4px}
 .form-card .note{color:var(--muted);font-size:14px;margin-bottom:24px}

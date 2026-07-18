@@ -540,6 +540,19 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       host.appendChild(row);
     });
 
+    /* ── Empty state — every day switched off ── */
+    if(!host.children.length){
+      const empty = document.createElement('div');
+      empty.className = 'sched-empty';
+      empty.innerHTML = `
+        <div class="sched-empty-icon">📡</div>
+        <div>
+          <div class="sched-empty-t">NO BROADCASTS THIS WEEK</div>
+          <div class="sched-empty-s">The new season is in production — stay tuned</div>
+        </div>`;
+      host.appendChild(empty);
+    }
+
     /* ── Optional schedule countdown card ── */
     const cdCfg = (typeof ENN_SCHEDULE_COUNTDOWN !== 'undefined') ? ENN_SCHEDULE_COUNTDOWN : null;
     if(cdCfg && cdCfg.enabled){
@@ -633,7 +646,65 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
   })();
 
-  /* ── Team cards (Period 1 / Period 4 tabs + cinematic expand) ── */
+  /* ── Spirit Week (home page, from EDIT/19-SPIRITWEEK.js) ──────── */
+  (function buildSpiritWeek(){
+    const cfg  = (typeof ENN_SPIRIT !== 'undefined') ? ENN_SPIRIT : null;
+    const root = $('#spiritweek-root');
+    if(!root || !cfg || cfg.enabled !== 'T' || !cfg.days || !cfg.days.length) return;
+
+    const DAY_NAMES = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const MONTHS    = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+    /* Parse 'YYYY-MM-DD' as a local date (avoids UTC off-by-one) */
+    const parseDay = str => {
+      const [y,m,d] = String(str).split('-').map(Number);
+      return new Date(y, m-1, d);
+    };
+    const fmtChip = dt => `${DAY_NAMES[dt.getDay()]} · ${MONTHS[dt.getMonth()]} ${dt.getDate()}`;
+
+    /* Today in Pacific time, midnight-normalized */
+    const nowPT  = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Los_Angeles'}));
+    const todayKey = `${nowPT.getFullYear()}-${String(nowPT.getMonth()+1).padStart(2,'0')}-${String(nowPT.getDate()).padStart(2,'0')}`;
+
+    /* Date-range chip for the header */
+    const first = parseDay(cfg.days[0].date);
+    const last  = parseDay(cfg.days[cfg.days.length-1].date);
+    const range = `${MONTHS[first.getMonth()]} ${first.getDate()} – ${MONTHS[last.getMonth()]} ${last.getDate()}`;
+
+    const cards = cfg.days.map((d, i) => {
+      const dt      = parseDay(d.date);
+      const isToday = d.date === todayKey;
+      return `
+        <div class="sw-card sw-card--${d.theme||'home'} reveal d${Math.min(6,i+1)}${isToday ? ' sw-card--today' : ''}">
+          <div class="sw-art" aria-hidden="true"></div>
+          <div class="sw-card-top">
+            <span class="sw-chip">${fmtChip(dt)}</span>
+            ${isToday ? '<span class="sw-today"><span class="d"></span>TODAY</span>' : ''}
+          </div>
+          <div class="sw-card-body">
+            <div class="sw-title">${d.title}</div>
+            <div class="sw-dress">${d.dress}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    root.innerHTML = `
+      <div class="spiritweek reveal">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">${cfg.eyebrow||'Spirit Week'}</div>
+            <div class="sec-title">${cfg.title||'SPIRIT WEEK'}</div>
+          </div>
+          <div class="sw-head-right">
+            <div class="sw-range mono">${range}</div>
+            ${cfg.sub ? `<div class="sec-sub">${cfg.sub}</div>` : ''}
+          </div>
+        </div>
+        <div class="sw-grid sw-grid--${cfg.days.length}">${cards}</div>
+      </div>`;
+  })();
+
+  /* ── Team cards (Period 1 / 4 / 6 tabs + cinematic expand) ───── */
   (function buildTeam(){
     /* Build a card for a single person */
     const card = (m, tag, kind, i) => {
@@ -684,6 +755,16 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     $('#team-p4-advisor').innerHTML = card(team.advisor, 'ADVISOR', 'advisor', 0);
     $('#p4-leader-count').textContent = cnt(p4.leaders.length);
     $('#p4-anchor-count').textContent = cnt(p4.anchors.length);
+
+    /* Fill Period 6 */
+    const p6 = team.period6;
+    if(p6 && $('#team-p6-leaders')){
+      $('#team-p6-leaders').innerHTML = make(p6.leaders, 'LEADER',  'crew');
+      $('#team-p6-anchors').innerHTML = make(p6.anchors, 'ON AIR',  'anchor');
+      $('#team-p6-advisor').innerHTML = card(team.advisor, 'ADVISOR', 'advisor', 0);
+      $('#p6-leader-count').textContent = cnt(p6.leaders.length);
+      $('#p6-anchor-count').textContent = cnt(p6.anchors.length);
+    }
 
     /* Tab switching */
     $$('.team-tab-btn').forEach(btn => {
@@ -953,6 +1034,111 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     if(!root) return;
     const headline = contact.heroHeadline.replace(/\n/g, '<br/>');
     const options  = contact.formRequestTypes.map(t => `<option>${t}</option>`).join('');
+    const schedOptions = (contact.schedAccessTypes || []).map(t => `<option>${t}</option>`).join('');
+
+    /* Scheduling & Access Request card — crew-only special-access approvals.
+       Guarded so the page still builds if the config block is missing. */
+    const schedCard = contact.schedHeading ? `
+          <div class="form-card reveal left" style="border-color:rgba(0,212,255,0.30);background:linear-gradient(135deg,rgba(0,212,255,0.05) 0%,var(--bg-1) 60%);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px;">
+              <span style="font-size:22px;line-height:1;">🎫</span>
+              <div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:2px;">${contact.schedEyebrow || 'ENN Crew Only'}</div>
+                <h3 style="margin:0;letter-spacing:.06em;">${contact.schedHeading}</h3>
+              </div>
+            </div>
+            <p class="note" style="margin-top:12px;margin-bottom:24px;">${contact.schedNote || ''}</p>
+            <form id="sched-form" action="${FORM_ENDPOINT}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="Scheduling Request"/>
+              <div class="form-row">
+                <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+                <div class="field"><label>Your Email</label><input type="email" name="email" required placeholder="So the desk can confirm your approval"/></div>
+              </div>
+              <div class="form-row">
+                <div class="field"><label>Event or Game</label><input type="text" name="event_name" required placeholder="e.g. Varsity Football vs. Otay Ranch"/></div>
+                <div class="field"><label>Event Date</label><input type="date" name="event_date" required/></div>
+              </div>
+              <div class="field">
+                <label>Access Needed</label>
+                <select name="access" required>
+                  <option value="">Choose access type…</option>
+                  ${schedOptions}
+                </select>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label>Reason for Filming</label>
+                <textarea name="reason" required placeholder="What are you covering and why — the segment or story this footage is for, and where you need to be to get it."></textarea>
+              </div>
+              <button type="submit" class="btn" id="sched-submit-btn">Request Approval →</button>
+            </form>
+            <div class="form-success" id="sched-form-success">
+              <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4>${contact.schedSuccessHeading || 'REQUEST SENT'}</h4>
+              <p>${contact.schedSuccessBody || ''}</p>
+            </div>
+          </div>` : '';
+
+    /* Misc questions card — one per tab, different form_type so each
+       lands in its own tab of the Google Sheet */
+    const miscCard = (id, formType, heading, note, successHeading, successBody) => `
+          <div class="form-card reveal left">
+            <h3>${heading}</h3>
+            <p class="note">${note}</p>
+            <form id="${id}" action="${FORM_ENDPOINT}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="${formType}"/>
+              <div class="form-row">
+                <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+                <div class="field"><label>Your Email</label><input type="email" name="email" required placeholder="Where we can reply"/></div>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label>Your Question</label>
+                <textarea name="message" required placeholder="Ask us anything — we read every submission."></textarea>
+              </div>
+              <button type="submit" class="btn" id="${id}-btn">Send Question →</button>
+            </form>
+            <div class="form-success" id="${id}-success">
+              <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4>${successHeading}</h4>
+              <p>${successBody}</p>
+            </div>
+          </div>`;
+
+    const miscCommunityCard = miscCard('misc-form', 'General Question',
+      contact.miscHeading || 'OTHER QUESTIONS',
+      contact.miscNote || 'Something that doesn\'t fit the forms above? Ask here.',
+      contact.miscSuccessHeading || 'QUESTION RECEIVED',
+      contact.miscSuccessBody || 'Thanks! We\'ll reply to the email you provided.');
+
+    const miscCrewCard = miscCard('crew-misc-form', 'Crew Question',
+      contact.crewMiscHeading || 'CREW QUESTIONS',
+      contact.crewMiscNote || 'For ENN students — anything for the desk.',
+      contact.crewMiscSuccessHeading || 'QUESTION RECEIVED',
+      contact.crewMiscSuccessBody || 'Got it — the desk will reply by email.');
+
+    /* Right-side cards for the Crew Desk tab */
+    const crewCards = (contact.crewInfoCards || []).map((c, i) => `
+      <div class="info-card reveal right d${i+1}">
+        <div class="ic-head"><div class="ic-icon">${c.icon}</div><h4>${c.heading}</h4></div>
+        <p>${c.body}</p>
+      </div>`).join('');
+
+    /* "Find us online" card — shared by both tabs' sidebars */
+    const findOnlineCard = `
+          <div class="info-card reveal right d5">
+            <div class="ic-head"><div class="ic-icon">📲</div><h4>FIND US ONLINE</h4></div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+              <a href="https://www.youtube.com/@${social.youtube}" target="_blank" rel="noopener"
+                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);transition:border-color .18s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fca5a5"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#fca5a5;letter-spacing:.1em">@${social.youtube}</span>
+              </a>
+              <a href="https://www.instagram.com/${social.instagram}" target="_blank" rel="noopener"
+                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(131,58,180,0.08);border:1px solid rgba(131,58,180,0.28);transition:border-color .18s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c084fc" stroke="none"/></svg>
+                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#c084fc;letter-spacing:.1em">@${social.instagram}</span>
+              </a>
+            </div>
+          </div>`;
     const cards    = contact.infoCards.map((c, i) => `
       <div class="info-card reveal right d${i+1}">
         <div class="ic-head"><div class="ic-icon">${c.icon}</div><h4>${c.heading}</h4></div>
@@ -966,6 +1152,13 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <p class="sub reveal d2">${contact.heroSub}</p>
         </div>
       </section>
+      <div class="contact-tabs-wrap">
+        <div class="contact-tabs" role="tablist">
+          <button class="contact-tab-btn active" role="tab" aria-selected="true" aria-controls="contact-panel-everyone" data-ctab="everyone">${contact.tabEveryone || 'For Everyone'}</button>
+          <button class="contact-tab-btn" role="tab" aria-selected="false" aria-controls="contact-panel-crew" data-ctab="crew">${contact.tabCrew || 'ENN Crew Desk'}</button>
+        </div>
+      </div>
+      <div id="contact-panel-everyone" class="contact-tab-panel active" role="tabpanel">
       <section class="contact-body">
         <div style="display:flex;flex-direction:column;gap:28px;">
           <div class="form-card reveal left">
@@ -1119,26 +1312,37 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
             </div>
           </div>
 
+          ${miscCommunityCard}
         </div>
         <aside class="info-stack">
           ${cards}
-          <div class="info-card reveal right d5">
-            <div class="ic-head"><div class="ic-icon">📲</div><h4>FIND US ONLINE</h4></div>
-            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
-              <a href="https://www.youtube.com/@${social.youtube}" target="_blank" rel="noopener"
-                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);transition:border-color .18s">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fca5a5"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#fca5a5;letter-spacing:.1em">@${social.youtube}</span>
-              </a>
-              <a href="https://www.instagram.com/${social.instagram}" target="_blank" rel="noopener"
-                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(131,58,180,0.08);border:1px solid rgba(131,58,180,0.28);transition:border-color .18s">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c084fc" stroke="none"/></svg>
-                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#c084fc;letter-spacing:.1em">@${social.instagram}</span>
-              </a>
-            </div>
-          </div>
+          ${findOnlineCard}
         </aside>
-      </section>`;
+      </section>
+      </div>
+      <div id="contact-panel-crew" class="contact-tab-panel" role="tabpanel">
+      <section class="contact-body">
+        <div style="display:flex;flex-direction:column;gap:28px;">
+          ${schedCard}
+          ${miscCrewCard}
+        </div>
+        <aside class="info-stack">
+          ${crewCards}
+          ${findOnlineCard}
+        </aside>
+      </section>
+      </div>`;
+
+    /* Tab switching — same pattern as the Team page */
+    $$('.contact-tab-btn', root).forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('.contact-tab-btn', root).forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        $$('.contact-tab-panel', root).forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        $('#contact-panel-' + btn.dataset.ctab).classList.add('active');
+      });
+    });
   })();
 
   /* ── Studio News Cards ───────────────────────────────────────── */
@@ -1417,6 +1621,54 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       } catch(err){ btn.disabled=false; btn.textContent='Submit Request →'; alert('Network error — check your connection.'); }
     });
   }
+
+  /* ── Scheduling & Access Request form (crew field passes) ────── */
+  const schedForm = $('#sched-form');
+  if(schedForm){
+    schedForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      for(const k of ['name','email','event_name','event_date','access','reason']){
+        const f = schedForm.elements[k];
+        if(!f?.value.trim()){ f?.focus(); return; }
+      }
+      const btn = $('#sched-submit-btn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const fd = new FormData(schedForm);
+        /* Mirror access + reason into the sheet's Message column so the
+           whole request reads in one cell alongside event name/date */
+        fd.append('message', `[${fd.get('access')}] ${fd.get('reason')}`);
+        const meta = await getSubmitterInfo();
+        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+        const r = await fetch(schedForm.action, {method:'POST', body:fd});
+        if(r.ok){ schedForm.style.display='none'; $('#sched-form-success').classList.add('active'); }
+        else { btn.disabled=false; btn.textContent='Request Approval →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
+      } catch(err){ btn.disabled=false; btn.textContent='Request Approval →'; alert('Network error — check your connection.'); }
+    });
+  }
+
+  /* ── Misc question forms (one per contact tab) ───────────────── */
+  ['misc-form','crew-misc-form'].forEach(fid => {
+    const mf = $('#' + fid);
+    if(!mf) return;
+    mf.addEventListener('submit', async e => {
+      e.preventDefault();
+      for(const k of ['name','email','message']){
+        const f = mf.elements[k];
+        if(!f?.value.trim()){ f?.focus(); return; }
+      }
+      const btn = $('#' + fid + '-btn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const fd = new FormData(mf);
+        const meta = await getSubmitterInfo();
+        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+        const r = await fetch(mf.action, {method:'POST', body:fd});
+        if(r.ok){ mf.style.display='none'; $('#' + fid + '-success').classList.add('active'); }
+        else { btn.disabled=false; btn.textContent='Send Question →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
+      } catch(err){ btn.disabled=false; btn.textContent='Send Question →'; alert('Network error — check your connection.'); }
+    });
+  });
 
   /* ── Song request form → Formspree ──────────────────────────── */
   /* Uses the iTunes Search API (no key required) to verify the song
@@ -1921,7 +2173,67 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
   }
 
+  /* ── "First Bulletin Coming Soon" cinematic standby screen ────── */
+  function renderComingSoon(){
+    const frame = $('#player-frame');
+    if(!frame) return;
+
+    /* Header text + badges */
+    $('#vid-title').textContent = 'First Bulletin Coming Soon';
+    $('#vid-date').textContent  = 'SEASON 2026–2027 · PREMIERE TBA';
+    const syncBadge = $('.badge-sync');
+    if(syncBadge){ syncBadge.innerHTML = '<span class="d"></span>Standby'; syncBadge.classList.add('badge-standby'); }
+    const liveBadge = $('.badge-live');
+    if(liveBadge) liveBadge.style.display = 'none';
+
+    frame.innerHTML = `
+      <div class="csoon">
+        <div class="csoon-leader" aria-hidden="true">
+          <svg viewBox="0 0 200 200" fill="none">
+            <circle cx="100" cy="100" r="96" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+            <circle cx="100" cy="100" r="72" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+            <line x1="100" y1="0" x2="100" y2="200" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <line x1="0" y1="100" x2="200" y2="100" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          </svg>
+          <div class="csoon-sweep"></div>
+          <div class="csoon-nums"><span>3</span><span>2</span><span>1</span></div>
+        </div>
+        <div class="csoon-inner">
+          <img class="csoon-logo" src="enn-logo.png" alt="" aria-hidden="true"/>
+          <div class="csoon-title">FIRST BULLETIN</div>
+          <div class="csoon-sub">COMING SOON</div>
+          <div class="csoon-season">SEASON 2026–2027 · PREMIERE DATE TBA</div>
+        </div>
+        <div class="csoon-chip"><span class="csoon-dot"></span>STAND BY</div>
+        <div class="csoon-tc" id="csoon-tc">00:00:00:00</div>
+        <div class="csoon-sig">ENN · SIGNAL 01</div>
+        <div class="csoon-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="csoon-scan" aria-hidden="true"></div>
+      </div>`;
+
+    /* Ticking SMPTE-style timecode (24 fps) */
+    const tcEl = $('#csoon-tc');
+    if(tcEl){
+      const t0 = Date.now();
+      const p2 = n => String(n).padStart(2,'0');
+      setInterval(() => {
+        const ms = Date.now() - t0;
+        const f  = Math.floor((ms % 1000) / (1000/24));
+        const s  = Math.floor(ms/1000) % 60;
+        const m  = Math.floor(ms/60000) % 60;
+        const h  = Math.floor(ms/3600000);
+        tcEl.textContent = `${p2(h)}:${p2(m)}:${p2(s)}:${p2(f)}`;
+      }, 1000/24);
+    }
+  }
+
   async function loadLatestVideo(){
+    /* ── Coming Soon mode — cinematic standby screen instead of a video ── */
+    if(typeof ENN_OVERRIDE !== 'undefined' && ENN_OVERRIDE.comingSoon === 'T'){
+      renderComingSoon();
+      return;
+    }
+
     const uploadsPlaylist = CHANNEL_ID.replace(/^UC/,'UU');
 
     /* ── Override check ── */
