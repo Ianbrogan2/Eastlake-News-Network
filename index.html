@@ -37,7 +37,7 @@
 </head>
 <body>
 
-<!-- ENN WEBSITE — to update content, edit js/config.js only. This file is layout/structure. -->
+<!-- ENN WEBSITE — to update content, edit the files in the EDIT/ folder. This file is layout/structure. -->
 
 <!-- NAV -->
 <nav class="nav">
@@ -61,7 +61,7 @@
   </div>
   <div class="nav-right">
     <div class="clock" id="clock"><span class="lbl">PST</span><span id="clock-v">--:--:--</span></div>
-    <div class="onair" id="onair-badge"><span class="pulse" id="onair-dot"></span><span id="onair-txt">On Air</span></div>
+    <div class="onair" id="onair-badge" role="button" tabindex="0" aria-label="Broadcast status — opens the ENN YouTube channel"><span class="pulse" id="onair-dot"></span><span id="onair-txt">On Air</span></div>
     <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -155,7 +155,7 @@
   <div class="footer-meta">
     <div>ENN · EASTLAKE NEWS NETWORK · EHS CHULA VISTA</div>
     <div>BROADCASTING M–TH · 10:31–10:41 AM PST · <a href="https://www.youtube.com/@ennbulletin/" target="_blank" rel="noopener">@ENNBULLETIN</a></div>
-    <div>© 2026 ENN · ALL STORIES STUDENT-PRODUCED</div>
+    <div>© <span id="footer-year">2026</span> ENN · ALL STORIES STUDENT-PRODUCED</div>
   </div>
 </main>
 
