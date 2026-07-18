@@ -2,9 +2,10 @@
 // ║  ENN EDIT FILE  16  —  SITE CHANGELOG                           ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  WHAT THIS FILE CONTROLS:                                        ║
-// ║    The build log shown at the bottom of the About page.          ║
-// ║    Each entry has a version tag, timestamp, and description.     ║
-// ║    The most recent entry shows a live "time since deploy" timer. ║
+// ║    The tiny fine-print version note at the very bottom of the    ║
+// ║    About page (e.g. "v2.7 · last updated 2026-07-17 00:00").    ║
+// ║    Only the NEWEST entry (top of the list) is shown on the site ║
+// ║    — the rest of the list is your own history/records.           ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  HOW TO EDIT:                                                    ║
 // ║    ADD NEW ENTRIES AT THE TOP of the array below.               ║

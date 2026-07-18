@@ -14,8 +14,10 @@
 // ║    the quotes, then commit the file.                             ║
 // ║    Do NOT delete quotes, commas, or colons.                      ║
 // ║                                                                  ║
-// ║  NOTE: The social links (YouTube / Instagram) and the           ║
-// ║  Formspree form ID are controlled in EDIT/01-CHANNEL.js.        ║
+// ║  NOTE: The social links (YouTube / Instagram) and the form      ║
+// ║  submission endpoint (Google Sheets) are controlled in           ║
+// ║  EDIT/01-CHANNEL.js — form submissions land in the Google        ║
+// ║  Sheet and email team@eastlakenewsnetwork.com automatically.     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 var ENN_CONTACT = {

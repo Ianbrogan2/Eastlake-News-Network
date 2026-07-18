@@ -1,9 +1,10 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ENN EDIT FILE  06  —  TEAM MEMBERS  (Period 1 & Period 4)      ║
+// ║  ENN EDIT FILE  06  —  TEAM MEMBERS  (Periods 1, 4 & 6)         ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  WHAT THIS FILE CONTROLS:                                        ║
-// ║    Everyone shown on the Team page — split into Period 1 and     ║
-// ║    Period 4 tabs, each with Leaders, Anchors, and the Advisor.   ║
+// ║    Everyone shown on the Team page — split into Period 1,        ║
+// ║    Period 4, and Period 6 tabs, each with Leaders, Anchors,      ║
+// ║    and the Advisor (the advisor shows on every tab).             ║
 // ║    Each person's card expands when clicked to show their bio.    ║
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  FIELDS FOR EACH PERSON:                                         ║
