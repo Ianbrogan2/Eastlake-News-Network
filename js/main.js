@@ -1052,16 +1052,18 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               <input type="hidden" name="form_type" value="Scheduling Request"/>
               <div class="form-row">
                 <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
-                <div class="field"><label>Event or Game</label><input type="text" name="event_name" required placeholder="e.g. Varsity Football vs. Otay Ranch"/></div>
+                <div class="field"><label>Your Email</label><input type="email" name="email" required placeholder="So the desk can confirm your approval"/></div>
               </div>
               <div class="form-row">
+                <div class="field"><label>Event or Game</label><input type="text" name="event_name" required placeholder="e.g. Varsity Football vs. Otay Ranch"/></div>
                 <div class="field"><label>Event Date</label><input type="date" name="event_date" required/></div>
-                <div class="field"><label>Access Needed</label>
-                  <select name="access" required>
-                    <option value="">Choose access type…</option>
-                    ${schedOptions}
-                  </select>
-                </div>
+              </div>
+              <div class="field">
+                <label>Access Needed</label>
+                <select name="access" required>
+                  <option value="">Choose access type…</option>
+                  ${schedOptions}
+                </select>
               </div>
               <div class="field" style="margin-bottom:20px">
                 <label>Reason for Filming</label>
@@ -1075,6 +1077,68 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               <p>${contact.schedSuccessBody || ''}</p>
             </div>
           </div>` : '';
+
+    /* Misc questions card — one per tab, different form_type so each
+       lands in its own tab of the Google Sheet */
+    const miscCard = (id, formType, heading, note, successHeading, successBody) => `
+          <div class="form-card reveal left">
+            <h3>${heading}</h3>
+            <p class="note">${note}</p>
+            <form id="${id}" action="${FORM_ENDPOINT}" method="POST" novalidate>
+              <input type="hidden" name="form_type" value="${formType}"/>
+              <div class="form-row">
+                <div class="field"><label>Your Name</label><input type="text" name="name" required placeholder="Your full name"/></div>
+                <div class="field"><label>Your Email</label><input type="email" name="email" required placeholder="Where we can reply"/></div>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label>Your Question</label>
+                <textarea name="message" required placeholder="Ask us anything — we read every submission."></textarea>
+              </div>
+              <button type="submit" class="btn" id="${id}-btn">Send Question →</button>
+            </form>
+            <div class="form-success" id="${id}-success">
+              <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h4>${successHeading}</h4>
+              <p>${successBody}</p>
+            </div>
+          </div>`;
+
+    const miscCommunityCard = miscCard('misc-form', 'General Question',
+      contact.miscHeading || 'OTHER QUESTIONS',
+      contact.miscNote || 'Something that doesn\'t fit the forms above? Ask here.',
+      contact.miscSuccessHeading || 'QUESTION RECEIVED',
+      contact.miscSuccessBody || 'Thanks! We\'ll reply to the email you provided.');
+
+    const miscCrewCard = miscCard('crew-misc-form', 'Crew Question',
+      contact.crewMiscHeading || 'CREW QUESTIONS',
+      contact.crewMiscNote || 'For ENN students — anything for the desk.',
+      contact.crewMiscSuccessHeading || 'QUESTION RECEIVED',
+      contact.crewMiscSuccessBody || 'Got it — the desk will reply by email.');
+
+    /* Right-side cards for the Crew Desk tab */
+    const crewCards = (contact.crewInfoCards || []).map((c, i) => `
+      <div class="info-card reveal right d${i+1}">
+        <div class="ic-head"><div class="ic-icon">${c.icon}</div><h4>${c.heading}</h4></div>
+        <p>${c.body}</p>
+      </div>`).join('');
+
+    /* "Find us online" card — shared by both tabs' sidebars */
+    const findOnlineCard = `
+          <div class="info-card reveal right d5">
+            <div class="ic-head"><div class="ic-icon">📲</div><h4>FIND US ONLINE</h4></div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+              <a href="https://www.youtube.com/@${social.youtube}" target="_blank" rel="noopener"
+                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);transition:border-color .18s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fca5a5"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#fca5a5;letter-spacing:.1em">@${social.youtube}</span>
+              </a>
+              <a href="https://www.instagram.com/${social.instagram}" target="_blank" rel="noopener"
+                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(131,58,180,0.08);border:1px solid rgba(131,58,180,0.28);transition:border-color .18s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c084fc" stroke="none"/></svg>
+                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#c084fc;letter-spacing:.1em">@${social.instagram}</span>
+              </a>
+            </div>
+          </div>`;
     const cards    = contact.infoCards.map((c, i) => `
       <div class="info-card reveal right d${i+1}">
         <div class="ic-head"><div class="ic-icon">${c.icon}</div><h4>${c.heading}</h4></div>
@@ -1088,6 +1152,13 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <p class="sub reveal d2">${contact.heroSub}</p>
         </div>
       </section>
+      <div class="contact-tabs-wrap">
+        <div class="contact-tabs" role="tablist">
+          <button class="contact-tab-btn active" role="tab" aria-selected="true" aria-controls="contact-panel-everyone" data-ctab="everyone">${contact.tabEveryone || 'For Everyone'}</button>
+          <button class="contact-tab-btn" role="tab" aria-selected="false" aria-controls="contact-panel-crew" data-ctab="crew">${contact.tabCrew || 'ENN Crew Desk'}</button>
+        </div>
+      </div>
+      <div id="contact-panel-everyone" class="contact-tab-panel active" role="tabpanel">
       <section class="contact-body">
         <div style="display:flex;flex-direction:column;gap:28px;">
           <div class="form-card reveal left">
@@ -1120,7 +1191,6 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               <p>${contact.successBody}</p>
             </div>
           </div>
-          ${schedCard}
           <div class="form-card reveal left">
             <h3>${contact.songHeading}</h3>
             <p class="note">${contact.songNote}</p>
@@ -1242,26 +1312,37 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
             </div>
           </div>
 
+          ${miscCommunityCard}
         </div>
         <aside class="info-stack">
           ${cards}
-          <div class="info-card reveal right d5">
-            <div class="ic-head"><div class="ic-icon">📲</div><h4>FIND US ONLINE</h4></div>
-            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
-              <a href="https://www.youtube.com/@${social.youtube}" target="_blank" rel="noopener"
-                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);transition:border-color .18s">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fca5a5"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#fca5a5;letter-spacing:.1em">@${social.youtube}</span>
-              </a>
-              <a href="https://www.instagram.com/${social.instagram}" target="_blank" rel="noopener"
-                 style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(131,58,180,0.08);border:1px solid rgba(131,58,180,0.28);transition:border-color .18s">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c084fc" stroke="none"/></svg>
-                <span style="font-family:'DM Mono',monospace;font-size:12px;color:#c084fc;letter-spacing:.1em">@${social.instagram}</span>
-              </a>
-            </div>
-          </div>
+          ${findOnlineCard}
         </aside>
-      </section>`;
+      </section>
+      </div>
+      <div id="contact-panel-crew" class="contact-tab-panel" role="tabpanel">
+      <section class="contact-body">
+        <div style="display:flex;flex-direction:column;gap:28px;">
+          ${schedCard}
+          ${miscCrewCard}
+        </div>
+        <aside class="info-stack">
+          ${crewCards}
+          ${findOnlineCard}
+        </aside>
+      </section>
+      </div>`;
+
+    /* Tab switching — same pattern as the Team page */
+    $$('.contact-tab-btn', root).forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('.contact-tab-btn', root).forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        $$('.contact-tab-panel', root).forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        $('#contact-panel-' + btn.dataset.ctab).classList.add('active');
+      });
+    });
   })();
 
   /* ── Studio News Cards ───────────────────────────────────────── */
@@ -1546,7 +1627,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   if(schedForm){
     schedForm.addEventListener('submit', async e => {
       e.preventDefault();
-      for(const k of ['name','event_name','event_date','access','reason']){
+      for(const k of ['name','email','event_name','event_date','access','reason']){
         const f = schedForm.elements[k];
         if(!f?.value.trim()){ f?.focus(); return; }
       }
@@ -1565,6 +1646,29 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       } catch(err){ btn.disabled=false; btn.textContent='Request Approval →'; alert('Network error — check your connection.'); }
     });
   }
+
+  /* ── Misc question forms (one per contact tab) ───────────────── */
+  ['misc-form','crew-misc-form'].forEach(fid => {
+    const mf = $('#' + fid);
+    if(!mf) return;
+    mf.addEventListener('submit', async e => {
+      e.preventDefault();
+      for(const k of ['name','email','message']){
+        const f = mf.elements[k];
+        if(!f?.value.trim()){ f?.focus(); return; }
+      }
+      const btn = $('#' + fid + '-btn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const fd = new FormData(mf);
+        const meta = await getSubmitterInfo();
+        Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
+        const r = await fetch(mf.action, {method:'POST', body:fd});
+        if(r.ok){ mf.style.display='none'; $('#' + fid + '-success').classList.add('active'); }
+        else { btn.disabled=false; btn.textContent='Send Question →'; alert('Submission failed — try again or reach us at @ennbulletin.'); }
+      } catch(err){ btn.disabled=false; btn.textContent='Send Question →'; alert('Network error — check your connection.'); }
+    });
+  });
 
   /* ── Song request form → Formspree ──────────────────────────── */
   /* Uses the iTunes Search API (no key required) to verify the song

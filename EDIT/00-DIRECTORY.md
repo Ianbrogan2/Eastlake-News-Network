@@ -148,13 +148,27 @@ eastlakenewsnetwork.com, and exactly which file to open to change it.
 ---
 
 ## ✉️ CONTACT PAGE — `09-CONTACT.js`
+
+The page is split into **two tabs** (like the Team page):
+**For Everyone** (all the public forms) and **ENN Crew Desk** (crew-only).
+Tab names: `tabEveryone`, `tabCrew`.
+
+**For Everyone tab:**
 - Page header: `heroEyebrow`, `heroHeadline`, `heroSub`
 - Coverage Request form: `formHeading`, `formNote`, `formRequestTypes`
   (the dropdown list), `successHeading`, `successBody`
-- Scheduling & Access Request (crew field passes): `schedHeading`, `schedEyebrow`,
-  `schedNote`, `schedAccessTypes` (the access dropdown — field pass, sideline,
-  assembly floor, backstage, off-campus), `schedSuccessHeading`, `schedSuccessBody`
-  — submissions land in their own "Scheduling Request" tab in the Google Sheet
+- Misc questions form (collects name + email): `miscHeading`, `miscNote`,
+  `miscSuccessHeading`, `miscSuccessBody`
+
+**ENN Crew Desk tab:**
+- Scheduling & Access Request (crew field passes — collects name + email):
+  `schedHeading`, `schedEyebrow`, `schedNote`, `schedAccessTypes` (the access
+  dropdown — field pass, sideline, assembly floor, backstage, off-campus),
+  `schedSuccessHeading`, `schedSuccessBody` — submissions land in their own
+  "Scheduling Request" tab in the Google Sheet
+- Crew questions form (collects name + email): `crewMiscHeading`, `crewMiscNote`,
+  `crewMiscSuccessHeading`, `crewMiscSuccessBody`
+- Right-side cards for this tab: `crewInfoCards` (same format as `infoCards`)
 - Song Request form: `songHeading`, `songNote`, `songSuccessHeading`, `songSuccessBody`
 - Love Lines (text + audio): `loveHeading`, `loveEyebrow`, `loveDesc`,
   `loveSuccessHeading`, `loveSuccessBody`

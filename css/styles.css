@@ -1125,6 +1125,24 @@ img{display:block;max-width:100%}
 .contact-body{padding: 24px clamp(18px,4.4vw,60px) clamp(60px,8vw,100px);
   display:grid;grid-template-columns: 1.7fr 1fr;gap:32px;align-items:start}
 @media (max-width:980px){.contact-body{grid-template-columns:1fr}}
+
+/* ── Contact page tabs (same look as the Team page tabs) ── */
+.contact-tabs-wrap{padding:0 clamp(18px,4.4vw,60px);margin-top:8px}
+.contact-tabs{display:flex;gap:4px;border-bottom:2px solid var(--border)}
+.contact-tab-btn{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.4vw,28px);letter-spacing:.08em;
+  padding:14px 36px;background:none;border:none;border-bottom:3px solid transparent;
+  margin-bottom:-2px;color:var(--muted);cursor:pointer;
+  transition:color .22s var(--ease),border-color .22s var(--ease),background .18s;
+  border-radius:8px 8px 0 0;
+}
+.contact-tab-btn:hover{color:#fff;background:rgba(255,255,255,0.04)}
+.contact-tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.contact-tab-panel{display:none}
+.contact-tab-panel.active{display:block}
+@media (max-width:640px){
+  .contact-tab-btn{padding:12px 18px;font-size:clamp(17px,4.6vw,22px)}
+}
 .form-card{padding:32px;background:var(--bg-1);border:1px solid var(--border);border-radius:14px}
 .form-card h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.01em;margin-bottom:4px}
 .form-card .note{color:var(--muted);font-size:14px;margin-bottom:24px}

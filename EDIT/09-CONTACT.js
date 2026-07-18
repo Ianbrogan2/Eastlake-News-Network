@@ -22,6 +22,15 @@
 
 var ENN_CONTACT = {
 
+  // ── PAGE TABS ─────────────────────────────────────────────────────
+  // The Contact page is split into two tabs (like the Team page):
+  //   Tab 1 — the public forms everyone uses (coverage, songs, love lines)
+  //   Tab 2 — the ENN crew desk (field passes, crew questions)
+
+  tabEveryone: 'For Everyone',
+  tabCrew:     'ENN Crew Desk',
+
+
   // ── TOP HERO SECTION ─────────────────────────────────────────────
   // The big text that appears at the top of the Contact page
 
@@ -107,6 +116,45 @@ var ENN_CONTACT = {
   loveDesc: 'Send a shoutout, thank you, or message to someone at Eastlake — student to student, student to faculty, faculty to student, or faculty to faculty. Submissions may be read live on the ENN bulletin, so keep an ear open.',
   loveSuccessHeading: 'MESSAGE RECEIVED 💌',
   loveSuccessBody: 'Your Love Line has been submitted. Tune in to the bulletin — you might just hear it on air.',
+
+
+  // ── MISC QUESTIONS FORM — "For Everyone" tab ─────────────────────
+  // The catch-all questions form at the bottom of the public tab.
+  // Asks for name + email so you can reply.
+
+  miscHeading: 'OTHER QUESTIONS',
+  miscNote: 'Something that doesn\'t fit the forms above? Ask here — include your email and we\'ll get back to you.',
+  miscSuccessHeading: 'QUESTION RECEIVED',
+  miscSuccessBody: 'Thanks! We\'ve got your question and will reply to the email you provided.',
+
+
+  // ── MISC QUESTIONS FORM — "ENN Crew Desk" tab ────────────────────
+  // The catch-all questions form for ENN students only.
+
+  crewMiscHeading: 'CREW QUESTIONS',
+  crewMiscNote: 'For ENN students — scheduling conflicts, equipment, shoot logistics, or anything else for the desk. Include your email so we can get back to you.',
+  crewMiscSuccessHeading: 'QUESTION RECEIVED',
+  crewMiscSuccessBody: 'Got it. The desk will reply to the email you provided.',
+
+
+  // ── CREW INFO CARDS ──────────────────────────────────────────────
+  // The cards on the right side of the ENN Crew Desk tab.
+  // Same format as infoCards below.
+
+  crewInfoCards: [
+
+    {
+      icon:    '⏱',
+      heading: 'APPROVAL TIMELINE',
+      body:    'Submit access requests at least <strong>one week before the event</strong>. You\'ll get a confirmation from the scheduling desk before game day.',
+    },
+    {
+      icon:    '🎫',
+      heading: 'PASS RULES',
+      body:    'Approval is <strong>per event</strong> — one request per game, assembly, or shoot. No confirmed approval means no field, floor, or backstage access.',
+    },
+
+  ],
 
 
   // ── INFO CARDS ────────────────────────────────────────────────────
