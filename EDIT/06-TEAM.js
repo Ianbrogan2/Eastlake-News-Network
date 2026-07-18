@@ -42,6 +42,13 @@
 // ║      • Commit this file                                          ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
+// ┌──────────────────────────────────────────────────────────────────┐
+// │  ⚠ ROSTER RESET FOR THE 2026–2027 SCHOOL YEAR                    │
+// │  Every card is a placeholder until the new crew is finalized.    │
+// │  TO ADD A REAL PERSON: replace 'TBD' with their name, fill in    │
+// │  grade / bio / email, and commit this file. That's it.           │
+// └──────────────────────────────────────────────────────────────────┘
+
 var ENN_TEAM = {
 
   // ── PERIOD 1 ──────────────────────────────────────────────────────
@@ -51,26 +58,26 @@ var ENN_TEAM = {
     leaders: [
 
       {
-        n:     'Emily Na Sanchez',
+        n:     'TBD',
         r:     'Lead Producer',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Alejandro Schejola',
+        n:     'TBD',
         r:     'Segment Producer',
-        grade: '11th',
-        bio:   'Alejandro Schejola is ENNs period 1 Segment Producer, in charge of maintaining a balance, cultivating cooperation, and progressing the capabilities of students. ',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Jovani Iglesias',
+        n:     'TBD',
         r:     'Broadcast Director',
-        grade: '10th',
-        bio:   'Jovani Iglesias is the Period 1 Broadcast Director, responsible for overseeing the technical and creative direction of every live broadcast, ensuring an enjoyable production for the student body. ',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
@@ -81,34 +88,34 @@ var ENN_TEAM = {
     anchors: [
 
       {
-        n:     'Rainen Gabriel',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '12th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Maddy Mcgee',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Christian Stevens',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Erina Tsuya',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
@@ -124,26 +131,26 @@ var ENN_TEAM = {
     leaders: [
 
       {
-        n:     'Ian Brogan',
+        n:     'TBD',
         r:     'Lead Producer',
-        grade: '11th',
-        bio:   'Ian Brogan is ENNs Lead Producer, responsible for all graphics, logos, animations, and the complete production of every broadcast.',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Cecilia Hettinger',
+        n:     'TBD',
         r:     'Segment Producer',
-        grade: '12th',
-        bio:   'Cecilia Hettinger is a senior at Eastlake High School and the period 4, ENN segment manager, bringing creativity, organization, and a passion for storytelling to every broadcast.',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Rory Licht',
+        n:     'TBD',
         r:     'Broadcast Director',
-        grade: '12th',
-        bio:   'Rory Licht is the period 4, Broadcast Director and an emerging filmmaker, bringing the ambition and discipline to every project he helps build at Eastlake High.',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
@@ -154,34 +161,34 @@ var ENN_TEAM = {
     anchors: [
 
       {
-        n:     'Hayden Stolebarger',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Sidney Jonason',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Mia Beas',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '11th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
       {
-        n:     'Alyssa Lagler',
+        n:     'TBD',
         r:     'Anchor',
-        grade: '12th',
-        bio:   '',
+        grade: '',
+        bio:   'Coming Soon',
         email: '',
         photo: '',
       },
@@ -191,14 +198,14 @@ var ENN_TEAM = {
   },
 
   // ── FACULTY ADVISOR ───────────────────────────────────────────────
-  // William appears at the bottom of BOTH period tabs automatically
+  // The advisor appears at the bottom of BOTH period tabs automatically
   advisor: {
-    n:     'William Nimmo',
-    r:     'Film Television Digital Media Instructor',
+    n:     'TBD',
+    r:     'Faculty Advisor',
     grade: '',
-    bio:   'Mr. Nimmo is an industry leader, bringing the standards of contemporary filmmaking and television production to the state-of-the-art programs at Eastlake High.',
-    email: 'william.nimmo@sweetwaterschools.org',
-    photo: '',   // e.g. 'img/team/william-nimmo.jpg'
+    bio:   'Coming Soon',
+    email: '',
+    photo: '',   // e.g. 'img/team/advisor/name.jpg'
   },
 
 };
