@@ -86,6 +86,10 @@ eastlakenewsnetwork.com, and exactly which file to open to change it.
 - One block per day: `date` (format `2026-07-27` — the site works out "MON · JUL 27"
   and lights up a TODAY badge on the right day by itself), `title`, `dress`,
   and `theme` — pick from: `beach` `ocean` `cali` `tropic` `home` `night` `neon` `gold`
+- Optional `photo` per day: upload an image to `img/spirit/` and set
+  `photo: 'img/spirit/monday.jpg'` to use it as that card's background
+  (a dark gradient is added automatically so text stays readable). Leave
+  `photo: ''` to use the animated theme art instead.
 - Reuse for every spirit week: rewrite the days, flip `enabled` to `'T'`, commit
 
 **`13-OVERRIDE.js` — The Latest Bulletin video player**
