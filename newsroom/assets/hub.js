@@ -33,7 +33,7 @@
       `<a href="${href}"${current===label?' aria-current="page"':''}>${label}</a>`).join('');
     return `<header class="nr-rail">
       <a class="nr-rail-logo" href="/newsroom/">
-        <img src="/enn-logo.png" alt=""><b>ENN</b><span>NEWSROOM</span>
+        <img src="/enn-logo.png" alt="ENN"><span>NEWSROOM</span>
       </a>
       <nav aria-label="Newsroom sections">${nav}</nav>
       <span class="nr-tally" title="Live studio"><i></i>ON&nbsp;AIR</span>
