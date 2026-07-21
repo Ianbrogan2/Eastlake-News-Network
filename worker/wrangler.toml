@@ -1,0 +1,17 @@
+name = "enn-newsroom"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# ── SECRETS (set with `wrangler secret put NAME` — never commit real values) ──
+#   R2_ACCOUNT_ID          your Cloudflare account ID
+#   R2_ACCESS_KEY_ID       R2 S3-auth access key id
+#   R2_SECRET_ACCESS_KEY   R2 S3-auth secret
+#   R2_BUCKET              value: enn-submissions
+#   AIRTABLE_TOKEN         Airtable personal access token (scoped to the base)
+#   AIRTABLE_BASE_ID       the app… id from the base URL
+#
+# ── plain vars (safe to commit) ──
+[vars]
+ALLOWED_ORIGIN = "https://eastlakenewsnetwork.com"
+SCHOOL_EMAIL_DOMAIN = "REPLACE-with-school-domain.org"
+AIRTABLE_SUBMISSIONS_TABLE = "Submissions"

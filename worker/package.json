@@ -1,0 +1,16 @@
+{
+  "name": "enn-newsroom-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ENN Newsroom backend — presigned R2 uploads + Airtable metadata/boards",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "aws4fetch": "^1.0.20"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
