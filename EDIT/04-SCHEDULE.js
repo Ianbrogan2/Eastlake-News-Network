@@ -76,7 +76,7 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { on: 'F', key: 'WED', idx: 3, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'WED', idx: 3, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Wednesday Episode', url: '' },
       { label: '', url: '' },
@@ -85,7 +85,7 @@ var ENN_SCHEDULE = [
     ],
   },
 
-  { on: 'F', key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
+  { on: 'T', key: 'THU', idx: 4, ep: 'Morning Bulletin', tm: '10:31–10:41 AM PST',
     links: [
       { label: 'Thursday Episode', url: '' },
       { label: '', url: '' },
