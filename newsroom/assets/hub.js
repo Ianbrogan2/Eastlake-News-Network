@@ -130,11 +130,33 @@
   };
   const io = ('IntersectionObserver' in window) ? new IntersectionObserver((es)=>{
     es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' }) : null;
+  }, { threshold:0.01, rootMargin:'0px 0px -6% 0px' }) : null;
   NR.observe = function(root){
     const els = $$('.nr-reveal, .nr-stagger, .nr-lower3, .nr-titlecard', root||document);
+    /* No IO or reduced motion → show everything immediately */
     if(!io || reduceMotion){ els.forEach(el=>el.classList.add('in')); return; }
-    els.forEach(el=>io.observe(el));
+    const vh = window.innerHeight || 800;
+    const pending = [];
+    els.forEach(el=>{
+      const r = el.getBoundingClientRect();
+      if(r.top < vh * 0.98 && r.bottom > 0){ el.classList.add('in'); }  /* in view on load → reveal now, no waiting on IO */
+      else { io.observe(el); pending.push(el); }
+    });
+    /* Scroll fallback — reveals below-fold items even if IO never fires (some
+       mobile / bfcache / embedded contexts don't emit intersections) */
+    if(pending.length){
+      const onScroll = () => {
+        const h = window.innerHeight;
+        for(let i=pending.length-1;i>=0;i--){
+          const el = pending[i];
+          if(el.classList.contains('in') || el.getBoundingClientRect().top < h*0.95){ el.classList.add('in'); pending.splice(i,1); }
+        }
+        if(!pending.length) window.removeEventListener('scroll', onScroll);
+      };
+      window.addEventListener('scroll', onScroll, {passive:true});
+      /* Safety net: nothing may stay invisible — reveal any stragglers */
+      setTimeout(()=>{ pending.forEach(el=>el.classList.add('in')); }, 2500);
+    }
   };
 
   /* ── Live broadcast clock (Pacific) → any [data-clock] element ── */
@@ -151,12 +173,25 @@
   /* ── Gate "remember for this tab" (sessionStorage only) ── */
   NR.gate = {
     key:'enn_gate_ok',
+    available(){ try{ sessionStorage.setItem('__ennt','1'); sessionStorage.removeItem('__ennt'); return true; }catch(e){ return false; } },
     remember(){ try{ sessionStorage.setItem(this.key,'1'); }catch(e){} },
     entered(){ try{ return sessionStorage.getItem(this.key)==='1'; }catch(e){ return false; } }
   };
 
+  /* Soft gate — a newsroom page requires passing the call-sign gate first.
+     Friendly curtain, not security (devtools can bypass, and nothing private
+     lives here — the Catalog is separately Access-gated). Fails OPEN if
+     sessionStorage is unavailable so it can never trap a visitor in a loop. */
+  NR.enforceGate = function(){
+    if(!NR.gate.available()) return true;      // storage blocked → don't gate
+    if(NR.gate.entered()) return true;
+    location.replace('/enn-callsign-gate.html');
+    return false;
+  };
+
   /* Auto-init on DOM ready */
   function init(){
+    if(!NR.enforceGate()) return;              // bounced to the gate — stop here
     NR.mountChrome(document.body.getAttribute('data-section')||'');
     NR.observe(document);
     NR.startClock();
