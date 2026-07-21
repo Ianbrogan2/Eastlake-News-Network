@@ -274,11 +274,11 @@ var ENN_TEAM = {
   // ── FACULTY ADVISOR ───────────────────────────────────────────────
   // The advisor appears at the bottom of ALL period tabs automatically
   advisor: {
-    n:     'TBD',
-    r:     'Faculty Advisor',
+    n:     'William Nimmo',
+    r:     'Film Television Digital Media Instructor',
     grade: '',
-    bio:   'Coming Soon',
-    email: '',
+    bio:   'Mr. Nimmo is an industry leader, bringing the standards of contemporary filmmaking and television production to the state-of-the-art programs at Eastlake High.',
+    email: 'william.nimmo@sweetwaterschools.org',
     photo: '',   // e.g. 'img/team/advisor/name.jpg'
   },
 
