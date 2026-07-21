@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Make — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="Make">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Toolkit</b><span>Build the piece</span></div>
+    <h1 class="nr-title">MAKE</h1>
+    <p class="nr-lede">Everything you need to build a broadcast-ready segment: what each piece type is, ideas you can claim, templates, the brand kit, where to get music legally, and how we name our files.</p>
+  </section>
+
+  <!-- Piece-type guides -->
+  <h2 class="nr-h2 nr-reveal">Piece-Type Guides</h2>
+  <p class="nr-sub nr-reveal">Target runtime ~2–3 minutes each. Tap a type for the format, a do/don't, and what makes it air.</p>
+  <div class="nr-grid nr-stagger" id="guides"></div>
+
+  <!-- Idea bank (live) -->
+  <h2 class="nr-h2 nr-reveal" id="ideas">Idea Bank · Requested Pieces</h2>
+  <p class="nr-sub nr-reveal">Approved concepts, first-come first-served. Claim one on the pitch board in the Newsroom.</p>
+  <div id="board-ideas" class="nr-reveal"></div>
+
+  <!-- Templates -->
+  <h2 class="nr-h2 nr-reveal">Script &amp; Question Templates</h2>
+  <div class="nr-grid nr-stagger">
+    <div class="nr-panel"><h3 class="nr-h3">Anchor Script Template <span class="nr-draft">Draft</span></h3><p style="color:var(--steel);font-size:13.5px">Intro → story handoffs → outro, with timing marks that add up to 10:00.</p><!-- TODO: paste real anchor script template --></div>
+    <div class="nr-panel"><h3 class="nr-h3">Interview Question Banks <span class="nr-draft">Draft</span></h3><p style="color:var(--steel);font-size:13.5px">Starter questions by segment: club interview, feature subject, man-on-the-street.</p><!-- TODO: paste real interview question banks --></div>
+  </div>
+
+  <!-- Brand kit -->
+  <h2 class="nr-h2 nr-reveal" id="brand">Brand Kit</h2>
+  <p class="nr-sub nr-reveal">The look that makes it ENN. <span class="nr-draft">Draft — asset files pending</span></p>
+  <div class="nr-grid nr-stagger">
+    <div class="nr-panel"><h3 class="nr-h3">Logos</h3><p style="color:var(--steel);font-size:13.5px">Primary mark, mono, safe-area versions.</p><!-- TODO: add logo files --></div>
+    <div class="nr-panel"><h3 class="nr-h3">Lower Thirds</h3><p style="color:var(--steel);font-size:13.5px">Name/title templates matching the on-air style.</p><!-- TODO: add lower-third templates --></div>
+    <div class="nr-panel"><h3 class="nr-h3">Intro / Outro Stingers</h3><p style="color:var(--steel);font-size:13.5px">The open and close every episode uses.</p><!-- TODO: add stingers --></div>
+    <div class="nr-panel"><h3 class="nr-h3">Fonts &amp; Colors</h3><p style="color:var(--steel);font-size:13.5px">Bebas Neue display · DM Sans body · ENN blue #1A56DB · kelly green #16A34A. Keep text inside the title-safe area.</p></div>
+  </div>
+
+  <!-- Stock library (guardrail) -->
+  <h2 class="nr-h2 nr-reveal">Stock Library</h2>
+  <div class="nr-panel nr-reveal" style="border-color:rgba(251,191,36,0.35)">
+    <div class="nr-eyebrow" style="margin-bottom:12px"><b style="background:#FBBF24;color:#1a1206">Licensing</b><span>Read before you use audio</span></div>
+    <p style="color:#c9cfda;font-size:14px;line-height:1.6;margin-bottom:14px">We do <strong>not</strong> re-host licensed music, SFX, or footage on this page — licensed content usually can't be publicly redistributed, and a public page is exactly where that gets us in trouble. Instead, get media from the licensed sources below and keep it in the shared class drive (behind the curtain), not on the open site.</p>
+    <ul class="nr-prose" style="max-width:none;color:#c9cfda"><li><a href="https://www.youtube.com/audiolibrary" target="_blank" rel="noopener">YouTube Audio Library</a> — free music &amp; SFX cleared for use</li><li><a href="https://freesound.org" target="_blank" rel="noopener">Freesound</a> — check each sound's license</li><li><a href="https://pixabay.com/music/" target="_blank" rel="noopener">Pixabay Music</a> — royalty-free</li><li>Class-licensed libraries — see Mr. Nimmo for logins <span class="nr-draft">Draft — add sources</span></li></ul>
+    <!-- TODO: add the studio's actual licensed sources; keep licensed files off this public page -->
+  </div>
+
+  <!-- Folder structure -->
+  <h2 class="nr-h2 nr-reveal">Folder Structure &amp; Naming</h2>
+  <p class="nr-sub nr-reveal">Everyone files identically so nobody loses a shot the night before air.</p>
+  <div class="nr-panel nr-reveal nr-prose" style="max-width:none">
+    <pre><code>RAW FOOTAGE · A-ROLL · B-ROLL · AUDIO · PROJECT FILES · EXPORTS ·
+GRAPHICS (LOWER THIRDS / TEMPLATES) · ARCHIVE (past semesters)</code></pre>
+    <p><strong>Naming examples</strong></p>
+    <pre><code>Episode05_Interview1_Aroll.mov
+2025_Podcast02_FinalCut.prproj</code></pre>
+  </div>
+
+  <!-- Gear how-tos -->
+  <h2 class="nr-h2 nr-reveal">Gear &amp; Software How-Tos</h2>
+  <p class="nr-sub nr-reveal">Cameras, mics, teleprompter, switcher, 4K drone, mobile studio, and the editor's export settings. <span class="nr-draft">Draft — fill after the September tech revamp</span></p>
+  <div id="make-howtos" class="nr-reveal"></div>
+  <!-- TODO: fill gear & software how-tos after the September tech revamp -->
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+var GUIDES=[
+  ['Man-on-the-Street','Quick reactions from real students to one sharp question.','Do: ask an open question and get 4–6 varied takes. Don\'t: lead the answer or film in a dead hallway.'],
+  ['Club Interview','A club shows off what it does, in its own space.','Do: film them doing the thing (B-roll!). Don\'t: sit two people in chairs and just talk.'],
+  ['Feature','A short story with a beginning, middle, and end about a person or trend.','Do: find the human angle. Don\'t: narrate what the viewer can already see.'],
+  ['Sports Corner','Scores, highlights, and what\'s next for the Titans.','Do: include the final score and B-roll. Don\'t: forget who won.'],
+  ['PSA','A 30–60s message that informs or persuades.','Do: one clear call to action. Don\'t: cram five messages in.'],
+  ['Comedy/Skit','A short, clean bit that lands a laugh.','Do: keep it tight and school-appropriate. Don\'t: run the joke into the ground.'],
+  ['Mini-game','An on-air game students can play along with.','Do: simple rules explained in 10 seconds. Don\'t: need a rulebook.'],
+  ['Trivia','A quick quiz segment on school or general knowledge.','Do: verify every answer. Don\'t: pick questions nobody can get.']
+];
+document.getElementById('guides').innerHTML = GUIDES.map(function(g){
+  return '<div class="nr-panel"><h3 class="nr-h3">'+NR.esc(g[0])+'</h3><p style="color:#c9cfda;font-size:13.5px;margin:6px 0 10px">'+NR.esc(g[1])+'</p><p style="color:var(--steel);font-size:12.5px;line-height:1.5">'+NR.esc(g[2])+'</p></div>';
+}).join('');
+NR.observe(document.getElementById('guides'));
+
+NR.board('pitches').then(function(res){
+  if(res.state==='ok'){ res.records=res.records.filter(function(r){return String(r.Status||'').toLowerCase().includes('open');}); }
+  NR.renderBoard('#board-ideas', res, {
+    columns:['Idea','Type','Status','Notes'],
+    emptyIcon:'💡', emptyTitle:'No open ideas right now', emptyBody:'Approved, unclaimed concepts show up here. Check back or pitch your own in the Newsroom.',
+    row:function(r){ return ['<strong>'+NR.esc(r['Story/Idea']||r.Story||'—')+'</strong>', NR.esc(r.Type||'—'), NR.statusChip(r.Status||'Open'), NR.esc(r.Notes||'')]; }
+  });
+});
+document.getElementById('make-howtos').innerHTML = NR.emptyState('🎛️','Gear guides coming after the tech revamp','Camera, mic, teleprompter, switcher, drone, and export-setting walkthroughs land here once the September gear update is done.');
+</script>
+</body>
+</html>

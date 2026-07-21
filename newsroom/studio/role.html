@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Role — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="Studio">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/studio/">← Run the Studio</a>
+  <div class="nr-eyebrow nr-titlecard"><b>Role Hub</b><span id="role-tag">Loading…</span></div>
+  <article class="nr-prose nr-reveal" id="role-body" style="margin-top:18px">
+    <p class="nr-sub">Loading role…</p>
+  </article>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+(function(){
+  var VALID={'studio-director':'Studio Director','newsroom-director':'Newsroom Director','main-editor':'Main Editor','website-controller':'Website Controller','equipment-manager':'Equipment Manager','camera-operators':'Camera Operators','anchors':'Anchors','assistant-directors':'Assistant Directors'};
+  var r=(new URLSearchParams(location.search)).get('r')||'';
+  if(!VALID[r]){ document.getElementById('role-body').innerHTML='<p class="nr-sub">Role not found. <a href="/newsroom/studio/" style="color:#7DD8FF">Back to roles →</a></p>'; document.getElementById('role-tag').textContent='Unknown'; return; }
+  document.getElementById('role-tag').textContent=VALID[r];
+  document.title=VALID[r]+' — ENN Newsroom';
+  NR.renderMarkdown('/newsroom/content/roles/'+r+'.md', '#role-body');
+})();
+</script>
+</body>
+</html>

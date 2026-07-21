@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Submit — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="Submit">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Portal</b><span>Turn in your piece</span></div>
+    <h1 class="nr-title">SUBMIT</h1>
+    <p class="nr-lede">Drop your finished piece here. It uploads straight to the ENN vault and lands on the producer's desk. Run the checklist first — it's the same list we grade against.</p>
+  </section>
+
+  <!-- Deadline rules -->
+  <div class="nr-panel nr-reveal" style="border-color:rgba(255,59,48,0.35);margin-bottom:26px">
+    <div class="nr-eyebrow" style="margin-bottom:12px"><b style="background:var(--live)">Deadline</b><span>Read this</span></div>
+    <p style="color:#c9cfda;font-size:14.5px;line-height:1.6">Pieces are due <strong>before class starts</strong> on your air day. <strong style="color:#ff8a84">Not done by the deadline = an automatic 0 for the week</strong> — no exceptions, because the show airs whether your piece is ready or not. Submit early; a rendered file beats a perfect idea that misses the bell.</p>
+  </div>
+
+  <!-- Pre-submit checklist -->
+  <h2 class="nr-h2 nr-reveal">Pre-Submit Checklist</h2>
+  <p class="nr-sub nr-reveal">Self-check before you turn in — these mirror the automatic deductions, so catch the point-losers now.</p>
+  <div class="nr-panel nr-reveal" style="margin-bottom:26px">
+    <ul class="nr-check" id="checklist">
+      <li><input type="checkbox" id="c1"><label for="c1">Submitted <strong>before the deadline</strong> <span class="req">(late = automatic 0)</span></label></li>
+      <li><input type="checkbox" id="c2"><label for="c2">Audio is clean and <strong>levels are checked</strong></label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><strong>Lower thirds</strong> are present and correct</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4"><strong>Spelling proofed</strong> — no blatant errors</label></li>
+      <li><input type="checkbox" id="c5"><label for="c5"><strong>B-roll included</strong> <span class="req">(required on Sports &amp; Reporting pieces)</span></label></li>
+      <li><input type="checkbox" id="c6"><label for="c6">Exported with the <strong>correct preset / resolution / format</strong></label></li>
+      <li><input type="checkbox" id="c7"><label for="c7">Content is <strong>appropriate and can air</strong>; overall quality is broadcast-ready</label></li>
+    </ul>
+    <p style="margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel)">
+      <a href="#" class="nr-back" style="margin:0;color:#7DD8FF" onclick="alert('Export preset placeholder — the editor\'s standard export settings file will be attached here.');return false;">↓ Download the standard export preset</a>
+      <span class="nr-draft" style="margin-left:8px">Draft — pending update</span>
+      <!-- TODO: attach export preset file matching the studio's spec -->
+    </p>
+  </div>
+
+  <!-- The form -->
+  <h2 class="nr-h2 nr-reveal">Drop Your Piece</h2>
+  <div id="offline-note" class="nr-reveal" style="display:none"></div>
+  <div class="nr-panel nr-panel-lg nr-reveal">
+    <form id="submit-form" autocomplete="off" novalidate>
+      <div class="nr-row2">
+        <div class="nr-field"><label for="f-name">Student Name</label><input id="f-name" name="name" type="text" required placeholder="Your full name"></div>
+        <div class="nr-field"><label for="f-email">School Email</label><input id="f-email" name="email" type="email" required placeholder="you@school.org"></div>
+      </div>
+      <div class="nr-row2">
+        <div class="nr-field"><label for="f-period">Class Period</label>
+          <select id="f-period" name="period" required><option value="">Select…</option><option>Period 1</option><option>Period 4</option><option>Period 6</option></select>
+        </div>
+        <div class="nr-field"><label for="f-group">Group</label>
+          <select id="f-group" name="group" required><option value="">Select…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+        </div>
+      </div>
+      <div class="nr-row2">
+        <div class="nr-field"><label for="f-type">Piece Type</label>
+          <select id="f-type" name="pieceType" required><option value="">Select…</option>
+            <option>Man-on-the-Street</option><option>Club Interview</option><option>Feature</option><option>Sports Corner</option><option>PSA</option><option>Comedy/Skit</option><option>Mini-game</option><option>Trivia</option></select>
+        </div>
+        <div class="nr-field"><label for="f-airweek">Air Week <span style="text-transform:none;color:var(--steel-dim)">(optional)</span></label><input id="f-airweek" name="airWeek" type="text" placeholder="e.g. Week of Sep 8"></div>
+      </div>
+      <div class="nr-field"><label for="f-title">Title</label><input id="f-title" name="title" type="text" required placeholder="What's it called?"></div>
+      <div class="nr-field"><label for="f-desc">Description</label><textarea id="f-desc" name="description" required placeholder="What is it, who's in it, and anything the producer should know."></textarea></div>
+      <div class="nr-field"><label for="f-file">The File</label><input id="f-file" name="file" type="file" required accept="video/*,audio/*"></div>
+
+      <!-- VU-style upload meter (signature moment) -->
+      <div class="nr-vu" id="vu">
+        <div class="nr-vu-track" id="vu-track"></div>
+        <div class="nr-vu-label"><span id="vu-stage">Preparing…</span><span id="vu-pct">0%</span></div>
+      </div>
+
+      <div id="form-msg" style="margin:14px 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em"></div>
+      <button type="submit" class="nr-btn" id="submit-btn">◉ Send to the Desk</button>
+    </form>
+
+    <!-- success -->
+    <div id="success" style="display:none;text-align:center;padding:20px 0">
+      <div style="font-family:var(--display);font-size:48px;color:var(--live);letter-spacing:.06em;text-shadow:0 0 30px rgba(255,59,48,0.5)">SUBMITTED</div>
+      <p style="color:#c9cfda;margin:8px 0 14px">Your piece is on the producer's desk. Keep the confirmation ID for your records.</p>
+      <div class="nr-chip is-approved" id="sub-id" style="font-size:12px">ID · —</div>
+    </div>
+  </div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+(function(){
+  var form=document.getElementById('submit-form'), btn=document.getElementById('submit-btn'),
+      msg=document.getElementById('form-msg'), vu=document.getElementById('vu'),
+      vuTrack=document.getElementById('vu-track'), vuStage=document.getElementById('vu-stage'), vuPct=document.getElementById('vu-pct');
+  var CFG=window.ENN||{};
+
+  // build VU segments
+  var SEGS=28; for(var i=0;i<SEGS;i++){ var s=document.createElement('span'); s.className='nr-vu-seg'; vuTrack.appendChild(s); }
+  var segEls=vuTrack.querySelectorAll('.nr-vu-seg');
+  function vuTo(pct){
+    var lit=Math.round(pct/100*SEGS);
+    segEls.forEach(function(el,idx){
+      if(idx<lit){ el.style.background = idx>SEGS*0.85?'#FF3B30':idx>SEGS*0.65?'#FBBF24':'#4ade80'; }
+      else el.style.background='rgba(255,255,255,0.05)';
+    });
+    vuPct.textContent=Math.round(pct)+'%';
+  }
+
+  if(!NR.workerReady){
+    document.getElementById('offline-note').style.display='block';
+    document.getElementById('offline-note').innerHTML = NR.emptyState('🔌','Submissions open once the vault is connected',
+      'The upload backend (Cloudflare Worker + R2) isn’t linked yet — see SETUP-NEXT-STEPS.md. You can still fill this out to see how it works; sending is disabled until it’s live.');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    msg.style.color='#ff8a84'; msg.textContent='';
+    var fd=new FormData(form);
+    var name=fd.get('name'), email=(fd.get('email')||'').trim(), file=document.getElementById('f-file').files[0];
+    for(var k of ['name','email','period','group','pieceType','title','description']){ if(!(fd.get(k)||'').trim()){ msg.textContent='Please fill in every required field.'; form.elements[k].focus(); return; } }
+    if(!file){ msg.textContent='Choose a file to upload.'; return; }
+    var domain=(CFG.SCHOOL_EMAIL_DOMAIN||'').toLowerCase();
+    if(domain && !/REPLACE/i.test(domain) && email.toLowerCase().indexOf('@'+domain)===-1){ msg.textContent='Use your school email ('+domain+') to submit.'; return; }
+
+    if(!NR.workerReady){ msg.textContent='Submissions aren’t connected yet — the backend needs to be set up first.'; return; }
+
+    btn.disabled=true; btn.textContent='Uploading…'; vu.classList.add('on'); vuStage.textContent='Requesting upload slot…'; vuTo(4);
+
+    // 1) mint presigned URL
+    fetch(CFG.WORKER_URL+'/upload-url',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fileName:file.name,contentType:file.type||'application/octet-stream',email:email})})
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'Upload slot denied'); return j; }); })
+      .then(function(j){
+        // 2) PUT the file straight to R2 with progress
+        vuStage.textContent='Uploading to the vault…';
+        return new Promise(function(res,rej){
+          var xhr=new XMLHttpRequest(); xhr.open('PUT', j.uploadUrl);
+          xhr.setRequestHeader('Content-Type', file.type||'application/octet-stream');
+          xhr.upload.onprogress=function(ev){ if(ev.lengthComputable){ vuTo(5+ (ev.loaded/ev.total)*85); } };
+          xhr.onload=function(){ (xhr.status>=200&&xhr.status<300)?res(j):rej(new Error('Upload failed ('+xhr.status+')')); };
+          xhr.onerror=function(){ rej(new Error('Network error during upload')); };
+          xhr.send(file);
+        });
+      })
+      .then(function(j){
+        // 3) write metadata
+        vuStage.textContent='Filing the paperwork…'; vuTo(94);
+        return fetch(CFG.WORKER_URL+'/submit',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({name:fd.get('name'),email:email,period:fd.get('period'),group:fd.get('group'),
+            pieceType:fd.get('pieceType'),title:fd.get('title'),description:fd.get('description'),airWeek:fd.get('airWeek')||'',
+            objectKey:j.key,fileName:file.name,fileSize:+(file.size/1048576).toFixed(1)})})
+          .then(function(r){ return r.json().then(function(m){ if(!r.ok) throw new Error(m.error||'Could not save'); return m; }); });
+      })
+      .then(function(m){
+        vuTo(100); vuStage.textContent='Done';
+        setTimeout(function(){
+          form.style.display='none'; vu.classList.remove('on');
+          var ok=document.getElementById('success'); ok.style.display='block';
+          document.getElementById('sub-id').textContent='ID · '+(m.id||'saved');
+          btn.classList.add('success-pulse');
+        }, 400);
+      })
+      .catch(function(err){
+        btn.disabled=false; btn.textContent='◉ Send to the Desk'; vu.classList.remove('on');
+        msg.textContent=err.message||'Something went wrong — try again.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

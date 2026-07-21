@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Newsroom — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="Newsroom">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>The Desk</b><span>Assignments &amp; editorial</span></div>
+    <h1 class="nr-title">NEWSROOM</h1>
+    <p class="nr-lede">Where stories get pitched, claimed, and tracked. The Newsroom Director and Assistant Directors live here to see which groups are ahead — and which are behind.</p>
+  </section>
+
+  <!-- Pitch board -->
+  <h2 class="nr-h2 nr-reveal">Assignment / Pitch Board</h2>
+  <p class="nr-sub nr-reveal">Pitch a story, claim it, watch it move: <span class="nr-chip is-open">Open</span> → <span class="nr-chip is-claimed">Claimed</span> → <span class="nr-chip is-producing">Producing</span> → <span class="nr-chip is-approved">Approved</span> → <span class="nr-chip is-aired">Aired</span></p>
+  <div id="board-pitches" class="nr-reveal" style="margin-bottom:14px"></div>
+  <a class="nr-btn ghost nr-reveal" href="#" onclick="alert('Link the Airtable Pitches form so students can add a pitch.');return false;">+ Pitch a story</a>
+  <span class="nr-draft" style="margin-left:8px">Draft — link pitch form</span>
+  <!-- TODO: link Airtable Pitches intake form -->
+
+  <!-- Announcements -->
+  <h2 class="nr-h2 nr-reveal">Announcements</h2>
+  <p class="nr-sub nr-reveal">Anchor rotations, deadlines, extra-credit.</p>
+  <div id="board-ann" class="nr-reveal"></div>
+
+  <!-- Birthdays & paid announcements -->
+  <h2 class="nr-h2 nr-reveal">Birthdays &amp; Paid Announcements</h2>
+  <p class="nr-sub nr-reveal">Feeds the anchor outro. Keep it short and school-appropriate.</p>
+  <div class="nr-panel nr-panel-lg nr-reveal">
+    <form id="shout-form" autocomplete="off" novalidate>
+      <div class="nr-row2">
+        <div class="nr-field"><label for="s-type">Type</label><select id="s-type" name="type" required><option value="">Select…</option><option>Birthday</option><option>Paid Announcement</option><option>Shout-out</option></select></div>
+        <div class="nr-field"><label for="s-for">For (name / club)</label><input id="s-for" name="for" type="text" required placeholder="Who's it for?"></div>
+      </div>
+      <div class="nr-field"><label for="s-msg">Message</label><textarea id="s-msg" name="message" required placeholder="What should the anchors read?"></textarea></div>
+      <div class="nr-field"><label for="s-date">Air Date</label><input id="s-date" name="airDate" type="date"></div>
+      <div id="shout-msg" style="margin:10px 0;font-family:var(--mono);font-size:12px"></div>
+      <button type="submit" class="nr-btn" id="shout-btn">◉ Send to the Anchors</button>
+    </form>
+    <div id="shout-ok" style="display:none;text-align:center;padding:16px 0"><div style="font-family:var(--display);font-size:36px;color:var(--live)">ON THE LIST</div><p style="color:#c9cfda">The anchors will pick it up for the outro.</p></div>
+  </div>
+
+  <!-- Standards -->
+  <h2 class="nr-h2 nr-reveal">Standards, Ethics &amp; Dress Code</h2>
+  <div class="nr-grid nr-stagger">
+    <div class="nr-panel"><h3 class="nr-h3">Can It Air?</h3><p style="color:#c9cfda;font-size:13.5px;line-height:1.6">If it embarrasses a student, isn't school-appropriate, or you couldn't show it to a parent — it doesn't air. When in doubt, ask the Newsroom Director before you shoot. <span class="nr-draft">Draft — finalize wording</span></p></div>
+    <div class="nr-panel"><h3 class="nr-h3">Professional Dress</h3><p style="color:#c9cfda;font-size:13.5px;line-height:1.6">Anchors and on-camera talent dress the part — clean, put-together, no logos that compete with ENN. <span class="nr-draft">Draft — finalize wording</span></p></div>
+    <div class="nr-panel"><h3 class="nr-h3">Corrections Policy</h3><p style="color:#c9cfda;font-size:13.5px;line-height:1.6">Got a fact wrong on air? We correct it on the next broadcast, plainly. Accuracy over ego. <span class="nr-draft">Draft — finalize wording</span></p></div>
+  </div>
+  <!-- TODO: finalize standards, ethics & dress code wording -->
+
+  <!-- Release forms -->
+  <h2 class="nr-h2 nr-reveal">Release Forms</h2>
+  <p class="nr-sub nr-reveal">We film students and do man-on-the-street constantly — get the signature. <span class="nr-draft">Draft — attach the actual PDF forms</span></p>
+  <div class="nr-grid nr-stagger">
+    <div class="nr-panel"><h3 class="nr-h3">Talent / Interview Release</h3><p style="color:var(--steel);font-size:13px;margin-bottom:10px">For anyone appearing or interviewed on camera.</p><a class="nr-btn ghost" href="#" onclick="alert('Attach the talent/interview release PDF.');return false;">Download PDF →</a></div>
+    <div class="nr-panel"><h3 class="nr-h3">Location Release</h3><p style="color:var(--steel);font-size:13px;margin-bottom:10px">For filming on private or off-campus property.</p><a class="nr-btn ghost" href="#" onclick="alert('Attach the location release PDF.');return false;">Download PDF →</a></div>
+    <div class="nr-panel"><h3 class="nr-h3">Parental Consent (Minors)</h3><p style="color:var(--steel);font-size:13px;margin-bottom:10px">Required for minors featured on camera.</p><a class="nr-btn ghost" href="#" onclick="alert('Attach the parental consent PDF.');return false;">Download PDF →</a></div>
+  </div>
+  <!-- TODO: attach the actual release/consent PDF forms -->
+
+  <!-- Tip line -->
+  <h2 class="nr-h2 nr-reveal">Tip Line</h2>
+  <div class="nr-panel nr-reveal">
+    <p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:14px">See something worth covering? Send ENN a news tip. Anyone can use this — you don't need to be in the class.</p>
+    <a class="nr-btn" href="/contact">Send a tip →</a>
+  </div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+NR.board('pitches').then(function(res){
+  NR.renderBoard('#board-pitches', res, {columns:['Story / Idea','Type','Pitched By','Group','Status','Air Date'],
+    emptyIcon:'📌',emptyTitle:'Pitch board is empty',emptyBody:'Stories appear here as they’re pitched. Be the first — pitch one below.',
+    row:function(r){return ['<strong>'+NR.esc(r['Story/Idea']||r.Story||'—')+'</strong>',NR.esc(r.Type||'—'),NR.esc(r['Pitched By']||'—'),NR.esc(r.Group||'—'),NR.statusChip(r.Status||''),NR.esc(r['Air Date']||'—')];}});
+});
+NR.board('announcements').then(function(res){
+  NR.renderBoard('#board-ann', res, {columns:['Message','Category','Posted','Expires'],
+    emptyIcon:'📣',emptyTitle:'No announcements right now',emptyBody:'Anchor rotations, deadlines, and extra-credit reminders post here.',
+    row:function(r){return ['<strong>'+NR.esc(r.Message||'—')+'</strong>',NR.statusChip(r.Category||''),NR.esc(r.Posted||'—'),NR.esc(r.Expires||'—')];}});
+});
+
+// Birthdays / paid intake — posts to the Worker (uses the generic submit path) or shows offline
+(function(){
+  var form=document.getElementById('shout-form'), btn=document.getElementById('shout-btn'), msg=document.getElementById('shout-msg');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    for(var k of ['type','for','message']){ if(!(form.elements[k].value||'').trim()){ msg.style.color='#ff8a84'; msg.textContent='Fill in type, who it\'s for, and the message.'; form.elements[k].focus(); return; } }
+    if(!NR.workerReady){ msg.style.color='#ff8a84'; msg.textContent='Not connected yet — link the Airtable form (see setup) to accept these live.'; return; }
+    btn.disabled=true; btn.textContent='Sending…';
+    fetch(window.ENN.WORKER_URL+'/submit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:form.elements['for'].value,pieceType:'Announcement',title:form.elements['type'].value,description:form.elements['message'].value,airWeek:form.elements['airDate'].value,group:'',period:'',email:'',objectKey:'',fileName:'',fileSize:0})})
+      .then(function(r){ if(!r.ok) throw 0; form.style.display='none'; document.getElementById('shout-ok').style.display='block'; })
+      .catch(function(){ btn.disabled=false; btn.textContent='◉ Send to the Anchors'; msg.style.color='#ff8a84'; msg.textContent='Could not send — try again.'; });
+  });
+})();
+</script>
+</body>
+</html>

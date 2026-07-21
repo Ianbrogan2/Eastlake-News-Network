@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Learn — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="Learn">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Class</b><span>Get better on camera &amp; in the edit</span></div>
+    <h1 class="nr-title">LEARN</h1>
+    <p class="nr-lede">A free one-hour crash course in broadcast: shoot it, frame it, mix it, cut it, and deliver it. Plus the weekly challenge and the exact rubric we grade you on — no secrets.</p>
+  </section>
+
+  <!-- Lessons library -->
+  <h2 class="nr-h2 nr-reveal">Lessons Library</h2>
+  <p class="nr-sub nr-reveal">Grouped by skill. Start anywhere — each lesson is short and hands-on. <span class="nr-draft">Draft — lessons being written</span></p>
+  <div class="nr-grid nr-stagger" id="lessons"></div>
+
+  <!-- Weekly challenge -->
+  <h2 class="nr-h2 nr-reveal">Weekly Skill Challenge</h2>
+  <p class="nr-sub nr-reveal">A new prompt every week. Submit your take, climb the board.</p>
+  <div id="board-challenge" class="nr-reveal" style="margin-bottom:14px"></div>
+  <a class="nr-btn ghost nr-reveal" href="/newsroom/submit/">Submit your challenge entry →</a>
+  <h3 class="nr-h3 nr-reveal" style="margin-top:30px">Leaderboard</h3>
+  <div id="board-leaderboard" class="nr-reveal"></div>
+
+  <!-- The rubric, in the open -->
+  <h2 class="nr-h2 nr-reveal">The Rubric — In the Open</h2>
+  <p class="nr-sub nr-reveal">Grade yourself before you submit. 100 points across three roles, plus automatic deductions.</p>
+  <div class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="nr-panel"><div class="nr-chip is-approved" style="margin-bottom:10px">Producer · 40 pts</div><ul class="nr-prose" style="max-width:none;color:#c9cfda;font-size:13.5px"><li>Deadline met</li><li>Length compliance</li><li>Appropriateness</li><li>Planning / pre-pro quality</li><li>Use of script / plan</li><li>Organization</li><li>Member contribution</li><li>Correct category</li></ul></div>
+    <div class="nr-panel"><div class="nr-chip is-producing" style="margin-bottom:10px">Director · 40 pts</div><ul class="nr-prose" style="max-width:none;color:#c9cfda;font-size:13.5px"><li>Creativity</li><li>Innovation</li><li>Visual quality</li><li>Framing</li><li>Professionalism</li><li>Presentation / effort</li><li>Entertainment value</li></ul></div>
+    <div class="nr-panel"><div class="nr-chip is-open" style="margin-bottom:10px">Editor · 20 pts</div><ul class="nr-prose" style="max-width:none;color:#c9cfda;font-size:13.5px"><li>Audio quality</li><li>Formatting / resolution</li><li>Upload method &amp; file naming</li><li>Technical polish</li></ul></div>
+  </div>
+  <div class="nr-panel nr-reveal" style="border-color:rgba(255,59,48,0.35);margin-top:16px">
+    <div class="nr-eyebrow" style="margin-bottom:10px"><b style="background:var(--live)">Automatic Deductions</b><span>Avoid these</span></div>
+    <p style="color:#c9cfda;font-size:13.5px;line-height:1.7">Late work · poor audio · missing lower thirds · spelling mistakes · no B-roll (sports/reporting) · incorrect export · unprofessionalism · can't air · low quality.</p>
+  </div>
+
+  <!-- Exemplar reel -->
+  <h2 class="nr-h2 nr-reveal">Exemplar Reel</h2>
+  <p class="nr-sub nr-reveal">Past pieces that nailed it, and <em>why</em>. Only pieces already public on <a href="https://www.youtube.com/@ennbulletin" target="_blank" rel="noopener" style="color:#7DD8FF">@ennbulletin</a> — anything not already public needs consent first. <span class="nr-draft">Draft — add embeds</span></p>
+  <div class="nr-grid nr-stagger" id="exemplars"></div>
+  <!-- TODO: embed exemplar pieces (only already-public @ennbulletin videos) with a note on why each works -->
+
+  <!-- CTE / career -->
+  <h2 class="nr-h2 nr-reveal">CTE &amp; Career</h2>
+  <div class="nr-grid nr-stagger">
+    <div class="nr-panel"><h3 class="nr-h3">Adobe Certification</h3><p style="color:var(--steel);font-size:13.5px">Premiere Pro certification path for editors. <span class="nr-draft">Draft — add links</span></p></div>
+    <div class="nr-panel"><h3 class="nr-h3">Competitions</h3><p style="color:var(--steel);font-size:13.5px">SkillsUSA, student journalism &amp; film awards. <span class="nr-draft">Draft — add links</span></p></div>
+    <div class="nr-panel"><h3 class="nr-h3">Demo Reel &amp; Portfolio</h3><p style="color:var(--steel);font-size:13.5px">How to cut a reel that gets you hired or admitted. <span class="nr-draft">Draft</span></p></div>
+    <div class="nr-panel"><h3 class="nr-h3">Internships</h3><p style="color:var(--steel);font-size:13.5px">Local media &amp; production opportunities. <span class="nr-draft">Draft — add links</span></p></div>
+  </div>
+  <!-- TODO: fill CTE/career links -->
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+var CATS=[
+  ['Shooting','Camera basics, movement, coverage'],['Framing','Rule of thirds, headroom, composition'],
+  ['Audio','Mics, levels, clean sound'],['Lighting','Three-point, available light, exposure'],
+  ['Editing','Cuts, pacing, B-roll, transitions'],['Scriptwriting','Writing for the ear, structure'],
+  ['Interviewing','Questions, listening, getting soundbites'],['On-Camera Delivery','Presence, pacing, eye line'],
+  ['Directing','Running a set, calling the show']
+];
+document.getElementById('lessons').innerHTML = CATS.map(function(c){
+  return '<div class="nr-panel"><h3 class="nr-h3">'+NR.esc(c[0])+'</h3><p style="color:#c9cfda;font-size:13px;margin:4px 0 8px">'+NR.esc(c[1])+'</p><p style="color:var(--steel);font-size:12px">1–2 starter lessons <span class="nr-draft">Draft</span></p></div>';
+}).join('');
+NR.observe(document.getElementById('lessons'));
+
+NR.board('challenge').then(function(res){
+  NR.renderBoard('#board-challenge', res, {columns:['Week','Challenge','Details'],
+    emptyIcon:'🎯',emptyTitle:'No challenge posted yet',emptyBody:'This week’s prompt appears here once it’s posted.',
+    row:function(r){return [NR.esc(r.Week||'—'),'<strong>'+NR.esc(r.Challenge||'—')+'</strong>',NR.esc(r.Details||'')];}});
+});
+NR.board('challenge').then(function(res){
+  var recs=(res.state==='ok')?res.records.filter(function(r){return r.Leaderboard;}):[];
+  NR.renderBoard('#board-leaderboard', {state:res.state,records:recs}, {columns:['Week','Leaderboard'],
+    emptyIcon:'🏆',emptyTitle:'Leaderboard is empty',emptyBody:'Standings show up here once entries are scored.',
+    row:function(r){return [NR.esc(r.Week||'—'),NR.esc(r.Leaderboard||'—')];}});
+});
+document.getElementById('exemplars').innerHTML =
+  NR.emptyState('🎬','Exemplars coming soon','Annotated best-of pieces (already public on @ennbulletin) will be embedded here with a note on why each one works.');
+NR.observe(document.getElementById('exemplars').parentElement);
+</script>
+</body>
+</html>

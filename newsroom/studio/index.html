@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Run the Studio — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="Studio">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Operations</b><span>Run the show</span></div>
+    <h1 class="nr-title">RUN THE<br>STUDIO</h1>
+    <p class="nr-lede">The machinery behind a live daily broadcast: who does what, where the gear is, how to book a room, and how the ten minutes are built. Leaders onboard themselves here each semester.</p>
+  </section>
+
+  <!-- Role hubs -->
+  <h2 class="nr-h2 nr-reveal">Role Hubs</h2>
+  <p class="nr-sub nr-reveal">One page per leadership role. Read yours top to bottom when you take the chair.</p>
+  <div class="nr-grid nr-stagger" id="roles"></div>
+
+  <!-- Equipment checkout -->
+  <h2 class="nr-h2 nr-reveal">Equipment Checkout</h2>
+  <p class="nr-sub nr-reveal">Live status of every kit. Check-in/out happens in the Equipment log (Airtable) — this is the read-only board.</p>
+  <div id="board-equipment" class="nr-reveal"></div>
+
+  <!-- Room booking -->
+  <h2 class="nr-h2 nr-reveal">Room Booking</h2>
+  <p class="nr-sub nr-reveal">The Podcast/Interview Room and the Anchor Room.</p>
+  <div class="nr-grid nr-stagger">
+    <div class="nr-panel"><h3 class="nr-h3">Podcast / Interview Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Book a slot before you shoot so two groups don't collide.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or an Airtable booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
+    <div class="nr-panel"><h3 class="nr-h3">Anchor Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Reserved for anchor filming 9:00–9:30; open after.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or an Airtable booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
+  </div>
+  <!-- TODO: link the studio Google Calendar or an Airtable booking form -->
+
+  <!-- Daily rundown -->
+  <h2 class="nr-h2 nr-reveal">Daily Rundown · Show Builder</h2>
+  <p class="nr-sub nr-reveal">Segment order and timing that adds up to a ten-minute show.</p>
+  <div class="nr-panel nr-reveal">
+    <div class="nr-board-wrap"><table class="nr-board"><thead><tr><th>#</th><th>Segment</th><th>Target</th><th>Running</th></tr></thead><tbody id="rundown"></tbody></table></div>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--steel);margin-top:12px">Adjust the targets to fit the day — the total should land at <strong style="color:#7DD8FF">10:00</strong>.</p>
+  </div>
+
+  <!-- Application -->
+  <h2 class="nr-h2 nr-reveal">Want a Role?</h2>
+  <div class="nr-panel nr-reveal">
+    <p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:14px">Roles are <strong>earned each semester</strong> — talk to Mr. Nimmo. Show up early, hit deadlines, and help your group, and you'll be on the shortlist.</p>
+    <a class="nr-btn" href="#" onclick="alert('Link the leadership application form here.');return false;">Apply for a role →</a>
+    <span class="nr-draft" style="margin-left:10px">Draft — link application form</span>
+    <!-- TODO: link the leadership application form -->
+  </div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+var ROLES=[
+  ['Studio Director','studio-director','The show runs on time because you do.'],
+  ['Newsroom Director','newsroom-director','Approves everything that airs.'],
+  ['Main Editor','main-editor','What you export is what the school sees.'],
+  ['Website Controller','website-controller','Owns ENN online.'],
+  ['Equipment Manager','equipment-manager','Every camera, mic, and card accounted for.'],
+  ['Camera Operators','camera-operators','Clean framing, safe footage.'],
+  ['Anchors','anchors','The face of the network.'],
+  ['Assistant Directors','assistant-directors','Keep every group moving.']
+];
+document.getElementById('roles').innerHTML = ROLES.map(function(r){
+  return '<a class="nr-tile" href="/newsroom/studio/role.html?r='+r[1]+'"><div class="k">Role</div><h3>'+NR.esc(r[0])+'</h3><p>'+NR.esc(r[2])+'</p><span class="go">→</span></a>';
+}).join('');
+NR.observe(document.getElementById('roles'));
+
+NR.board('equipment').then(function(res){
+  NR.renderBoard('#board-equipment', res, {columns:['Item','Category','Status','Held By','Due Back'],
+    emptyIcon:'🎥',emptyTitle:'Equipment log not populated yet',emptyBody:'Each kit’s status shows here once the Equipment table has items.',
+    row:function(r){return [NR.esc(r.Item||'—'),NR.esc(r.Category||'—'),NR.statusChip(r.Status||''),NR.esc(r['Held By']||'—'),NR.esc(r['Due Back']||'—')];}});
+});
+
+var RUN=[['1','Cold Open / Intro','0:30'],['2','Top Story','1:30'],['3','Feature','2:00'],['4','Sports Corner','1:30'],['5','Club / Interview','1:30'],['6','PSA / Mini-game','1:00'],['7','Trivia / Comedy','1:00'],['8','Outro / Birthdays','1:00']];
+var total=0; document.getElementById('rundown').innerHTML = RUN.map(function(r){
+  var parts=r[2].split(':'); total+=(+parts[0])*60+(+parts[1]);
+  var mm=Math.floor(total/60), ss=total%60;
+  return '<tr><td>'+r[0]+'</td><td><strong>'+NR.esc(r[1])+'</strong></td><td>'+r[2]+'</td><td class="nr-clock">'+mm+':'+String(ss).padStart(2,'0')+'</td></tr>';
+}).join('');
+</script>
+</body>
+</html>
