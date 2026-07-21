@@ -59,9 +59,16 @@ button:active{transform:translateY(1px)}
 a{text-decoration:none;color:inherit}
 
 /* SIGNAL LOCKED flourish + cut-to-feed wipe */
-.locked{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0}
-.locked.on{opacity:1;transition:opacity .18s}
-.locked b{font-family:var(--display);font-size:clamp(40px,10vw,84px);letter-spacing:.06em;color:#fff;text-shadow:0 0 40px rgba(255,59,48,0.6)}
+/* full-screen confirmation — solid backdrop so it fully covers the form */
+.locked{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  pointer-events:none;opacity:0;visibility:hidden;
+  background:radial-gradient(120% 80% at 50% 40%, #131a26 0%, #0A0E14 60%, #060910 100%);}
+.locked.on{opacity:1;visibility:visible;transition:opacity .28s var(--ease-out)}
+.locked-tally{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--live);padding:7px 14px;border-radius:999px;border:1px solid rgba(255,59,48,0.5);background:rgba(255,59,48,0.08);margin-bottom:20px}
+.locked-tally i{width:9px;height:9px;border-radius:50%;background:var(--live);box-shadow:0 0 14px 2px rgba(255,59,48,0.85);animation:pulse 1s ease-in-out infinite}
+.locked-logo{width:56px;height:56px;border-radius:12px;margin-bottom:14px;filter:drop-shadow(0 0 20px rgba(26,86,219,0.45))}
+.locked b{font-family:var(--display);font-size:clamp(40px,10vw,84px);letter-spacing:.06em;color:#fff;text-shadow:0 0 40px rgba(255,59,48,0.55)}
+.locked-sub{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--steel);margin-top:8px}
 .wipe{position:fixed;inset:0;z-index:10;background:var(--live);transform:scaleX(0);transform-origin:left;pointer-events:none}
 .wipe.cut{animation:wipe-cut .5s var(--ease-cut) forwards}
 @keyframes wipe-cut{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}50.01%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
@@ -95,7 +102,12 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<div class="locked" id="locked" aria-hidden="true"><b>SIGNAL LOCKED</b></div>
+<div class="locked" id="locked" aria-hidden="true">
+  <span class="locked-tally"><i></i>ON AIR</span>
+  <img class="locked-logo" src="enn-logo.png" alt=""/>
+  <b>SIGNAL LOCKED</b>
+  <span class="locked-sub">Cutting to the feed…</span>
+</div>
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
 <script>
@@ -113,13 +125,14 @@ a{text-decoration:none;color:inherit}
 
   function enter(){
     remember();
-    tally.classList.add('hot'); tally.querySelector('i');
-    tally.childNodes[1] && (tally.lastChild.textContent = ' ON AIR');
+    tally.classList.add('hot');
     tally.innerHTML = '<i></i>ON AIR';
     if(reduce){ window.location.href = HUB; return; }
+    /* 1) confirmation screen covers the form, 2) hold so it reads,
+       3) wipe cut, 4) redirect into the hub */
     locked.classList.add('on');
-    setTimeout(function(){ wipe.classList.add('cut'); }, 340);
-    setTimeout(function(){ window.location.href = HUB; }, 760);
+    setTimeout(function(){ wipe.classList.add('cut'); }, 640);
+    setTimeout(function(){ window.location.href = HUB; }, 1080);
   }
 
   form.addEventListener('submit', function(e){
