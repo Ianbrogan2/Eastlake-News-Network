@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bulletin Calendar — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+<style>
+/* ── Bulletin calendar — scoped under .enncal so it never touches the hub shell ── */
+.enncal{
+  --cbg:#0C0F16; --cpanel:#0C0F16; --cbord:#20262E;
+  --p1:#2E6FE0; --p4:#16967F; --p6:#10A50E;
+  --cink:#F2F4F8; --clight:#C9D1DC; --cdim:#6B7688;
+  font-family:var(--body);
+}
+.enncal .sub{color:var(--clight);font-size:14px;margin:0 0 4px}
+.enncal .sub b{color:var(--enn)}
+
+/* next-bulletin banner */
+.enncal #next{margin:8px 0 6px;display:flex;align-items:center;gap:12px;justify-content:center;
+  background:var(--cpanel);border:1px solid var(--cbord);border-radius:12px;padding:12px 18px;font-size:14px;color:var(--clight)}
+.enncal #next .tally{width:11px;height:11px;border-radius:50%;background:var(--p6);
+  box-shadow:0 0 12px 2px rgba(16,165,14,.7);animation:encalpulse 2.4s ease-in-out infinite}
+.enncal #next b{color:#fff}
+@keyframes encalpulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* filter chips */
+.enncal .filters{display:flex;gap:10px;justify-content:flex-start;flex-wrap:wrap;margin:20px 0 6px}
+.enncal .chip{cursor:pointer;border:1px solid var(--cbord);background:var(--cpanel);color:var(--clight);
+  border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;letter-spacing:.02em;
+  display:inline-flex;align-items:center;gap:8px;transition:transform .12s,border-color .15s;min-height:40px}
+.enncal .chip:hover{transform:translateY(-1px)}
+.enncal .chip .dot{width:11px;height:11px;border-radius:3px}
+.enncal .chip[data-filter="p1"] .dot{background:var(--p1)}
+.enncal .chip[data-filter="p4"] .dot{background:var(--p4)}
+.enncal .chip[data-filter="p6"] .dot{background:var(--p6)}
+.enncal .chip.active{color:#fff;border-color:#3a4453;background:#141a24}
+
+/* month + grid */
+.enncal .month{margin-top:36px}
+.enncal .month h2{font-family:var(--display);font-size:26px;font-weight:400;letter-spacing:.04em;margin:0 0 12px;
+  padding-bottom:10px;border-bottom:2px solid var(--enn)}
+.enncal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.enncal .wd{color:var(--cdim);font-size:10px;font-weight:800;letter-spacing:.12em;text-align:center;padding:4px 0;font-family:var(--mono)}
+.enncal .day{position:relative;min-height:86px;border:1px solid var(--cbord);border-radius:8px;
+  background:var(--cpanel);padding:6px 7px;overflow:hidden}
+.enncal .day.blank{background:transparent;border:0}
+.enncal .day.empty .dnum,.enncal .day.off .dnum{color:#3A424E}
+.enncal .dnum{font-weight:800;font-size:12px}
+.enncal .day .note{position:absolute;left:0;right:0;top:50%;transform:translateY(-40%);
+  text-align:center;color:var(--cdim);font-style:italic;font-size:10.5px;padding:0 4px}
+
+/* bulletin cells */
+.enncal .day.bull{color:#fff;border-color:#000}
+.enncal .day.bull.p1{background:var(--p1)} .enncal .day.bull.p4{background:var(--p4)} .enncal .day.bull.p6{background:var(--p6)}
+.enncal .day.bull .bnum{position:absolute;top:6px;right:8px;font-size:9px;color:rgba(255,255,255,.82)}
+.enncal .day.bull .plabel{position:absolute;left:0;right:0;top:50%;transform:translateY(-55%);
+  text-align:center;font-weight:800;font-size:19px;letter-spacing:.02em}
+.enncal .day.bull .time{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:10px;color:rgba(255,255,255,.9)}
+.enncal .day.bull{transition:transform .13s,box-shadow .13s;cursor:default}
+.enncal .day.bull:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15) inset}
+
+/* filtering */
+.enncal #cal[data-filter="p1"] .day.bull:not(.p1),
+.enncal #cal[data-filter="p4"] .day.bull:not(.p4),
+.enncal #cal[data-filter="p6"] .day.bull:not(.p6){opacity:.16;filter:grayscale(1)}
+
+/* notes */
+.enncal .notes{margin-top:40px;background:var(--cpanel);border:1px solid var(--cbord);
+  border-radius:12px;padding:18px 20px;color:var(--cdim);font-size:12.5px;line-height:1.55}
+.enncal .notes b{color:var(--clight)}
+
+@media (max-width:640px){
+  .enncal .day{min-height:64px;padding:4px 5px}
+  .enncal .day .time,.enncal .day.bull .bnum{display:none}
+  .enncal .day.bull .plabel{font-size:15px;transform:translateY(-40%)}
+  .enncal .day .note{font-size:9px}
+  .enncal .grid{gap:4px}
+}
+</style>
+</head>
+<body class="nr" data-section="Calendar">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Schedule</b><span>Fall 2026 Season</span></div>
+    <h1 class="nr-title">BULLETIN<br>CALENDAR</h1>
+    <p class="sub" style="margin-top:16px"><b>Fall 2026</b> · 60 bulletins · 10:31–10:41 AM · 20 per period</p>
+  </section>
+
+  <div class="enncal nr-reveal">
+    <div id="next"></div>
+
+    <div class="filters">
+      <button class="chip active" data-filter="all">All bulletins</button>
+      <button class="chip" data-filter="p1"><span class="dot"></span>Period 1 · 20</button>
+      <button class="chip" data-filter="p4"><span class="dot"></span>Period 4 · 20</button>
+      <button class="chip" data-filter="p6"><span class="dot"></span>Period 6 · 20</button>
+    </div>
+
+    <div id="cal" data-filter="all"></div>
+
+    <div class="notes">
+      <b>How it's built.</b> A bulletin airs only on days whose bell schedule includes the
+      10:31–10:41 slot (schedule types A, B, and N). Periods rotate P1 → P4 → P6 down the list,
+      landing exactly 20 each. <br>
+      <b>No bulletins on:</b> Labor Day (Sep 7), Fall Break (Sep 21–Oct 2), Veterans Day (Nov 11),
+      Thanksgiving week (Nov 23–27), finals &amp; minimum days (Dec 14–18), and “Full Day” Tuesdays
+      (Sep 8, Oct 6, Dec 14). Fridays have no bulletin — except <b>Nov 13</b>, an “N” schedule day
+      that includes the slot, counted here as Period 4.
+    </div>
+  </div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+  /* ===================== DATA (Website Controller — edit here only) ===================== */
+  const BULLETINS = [
+    "2026-08-03","2026-08-04","2026-08-05","2026-08-06","2026-08-10","2026-08-11","2026-08-12","2026-08-13",
+    "2026-08-17","2026-08-18","2026-08-19","2026-08-20","2026-08-24","2026-08-25","2026-08-26","2026-08-27",
+    "2026-08-31",
+    "2026-09-01","2026-09-02","2026-09-03","2026-09-09","2026-09-10","2026-09-14","2026-09-15","2026-09-16","2026-09-17",
+    "2026-10-07","2026-10-08","2026-10-12","2026-10-13","2026-10-14","2026-10-15","2026-10-19","2026-10-20",
+    "2026-10-21","2026-10-22","2026-10-26","2026-10-27","2026-10-28","2026-10-29",
+    "2026-11-02","2026-11-03","2026-11-04","2026-11-05","2026-11-09","2026-11-10","2026-11-12","2026-11-13",
+    "2026-11-16","2026-11-17","2026-11-18","2026-11-19","2026-11-30",
+    "2026-12-01","2026-12-02","2026-12-03","2026-12-07","2026-12-08","2026-12-09","2026-12-10"
+  ];
+  const ROTATION = ["P1","P4","P6"];   // P1 → P4 → P6, repeating (20 each). #1 is P1.
+
+  const ANNOT = {};
+  const put = (y,m,d,t)=>ANNOT[`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`]=t;
+  put(2026,9,7,"Holiday"); put(2026,9,8,"Full Day");
+  for(let d=21;d<=25;d++) put(2026,9,d,"Fall Break");
+  for(let d=28;d<=30;d++) put(2026,9,d,"Fall Break");
+  put(2026,10,1,"Fall Break"); put(2026,10,2,"Fall Break");
+  put(2026,10,5,"No School"); put(2026,10,6,"Full Day");
+  put(2026,11,11,"Veterans Day");
+  for(let d=23;d<=25;d++) put(2026,11,d,"No School");
+  put(2026,11,26,"Thanksgiving"); put(2026,11,27,"Holiday");
+  put(2026,12,14,"Full Day");
+  for(let d=15;d<=17;d++) put(2026,12,d,"Finals");
+  put(2026,12,18,"Min Day");
+
+  const MONTHS = [[2026,7],[2026,8],[2026,9],[2026,10],[2026,11]]; // 0-indexed months: Aug..Dec
+  /* ==================================================================================== */
+
+  const MAP = {};
+  BULLETINS.forEach((iso,i)=>{ MAP[iso] = {period:ROTATION[i%3], num:i+1}; });
+
+  const WD = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  const MN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const iso = (y,m,d)=>`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+  function monthEl(year, month){
+    const wrap = document.createElement("section"); wrap.className = "month";
+    const h2 = document.createElement("h2"); h2.textContent = `${MN[month]} ${year}`; wrap.appendChild(h2);
+    const grid = document.createElement("div"); grid.className = "grid";
+    WD.forEach(w=>{ const el=document.createElement("div"); el.className="wd"; el.textContent=w; grid.appendChild(el); });
+    const first = new Date(year, month, 1).getDay();
+    const days = new Date(year, month+1, 0).getDate();
+    for(let b=0;b<first;b++){ const el=document.createElement("div"); el.className="day blank"; grid.appendChild(el); }
+    for(let d=1; d<=days; d++){
+      const key = iso(year,month,d);
+      const cell = document.createElement("div");
+      const hit = MAP[key];
+      if(hit){
+        cell.className = `day bull ${hit.period.toLowerCase()}`;
+        cell.innerHTML = `<span class="dnum">${d}</span><span class="bnum">#${hit.num}</span><span class="plabel">${hit.period}</span><span class="time">10:31 AM</span>`;
+      } else if(ANNOT[key]){
+        cell.className = "day off";
+        cell.innerHTML = `<span class="dnum">${d}</span><span class="note">${ANNOT[key]}</span>`;
+      } else {
+        cell.className = "day empty";
+        cell.innerHTML = `<span class="dnum">${d}</span>`;
+      }
+      grid.appendChild(cell);
+    }
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  const cal = document.getElementById("cal");
+  MONTHS.forEach(([y,m])=> cal.appendChild(monthEl(y,m)));
+
+  document.querySelectorAll(".chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active", c===chip));
+      cal.dataset.filter = chip.dataset.filter;
+    });
+  });
+
+  (function(){
+    const today = new Date(); today.setHours(0,0,0,0);
+    const upcoming = BULLETINS.map((s,i)=>({d:new Date(s+"T00:00:00"),i})).filter(o=>o.d>=today).sort((a,b)=>a.d-b.d)[0];
+    const box = document.getElementById("next");
+    if(upcoming){
+      const p = ROTATION[upcoming.i%3];
+      const nice = upcoming.d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+      box.innerHTML = `<span class="tally"></span><span>Next bulletin: <b>${p}</b> · ${nice} · 10:31 AM</span>`;
+    } else {
+      box.innerHTML = `<span class="tally" style="background:#6B7688;box-shadow:none"></span><span>That's a wrap on the Fall 2026 season.</span>`;
+    }
+  })();
+</script>
+</body>
+</html>

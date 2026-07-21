@@ -22,6 +22,7 @@
   /* ── Standard top rail (broadcast chrome with breathing tally) ── */
   const SECTIONS = [
     ['This Week','/newsroom/'],
+    ['Calendar','/newsroom/calendar/'],
     ['Submit','/newsroom/submit/'],
     ['Make','/newsroom/make/'],
     ['Learn','/newsroom/learn/'],
