@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>This Week — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css">
+<script src="/newsroom/config.js"></script>
+</head>
+<body class="nr" data-section="This Week">
+<div data-rail></div>
+
+<main class="nr-wrap">
+
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Live</b><span>Newsroom · This Week</span></div>
+    <h1 class="nr-title">THIS WEEK<br>AT ENN</h1>
+    <p class="nr-lede">The desk is live. Here's what's due, who's on the anchor chair, and this week's challenge. Broadcast runs Monday–Thursday, 10:31–10:41 AM.</p>
+  </section>
+
+  <!-- Top strip: broadcast clock + next-airtime countdown -->
+  <section class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:8px">
+    <div class="nr-panel">
+      <div class="nr-tile-k" style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Studio Clock · Pacific</div>
+      <div class="nr-clock" data-clock style="font-family:var(--display);font-size:44px;letter-spacing:.04em;margin-top:6px">--:--:-- PT</div>
+    </div>
+    <div class="nr-panel">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Next Broadcast</div>
+      <div id="cd" class="nr-clock" style="font-family:var(--display);font-size:44px;letter-spacing:.04em;margin-top:6px;color:#7DD8FF">—</div>
+      <div id="cd-label" style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--steel);margin-top:2px">M–TH · 10:31 AM</div>
+    </div>
+    <div class="nr-panel">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">On the Chair</div>
+      <div id="anchors-mini" style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+        <div class="nr-lower3"><span style="font-family:var(--display);font-size:22px;letter-spacing:.02em">A1 · <span class="nr-draft" style="vertical-align:middle">TBA</span></span></div>
+        <div class="nr-lower3"><span style="font-family:var(--display);font-size:22px;letter-spacing:.02em">A2 · <span class="nr-draft" style="vertical-align:middle">TBA</span></span></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--steel);margin-top:8px">Rotates every 2 weeks · announced Tuesdays</div>
+    </div>
+  </section>
+
+  <!-- What's due / who airs -->
+  <h2 class="nr-h2 nr-reveal">What's Due</h2>
+  <p class="nr-sub nr-reveal">Groups 1–3 air one day, Groups 4–6 the next. Each group produces one piece per week — pieces are due <strong>before class starts</strong>.</p>
+  <div id="board-due" class="nr-reveal"></div>
+
+  <!-- Skill challenge -->
+  <h2 class="nr-h2 nr-reveal">Skill Challenge of the Week</h2>
+  <div id="board-challenge" class="nr-reveal"></div>
+
+  <!-- Announcements strip -->
+  <h2 class="nr-h2 nr-reveal">Announcements</h2>
+  <div id="board-ann" class="nr-reveal"></div>
+
+  <!-- The six sections -->
+  <h2 class="nr-h2 nr-reveal">The Newsroom</h2>
+  <div class="nr-grid nr-stagger">
+    <a class="nr-tile" href="/newsroom/submit/"><div class="k">01 · Turn it in</div><h3>Submit</h3><p>Drop your piece, run the pre-submit checklist, beat the deadline.</p><span class="go">→</span></a>
+    <a class="nr-tile" href="/newsroom/make/"><div class="k">02 · Build it</div><h3>Make</h3><p>Piece guides, the idea bank, templates, brand kit, gear how-tos.</p><span class="go">→</span></a>
+    <a class="nr-tile" href="/newsroom/learn/"><div class="k">03 · Get better</div><h3>Learn</h3><p>Lessons, the weekly challenge, the rubric in the open, exemplars.</p><span class="go">→</span></a>
+    <a class="nr-tile" href="/newsroom/studio/"><div class="k">04 · Run it</div><h3>Studio</h3><p>Role hubs, equipment checkout, room booking, the daily rundown.</p><span class="go">→</span></a>
+    <a class="nr-tile" href="/newsroom/newsroom/"><div class="k">05 · The desk</div><h3>Newsroom</h3><p>Pitch board, announcements, standards, release forms, tip line.</p><span class="go">→</span></a>
+    <a class="nr-tile" href="/newsroom/make/#brand"><div class="k">06 · Look right</div><h3>Brand Kit</h3><p>Logos, lower thirds, stingers, fonts, colors, safe-title guidance.</p><span class="go">→</span></a>
+  </div>
+
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js"></script>
+<script>
+/* Live countdown to the next broadcast (Mon–Thu 10:31 AM PT) */
+(function(){
+  var el = document.getElementById('cd'), lab = document.getElementById('cd-label');
+  function nextAir(){
+    // work in Pacific time
+    var now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'}));
+    for(var add=0; add<8; add++){
+      var d = new Date(now); d.setDate(now.getDate()+add); d.setHours(10,31,0,0);
+      var dow = d.getDay(); // 1..4 = Mon..Thu
+      if(dow>=1 && dow<=4 && d.getTime() > now.getTime()) return d;
+    }
+    return null;
+  }
+  function tick(){
+    var target = nextAir(); if(!target){ el.textContent='—'; return; }
+    var now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'}));
+    var diff = Math.max(0, target - now);
+    var h = Math.floor(diff/3600000), m = Math.floor(diff%3600000/60000), s = Math.floor(diff%60000/1000);
+    var p = function(n){return String(n).padStart(2,'0');};
+    el.textContent = (h>0? h+'h ':'') + p(m)+'m '+p(s)+'s';
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    lab.textContent = 'Airs '+days[target.getDay()]+' · 10:31 AM';
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* Live boards (graceful offline states until the Worker is connected) */
+NR.board('challenge').then(function(res){
+  NR.renderBoard('#board-challenge', res, {
+    columns:['Week','Challenge','Details'],
+    emptyIcon:'🎯', emptyTitle:'No challenge posted yet', emptyBody:'This week’s skill challenge shows up here once it’s posted in Airtable.',
+    row:function(r){ return [NR.esc(r.Week||'—'), '<strong>'+NR.esc(r.Challenge||'—')+'</strong>', NR.esc(r.Details||'')]; }
+  });
+});
+NR.board('announcements').then(function(res){
+  NR.renderBoard('#board-ann', res, {
+    columns:['Message','Category','Posted'],
+    emptyIcon:'📣', emptyTitle:'No announcements right now', emptyBody:'Deadlines, extra-credit reminders, and anchor rotations post here.',
+    row:function(r){ return ['<strong>'+NR.esc(r.Message||'—')+'</strong>', NR.statusChip(r.Category||''), NR.esc(r.Posted||'')]; }
+  });
+});
+NR.board('pitches').then(function(res){
+  // "What's due" reuses the pitch board's producing/claimed rows as the live work-in-progress view
+  if(res.state==='ok'){ res.records = res.records.filter(function(r){var s=String(r.Status||'').toLowerCase();return s.includes('claim')||s.includes('produc');}); }
+  NR.renderBoard('#board-due', res, {
+    columns:['Piece','Group','Status','Air Date'],
+    emptyIcon:'🗓️', emptyTitle:'No pieces in production yet', emptyBody:'Once groups claim pitches, their in-progress pieces show here so everyone can see what’s due.',
+    row:function(r){ return ['<strong>'+NR.esc(r['Story/Idea']||r.Story||'—')+'</strong>', NR.esc(r.Group||'—'), NR.statusChip(r.Status||''), NR.esc(r['Air Date']||'—')]; }
+  });
+});
+</script>
+</body>
+</html>

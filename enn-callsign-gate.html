@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Enter the Newsroom — ENN</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --studio:#0A0E14;--panel:#121824;--panel-2:#0E141F;--edge:#223049;
+  --enn:#1A56DB;--enn-bright:#2E6BF0;--live:#FF3B30;--ink:#F2F4F8;--steel:#6B7688;
+  --mono:'DM Mono',ui-monospace,monospace;--display:'Bebas Neue',sans-serif;--body:'DM Sans',system-ui,sans-serif;
+  --ease-out:cubic-bezier(0.16,1,0.30,1);--ease-cut:cubic-bezier(0.70,0,0.30,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--studio);color:var(--ink);font-family:var(--body);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;padding:20px}
+:focus-visible{outline:2px solid var(--enn-bright);outline-offset:3px}
+/* atmosphere */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(120% 80% at 50% -10%,rgba(26,86,219,0.18),transparent 55%),radial-gradient(100% 100% at 50% 50%,transparent 58%,rgba(0,0,0,0.6) 100%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.035) 0 1px,transparent 1px 3px);mix-blend-mode:overlay;opacity:.6}
+
+.gate{position:relative;z-index:2;width:min(440px,94vw);text-align:center;animation:gate-in .8s var(--ease-out) both}
+@keyframes gate-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.tally{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--steel);padding:7px 14px;border-radius:999px;border:1px solid var(--edge);background:var(--panel);margin-bottom:26px;transition:color .4s,border-color .4s,background .4s}
+.tally i{width:9px;height:9px;border-radius:50%;background:var(--steel);transition:background .3s,box-shadow .3s}
+.tally.hot{color:var(--live);border-color:rgba(255,59,48,0.5);background:rgba(255,59,48,0.08)}
+.tally.hot i{background:var(--live);box-shadow:0 0 14px 2px rgba(255,59,48,0.85);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.logo{width:64px;height:64px;border-radius:12px;margin:0 auto 20px;filter:drop-shadow(0 0 20px rgba(26,86,219,0.4))}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--steel);margin-bottom:8px}
+h1{font-family:var(--display);font-size:clamp(40px,11vw,64px);line-height:.9;letter-spacing:.02em;font-weight:400;margin-bottom:10px}
+.hint{color:var(--steel);font-size:13.5px;line-height:1.5;margin-bottom:26px}
+
+form{display:flex;flex-direction:column;gap:12px}
+.input-wrap{position:relative}
+input{width:100%;text-align:center;background:var(--panel-2);border:1px solid var(--edge);border-radius:11px;color:var(--ink);font-family:var(--mono);font-size:20px;letter-spacing:.3em;text-transform:uppercase;padding:16px 14px;transition:border-color .18s,box-shadow .18s}
+input::placeholder{color:var(--steel);letter-spacing:.2em;font-size:14px}
+input:focus{outline:none;border-color:var(--enn);box-shadow:0 0 0 3px rgba(26,86,219,0.2)}
+.gate.wrong .input-wrap{animation:shake .4s}
+@keyframes shake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(4px)}50%{transform:translateX(-6px)}}
+.err{color:var(--live);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;height:14px;opacity:0;transition:opacity .2s}
+.gate.wrong .err{opacity:1}
+
+button{min-height:52px;border:0;border-radius:11px;background:var(--enn);color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:background .16s,transform .1s;box-shadow:0 10px 30px -12px rgba(26,86,219,0.8)}
+button:hover{background:var(--enn-bright)}
+button:active{transform:translateY(1px)}
+
+.foot{margin-top:24px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.watch{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);transition:color .16s}
+.watch:hover{color:var(--ink)}
+.back{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#3a4657}
+.back:hover{color:var(--steel)}
+a{text-decoration:none;color:inherit}
+
+/* SIGNAL LOCKED flourish + cut-to-feed wipe */
+.locked{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0}
+.locked.on{opacity:1;transition:opacity .18s}
+.locked b{font-family:var(--display);font-size:clamp(40px,10vw,84px);letter-spacing:.06em;color:#fff;text-shadow:0 0 40px rgba(255,59,48,0.6)}
+.wipe{position:fixed;inset:0;z-index:10;background:var(--live);transform:scaleX(0);transform-origin:left;pointer-events:none}
+.wipe.cut{animation:wipe-cut .5s var(--ease-cut) forwards}
+@keyframes wipe-cut{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}50.01%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+.wipe::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.14) 0 2px,transparent 2px 4px)}
+
+@media (prefers-reduced-motion: reduce){
+  .gate,.tally.hot i{animation:none}
+  .wipe.cut{animation:none}
+}
+</style>
+</head>
+<body>
+<script src="newsroom/config.js"></script>
+
+<div class="gate" id="gate">
+  <span class="tally" id="tally"><i></i>OFF AIR · STANDBY</span>
+  <img class="logo" src="enn-logo.png" alt="ENN"/>
+  <div class="eyebrow">Restricted Feed · Crew Access</div>
+  <h1>ENTER THE<br>NEWSROOM</h1>
+  <p class="hint">Type the call sign to go behind the desk. If you're in the class, you've been told the word.</p>
+  <form id="form" autocomplete="off">
+    <div class="input-wrap">
+      <input id="call" type="text" inputmode="text" aria-label="Call sign" placeholder="CALL SIGN" maxlength="24" autocapitalize="characters" spellcheck="false"/>
+    </div>
+    <div class="err" id="err" role="alert">Signal lost — try again</div>
+    <button type="submit">◉ Go Live</button>
+  </form>
+  <div class="foot">
+    <a class="watch" id="watch" href="https://www.youtube.com/@ennbulletin/live" target="_blank" rel="noopener">▶ Watch live on YouTube ↗</a>
+    <a class="back" href="/">← Back to eastlakenewsnetwork.com</a>
+  </div>
+</div>
+
+<div class="locked" id="locked" aria-hidden="true"><b>SIGNAL LOCKED</b></div>
+<div class="wipe" id="wipe" aria-hidden="true"></div>
+
+<script>
+(function(){
+  var CFG = window.ENN || {};
+  var CALL = String(CFG.CALL_SIGN || 'ENN').trim().toLowerCase();
+  var HUB  = CFG.HUB_URL || '/newsroom/';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var gate=document.getElementById('gate'), form=document.getElementById('form'),
+      input=document.getElementById('call'), tally=document.getElementById('tally'),
+      locked=document.getElementById('locked'), wipe=document.getElementById('wipe');
+
+  function remember(){ try{ sessionStorage.setItem('enn_gate_ok','1'); }catch(e){} }
+
+  function enter(){
+    remember();
+    tally.classList.add('hot'); tally.querySelector('i');
+    tally.childNodes[1] && (tally.lastChild.textContent = ' ON AIR');
+    tally.innerHTML = '<i></i>ON AIR';
+    if(reduce){ window.location.href = HUB; return; }
+    locked.classList.add('on');
+    setTimeout(function(){ wipe.classList.add('cut'); }, 340);
+    setTimeout(function(){ window.location.href = HUB; }, 760);
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var val = (input.value||'').trim().toLowerCase();
+    if(val === CALL){ enter(); }
+    else {
+      gate.classList.remove('wrong'); void gate.offsetWidth; gate.classList.add('wrong');
+      input.select();
+    }
+  });
+  input.focus();
+})();
+</script>
+</body>
+</html>
