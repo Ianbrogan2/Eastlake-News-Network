@@ -1279,6 +1279,9 @@ img{display:block;max-width:100%}
   color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
 }
 .footer-meta a:hover{color:#fff}
+/* quiet crew-access door — a decorative record dot; only those told about it click it */
+.crew-door{color:rgba(255,255,255,0.14);text-decoration:none;padding:0 2px;transition:color .3s,text-shadow .3s}
+.crew-door:hover{color:#FF3B30;text-shadow:0 0 8px rgba(255,59,48,0.6)}
 
 @media (prefers-reduced-motion: reduce){
   /* Collapse scroll space so the hero doesn't pin for 5+ screen-heights */
