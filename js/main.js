@@ -305,14 +305,21 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       return;
     }
 
-    /* Desktop: every 2nd frame (~240 frames × ~40 KB ≈ 9.6 MB — half the data). */
+    /* Desktop: load ONLY the frames the scroll actually shows (210 → end,
+       every 2nd frame), and load them in playback order.
+       The ~210 transparent lead-in frames (0–209) are never rendered — the
+       scroll starts at frame 210 — so fetching them was pure waste that also
+       pushed the real content frames to the back of the queue. Skipping them
+       is ~105 fewer requests + decodes with ZERO visual change, and content
+       now populates front-to-back the way it's viewed. */
     const STEP = 2;
     await loadFrameAt(210);
     scrubUnlocked = true;
     const indices = [];
-    for(let i = 0; i < totalFrames; i += STEP) if(i !== 210) indices.push(i);
-    for(let s = 0; s < indices.length; s += CHUNK_SIZE){
-      await Promise.allSettled(indices.slice(s, s + CHUNK_SIZE).map(i => loadFrameAt(i)));
+    for(let i = 212; i < totalFrames; i += STEP) indices.push(i);
+    const DESKTOP_CHUNK = 12;   // HTTP/2 multiplexes these small frames well
+    for(let s = 0; s < indices.length; s += DESKTOP_CHUNK){
+      await Promise.allSettled(indices.slice(s, s + DESKTOP_CHUNK).map(i => loadFrameAt(i)));
     }
   }
   loadAllFramesChunked();
