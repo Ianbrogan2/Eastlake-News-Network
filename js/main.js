@@ -21,6 +21,92 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   const calendar = ENN_CALENDAR;
   const heroConf = (typeof ENN_HERO !== 'undefined') ? ENN_HERO : {};
 
+  /* ── Site text & labels (from EDIT/20-SITE-TEXT.js) ──────────────
+     Injects every "chrome" string so it's all editable in one file.
+     Every write is guarded — a missing element never breaks the page. */
+  (function applySiteText(){
+    const S = (typeof ENN_SITE !== 'undefined') ? ENN_SITE : null;
+    if(!S) return;
+    const $  = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+    const setTxt  = (sel, v) => { const el = $(sel); if(el && v != null) el.textContent = v; };
+    const setHtml = (sel, v) => { const el = $(sel); if(el && v != null) el.innerHTML = v; };
+    const nl2br   = (v) => String(v||'').replace(/\n/g, '<br/>');
+
+    /* SEO / tab */
+    if(S.pageTitle) document.title = S.pageTitle;
+    const meta = (name, val, prop) => { const el = document.querySelector(prop?`meta[property="${name}"]`:`meta[name="${name}"]`); if(el && val != null) el.setAttribute('content', val); };
+    meta('description', S.metaDescription);
+    meta('og:title', S.ogTitle, true);
+    meta('og:description', S.ogDescription, true);
+
+    /* Brand */
+    setTxt('.logo-name', S.brandName);
+    setTxt('.logo-school', S.brandSchool);
+
+    /* Nav labels (desktop + mobile), by route */
+    if(S.nav){
+      Object.keys(S.nav).forEach(route => {
+        $$(`.nav-link[data-route="${route}"], .mobile-link[data-route="${route}"]`)
+          .forEach(a => a.textContent = S.nav[route]);
+      });
+    }
+    setTxt('.mobile-meta', S.mobileMeta);
+
+    /* On-air + clock (default label; live state is set by the on-air logic) */
+    setTxt('#onair-txt', S.onAirText);
+    setTxt('.clock .lbl', S.clockLabel);
+
+    /* Hero */
+    setTxt('#hero-tagline', S.heroTagline);
+    setTxt('#hero-subline', S.heroSubline);
+    setTxt('.scroll-progress-text', S.scrollLabel);
+    setTxt('.hero-skip-label', S.skipIntro);
+
+    /* Home section headings */
+    setTxt('#latest-eyebrow', S.latestEyebrow);
+    setTxt('#latest-title',   S.latestTitle);
+    setTxt('#latest-sub',     S.latestSub);
+    setTxt('#slate-label',    S.slateLabel);
+    setTxt('#desk-eyebrow',   S.deskEyebrow);
+    setTxt('#desk-title',     S.deskTitle);
+    setTxt('#desk-sub',       S.deskSub);
+
+    /* Ticker label — keep the pulsing dot, replace the text after it */
+    const tk = $('.tk-label');
+    if(tk && S.tickerLabel){
+      const dot = tk.querySelector('.d');
+      tk.innerHTML = (dot ? '<span class="d"></span>' : '') + NR_esc(S.tickerLabel);
+    }
+
+    /* Footer — rebuild while preserving the @handle link, © year, crew door */
+    const fm = $('.footer-meta');
+    if(fm){
+      const yt = (typeof ENN_SOCIAL !== 'undefined' && ENN_SOCIAL.youtube) ? ENN_SOCIAL.youtube : 'ennbulletin';
+      const l2 = String(S.footerLine2 || '').replace(/@ENNBULLETIN/i,
+        `<a href="https://www.youtube.com/@${yt}/" target="_blank" rel="noopener">@ENNBULLETIN</a>`);
+      fm.innerHTML =
+        `<div>${NR_esc(S.footerLine1||'')}</div>` +
+        `<div>${l2}</div>` +
+        `<div>© <span id="footer-year">${new Date().getFullYear()}</span> ENN · ${NR_esc(S.footerLine3||'')} · ` +
+        `<a class="crew-door" href="/enn-callsign-gate.html" aria-label="Crew access" title="Crew">◉</a></div>`;
+    }
+
+    /* Page heroes (team / studio / calendar / games) */
+    const hero = (rootSel, cfg) => {
+      if(!cfg) return; const root = $(rootSel); if(!root) return;
+      const eb = root.querySelector('.eyebrow'); if(eb && cfg.eyebrow) eb.textContent = cfg.eyebrow;
+      const h1 = root.querySelector('h1');       if(h1 && cfg.headline) h1.innerHTML = nl2br(cfg.headline);
+      const sb = root.querySelector('.sub');     if(sb && cfg.sub) sb.textContent = cfg.sub;
+    };
+    hero('.team-hero', S.team);
+    hero('.studio-hero', S.studio);
+    hero('.cal-hero', S.calendar);
+    hero('.bullpen-hero', S.games);
+
+    function NR_esc(s){ return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  })();
+
   /* Detect mobile/tablet up-front — used by hero height and frame loader */
   const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
                     || window.innerWidth <= 900;
@@ -375,7 +461,8 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     if(!badge) return;
     const live = isOnAir();
     badge.classList.toggle('offair', !live);
-    if(txt) txt.textContent = live ? 'On Air' : 'Off Air';
+    const _S = (typeof ENN_SITE !== 'undefined') ? ENN_SITE : {};
+    if(txt) txt.textContent = live ? (_S.onAirText || 'On Air') : (_S.offAirText || 'Off Air');
     /* Update the href so it always points to the right destination */
     badge.dataset.href = live
       ? `https://www.youtube.com/@${CHANNEL_HANDLE}/live`

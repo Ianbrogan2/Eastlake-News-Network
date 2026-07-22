@@ -1,36 +1,66 @@
 /*
 ╔══════════════════════════════════════════════════════════════════╗
-║  ENN EDIT FILE  07  —  BRAND COLORS                             ║
+║  ENN EDIT FILE  07  —  COLORS  (the whole palette)             ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║  WHAT THIS FILE CONTROLS:                                        ║
-║    The main brand colors used across the entire site             ║
+║    Every color used across the main site — backgrounds, brand    ║
+║    colors, text, borders, and the two gradients.                 ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║  HOW TO EDIT:                                                    ║
-║    Change the hex color codes next to the color names below      ║
-║    A hex code looks like:  #1A56DB  or  #16A34A                  ║
-║    You can find hex codes at:  https://htmlcolors.com            ║
+║    Change the color value after each name.                        ║
+║      • Hex codes look like  #1A56DB                              ║
+║      • rgba(255,255,255,0.55) = white at 55% opacity            ║
+║    Find hex codes at  https://htmlcolors.com                     ║
 ║                                                                  ║
-║  WARNING: Only change the color values — do NOT rename the       ║
-║  variable names (--blue, --green, etc.) or the site will break  ║
-╠══════════════════════════════════════════════════════════════════╣
-║  HOW THIS WORKS:                                                  ║
-║    This file overrides only the colors in the main stylesheet.   ║
-║    Everything else (fonts, layout, spacing) stays the same.      ║
+║  WARNING: only change the VALUES. Do NOT rename the variables    ║
+║  (--blue, --bg-0, etc.) or the site will break.                 ║
 ╚══════════════════════════════════════════════════════════════════╝
 */
 
 :root {
 
-  /* Primary brand color — used for buttons, highlights, accents */
-  --blue:        #1A56DB;
+  /* ── BRAND ────────────────────────────────────────────────────── */
+  /* Primary brand color — buttons, links, highlights, accents */
+  --blue:         #1A56DB;
+  /* Brighter primary — hover states */
+  --blue-bright:  #2E6BF0;
+  /* Secondary brand color — live badges, success/"on air" states */
+  --green:        #16A34A;
+  /* Brighter secondary — hover states */
+  --green-bright: #22C55E;
+  /* Cyan accent — "today", info highlights, links on dark cards */
+  --cyan:         #00D4FF;
+  /* Red — errors, love-lines, alerts */
+  --red:          #EF4444;
 
-  /* Hover/bright variant of the primary color */
-  --blue-bright: #2E6BF0;
+  /* ── BACKGROUNDS (darkest → lightest) ─────────────────────────── */
+  /* Page background (the darkest) */
+  --bg-0:         #030306;
+  /* Card / panel background */
+  --bg-1:         #0A0A10;
+  /* Slightly raised panel */
+  --bg-2:         #111119;
+  /* Highest raised panel / inputs */
+  --bg-3:         #181822;
 
-  /* Secondary brand color — used for live badges, success states */
-  --green:       #16A34A;
+  /* ── TEXT ─────────────────────────────────────────────────────── */
+  /* Main text color */
+  --text:         #F2F2F7;
+  /* Dimmed text — subtitles, secondary info */
+  --muted:        rgba(255,255,255,0.55);
+  /* Extra-dim text — captions, fine print */
+  --muted-2:      rgba(255,255,255,0.38);
 
-  /* Hover/bright variant of the secondary color */
-  --green-bright:#22C55E;
+  /* ── BORDERS ──────────────────────────────────────────────────── */
+  /* Faint dividers / card edges */
+  --border:       rgba(255,255,255,0.06);
+  /* Stronger border on hover / active */
+  --border-hi:    rgba(255,255,255,0.13);
+
+  /* ── GRADIENTS ────────────────────────────────────────────────── */
+  /* Big background gradient (blue → green). Change the hex stops. */
+  --grad-bg:   linear-gradient(92deg, var(--blue) 0%, #1E7ACB 45%, var(--green) 100%);
+  /* Gradient used on gradient text headings */
+  --grad-text: linear-gradient(92deg, #5B8DF7, #3FCE72);
 
 }

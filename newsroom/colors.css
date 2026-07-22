@@ -1,0 +1,35 @@
+/*
+╔══════════════════════════════════════════════════════════════════╗
+║  ENN NEWSROOM — COLORS  (the student hub palette)               ║
+╠══════════════════════════════════════════════════════════════════╣
+║  Every color used across the newsroom / student hub. Change the   ║
+║  value after each name (hex like #1A56DB). Don't rename the        ║
+║  variables. This is separate from the main site's EDIT/07-COLORS. ║
+╚══════════════════════════════════════════════════════════════════╝
+*/
+:root {
+
+  /* Control-room background (darkest) */
+  --studio:    #0A0E14;
+  /* Card / equipment-panel face */
+  --panel:     #121824;
+  /* Recessed panel / inputs */
+  --panel-2:   #0E141F;
+  /* Seams / borders */
+  --edge:      #223049;
+
+  /* ENN brand blue — buttons, links, active states */
+  --enn:        #1A56DB;
+  /* Brighter blue — hover */
+  --enn-bright: #2E6BF0;
+  /* On-air tally red — the live/standby glow */
+  --live:       #FF3B30;
+
+  /* Main text */
+  --ink:       #F2F4F8;
+  /* Labels / secondary text */
+  --steel:     #6B7688;
+  /* Faintest text */
+  --steel-dim: #4A5464;
+
+}

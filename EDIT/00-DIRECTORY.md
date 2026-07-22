@@ -52,12 +52,18 @@ eastlakenewsnetwork.com, and exactly which file to open to change it.
 | Calendar | `11-CALENDAR.js` — but usually just add events in Google Calendar |
 | Bingo squares & title | `15-BINGO.js` |
 | Fun facts (Did You Know card + 404 page) | `14-FACTS.js` |
-| Site brand colors | `07-COLORS.css` |
+| Every color on the main site | `07-COLORS.css` |
+| Nav labels, hero taglines, section headings, footer, SEO text | `20-SITE-TEXT.js` |
+| The big title at the top of Team / Studio / Calendar / Games | `20-SITE-TEXT.js` |
 | **Take the whole site down for maintenance** | `17-MAINTENANCE.js` |
 | YouTube channel / Instagram handles | `01-CHANNEL.js` |
 | Where form submissions go | `01-CHANNEL.js` |
 | Version note at the bottom of About | `16-CHANGELOG.js` |
 | Intro animation speed | `12-HERO.js` |
+| **Student newsroom** — call sign, form links | `newsroom/config.js` |
+| **Student newsroom** — the boards (pitches, announcements…) | `newsroom/boards.js` |
+| **Student newsroom** — its colors | `newsroom/colors.css` |
+| **Student newsroom** — role/lesson/guide prose | `newsroom/content/…` |
 
 ---
 
