@@ -54,7 +54,15 @@
       pwEl.select();
     } finally { btn.disabled = false; btn.textContent = '◉ Enter the Studio'; }
   });
-  $('#logout').addEventListener('click', ()=>{ PW=''; appEl.hidden=true; loginEl.hidden=false; pwEl.value=''; });
+  /* Enter in either field signs in (don't rely on implicit form submission) */
+  [userEl, pwEl].forEach(el => el.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(form.requestSubmit) form.requestSubmit();
+      else form.dispatchEvent(new Event('submit', {cancelable:true, bubbles:true}));
+    }
+  }));
+  $('#logout').addEventListener('click', ()=>{ PW=''; USER=''; appEl.hidden=true; loginEl.hidden=false; pwEl.value=''; });
   $('#home-link').addEventListener('click', e=>{ e.preventDefault(); renderDash(); });
   $('#editor-back').addEventListener('click', e=>{ e.preventDefault(); renderDash(); });
 
