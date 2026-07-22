@@ -63,9 +63,20 @@
     $('#editor').hidden = true; $('#dash').hidden = false;
     $('#save-state').textContent = LIVE ? '' : 'Preview mode';
     $('#save-state').className = 'save-state';
-    $('#cards').innerHTML = SCHEMA.map(s =>
-      `<button class="card" data-id="${s.id}"><div class="ic">${s.icon||'✏️'}</div>`+
-      `<h3>${esc(s.label)}</h3><p>${esc(s.desc||'')}</p><span class="go">→</span></button>`).join('');
+    /* group the cards under headings */
+    const groups = [];
+    SCHEMA.forEach(s => {
+      const g = s.group || 'Other';
+      let bucket = groups.find(x=>x.name===g);
+      if(!bucket){ bucket={name:g, items:[]}; groups.push(bucket); }
+      bucket.items.push(s);
+    });
+    $('#cards').innerHTML = groups.map(g =>
+      `<div class="group-title">${esc(g.name)}</div>` +
+      `<div class="cards-row">` + g.items.map(s =>
+        `<button class="card" data-id="${s.id}"><div class="ic">${s.icon||'✏️'}</div>`+
+        `<h3>${esc(s.label)}</h3><p>${esc(s.desc||'')}</p><span class="go">→</span></button>`).join('') +
+      `</div>`).join('');
     $('#cards').querySelectorAll('.card').forEach(c =>
       c.addEventListener('click', ()=> openEditor(SCHEMA.find(s=>s.id===c.dataset.id))));
     if(!LIVE){
@@ -89,7 +100,8 @@
       current = { section, data, fileText: text };
       body.innerHTML = '';
       if(section.kind==='css'){ renderCss(body, section, data); }
-      else if(section.kind==='jsarray'){ body.appendChild(listField({label:section.itemLabel||'Item', fields:section.fields, itemLabel:section.itemLabel}, data, v=>{ current.data=v; })); }
+      else if(section.kind==='jsarray-text'){ body.appendChild(textListField(data, section.itemLabel)); }
+      else if(section.kind==='jsarray'){ body.appendChild(listField({label:section.itemLabel||'Item', fields:section.fields, itemLabel:section.itemLabel}, data)); }
       else { section.fields.forEach(f => body.appendChild(fieldEl(f, data))); }
     } catch(err){ body.innerHTML = `<div class="notice">Couldn’t open this section: ${esc(err.message)}</div>`; }
   }
@@ -110,11 +122,18 @@
       wrap.appendChild(listField(f, obj[f.key]));
       return wrap;
     }
+    if(f.type==='textlist'){
+      obj[f.key] = Array.isArray(obj[f.key]) ? obj[f.key] : [];
+      wrap.appendChild(labelEl(f));
+      wrap.appendChild(textListField(obj[f.key], f.itemLabel));
+      return wrap;
+    }
     wrap.appendChild(labelEl(f));
     let input;
     if(f.type==='textarea'){ input=document.createElement('textarea'); input.value=obj[f.key]||''; input.oninput=()=>obj[f.key]=input.value; }
     else if(f.type==='number'){ input=document.createElement('input'); input.type='number'; input.value=(obj[f.key]??''); input.oninput=()=>obj[f.key]=input.value===''?'':Number(input.value); }
     else if(f.type==='toggle'){ const lab=document.createElement('label'); lab.className='toggle'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=String(obj[f.key]).toUpperCase()==='T'; cb.onchange=()=>obj[f.key]=cb.checked?'T':'F'; lab.appendChild(cb); lab.insertAdjacentText('beforeend', cb.checked?' On':' Off'); cb.onchange=()=>{obj[f.key]=cb.checked?'T':'F'; lab.lastChild.textContent=cb.checked?' On':' Off';}; wrap.appendChild(lab); return wrap; }
+    else if(f.type==='toggleBool'){ const lab=document.createElement('label'); lab.className='toggle'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=obj[f.key]===true; lab.appendChild(cb); lab.insertAdjacentText('beforeend', cb.checked?' On':' Off'); cb.onchange=()=>{obj[f.key]=cb.checked; lab.lastChild.textContent=cb.checked?' On':' Off';}; wrap.appendChild(lab); return wrap; }
     else if(f.type==='image'){ wrap.appendChild(imageField(f, obj)); return wrap; }
     else { input=document.createElement('input'); input.type=(f.type==='url'?'url':'text'); input.value=obj[f.key]||''; input.oninput=()=>obj[f.key]=input.value; }
     wrap.appendChild(input); return wrap;
@@ -137,6 +156,29 @@
       });
       const add=document.createElement('button'); add.className='add-btn'; add.textContent='+ Add '+(f.itemLabel||'item');
       add.onclick=()=>{ const blank={}; f.fields.forEach(sf=>blank[sf.key]= sf.type==='list'?[]:sf.type==='object'?{}:''); arr.push(blank); draw(); };
+      box.appendChild(add);
+    }
+    draw(); return box;
+  }
+
+  /* repeatable list of plain text lines (facts, bingo squares, paragraphs…) */
+  function textListField(arr, itemLabel){
+    const box=document.createElement('div');
+    function draw(){
+      box.innerHTML='';
+      arr.forEach((val,i)=>{
+        const row=document.createElement('div');
+        row.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:flex-start';
+        const inp=document.createElement('textarea');
+        inp.value=val==null?'':String(val); inp.style.cssText='flex:1;min-height:44px';
+        inp.oninput=()=>arr[i]=inp.value;
+        const rm=document.createElement('button'); rm.className='rm'; rm.type='button'; rm.textContent='✕';
+        rm.onclick=()=>{ arr.splice(i,1); draw(); };
+        row.appendChild(inp); row.appendChild(rm); box.appendChild(row);
+      });
+      const add=document.createElement('button'); add.className='add-btn'; add.type='button';
+      add.textContent='+ Add '+(itemLabel||'line');
+      add.onclick=()=>{ arr.push(''); draw(); };
       box.appendChild(add);
     }
     draw(); return box;
@@ -194,38 +236,50 @@
   }
 
   /* ── .js file read/write (preserves the comment header) ── */
-  function extractLiteral(text, varName){
-    const m = text.indexOf('var '+varName);
-    if(m<0) throw new Error('Could not find '+varName);
-    let i = text.indexOf('=', m)+1;
-    while(/\s/.test(text[i])) i++;
+  function findDecl(text, varName){
+    let m = text.indexOf('var '+varName), prefix = 'var '+varName;
+    if(m<0){ m = text.indexOf('window.'+varName); prefix = 'window.'+varName; }
+    return { m, prefix };
+  }
+  /* Walks a { } / [ ] literal, correctly skipping strings AND comments.
+     (Comments matter: an apostrophe in a comment — "Who's on the chair" —
+     would otherwise look like a string and swallow the rest of the file.)
+     Returns the index just past the literal's closing bracket. */
+  function scanLiteral(text, i){
     const open = text[i], close = open==='{'?'}':']';
     if(open!=='{' && open!=='[') throw new Error('Unexpected format');
-    let depth=0, str=null, start=i;
+    let depth=0, str=null;
     for(; i<text.length; i++){
-      const c=text[i];
-      if(str){ if(c==='\\'){i++;continue;} if(c===str) str=null; continue; }
-      if(c==="'"||c==='"'){ str=c; continue; }
+      const c=text[i], n=text[i+1];
+      if(str){ if(c==='\\'){ i++; continue; } if(c===str) str=null; continue; }
+      if(c==='/' && n==='/'){ while(i<text.length && text[i]!=='\n') i++; continue; }
+      if(c==='/' && n==='*'){ i+=2; while(i<text.length && !(text[i]==='*' && text[i+1]==='/')) i++; i++; continue; }
+      if(c==="'" || c==='"' || c==='`'){ str=c; continue; }
       if(c===open) depth++;
-      else if(c===close){ depth--; if(depth===0){ i++; break; } }
+      else if(c===close){ depth--; if(depth===0) return i+1; }
     }
-    const literal = text.slice(start, i);
+    return i;
+  }
+  function literalStart(text, m){
+    let i = text.indexOf('=', m)+1;
+    while(/\s/.test(text[i])) i++;
+    return i;
+  }
+  function extractLiteral(text, varName){
+    const { m } = findDecl(text, varName);
+    if(m<0) throw new Error('Could not find '+varName);
+    const start = literalStart(text, m);
+    const end = scanLiteral(text, start);
     // eslint-disable-next-line no-new-func
-    return Function('"use strict";return ('+literal+');')();
+    return Function('"use strict";return ('+text.slice(start,end)+');')();
   }
   function rebuildFile(text, varName, data){
-    const m = text.indexOf('var '+varName);
+    const { m, prefix } = findDecl(text, varName);
     const header = text.slice(0, m);
-    // find end of the old literal to preserve any trailing text
-    let i = text.indexOf('=', m)+1; while(/\s/.test(text[i])) i++;
-    const open=text[i], close=open==='{'?'}':']'; let depth=0,str=null;
-    for(; i<text.length; i++){ const c=text[i];
-      if(str){ if(c==='\\'){i++;continue;} if(c===str)str=null; continue; }
-      if(c==="'"||c==='"'){str=c;continue;}
-      if(c===open)depth++; else if(c===close){depth--; if(depth===0){i++;break;}} }
-    let tail = text.slice(i);                     // usually ";" + newline
+    const i = scanLiteral(text, literalStart(text, m));   // end of the old literal
+    let tail = text.slice(i);                     // usually ";" + newline (+ any IIFE after)
     if(!/^\s*;/.test(tail)) tail = ';'+tail;
-    return header + 'var '+varName+' = ' + jsLit(data,1) + tail;
+    return header + prefix + ' = ' + jsLit(data,1) + tail;
   }
   function jsLit(v, ind){
     const pad='  '.repeat(ind), pad0='  '.repeat(ind-1);
