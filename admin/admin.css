@@ -6,6 +6,8 @@
   --ease:cubic-bezier(0.16,1,0.30,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+/* must beat layout rules like .login{display:flex} — otherwise hidden panels stay visible */
+[hidden]{display:none !important}
 body{background:var(--studio);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
@@ -30,10 +32,18 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .login h1{font-family:var(--display);font-size:clamp(44px,11vw,64px);line-height:.9;letter-spacing:.04em;font-weight:400}
 .login-hint{color:var(--steel);font-size:13.5px;margin:8px 0 24px}
 #login-form{display:flex;flex-direction:column;gap:12px}
-#pw{width:100%;text-align:center;background:var(--panel-2);border:1px solid var(--edge);border-radius:11px;color:var(--ink);
+#user,#pw{width:100%;text-align:center;background:var(--panel-2);border:1px solid var(--edge);border-radius:11px;color:var(--ink);
   font-family:var(--mono);font-size:16px;letter-spacing:.1em;padding:15px 14px;transition:border-color .18s,box-shadow .18s}
-#pw:focus{outline:none;border-color:var(--enn);box-shadow:0 0 0 3px rgba(26,86,219,.2)}
-.login.wrong #pw{animation:shake .4s}
+#user::placeholder,#pw::placeholder{color:var(--steel-dim);letter-spacing:.08em}
+#user:focus,#pw:focus{outline:none;border-color:var(--enn);box-shadow:0 0 0 3px rgba(26,86,219,.2)}
+/* kill the browser's autofill white-fill */
+#user:-webkit-autofill,#pw:-webkit-autofill,
+#user:-webkit-autofill:focus,#pw:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--ink);
+  -webkit-box-shadow:0 0 0 1000px var(--panel-2) inset;
+  caret-color:var(--ink);
+  transition:background-color 9999s ease-out}
+.login.wrong #user,.login.wrong #pw{animation:shake .4s}
 @keyframes shake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(4px)}50%{transform:translateX(-6px)}}
 .login-err{color:var(--live);font-family:var(--mono);font-size:11px;letter-spacing:.12em;height:13px;opacity:0;transition:opacity .2s}
 .login.wrong .login-err{opacity:1}
