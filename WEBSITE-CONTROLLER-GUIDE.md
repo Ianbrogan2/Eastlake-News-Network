@@ -8,8 +8,10 @@ Markdown. Save, commit, done — GitHub Pages redeploys automatically.
 **To change the call sign:** edit `CALL_SIGN` in `/newsroom/config.js`.
 
 **To post an announcement, add a pitch, update the anchor rotation, or mark equipment
-out/in:** edit the matching table in the **ENN Newsroom** Airtable base. The site reads it
-live — no code change needed.
+out/in:** edit the matching list in **`newsroom/boards.js`**. Copy an example row, fill it in,
+commit — the board updates on the site. (No Airtable, no accounts.)
+
+**To change the call sign or the submission-form links:** edit **`newsroom/config.js`**.
 
 **To add a lesson or piece guide:** copy an existing file in `/newsroom/content/lessons/` or
 `/newsroom/content/guides/`, rename it, write the new content, and add a link where similar
