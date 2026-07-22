@@ -27,9 +27,7 @@
   <h2 class="nr-h2 nr-reveal">Assignment / Pitch Board</h2>
   <p class="nr-sub nr-reveal">Pitch a story, claim it, watch it move: <span class="nr-chip is-open">Open</span> → <span class="nr-chip is-claimed">Claimed</span> → <span class="nr-chip is-producing">Producing</span> → <span class="nr-chip is-approved">Approved</span> → <span class="nr-chip is-aired">Aired</span></p>
   <div id="board-pitches" class="nr-reveal" style="margin-bottom:14px"></div>
-  <a class="nr-btn ghost nr-reveal" href="#" onclick="alert('Link the Airtable Pitches form so students can add a pitch.');return false;">+ Pitch a story</a>
-  <span class="nr-draft" style="margin-left:8px">Draft — link pitch form</span>
-  <!-- TODO: link Airtable Pitches intake form -->
+  <div id="pitch-cta" class="nr-reveal"></div>
 
   <!-- Announcements -->
   <h2 class="nr-h2 nr-reveal">Announcements</h2>
@@ -37,20 +35,11 @@
   <div id="board-ann" class="nr-reveal"></div>
 
   <!-- Birthdays & paid announcements -->
-  <h2 class="nr-h2 nr-reveal">Birthdays &amp; Paid Announcements</h2>
+  <h2 class="nr-h2 nr-reveal">Birthdays &amp; Shout-Outs</h2>
   <p class="nr-sub nr-reveal">Feeds the anchor outro. Keep it short and school-appropriate.</p>
-  <div class="nr-panel nr-panel-lg nr-reveal">
-    <form id="shout-form" autocomplete="off" novalidate>
-      <div class="nr-row2">
-        <div class="nr-field"><label for="s-type">Type</label><select id="s-type" name="type" required><option value="">Select…</option><option>Birthday</option><option>Paid Announcement</option><option>Shout-out</option></select></div>
-        <div class="nr-field"><label for="s-for">For (name / club)</label><input id="s-for" name="for" type="text" required placeholder="Who's it for?"></div>
-      </div>
-      <div class="nr-field"><label for="s-msg">Message</label><textarea id="s-msg" name="message" required placeholder="What should the anchors read?"></textarea></div>
-      <div class="nr-field"><label for="s-date">Air Date</label><input id="s-date" name="airDate" type="date"></div>
-      <div id="shout-msg" style="margin:10px 0;font-family:var(--mono);font-size:12px"></div>
-      <button type="submit" class="nr-btn" id="shout-btn">◉ Send to the Anchors</button>
-    </form>
-    <div id="shout-ok" style="display:none;text-align:center;padding:16px 0"><div style="font-family:var(--display);font-size:36px;color:var(--live)">ON THE LIST</div><p style="color:#c9cfda">The anchors will pick it up for the outro.</p></div>
+  <div class="nr-panel nr-reveal">
+    <p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:14px">Send birthdays, shout-outs, and paid announcements through the <strong>Love Lines</strong> form on the main site — it drops straight into our submissions and the anchors pull from it for the outro.</p>
+    <a class="nr-btn" href="/contact">Submit a shout-out →</a>
   </div>
 
   <!-- Standards -->
@@ -81,6 +70,7 @@
 </main>
 <div data-foot></div>
 
+<script src="/newsroom/boards.js"></script>
 <script src="/newsroom/assets/hub.js"></script>
 <script>
 NR.board('pitches').then(function(res){
@@ -94,19 +84,12 @@ NR.board('announcements').then(function(res){
     row:function(r){return ['<strong>'+NR.esc(r.Message||'—')+'</strong>',NR.statusChip(r.Category||''),NR.esc(r.Posted||'—'),NR.esc(r.Expires||'—')];}});
 });
 
-// Birthdays / paid intake — posts to the Worker (uses the generic submit path) or shows offline
+// Pitch a story — link to the optional pitch Google Form, else guide to the desk
 (function(){
-  var form=document.getElementById('shout-form'), btn=document.getElementById('shout-btn'), msg=document.getElementById('shout-msg');
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    for(var k of ['type','for','message']){ if(!(form.elements[k].value||'').trim()){ msg.style.color='#ff8a84'; msg.textContent='Fill in type, who it\'s for, and the message.'; form.elements[k].focus(); return; } }
-    if(!NR.workerReady){ msg.style.color='#ff8a84'; msg.textContent='Not connected yet — link the Airtable form (see setup) to accept these live.'; return; }
-    btn.disabled=true; btn.textContent='Sending…';
-    fetch(window.ENN.WORKER_URL+'/submit',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:form.elements['for'].value,pieceType:'Announcement',title:form.elements['type'].value,description:form.elements['message'].value,airWeek:form.elements['airDate'].value,group:'',period:'',email:'',objectKey:'',fileName:'',fileSize:0})})
-      .then(function(r){ if(!r.ok) throw 0; form.style.display='none'; document.getElementById('shout-ok').style.display='block'; })
-      .catch(function(){ btn.disabled=false; btn.textContent='◉ Send to the Anchors'; msg.style.color='#ff8a84'; msg.textContent='Could not send — try again.'; });
-  });
+  var url=(window.ENN&&window.ENN.PITCH_FORM_URL||'').trim();
+  var el=document.getElementById('pitch-cta');
+  if(url){ el.innerHTML='<a class="nr-btn ghost" href="'+NR.esc(url)+'" target="_blank" rel="noopener">+ Pitch a story ↗</a>'; }
+  else { el.innerHTML='<p style="color:var(--steel);font-size:13.5px">Got a story idea? Bring it to the <strong style="color:#c9cfda">Newsroom Director</strong> and they\'ll add it to the board.</p>'; }
 })();
 </script>
 </body>

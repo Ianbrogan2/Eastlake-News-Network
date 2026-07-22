@@ -11,11 +11,8 @@
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Is the Worker configured yet? */
-  const workerReady = !!(ENN.WORKER_URL && !/REPLACE/i.test(ENN.WORKER_URL));
-
   const NR = window.NR = {
-    ENN, $, $$, reduceMotion, workerReady,
+    ENN, $, $$, reduceMotion,
     esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   };
 
@@ -33,7 +30,7 @@
     const nav = SECTIONS.map(([label,href]) =>
       `<a href="${href}"${current===label?' aria-current="page"':''}>${label}</a>`).join('');
     return `<header class="nr-rail">
-      <a class="nr-rail-logo" href="/newsroom/">
+      <a class="nr-rail-logo" href="/" title="Back to eastlakenewsnetwork.com" aria-label="Back to the main ENN site">
         <img src="/enn-logo.png" alt="ENN"><span>NEWSROOM</span>
       </a>
       <nav aria-label="Newsroom sections">${nav}</nav>
@@ -84,27 +81,15 @@
       .catch(() => { el.innerHTML = `<p class="nr-sub">Content is being written. <span class="nr-draft">Draft — pending update</span></p>`; });
   };
 
-  /* ── Live boards from the Worker (graceful empty / not-connected / error) ── */
+  /* ── Boards come from newsroom/boards.js (leaders edit that file) ── */
   NR.board = function(name){
-    if(!workerReady) return Promise.resolve({ state:'offline', records:[] });
-    return fetch(`${ENN.WORKER_URL}/board?name=${encodeURIComponent(name)}`)
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(d => ({ state:'ok', records: (d && d.records) || [] }))
-      .catch(() => ({ state:'error', records:[] }));
+    const data = (window.ENN_BOARDS && window.ENN_BOARDS[name]) || [];
+    return Promise.resolve({ state:'ok', records: Array.isArray(data) ? data : [] });
   };
   /* Standard board renderer: pass columns + a row->cells mapper */
   NR.renderBoard = function(host, result, opts){
     const el = typeof host==='string' ? $(host) : host; if(!el) return;
-    const { state, records } = result;
-    if(state==='offline'){
-      el.innerHTML = NR.emptyState('📡','Live board not connected yet',
-        'This board goes live once the Cloudflare Worker + Airtable are set up (see SETUP-NEXT-STEPS.md). Until then, it stays quiet.');
-      return;
-    }
-    if(state==='error'){
-      el.innerHTML = NR.emptyState('⚠️','Couldn’t reach the board','The live feed didn’t respond. Refresh in a moment, or check the Worker.');
-      return;
-    }
+    const { records } = result;
     if(!records.length){
       el.innerHTML = NR.emptyState(opts.emptyIcon||'🗒️', opts.emptyTitle||'Nothing here yet', opts.emptyBody||'New entries will appear here automatically.');
       return;

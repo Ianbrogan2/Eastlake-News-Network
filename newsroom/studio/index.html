@@ -30,17 +30,17 @@
 
   <!-- Equipment checkout -->
   <h2 class="nr-h2 nr-reveal">Equipment Checkout</h2>
-  <p class="nr-sub nr-reveal">Live status of every kit. Check-in/out happens in the Equipment log (Airtable) — this is the read-only board.</p>
+  <p class="nr-sub nr-reveal">Live status of every kit. Leaders keep this up to date in newsroom/boards.js.</p>
   <div id="board-equipment" class="nr-reveal"></div>
 
   <!-- Room booking -->
   <h2 class="nr-h2 nr-reveal">Room Booking</h2>
   <p class="nr-sub nr-reveal">The Podcast/Interview Room and the Anchor Room.</p>
   <div class="nr-grid nr-stagger">
-    <div class="nr-panel"><h3 class="nr-h3">Podcast / Interview Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Book a slot before you shoot so two groups don't collide.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or an Airtable booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
-    <div class="nr-panel"><h3 class="nr-h3">Anchor Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Reserved for anchor filming 9:00–9:30; open after.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or an Airtable booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
+    <div class="nr-panel"><h3 class="nr-h3">Podcast / Interview Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Book a slot before you shoot so two groups don't collide.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or a booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
+    <div class="nr-panel"><h3 class="nr-h3">Anchor Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Reserved for anchor filming 9:00–9:30; open after.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or a booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
   </div>
-  <!-- TODO: link the studio Google Calendar or an Airtable booking form -->
+  <!-- TODO: link the studio Google Calendar or a booking form -->
 
   <!-- Daily rundown -->
   <h2 class="nr-h2 nr-reveal">Daily Rundown · Show Builder</h2>
@@ -61,6 +61,7 @@
 </main>
 <div data-foot></div>
 
+<script src="/newsroom/boards.js"></script>
 <script src="/newsroom/assets/hub.js"></script>
 <script>
 var ROLES=[

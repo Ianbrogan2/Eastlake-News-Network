@@ -1,4 +1,6 @@
-<!-- CLOUDFLARE ACCESS REQUIRED: gate this path to school Google accounts. See SETUP-NEXT-STEPS.md §6. -->
+<!-- ACCESS: this page only links to the submissions Google Sheet, which you
+     share with leaders + Mr. Nimmo only. Google sign-in is the access control.
+     Do not link this page from any public page. -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -20,54 +22,33 @@
   <!-- Restricted banner -->
   <div class="nr-panel nr-reveal" style="border-color:rgba(255,59,48,0.5);background:linear-gradient(180deg,rgba(255,59,48,0.06),var(--panel-2));margin-bottom:24px">
     <div class="nr-eyebrow" style="margin-bottom:10px"><b style="background:var(--live)">Restricted</b><span>Leaders &amp; advisor only</span></div>
-    <p style="color:#c9cfda;font-size:14px;line-height:1.6">This page lists student names and their work. It's protected by <strong>Cloudflare Access</strong> — only school accounts get in, and it is never linked from any public page. Don't screenshot or share names outside the team.</p>
+    <p style="color:#c9cfda;font-size:14px;line-height:1.6">This is where student names and their work live. It opens the submission <strong>Google Sheet</strong>, which is shared only with leaders and Mr. Nimmo — that Google sharing is the access control. Don't screenshot or share names outside the team, and never link this page publicly.</p>
   </div>
 
   <section class="nr-hero nr-reveal" style="padding-top:0">
     <div class="nr-eyebrow"><b>Catalog</b><span>Every submission</span></div>
     <h1 class="nr-title" style="font-size:clamp(36px,6vw,64px)">SUBMISSION<br>CATALOG</h1>
-    <p class="nr-lede">Everything that's come in — sortable, searchable, downloadable. Mark items as reviewed and note their archive drive as you go.</p>
+    <p class="nr-lede">Every piece that's come in — sortable, filterable, and downloadable right inside Google Sheets. Mark items reviewed and note their archive drive there as you go.</p>
   </section>
 
-  <div class="nr-panel nr-reveal" style="margin-bottom:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-    <input id="search" type="search" placeholder="Search title, student, group…" style="flex:1;min-width:200px;background:var(--panel-2);border:1px solid var(--edge);border-radius:9px;color:var(--ink);font-family:inherit;font-size:14px;padding:11px 14px">
-    <span id="count" class="nr-chip">— items</span>
-  </div>
-
-  <div id="catalog" class="nr-reveal"></div>
+  <div class="nr-panel nr-panel-lg nr-reveal" id="catalog-box"></div>
 </main>
 <div data-foot></div>
 
 <script src="/newsroom/assets/hub.js"></script>
 <script>
-var COLS=['Submitted At','Piece Type','Group','Title','Student Name','Status','File','Archived to Drive #'];
-var ALL=[], sortKey=null, sortDir=1;
-
-function fetchCatalog(){
-  var host=document.getElementById('catalog');
-  if(!NR.workerReady){ host.innerHTML=NR.emptyState('🔌','Catalog not connected yet','Once the Worker + Airtable are set up, every submission lists here. See SETUP-NEXT-STEPS.md.'); return; }
-  fetch(window.ENN.WORKER_URL+'/board?name=submissions')
-    .then(function(r){ return r.ok?r.json():Promise.reject(); })
-    .then(function(d){ ALL=(d.records||[]); render(); })
-    .catch(function(){ host.innerHTML=NR.emptyState('⚠️','Couldn’t load the catalog','The feed didn’t respond. Refresh, or check the Worker.'); });
-}
-function render(){
-  var q=(document.getElementById('search').value||'').toLowerCase();
-  var rows=ALL.filter(function(r){ return !q || JSON.stringify(r).toLowerCase().indexOf(q)>-1; });
-  if(sortKey){ rows.sort(function(a,b){ return String(a[sortKey]||'').localeCompare(String(b[sortKey]||''))*sortDir; }); }
-  document.getElementById('count').textContent=rows.length+' item'+(rows.length===1?'':'s');
-  var host=document.getElementById('catalog');
-  if(!rows.length){ host.innerHTML=NR.emptyState('🗂️','No submissions yet','They’ll appear here as students turn work in.'); return; }
-  var head=COLS.map(function(c){ var ar=sortKey===c?(sortDir>0?' ↑':' ↓'):''; return '<th style="cursor:pointer" data-k="'+c+'">'+NR.esc(c)+ar+'</th>'; }).join('');
-  var body=rows.map(function(r){
-    var link=r['Object Key']? '<a href="#" onclick="alert(\'Download links resolve through the Worker/R2 once connected.\');return false;" style="color:#7DD8FF">↓ file</a>' : '—';
-    return '<tr><td class="nr-clock" style="font-size:12px">'+NR.esc(r['Submitted At']||'—')+'</td><td>'+NR.esc(r['Piece Type']||'—')+'</td><td>'+NR.esc(r.Group||'—')+'</td><td><strong>'+NR.esc(r.Title||'—')+'</strong></td><td>'+NR.esc(r['Student Name']||'—')+'</td><td>'+NR.statusChip(r.Status||'New')+'</td><td>'+link+'</td><td>'+NR.esc(r['Archived to Drive #']||'—')+'</td></tr>';
-  }).join('');
-  host.innerHTML='<div class="nr-board-wrap"><table class="nr-board"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>';
-  host.querySelectorAll('th[data-k]').forEach(function(th){ th.addEventListener('click',function(){ var k=th.getAttribute('data-k'); if(sortKey===k) sortDir*=-1; else {sortKey=k;sortDir=1;} render(); }); });
-}
-document.getElementById('search').addEventListener('input', render);
-fetchCatalog();
+(function(){
+  var url = (window.ENN && window.ENN.CATALOG_SHEET_URL || '').trim();
+  var box = document.getElementById('catalog-box');
+  if(url){
+    box.innerHTML =
+      '<p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:18px">The catalog is your submission Google Sheet — every column, filter, and download in one place.</p>'+
+      '<a class="nr-btn" href="'+NR.esc(url)+'" target="_blank" rel="noopener">◉ Open the Submission Sheet ↗</a>';
+  } else {
+    box.innerHTML = NR.emptyState('🔌','Catalog sheet not linked yet',
+      'Once your submission Google Form exists, paste its responses Sheet link into newsroom/config.js (CATALOG_SHEET_URL). Share that Sheet only with leaders + Mr. Nimmo.');
+  }
+})();
 </script>
 </body>
 </html>

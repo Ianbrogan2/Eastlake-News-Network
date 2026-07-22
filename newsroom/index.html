@@ -72,6 +72,7 @@
 </main>
 <div data-foot></div>
 
+<script src="/newsroom/boards.js"></script>
 <script src="/newsroom/assets/hub.js"></script>
 <script>
 /* Live countdown to the next broadcast (Mon–Thu 10:31 AM PT) */
@@ -100,11 +101,11 @@
   tick(); setInterval(tick,1000);
 })();
 
-/* Live boards (graceful offline states until the Worker is connected) */
+/* Boards read from newsroom/boards.js (leaders edit that file) */
 NR.board('challenge').then(function(res){
   NR.renderBoard('#board-challenge', res, {
     columns:['Week','Challenge','Details'],
-    emptyIcon:'🎯', emptyTitle:'No challenge posted yet', emptyBody:'This week’s skill challenge shows up here once it’s posted in Airtable.',
+    emptyIcon:'🎯', emptyTitle:'No challenge posted yet', emptyBody:'This week’s skill challenge shows up here once a leader posts it in boards.js.',
     row:function(r){ return [NR.esc(r.Week||'—'), '<strong>'+NR.esc(r.Challenge||'—')+'</strong>', NR.esc(r.Details||'')]; }
   });
 });
