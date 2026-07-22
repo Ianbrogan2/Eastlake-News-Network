@@ -15,9 +15,11 @@ function doPost(e){
   var out = { ok:false };
   try{
     var body = JSON.parse(e.postData.contents);
-    // every request must carry the correct password
-    if(String(body.password||'') !== String(prop('ADMIN_PASSWORD')||'')){
-      return json({ ok:false, error:'Wrong password.' });
+    // every request must carry the correct username + password
+    var okUser = String(body.user||'').toLowerCase() === String(prop('ADMIN_USER')||'').toLowerCase();
+    var okPass = String(body.password||'') === String(prop('ADMIN_PASSWORD')||'');
+    if(!okUser || !okPass){
+      return json({ ok:false, error:'Wrong username or password.' });
     }
     var action = body.action;
     if(action === 'auth')        out = { ok:true };

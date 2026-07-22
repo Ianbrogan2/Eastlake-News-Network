@@ -17,8 +17,10 @@ This is the only "GitHub moment" — you never see it again after this.
 - [ ] **Permissions → Repository permissions → Contents → Read and write.**
 - [ ] Generate, then **copy the token** (starts with `github_pat_…`). Keep it for step 3.
 
-## 2. Pick your password
-- [ ] Choose the password your team will type to log in (e.g. `ennstudio2026`). You'll paste it in step 3.
+## 2. Pick your username + password
+- [ ] Choose the **username** (e.g. `team@eastlakenewsnetwork.com`) and **password** your team types
+      to log in. You'll paste them in step 3. (Never put the password in any site file — it lives
+      only in the Apps Script.)
 
 ## 3. Deploy the backend (Google Apps Script)
 - [ ] Go to **script.google.com → New project.**
@@ -26,7 +28,8 @@ This is the only "GitHub moment" — you never see it again after this.
 - [ ] Click the **gear (Project Settings) → Script Properties → Add script property** and add these **four**:
       | Property | Value |
       |---|---|
-      | `ADMIN_PASSWORD` | the password from step 2 |
+      | `ADMIN_USER` | your username from step 2 (e.g. `team@eastlakenewsnetwork.com`) |
+      | `ADMIN_PASSWORD` | your password from step 2 |
       | `GITHUB_TOKEN` | the `github_pat_…` from step 1 |
       | `GITHUB_REPO` | `Ianbrogan2/Eastlake-News-Network` |
       | `GITHUB_BRANCH` | `main` |

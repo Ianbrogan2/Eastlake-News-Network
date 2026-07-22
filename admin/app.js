@@ -13,7 +13,7 @@
   const $ = (s,r=document)=>r.querySelector(s);
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  let PW = '';                 // the ENN password (kept only in memory)
+  let PW = '', USER = '';      // credentials (kept only in memory)
   let current = null;          // {section, data, fileText}
 
   /* ── Backend calls (preview mode fakes read from live files) ── */
@@ -30,7 +30,7 @@
     }
     const res = await fetch(BACKEND, {
       method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(Object.assign({ action, password: PW }, payload))
+      body: JSON.stringify(Object.assign({ action, user: USER, password: PW }, payload))
     });
     const j = await res.json().catch(()=>({ok:false,error:'Bad response'}));
     if(!j.ok) throw new Error(j.error || 'Request failed');
@@ -38,14 +38,13 @@
   }
 
   /* ── LOGIN ── */
-  const loginEl = $('#login'), appEl = $('#app'), form = $('#login-form'), pwEl = $('#pw');
+  const loginEl = $('#login'), appEl = $('#app'), form = $('#login-form'), pwEl = $('#pw'), userEl = $('#user');
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    const val = pwEl.value;
     const btn = $('#login-btn'); btn.disabled = true; btn.textContent = 'Checking…';
     try {
-      PW = val;
-      await api('auth', {});          // preview: always ok; live: verifies password
+      USER = userEl.value.trim(); PW = pwEl.value;
+      await api('auth', {});          // preview: always ok; live: verifies username + password
       loginEl.hidden = true; appEl.hidden = false;
       renderDash();
     } catch(err){
