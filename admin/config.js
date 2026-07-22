@@ -7,6 +7,6 @@
    what would be written — nothing is published yet.
 ══════════════════════════════════════════════════════════════════ */
 window.ENN_ADMIN = {
-  BACKEND_URL: "",                    // e.g. https://script.google.com/macros/s/AKfy…/exec
+  BACKEND_URL: "https://script.google.com/macros/s/AKfycbxF3IKUpEef9K43pJM39k_JMInkooIlm8DiFMbXK7Bsh2C0Oy8GDv0HVZMP4ithnnG8/exec",                    // e.g. https://script.google.com/macros/s/AKfy…/exec
   SITE_NAME: "Eastlake News Network"
 };
