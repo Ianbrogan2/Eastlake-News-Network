@@ -46,6 +46,22 @@
     const footHost = $('[data-foot]'); if(footHost) footHost.outerHTML = NR.foot();
   };
 
+  /* Apply this page's hero text from newsroom/text.js (guarded — a missing
+     element or entry never breaks the page) */
+  NR.applyText = function(section){
+    const T = (window.ENN_NR_TEXT && window.ENN_NR_TEXT[section]) || null;
+    if(!T) return;
+    const hero = $('.nr-hero'); if(!hero) return;
+    const eb = hero.querySelector('.nr-eyebrow');
+    if(eb){
+      const b = eb.querySelector('b'), sp = eb.querySelector('span');
+      if(b && T.eyebrowTag != null) b.textContent = T.eyebrowTag;
+      if(sp && T.eyebrowLabel != null) sp.innerHTML = NR.esc(T.eyebrowLabel);
+    }
+    const h1 = hero.querySelector('.nr-title'); if(h1 && T.title != null) h1.innerHTML = T.title;
+    const ld = hero.querySelector('.nr-lede');  if(ld && T.lede != null)  ld.textContent = T.lede;
+  };
+
   /* ── Tiny markdown → HTML (headings, lists, bold/italic, code, links, quotes) ── */
   NR.md = function(src){
     if(!src) return '';
@@ -178,7 +194,9 @@
   /* Auto-init on DOM ready */
   function init(){
     if(!NR.enforceGate()) return;              // bounced to the gate — stop here
-    NR.mountChrome(document.body.getAttribute('data-section')||'');
+    const section = document.body.getAttribute('data-section') || '';
+    NR.mountChrome(section);
+    NR.applyText(section);
     NR.observe(document);
     NR.startClock();
   }

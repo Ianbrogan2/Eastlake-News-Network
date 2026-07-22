@@ -62,6 +62,7 @@ eastlakenewsnetwork.com, and exactly which file to open to change it.
 | Intro animation speed | `12-HERO.js` |
 | **Student newsroom** — call sign, form links | `newsroom/config.js` |
 | **Student newsroom** — the boards (pitches, announcements…) | `newsroom/boards.js` |
+| **Student newsroom** — each page's title & intro | `newsroom/text.js` |
 | **Student newsroom** — its colors | `newsroom/colors.css` |
 | **Student newsroom** — role/lesson/guide prose | `newsroom/content/…` |
 

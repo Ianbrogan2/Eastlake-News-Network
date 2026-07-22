@@ -72,6 +72,15 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     setTxt('#desk-title',     S.deskTitle);
     setTxt('#desk-sub',       S.deskSub);
 
+    /* Latest-bulletin player defaults (shown until the real video loads) */
+    if(S.player){
+      setTxt('#vid-title', S.player.loadingTitle);
+      setTxt('#vid-date',  S.player.loadingDate);
+      const pl = $('.player-loading > div:last-child'); if(pl && S.player.loadingText) pl.textContent = S.player.loadingText;
+      const bs = $('.badge-sync'); if(bs && S.player.badgeSync != null) bs.innerHTML = '<span class="d"></span>' + NR_esc(S.player.badgeSync);
+      const bl = $('.badge-live'); if(bl && S.player.badgeLive != null) bl.innerHTML = '<span class="d"></span>' + NR_esc(S.player.badgeLive);
+    }
+
     /* Ticker label — keep the pulsing dot, replace the text after it */
     const tk = $('.tk-label');
     if(tk && S.tickerLabel){

@@ -59,6 +59,15 @@ var ENN_SITE = {
   deskTitle:     'ON OUR DESK',
   deskSub:       'Stories our student journalists are covering this week — from campus news to sports and student life.',
 
+  // ── LATEST BULLETIN PLAYER (the words shown while it loads) ──────
+  player: {
+    loadingTitle: 'Loading latest broadcast…',
+    loadingDate:  'FETCHING FROM @ENNBULLETIN',
+    loadingText:  'SYNCING LATEST EPISODE…',
+    badgeSync:    'Auto-synced',   // the little "Auto-synced" tag
+    badgeLive:    'Live',          // the little "Live" tag
+  },
+
   // ── BOTTOM TICKER LABEL ──────────────────────────────────────────
   tickerLabel: 'ENN Breaking',
 
