@@ -792,8 +792,8 @@ var ENN_ROSTER = {
       {
         role: 'Studio Director',
         id: '',
-        first: '',
-        last: ''
+        first: 'GiuGiu',
+        last: 'Bischoffer'
       },
       {
         role: 'Newsroom Director',
