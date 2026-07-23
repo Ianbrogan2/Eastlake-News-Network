@@ -53,21 +53,21 @@ var ENN_ROSTER = {
       },
       {
         role: 'Newsroom Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1592547',
+        first: 'Ava',
+        last: 'Ridgeway'
       },
       {
         role: 'Assistant Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1592985',
+        first: 'Maddy',
+        last: 'Mcgee'
       },
       {
         role: 'Assistant Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1594938',
+        first: 'Christian',
+        last: 'Stevens'
       },
       {
         role: 'Camera Operator',
