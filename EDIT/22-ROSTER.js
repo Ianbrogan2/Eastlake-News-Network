@@ -791,7 +791,7 @@ var ENN_ROSTER = {
     leadership: [
       {
         role: 'Studio Director',
-        id: '',
+        id: '1594460',
         first: 'GiuGiu',
         last: 'Bischoffer'
       },
@@ -810,8 +810,8 @@ var ENN_ROSTER = {
       {
         role: 'Assistant Director',
         id: '',
-        first: '',
-        last: ''
+        first: 'Rondell',
+        last: 'Minor'
       },
       {
         role: 'Assistant Director',
@@ -861,24 +861,24 @@ var ENN_ROSTER = {
         name: 'Group 1',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1595734',
+            first: 'Ollin',
+            last: 'Torres'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1594790',
+            first: 'Armando',
+            last: 'Padilla'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1608033',
+            first: 'Kat',
+            last: 'Unzueta'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1594265',
+            first: 'Aden',
+            last: 'Espinoza'
           },
           {
             id: '',
@@ -891,24 +891,24 @@ var ENN_ROSTER = {
         name: 'Group 2',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1621203',
+            first: 'Lucas',
+            last: 'Pelayo'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1620774',
+            first: 'Justin',
+            last: 'Galvan'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1622440',
+            first: 'Kiley',
+            last: 'Ovalle'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1606551',
+            first: 'Lizette',
+            last: 'Herrera'
           },
           {
             id: '',
@@ -921,24 +921,24 @@ var ENN_ROSTER = {
         name: 'Group 3',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1089240',
+            first: 'Aiden',
+            last: 'Alamilla'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1604417',
+            first: 'Joaquin',
+            last: 'Perez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1597468',
+            first: 'Oscar',
+            last: 'Gonzalez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1599966',
+            first: 'Warren',
+            last: 'Korsmo'
           },
           {
             id: '',
@@ -951,29 +951,29 @@ var ENN_ROSTER = {
         name: 'Group 4',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1606613',
+            first: 'Leila',
+            last: 'Yescas'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1599184',
+            first: 'Shiann',
+            last: 'Rodriguez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1620817',
+            first: 'Jamilah',
+            last: 'Jones'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1606445',
+            first: 'Sophia (Phi)',
+            last: 'Maxwell'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607474',
+            first: 'Maya',
+            last: 'Fortunado'
           }
         ]
       },
@@ -981,29 +981,29 @@ var ENN_ROSTER = {
         name: 'Group 5',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1613106',
+            first: 'Rondell (Del)',
+            last: 'Minor'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1605445',
+            first: 'Ryan (RJ)',
+            last: 'Yamasaki'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607917',
+            first: 'Gianni',
+            last: 'Quillopo'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607878',
+            first: 'Caden',
+            last: 'Navarro'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1623225',
+            first: 'Gibran',
+            last: 'Espinoza'
           }
         ]
       },
@@ -1011,24 +1011,24 @@ var ENN_ROSTER = {
         name: 'Group 6',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1592789',
+            first: 'Expedito (JR)',
+            last: 'Luyun'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607112',
+            first: 'Brent',
+            last: 'Wan'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1608415',
+            first: 'Christian',
+            last: 'Alvarez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1594029',
+            first: 'Santiago',
+            last: 'Ramirez'
           },
           {
             id: '',
