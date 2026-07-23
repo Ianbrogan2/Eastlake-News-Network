@@ -167,9 +167,9 @@ var ENN_ROSTER = {
             last: 'Fong'
           },
           {
-            id: '2121212',
-            first: 'Barac',
-            last: 'Salinas'
+            id: '1594976',
+            first: 'Myia',
+            last: 'Ruiz'
           }
         ]
       },
@@ -227,9 +227,9 @@ var ENN_ROSTER = {
             last: 'Infante'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '01010101',
+            first: 'Barac',
+            last: 'Salinas'
           }
         ]
       },
