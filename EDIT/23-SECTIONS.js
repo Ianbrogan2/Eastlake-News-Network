@@ -47,7 +47,7 @@ var ENN_SECTIONS = {
   newsroom: {
     pageCalendar: true,
     pageSubmit: true,
-    pageMake: true,
+    pageMake: false,
     pageLearn: true,
     pageStudio: false,
     pageDesk: true,
