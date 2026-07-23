@@ -274,37 +274,48 @@
     const name = window.ENN_ID.displayName(me);
     const role = window.ENN_ID.roleLine(me);
 
-    /* Air dates come from the same season file the public countdown uses */
-    let next = null, upcoming = [];
+    /* Air dates come from the same season file the public countdown uses.
+       Someone on a group gets THEIR GROUP's dates — groups alternate, so
+       half the period's bulletins aren't theirs. Someone with only a
+       leadership role gets the whole period's dates instead. */
+    let next = null, upcoming = [], scope = '';
     if(typeof ENN_SEASON !== 'undefined'){
       const tag = window.ENN_ID.periodTag(me);
-      if(window.ENN_ID.isAdvisor(me)){
-        next = ENN_SEASON.next();
+      if(window.ENN_ID.inGroup(me)){
+        next     = window.ENN_ID.myNextAirDate(me);
+        upcoming = window.ENN_ID.myAirDates(me)
+                     .filter(b => b.date.getTime() > Date.now()).slice(0, 4);
+        scope    = 'group';
+      } else if(window.ENN_ID.isAdvisor(me)){
+        next     = ENN_SEASON.next();
         upcoming = ENN_SEASON.upcomingFor('').slice(0, 4);
       } else if(tag){
-        next = ENN_SEASON.next(tag);
+        next     = ENN_SEASON.next(tag);
         upcoming = ENN_SEASON.upcomingFor(tag).slice(0, 4);
+        scope    = 'period';
       }
     }
 
     const days = d => Math.max(0, Math.ceil((d - Date.now()) / 86400000));
 
-    /* the piece is due before class on the air day */
+    /* The published rule is "due before class starts on your air day" —
+       the same day it airs, not the night before. */
     let dueLine = '—';
-    if(next){
-      const due = new Date(next.date.getTime());
-      due.setDate(due.getDate() - 1);
-      dueLine = ENN_SEASON.longDate(due) + ', end of day';
-    }
+    if(next) dueLine = 'Before class on <strong>' + ENN_SEASON.longDate(next.date) + '</strong>';
 
     const rows = [];
     if(me.period) rows.push(['Your period', 'Period ' + me.period]);
     if(me.groupName) rows.push(['Your group', NR.esc(me.groupName)]);
     if(role) rows.push(['Your role', NR.esc(role)]);
     if(next){
-      rows.push(['Your next air date',
+      rows.push([scope === 'group' ? 'Your group airs next' : 'Your next air date',
         '<strong>' + ENN_SEASON.longDate(next.date) + '</strong> · in ' + days(next.date) + ' days']);
-      rows.push(['Piece due', dueLine]);
+      if(scope === 'group') rows.push(['Piece due', dueLine]);
+    }
+    /* A leader with no group has nothing to hand in — say so plainly
+       rather than leaving a Submit button that files against no group. */
+    if(!window.ENN_ID.inGroup(me) && window.ENN_ID.isLeader(me) && !window.ENN_ID.isAdvisor(me)){
+      rows.push(['Submissions', 'Not applicable — you’re not on a production group']);
     }
 
     const mates = (me.groupMates && me.groupMates.length)
@@ -313,7 +324,8 @@
       : '';
 
     const dates = upcoming.length
-      ? `<div class="nr-desk-dates"><span>Coming up</span>${
+      ? `<div class="nr-desk-dates"><span>${
+          scope === 'group' ? 'Your group airs' : 'Coming up'}</span>${
           upcoming.map(b => `<b>${NR.esc(ENN_SEASON.shortDate(b.date))}${
             window.ENN_ID.isAdvisor(me) ? ' · ' + b.period : ''}</b>`).join('')}</div>`
       : '';
@@ -333,7 +345,8 @@
         ${mates}
         ${dates}
         <div class="nr-desk-actions">
-          <a class="nr-btn" href="/newsroom/submit/">Submit your piece →</a>
+          ${window.ENN_ID.canSubmit(me)
+            ? '<a class="nr-btn" href="/newsroom/submit/">Submit your piece →</a>' : ''}
           ${window.ENN_ID.isLeader(me)
             ? '<a class="nr-btn ghost" href="/newsroom/leadership/">Leadership tools →</a>' : ''}
           <a class="nr-desk-out" href="#" data-signout2>Not you? Sign out</a>

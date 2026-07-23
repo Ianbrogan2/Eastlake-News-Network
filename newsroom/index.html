@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=2">
-<link rel="stylesheet" href="/newsroom/colors.css?v=2">
-<script src="/newsroom/config.js?v=2"></script>
-<script src="/EDIT/21-BULLETINS.js?v=2"></script>
-<script src="/EDIT/22-ROSTER.js?v=2"></script>
-<script src="/newsroom/assets/identity.js?v=2"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
+<link rel="stylesheet" href="/newsroom/colors.css?v=3">
+<script src="/newsroom/config.js?v=3"></script>
+<script src="/EDIT/21-BULLETINS.js?v=3"></script>
+<script src="/EDIT/22-ROSTER.js?v=3"></script>
+<script src="/newsroom/assets/identity.js?v=3"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -80,34 +80,50 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=2"></script>
-<script src="/newsroom/text.js?v=2"></script>
-<script src="/newsroom/assets/hub.js?v=2"></script>
+<script src="/newsroom/boards.js?v=3"></script>
+<script src="/newsroom/text.js?v=3"></script>
+<script src="/newsroom/assets/hub.js?v=3"></script>
 <script>
-/* Live countdown to the next broadcast (Mon–Thu 10:31 AM PT) */
+/* Countdown to the next real bulletin.
+   Reads EDIT/21-BULLETINS.js, so it counts to a day the show actually
+   airs — not merely the next weekday. When someone is signed in with a
+   group, it counts to THAT GROUP's next turn instead of the period's. */
 (function(){
   var el = document.getElementById('cd'), lab = document.getElementById('cd-label');
-  function nextAir(){
-    // work in Pacific time
-    var now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'}));
-    for(var add=0; add<8; add++){
-      var d = new Date(now); d.setDate(now.getDate()+add); d.setHours(10,31,0,0);
-      var dow = d.getDay(); // 1..4 = Mon..Thu
-      if(dow>=1 && dow<=4 && d.getTime() > now.getTime()) return d;
+  if(typeof ENN_SEASON === 'undefined'){ el.textContent = '—'; return; }
+
+  var me = (window.NR && NR.me) ? NR.me() : null;
+  var target = null, note = '';
+
+  if(window.ENN_ID && window.ENN_ID.inGroup(me)){
+    var g = window.ENN_ID.myNextAirDate(me);
+    if(g){ target = g.date; note = NR.esc(me.groupName) + ' airs ' + ENN_SEASON.shortDate(g.date); }
+  }
+  if(!target){
+    var tag = (window.ENN_ID && me) ? window.ENN_ID.periodTag(me) : '';
+    var n = ENN_SEASON.next(tag || undefined);
+    if(n){
+      target = n.date;
+      note = (tag ? 'Period ' + ENN_SEASON.periodNumber(n.period) : n.period) +
+             ' · ' + ENN_SEASON.shortDate(n.date);
     }
-    return null;
   }
+
+  if(!target){ el.textContent = '—'; lab.textContent = 'Season complete'; return; }
+
   function tick(){
-    var target = nextAir(); if(!target){ el.textContent='—'; return; }
-    var now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'}));
-    var diff = Math.max(0, target - now);
-    var h = Math.floor(diff/3600000), m = Math.floor(diff%3600000/60000), s = Math.floor(diff%60000/1000);
-    var p = function(n){return String(n).padStart(2,'0');};
-    el.textContent = (h>0? h+'h ':'') + p(m)+'m '+p(s)+'s';
-    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    lab.textContent = 'Airs '+days[target.getDay()]+' · 10:31 AM';
+    var diff = target.getTime() - Date.now();
+    if(diff <= 0){ el.textContent = 'ON AIR'; lab.textContent = note; return; }
+    var d = Math.floor(diff/86400000),
+        h = Math.floor(diff%86400000/3600000),
+        m = Math.floor(diff%3600000/60000),
+        s = Math.floor(diff%60000/1000);
+    var p = function(n){ return String(n).padStart(2,'0'); };
+    el.textContent = d > 0 ? (d + 'd ' + p(h) + 'h ' + p(m) + 'm')
+                           : (p(h) + 'h ' + p(m) + 'm ' + p(s) + 's');
+    lab.textContent = note;
   }
-  tick(); setInterval(tick,1000);
+  tick(); setInterval(tick, 1000);
 })();
 
 /* Boards read from newsroom/boards.js (leaders edit that file) */

@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=2">
-<link rel="stylesheet" href="/newsroom/colors.css?v=2">
-<script src="/newsroom/config.js?v=2"></script>
-<script src="/EDIT/21-BULLETINS.js?v=2"></script>
-<script src="/EDIT/22-ROSTER.js?v=2"></script>
-<script src="/newsroom/assets/identity.js?v=2"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
+<link rel="stylesheet" href="/newsroom/colors.css?v=3">
+<script src="/newsroom/config.js?v=3"></script>
+<script src="/EDIT/21-BULLETINS.js?v=3"></script>
+<script src="/EDIT/22-ROSTER.js?v=3"></script>
+<script src="/newsroom/assets/identity.js?v=3"></script>
 </head>
 <body class="nr" data-section="Submit">
 <div data-rail></div>
@@ -61,17 +61,53 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/text.js?v=2"></script>
-<script src="/newsroom/assets/hub.js?v=2"></script>
+<script src="/newsroom/text.js?v=3"></script>
+<script src="/newsroom/assets/hub.js?v=3"></script>
 <script>
 (function(){
   var url = (window.ENN && window.ENN.SUBMIT_FORM_URL || '').trim();
   var cta = document.getElementById('submit-cta');
+  var me  = NR.me();
+
+  /* Pieces are produced by GROUPS. Someone who only holds a leadership
+     role has no group making a piece, so there is nothing for them to
+     hand in — show them why instead of a form that would file against
+     no group. A leader who is also on a group submits normally. */
+  if(window.ENN_ID && me && me.kind !== 'guest' && !window.ENN_ID.canSubmit(me)){
+    var roleTxt = window.ENN_ID.roleLine(me);
+    cta.innerHTML = NR.emptyState('🎬','Submissions aren’t for your role',
+      'You’re signed in as ' + NR.esc(window.ENN_ID.displayName(me)) +
+      (roleTxt ? ' · ' + NR.esc(roleTxt) : '') +
+      '. Pieces are turned in by production groups, and you’re not on one this semester, so there’s nothing here for you to submit. ' +
+      'If you should be on a group, ask Mr. Nimmo to add you to one at /admin.') +
+      '<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">' +
+        '<a class="nr-btn ghost" href="/newsroom/leadership/">Leadership tools →</a>' +
+        '<a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a>' +
+      '</div>';
+    var box = document.getElementById('submit-box');
+    var lead = box && box.querySelector('p');
+    if(lead) lead.textContent = 'Turning in work is handled by production groups.';
+    var second = box && box.querySelectorAll('p')[1];
+    if(second) second.remove();
+    /* the pre-submit checklist isn't theirs to run either */
+    var list = document.getElementById('checklist');
+    if(list && list.parentElement) list.parentElement.style.display = 'none';
+    return;
+  }
+
   if(url){
-    cta.innerHTML = '<a class="nr-btn" href="'+NR.esc(url)+'" target="_blank" rel="noopener">◉ Open the Submission Form ↗</a>';
+    var extra = '';
+    if(window.ENN_ID && me && me.group){
+      var nx = window.ENN_ID.myNextAirDate(me);
+      extra = '<p style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel);margin-top:12px">' +
+        'Submitting for <strong style="color:#7DD8FF">' + NR.esc(me.groupName) + '</strong> · Period ' + me.period +
+        (nx && typeof ENN_SEASON !== 'undefined'
+          ? ' · airs ' + NR.esc(ENN_SEASON.longDate(nx.date)) : '') + '</p>';
+    }
+    cta.innerHTML = '<a class="nr-btn" href="'+NR.esc(url)+'" target="_blank" rel="noopener">◉ Open the Submission Form ↗</a>' + extra;
   } else {
     cta.innerHTML = NR.emptyState('📝','Submission form not linked yet',
-      'A leader needs to create the Google Form and paste its link into newsroom/config.js (SUBMIT_FORM_URL). Until then, ask the Newsroom Director where to turn in your piece.');
+      'A leader needs to create the Google Form and paste its link into /admin → Newsroom Settings. Until then, ask the Newsroom Director where to turn in your piece.');
   }
 })();
 </script>

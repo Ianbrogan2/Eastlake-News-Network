@@ -63,6 +63,19 @@ var ENN_BULLETINS = {
   // Bulletin #1 gets the first one, #2 the second, and so on, looping.
   rotation: ['P1', 'P4', 'P6'],
 
+  // ── How groups alternate ────────────────────────────────────────
+  // A period's groups split into two waves that take turns:
+  //   • the FIRST wave airs that period's 1st, 3rd, 5th… bulletin
+  //   • the SECOND wave airs its 2nd, 4th, 6th… bulletin
+  //
+  // This number is how many groups are in the FIRST wave.
+  //   0  → split down the middle automatically
+  //        (with 10 groups: 1–5 air first, 6–10 air next)
+  //   4  → groups 1–4 air first, everything from 5 up airs next
+  //
+  // Change it here and every student's air dates update at once.
+  groupsPerWave: 0,
+
   // ── EVERY BULLETIN DATE, in order ───────────────────────────────
   dates: [
     // ── August ──
@@ -188,6 +201,50 @@ var ENN_SEASON = (function(){
     return list.length ? list[0] : null;
   }
 
+  /* ── Which groups air on which bulletin ──────────────────────
+     A period's groups are split into two waves that alternate.
+     The first wave airs the period's 1st, 3rd, 5th… bulletin; the
+     second wave airs the 2nd, 4th, 6th… So a group airs every other
+     time its period is up.
+
+     Where the split falls is set by ENN_BULLETINS.groupsPerWave —
+     leave it 0 and the groups are split down the middle. */
+  function waveSize(totalGroups){
+    var c = cfg();
+    var n = c && c.groupsPerWave ? +c.groupsPerWave : 0;
+    if(n > 0) return n;
+    return Math.ceil((totalGroups || 0) / 2);
+  }
+
+  /* Group number (1-based) → 0 for the first wave, 1 for the second */
+  function waveOf(groupNumber, totalGroups){
+    if(!groupNumber) return null;
+    return (groupNumber <= waveSize(totalGroups)) ? 0 : 1;
+  }
+
+  /* Every bulletin a wave airs on, in order. */
+  function waveDates(period, wave){
+    if(wave !== 0 && wave !== 1) return [];
+    var want = String(period || '').toUpperCase().replace(/^PERIOD\s*/, 'P');
+    if(want && want.charAt(0) !== 'P') want = 'P' + want;
+    return all()
+      .filter(function(b){ return !want || b.period === want; })
+      .filter(function(b, i){ return i % 2 === wave; });
+  }
+
+  /* A specific group's air dates — the call sites actually use. */
+  function datesForGroup(period, groupNumber, totalGroups){
+    return waveDates(period, waveOf(groupNumber, totalGroups));
+  }
+
+  /* …and the next one that hasn't aired yet. */
+  function nextForGroup(period, groupNumber, totalGroups){
+    var now = Date.now();
+    var list = datesForGroup(period, groupNumber, totalGroups)
+      .filter(function(b){ return b.date && b.date.getTime() > now; });
+    return list.length ? list[0] : null;
+  }
+
   /* All remaining bulletins for a period — used for "your air dates". */
   function upcomingFor(period){
     var now = Date.now();
@@ -220,13 +277,18 @@ var ENN_SEASON = (function(){
   }
 
   return {
-    config:       cfg,
-    all:          all,
-    next:         next,
-    upcomingFor:  upcomingFor,
-    airDate:      airDate,
-    periodNumber: periodNumber,
-    shortDate:    shortDate,
-    longDate:     longDate
+    config:        cfg,
+    all:           all,
+    next:          next,
+    upcomingFor:   upcomingFor,
+    airDate:       airDate,
+    periodNumber:  periodNumber,
+    shortDate:     shortDate,
+    longDate:      longDate,
+    waveSize:      waveSize,
+    waveOf:        waveOf,
+    waveDates:     waveDates,
+    datesForGroup: datesForGroup,
+    nextForGroup:  nextForGroup
   };
 })();

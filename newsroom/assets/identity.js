@@ -75,9 +75,10 @@
         (g.members || []).forEach(function(m){
           if(!m || txt(m.id) !== want) return;
           ensure(m, p);
-          hit.period    = p;                    // the group's period wins
-          hit.group     = gi + 1;
-          hit.groupName = txt(g.name) || ('Group ' + (gi + 1));
+          hit.period      = p;                  // the group's period wins
+          hit.group       = gi + 1;
+          hit.groupCount  = (per.groups || []).length;
+          hit.groupName   = txt(g.name) || ('Group ' + (gi + 1));
           hit.groupMates = (g.members || [])
             .filter(function(x){ return x && txt(x.id) && txt(x.id) !== want; })
             .map(fullName)
@@ -183,6 +184,43 @@
     return (me && me.period) ? ('P' + me.period) : '';
   }
 
+  /* ── Production-group membership ───────────────────────────────
+     Pieces are made by GROUPS, not by individuals. Somebody who only
+     holds a leadership role has no group producing a piece, so there
+     is nothing for them to turn in — and the Submit page tells them
+     that instead of handing them a form that would file a piece
+     against no group.
+
+     A leader who is ALSO on a group submits normally, with that
+     group. The advisor can always get to it. */
+  function inGroup(me){
+    me = me || load();
+    return !!(me && me.group);
+  }
+  function canSubmit(me){
+    me = me || load();
+    if(!me || me.kind === 'guest') return false;
+    if(me.kind === 'advisor') return true;
+    return inGroup(me);
+  }
+
+  /* Which alternating wave this person's group is in, and its dates. */
+  function myWave(me){
+    me = me || load();
+    if(!me || !me.group || typeof ENN_SEASON === 'undefined') return null;
+    return ENN_SEASON.waveOf(me.group, me.groupCount);
+  }
+  function myAirDates(me){
+    me = me || load();
+    if(!me || !me.group || typeof ENN_SEASON === 'undefined') return [];
+    return ENN_SEASON.datesForGroup(periodTag(me), me.group, me.groupCount);
+  }
+  function myNextAirDate(me){
+    me = me || load();
+    if(!me || !me.group || typeof ENN_SEASON === 'undefined') return null;
+    return ENN_SEASON.nextForGroup(periodTag(me), me.group, me.groupCount);
+  }
+
   window.ENN_ID = {
     resolve:     resolve,
     save:        save,
@@ -192,10 +230,15 @@
     displayName: displayName,
     roleLine:    roleLine,
     greeting:    greeting,
-    isLeader:    isLeader,
-    isAdvisor:   isAdvisor,
-    periodTag:   periodTag,
-    fullName:    fullName,
-    periods:     PERIODS
+    isLeader:      isLeader,
+    isAdvisor:     isAdvisor,
+    periodTag:     periodTag,
+    fullName:      fullName,
+    periods:       PERIODS,
+    inGroup:       inGroup,
+    canSubmit:     canSubmit,
+    myWave:        myWave,
+    myAirDates:    myAirDates,
+    myNextAirDate: myNextAirDate
   };
 })();
