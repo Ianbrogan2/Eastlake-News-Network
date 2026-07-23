@@ -36,382 +36,1289 @@
 // ╚═══════════════════════════════════════════════════════════════╝
 
 var ENN_ROSTER = {
-
-  // ── The one admin account ───────────────────────────────────
-  // Mr. Nimmo types this code instead of a student ID. It unlocks
-  // everything, in all three periods.
   advisorCode: 'ENNADM26',
-
   advisor: {
     first: 'Mr.',
-    last:  'Nimmo',
-    role:  'Faculty Advisor',
+    last: 'Nimmo',
+    role: 'Faculty Advisor'
   },
-
-  // ── The base call sign ─────────────────────────────────────
-  // Anyone who types this gets the plain newsroom — no name, no
-  // personal info. Set in newsroom/config.js as CALL_SIGN.
-  // (kept here only as a reminder — change it in newsroom/config.js)
   baseCallSign: 'ENN',
-
-  // ═════════════════  P E R I O D   1  ═══════════════════════════
   period1: {
-
-    // ── Leadership — 10 slots ───────────────────────────────
-    // Leave the ID blank for any role nobody holds this semester.
     leadership: [
-      { role: 'Studio Director',    id: '', first: '', last: '' },
-      { role: 'Newsroom Director',  id: '', first: '', last: '' },
-      { role: 'Assistant Director',  id: '', first: '', last: '' },
-      { role: 'Assistant Director',  id: '', first: '', last: '' },
-      { role: 'Camera Operator',    id: '', first: '', last: '' },
-      { role: 'Camera Operator',    id: '', first: '', last: '' },
-      { role: 'Main Editor',        id: '', first: '', last: '' },
-      { role: 'Anchor',             id: '', first: '', last: '' },
-      { role: 'Anchor',             id: '', first: '', last: '' },
-      { role: 'Equipment Manager',  id: '', first: '', last: '' },
+      {
+        role: 'Studio Director',
+        id: '1595697',
+        first: 'Ian',
+        last: 'Brogan'
+      },
+      {
+        role: 'Newsroom Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Assistant Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Assistant Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Camera Operator',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Camera Operator',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Main Editor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Anchor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Anchor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Equipment Manager',
+        id: '',
+        first: '',
+        last: ''
+      }
     ],
-
-    // ── Production groups — 8 groups, up to 8 students each ──────
     groups: [
-
-      // ─ Group 1 ─
-      { name: 'Group 1', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 2 ─
-      { name: 'Group 2', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 3 ─
-      { name: 'Group 3', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 4 ─
-      { name: 'Group 4', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 5 ─
-      { name: 'Group 5', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 6 ─
-      { name: 'Group 6', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 7 ─
-      { name: 'Group 7', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 8 ─
-      { name: 'Group 8', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-    ],
-
+      {
+        name: 'Group 1',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 2',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 3',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 4',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 5',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 6',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 7',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 8',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      }
+    ]
   },
-
-  // ═════════════════  P E R I O D   4  ═══════════════════════════
   period4: {
-
-    // ── Leadership — 10 slots ───────────────────────────────
-    // Leave the ID blank for any role nobody holds this semester.
     leadership: [
-      { role: 'Studio Director',    id: '', first: '', last: '' },
-      { role: 'Newsroom Director',  id: '', first: '', last: '' },
-      { role: 'Assistant Director',  id: '', first: '', last: '' },
-      { role: 'Assistant Director',  id: '', first: '', last: '' },
-      { role: 'Camera Operator',    id: '', first: '', last: '' },
-      { role: 'Camera Operator',    id: '', first: '', last: '' },
-      { role: 'Main Editor',        id: '', first: '', last: '' },
-      { role: 'Anchor',             id: '', first: '', last: '' },
-      { role: 'Anchor',             id: '', first: '', last: '' },
-      { role: 'Equipment Manager',  id: '', first: '', last: '' },
+      {
+        role: 'Studio Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Newsroom Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Assistant Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Assistant Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Camera Operator',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Camera Operator',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Main Editor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Anchor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Anchor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Equipment Manager',
+        id: '',
+        first: '',
+        last: ''
+      }
     ],
-
-    // ── Production groups — 8 groups, up to 8 students each ──────
     groups: [
-
-      // ─ Group 1 ─
-      { name: 'Group 1', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 2 ─
-      { name: 'Group 2', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 3 ─
-      { name: 'Group 3', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 4 ─
-      { name: 'Group 4', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 5 ─
-      { name: 'Group 5', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 6 ─
-      { name: 'Group 6', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 7 ─
-      { name: 'Group 7', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 8 ─
-      { name: 'Group 8', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-    ],
-
+      {
+        name: 'Group 1',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 2',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 3',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 4',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 5',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 6',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 7',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 8',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      }
+    ]
   },
-
-  // ═════════════════  P E R I O D   6  ═══════════════════════════
   period6: {
-
-    // ── Leadership — 10 slots ───────────────────────────────
-    // Leave the ID blank for any role nobody holds this semester.
     leadership: [
-      { role: 'Studio Director',    id: '', first: '', last: '' },
-      { role: 'Newsroom Director',  id: '', first: '', last: '' },
-      { role: 'Assistant Director',  id: '', first: '', last: '' },
-      { role: 'Assistant Director',  id: '', first: '', last: '' },
-      { role: 'Camera Operator',    id: '', first: '', last: '' },
-      { role: 'Camera Operator',    id: '', first: '', last: '' },
-      { role: 'Main Editor',        id: '', first: '', last: '' },
-      { role: 'Anchor',             id: '', first: '', last: '' },
-      { role: 'Anchor',             id: '', first: '', last: '' },
-      { role: 'Equipment Manager',  id: '', first: '', last: '' },
+      {
+        role: 'Studio Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Newsroom Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Assistant Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Assistant Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Camera Operator',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Camera Operator',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Main Editor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Anchor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Anchor',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Equipment Manager',
+        id: '',
+        first: '',
+        last: ''
+      }
     ],
-
-    // ── Production groups — 8 groups, up to 8 students each ──────
     groups: [
-
-      // ─ Group 1 ─
-      { name: 'Group 1', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 2 ─
-      { name: 'Group 2', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 3 ─
-      { name: 'Group 3', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 4 ─
-      { name: 'Group 4', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 5 ─
-      { name: 'Group 5', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 6 ─
-      { name: 'Group 6', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 7 ─
-      { name: 'Group 7', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-
-      // ─ Group 8 ─
-      { name: 'Group 8', members: [
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-        { id: '', first: '', last: '' },
-      ]},
-    ],
-
-  },
-
+      {
+        name: 'Group 1',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 2',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 3',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 4',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 5',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 6',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 7',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 8',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      }
+    ]
+  }
 };
