@@ -132,9 +132,9 @@ var ENN_ROSTER = {
             last: 'Mcgee'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607409',
+            first: 'Elise',
+            last: 'Navarette'
           },
           {
             id: '',
@@ -147,24 +147,24 @@ var ENN_ROSTER = {
         name: 'Group 2',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1593438',
+            first: 'Clarissa',
+            last: 'Vazquez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1595483',
+            first: 'Tyler',
+            last: 'Little'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1594778',
+            first: 'Gavin',
+            last: 'Labak'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1605674',
+            first: 'Sofia ',
+            last: 'Fong'
           },
           {
             id: '',
