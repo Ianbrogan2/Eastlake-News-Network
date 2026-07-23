@@ -237,24 +237,24 @@ var ENN_ROSTER = {
         name: 'Group 5',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1594297',
+            first: 'Cain ',
+            last: 'Benitez-Brown'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1593174',
+            first: 'Evan',
+            last: 'Harry'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1592859',
+            first: 'Andres',
+            last: 'solorzano'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1593401',
+            first: 'Clark',
+            last: 'Del Rosario'
           },
           {
             id: '',
