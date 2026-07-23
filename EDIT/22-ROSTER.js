@@ -490,7 +490,7 @@ var ENN_ROSTER = {
         members: [
           {
             id: '1596078',
-            first: 'reese',
+            first: 'Reese',
             last: 'Hernandez'
           },
           {
