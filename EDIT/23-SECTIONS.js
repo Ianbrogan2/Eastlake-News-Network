@@ -26,72 +26,45 @@
 // ╚═══════════════════════════════════════════════════════════════╝
 
 var ENN_SECTIONS = {
-
-  /* ══════════════════════════════════════════════════════════════
-     MAIN SITE  —  eastlakenewsnetwork.com
-     ══════════════════════════════════════════════════════════════ */
   mainSite: {
-
-    // ── Whole pages (these are the menu items at the top) ─────────
-    // Home can't be switched off — it's where everything falls back to.
-    pageAbout:      true,
-    pageTeam:       true,
-    pageStudio:     true,
-    pageCalendar:   true,
-    pageContact:    true,
-    pageGames:      true,
-
-    // ── Sections on the home page ────────────────────────────────
-    heroAnimation:  true,   // the big scroll-scrubbed intro
-    latestBulletin: true,   // the YouTube player block
-    weeklySchedule: true,   // this week's broadcast days
-    countdownCard:  true,   // the "next bulletin" countdown
-    spiritWeek:     true,   // the spirit-week day cards
-    newsStories:    true,   // "On Our Desk" featured + sidebar
-
-    // ── Site chrome (appears on every page) ──────────────────────
-    newsTicker:     true,   // the scrolling bar at the bottom
-    onAirBadge:     true,   // the red ON AIR pill in the header
-    studioClock:    true,   // the PST clock in the header
-    crewDoor:       true,   // the ◉ crew link in the footer
+    pageAbout: true,
+    pageTeam: true,
+    pageStudio: true,
+    pageCalendar: true,
+    pageContact: true,
+    pageGames: true,
+    heroAnimation: true,
+    latestBulletin: true,
+    weeklySchedule: true,
+    countdownCard: true,
+    spiritWeek: true,
+    newsStories: true,
+    newsTicker: true,
+    onAirBadge: true,
+    studioClock: true,
+    crewDoor: true
   },
-
-  /* ══════════════════════════════════════════════════════════════
-     STUDENT NEWSROOM  —  eastlakenewsnetwork.com/newsroom
-     ══════════════════════════════════════════════════════════════ */
   newsroom: {
-
-    // ── Whole pages (these are the tabs in the newsroom) ──────────
-    // "This Week" can't be switched off — it's the newsroom's home.
-    pageCalendar:   true,   // the season bulletin calendar
-    pageSubmit:     true,   // turning in pieces
-    pageMake:       true,   // guides, templates, brand kit
-    pageLearn:      true,   // lessons, rubric, challenge
-    pageStudio:     true,   // roles, equipment, rooms
-    pageDesk:       true,   // pitch board, standards, tip line
-    pageCrew:       true,   // every group and leadership role
-    pageLeaderboard: true, // biweekly best-of, visible to all students
-    pageLeadership: true,   // leaders' tools (grading, rundown)
-
-    // ── Leadership tools (inside the Leadership tab) ─────────────
-    toolGrading:    true,   // score a piece on the rubric
-    toolGradebook:  true,   // recorded grades + CSV export
-    toolRundown:    true,   // the show builder
-
-    // ── Sections on the newsroom front page ──────────────────────
-    myDashboard:    true,   // the "Hello <name>" personal panel
-    clockStrip:     true,   // studio clock + next broadcast
-    whatsDue:       true,
+    pageCalendar: true,
+    pageSubmit: true,
+    pageMake: true,
+    pageLearn: true,
+    pageStudio: false,
+    pageDesk: true,
+    pageCrew: true,
+    pageLeaderboard: true,
+    pageLeadership: true,
+    toolGrading: true,
+    toolGradebook: true,
+    toolRundown: true,
+    myDashboard: true,
+    clockStrip: true,
+    whatsDue: true,
     skillChallenge: true,
-    announcements:  true,
+    announcements: true
   },
-
-  /* ══════════════════════════════════════════════════════════════
-     WHAT PEOPLE SEE WHEN SOMETHING IS OFF
-     ══════════════════════════════════════════════════════════════ */
-  disabledTitle:   'Not available right now',
-  disabledMessage: 'This part of the site is switched off at the moment. Check back soon.',
-
+  disabledTitle: 'Not available right now',
+  disabledMessage: 'This part of the site is switched off at the moment. Check back soon.'
 };
 
 
