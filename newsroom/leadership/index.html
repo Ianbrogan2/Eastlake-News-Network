@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Leadership — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=2">
+<link rel="stylesheet" href="/newsroom/colors.css?v=2">
+<script src="/newsroom/config.js?v=2"></script>
+<script src="/EDIT/21-BULLETINS.js?v=2"></script>
+<script src="/EDIT/22-ROSTER.js?v=2"></script>
+<script src="/newsroom/assets/identity.js?v=2"></script>
+</head>
+<body class="nr" data-section="Leadership">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+
+  <!-- Filled in by script once we know who's looking -->
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Restricted</b><span id="lead-eyebrow">Leadership</span></div>
+    <h1 class="nr-title" id="lead-title">LEADERSHIP</h1>
+    <p class="nr-lede" id="lead-lede">Checking your access…</p>
+  </section>
+
+  <div id="lead-body"></div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js?v=2"></script>
+<script>
+(function(){
+  var body = document.getElementById('lead-body');
+  var me   = NR.me();
+
+  /* Students who wander in get a friendly redirect, not an error. */
+  if(!window.ENN_ID || !window.ENN_ID.isLeader(me)){
+    document.getElementById('lead-title').textContent = 'CREW ONLY';
+    document.getElementById('lead-lede').textContent =
+      'This page is for leadership roles. Sign in with a leadership student ID to see it.';
+    body.innerHTML = NR.emptyState('🔒','Nothing to show here',
+      'If you hold a leadership role this semester and this page is empty, your student ID may not be in that role slot yet — ask Mr. Nimmo to add it.') +
+      '<div style="margin-top:18px"><a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a></div>';
+    NR.observe(document);
+    return;
+  }
+
+  var name    = window.ENN_ID.displayName(me);
+  var roles   = window.ENN_ID.roleLine(me);
+  var advisor = window.ENN_ID.isAdvisor(me);
+
+  document.getElementById('lead-eyebrow').textContent = roles || 'Leadership';
+  document.getElementById('lead-title').textContent   = advisor ? 'ADVISOR DESK' : 'LEADERSHIP';
+  document.getElementById('lead-lede').textContent    = advisor
+    ? 'Every period, every group, every air date — the whole network from one page.'
+    : 'Your role, your period, and the groups you’re responsible for.';
+
+  var R = (typeof ENN_ROSTER !== 'undefined') ? ENN_ROSTER : null;
+  var periods = advisor ? window.ENN_ID.periods : [me.period];
+  var html = '';
+
+  /* ── Who you are ── */
+  html += '<div class="nr-panel nr-reveal" style="margin-bottom:26px">' +
+    '<div class="nr-eyebrow" style="margin-bottom:12px"><b>You</b><span>' + NR.esc(name) + '</span></div>' +
+    '<p style="color:#c9cfda;font-size:14.5px;line-height:1.6">' +
+      '<strong>' + NR.esc(name) + '</strong>' +
+      (roles ? ' &middot; ' + NR.esc(roles) : '') +
+      (advisor ? ' &middot; all periods' : (me.period ? ' &middot; Period ' + me.period : '')) +
+    '</p></div>';
+
+  /* ── Each period you're responsible for ── */
+  periods.forEach(function(p){
+    var per = R ? R['period'+p] : null;
+    if(!per) return;
+
+    html += '<h2 class="nr-h2 nr-reveal">Period ' + p + '</h2>';
+
+    /* upcoming air dates for this period */
+    if(typeof ENN_SEASON !== 'undefined'){
+      var up = ENN_SEASON.upcomingFor('P'+p).slice(0,6);
+      if(up.length){
+        html += '<p class="nr-sub nr-reveal">Next air dates: ' +
+          up.map(function(b){ return '<strong>' + NR.esc(ENN_SEASON.shortDate(b.date)) + '</strong>'; }).join(' &middot; ') +
+          '</p>';
+      }
+    }
+
+    /* leadership table */
+    var leaders = (per.leadership||[]).filter(function(l){ return l && (l.first || l.last || l.id); });
+    html += '<div class="nr-panel nr-reveal" style="margin-bottom:18px">' +
+      '<h3 class="nr-h3">Leadership</h3>';
+    if(leaders.length){
+      html += '<div class="nr-board-wrap"><table class="nr-board"><thead><tr><th>Role</th><th>Who</th></tr></thead><tbody>' +
+        leaders.map(function(l){
+          return '<tr><td><strong>' + NR.esc(l.role||'—') + '</strong></td><td>' +
+                 NR.esc(window.ENN_ID.fullName(l) || '—') + '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+    } else {
+      html += '<p style="color:var(--steel);font-size:13.5px">No leadership roles filled for this period yet.</p>';
+    }
+    html += '</div>';
+
+    /* groups */
+    var groups = (per.groups||[]).map(function(g,i){
+      var mem = (g.members||[]).filter(function(m){ return m && (m.first || m.last || m.id); });
+      return {n:i+1, name:g.name, members:mem};
+    }).filter(function(g){ return g.members.length; });
+
+    html += '<div class="nr-panel nr-reveal" style="margin-bottom:30px">' +
+      '<h3 class="nr-h3">Production Groups</h3>';
+    if(groups.length){
+      html += '<div class="nr-board-wrap"><table class="nr-board"><thead><tr><th>#</th><th>Group</th><th>Members</th></tr></thead><tbody>' +
+        groups.map(function(g){
+          return '<tr><td>' + g.n + '</td><td><strong>' + NR.esc(g.name||('Group '+g.n)) + '</strong></td><td>' +
+            g.members.map(function(m){ return NR.esc(window.ENN_ID.fullName(m)); }).filter(Boolean).join(', ') +
+            '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+    } else {
+      html += NR.emptyState('👥','No groups filled in yet',
+        'Once the roster is entered at /admin, every group in this period shows up here with its members.');
+    }
+    html += '</div>';
+  });
+
+  /* ── What's still being built ── */
+  html += '<h2 class="nr-h2 nr-reveal">Coming to this page</h2>' +
+    '<div class="nr-grid nr-stagger">' +
+    '<div class="nr-panel"><h3 class="nr-h3">Grading</h3><p style="color:var(--steel);font-size:13.5px">Score pieces against the 100-point rubric and submit grades. <span class="nr-draft">In build</span></p></div>' +
+    '<div class="nr-panel"><h3 class="nr-h3">Grade queue</h3><p style="color:var(--steel);font-size:13.5px">Everything waiting on you, counted. <span class="nr-draft">In build</span></p></div>' +
+    '<div class="nr-panel"><h3 class="nr-h3">Late &amp; missing</h3><p style="color:var(--steel);font-size:13.5px">Auto-flagged when a deadline passes with no submission. <span class="nr-draft">In build</span></p></div>' +
+    '<div class="nr-panel"><h3 class="nr-h3">Rundown builder</h3><p style="color:var(--steel);font-size:13.5px">Build the show order, assign segments, print it. <span class="nr-draft">In build</span></p></div>' +
+    '</div>';
+
+  body.innerHTML = html;
+  NR.observe(body);
+})();
+</script>
+</body>
+</html>
