@@ -22,7 +22,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 
 var ENN_MAINTENANCE = {
-  enabled: true,
+  enabled: false,
   returnDate: 'Thursday, Apr 30',
   returnTime: '12:00 AM PT',
   message: ''
