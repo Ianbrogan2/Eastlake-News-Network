@@ -727,9 +727,38 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     const cdCfg = (typeof ENN_SCHEDULE_COUNTDOWN !== 'undefined') ? ENN_SCHEDULE_COUNTDOWN : null;
     if(cdCfg && cdCfg.enabled){
       const theme   = cdCfg.theme || 'orange';
-      const target  = cdCfg.target ? new Date(cdCfg.target).getTime() : 0;
-      const isLive  = target <= Date.now();
-      const timerHtml = isLive
+
+      /* Auto mode: follow the season in EDIT/21-BULLETINS.js so the card
+         rolls to the next bulletin on its own and never goes stale.
+         Falls back to the manual label/target if the season file is
+         missing or every bulletin has already aired. */
+      let cdLabel    = cdCfg.label || 'Countdown';
+      let cdSublabel = cdCfg.sublabel || '';
+      let target     = cdCfg.target ? new Date(cdCfg.target).getTime() : 0;
+      let seasonOver = false;
+
+      if(cdCfg.auto && typeof ENN_SEASON !== 'undefined'){
+        const season = ENN_SEASON.config();
+        const up     = ENN_SEASON.next();
+        if(up){
+          target     = up.date.getTime();
+          cdLabel    = (season && season.countdownLabel) || 'Next Bulletin';
+          cdSublabel = ((season && season.countdownSublabel) || 'Period {period} · {date}')
+            .replace('{period}', ENN_SEASON.periodNumber(up.period))
+            .replace('{date}',   ENN_SEASON.shortDate(up.date))
+            .replace('{num}',    up.num);
+        } else if(season){
+          /* Season finished — show the wrap-up instead of a dead timer */
+          seasonOver = true;
+          cdLabel    = season.seasonOverLabel || 'Season Complete';
+          cdSublabel = season.seasonOverSublabel || '';
+        }
+      }
+
+      const isLive  = !seasonOver && target <= Date.now();
+      const timerHtml = seasonOver
+        ? `<div class="sched-cd-outnow">THAT'S A WRAP</div>`
+        : isLive
         ? `<div class="sched-cd-outnow">OUT NOW</div>`
         : `<div class="sched-cd-timer" id="sched-cd-timer">
              <div class="sched-cd-block"><div class="sched-cd-num" id="scd-d">--</div><div class="sched-cd-lbl">Days</div></div>
@@ -747,15 +776,15 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         <${tag} class="sched-countdown sched-countdown--${theme}"${attrs}>
           <div class="sched-cd-inner">
             <div class="sched-cd-labels">
-              <div class="sched-cd-name">${cdCfg.label||'Countdown'}</div>
-              ${cdCfg.sublabel ? `<div class="sched-cd-sub">${cdCfg.sublabel}</div>` : ''}
+              <div class="sched-cd-name">${cdLabel}</div>
+              ${cdSublabel ? `<div class="sched-cd-sub">${cdSublabel}</div>` : ''}
             </div>
             ${timerHtml}
           </div>
         </${tag}>`;
       host.appendChild(cdEl.firstElementChild);
 
-      if(!isLive){
+      if(!isLive && !seasonOver){
         const dEl = $('#scd-d'), hEl = $('#scd-h'), mEl = $('#scd-m'), sEl = $('#scd-s');
         function schedTick(){
           const diff = target - Date.now();

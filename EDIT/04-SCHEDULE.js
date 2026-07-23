@@ -29,7 +29,21 @@
 // ║  Appears below the schedule rows on the home page                ║
 // ║                                                                  ║
 // ║  Set  enabled: true  to show it, false to hide it               ║
+// ╠══════════════════════════════════════════════════════════════════╣
+// ║  TWO WAYS TO USE IT                                              ║
 // ║                                                                  ║
+// ║  ① AUTOMATIC  (recommended — this is how it's set now)          ║
+// ║     Leave  auto: true                                            ║
+// ║     The card counts down to the NEXT BULLETIN and updates        ║
+// ║     itself forever. It reads the dates from EDIT/21-BULLETINS.js ║
+// ║     so you never have to touch it. When one bulletin airs it     ║
+// ║     rolls to the next one on its own. At the end of the season   ║
+// ║     it shows the wrap-up message.                                ║
+// ║                                                                  ║
+// ║  ② MANUAL  (for a one-off — a game, a premiere, an event)       ║
+// ║     Set  auto: false  and fill in label, sublabel and target     ║
+// ║     below. The countdown then points wherever you tell it.       ║
+// ╠══════════════════════════════════════════════════════════════════╣
 // ║  theme options:  'orange'  'blue'  'red'  'green'  'purple'     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
@@ -37,20 +51,27 @@ var ENN_SCHEDULE_COUNTDOWN = {
 
   enabled: true,   // ← set to false to hide the countdown card
 
+  auto: true,      // ← true = follow the bulletin schedule automatically
+                   //   false = use the label/sublabel/target below
+
+  // ── These four are only used when  auto: false  ──────────────────
+
   // Short label shown on the left of the card
-  label: 'First Day of School',
+  label: 'Next Bulletin',
 
   // Smaller text underneath the label
-  sublabel: 'Welcome Back Titans · Jul 22',
+  sublabel: '',
 
-  // ISO date — when to count down to (passes → shows "OUT NOW" automatically)
-  target: '2026-07-22T00:00:00',
+  // ISO date — when to count down to (passes → shows "OUT NOW")
+  target: '2026-08-03T10:31:00',
+
+  // ── These always apply ───────────────────────────────────────────
 
   // Optional link when clicked (leave blank for no link)
-  link: 'https://elh.sweetwaterschools.org/',
+  link: '/newsroom/calendar/',
 
   // Colour theme: 'orange'  'blue'  'red'  'green'  'purple'
-  theme: 'green',
+  theme: 'blue',
 
 };
 

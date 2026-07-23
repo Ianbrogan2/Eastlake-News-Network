@@ -20,6 +20,11 @@ var ENN_CHANGELOG = [
   /* ✏️ CHANGELOG ENTRIES — add new entries at the top ──────────── */
 
   {
+    version:     'v2.8',
+    timestamp:   '2026-07-22T00:00:00',
+    description: 'First day of school. Season content refresh, and the bulletin schedule moved into one shared file so the countdown now follows the season automatically.',
+  },
+  {
     version:     'v2.7',
     timestamp:   '2026-07-17T00:00:00',
     description: '2026–2027 school year refresh: new-year content, team roster reset, first-day countdown, accessibility fixes.',

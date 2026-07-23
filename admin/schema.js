@@ -15,6 +15,28 @@
     { key:'email', label:'Email', type:'text' },
     { key:'photo', label:'Headshot', type:'image', folder:'img/team/crew' },
   ];
+  // one student in a production group
+  var STUDENT = [
+    { key:'id',    label:'Student ID', type:'text', help:'What they type to log in' },
+    { key:'first', label:'First name', type:'text' },
+    { key:'last',  label:'Last name',  type:'text' },
+  ];
+  // one leadership slot — same, plus the role title
+  var LEADER = [
+    { key:'role',  label:'Role', type:'text', help:'Studio Director, Anchor, etc.' },
+    { key:'id',    label:'Student ID', type:'text', help:'Leave blank if nobody holds this role' },
+    { key:'first', label:'First name', type:'text' },
+    { key:'last',  label:'Last name',  type:'text' },
+  ];
+  // the two lists that make up one period
+  var PERIOD_ROSTER = [
+    { key:'leadership', label:'Leadership', type:'list', itemLabel:'Role', fields:LEADER },
+    { key:'groups', label:'Production Groups', type:'list', itemLabel:'Group', fields:[
+      { key:'name', label:'Group name', type:'text' },
+      { key:'members', label:'Members', type:'list', itemLabel:'Student', fields:STUDENT },
+    ]},
+  ];
+
   var LINKS = { key:'links', label:'Episode links', type:'list', itemLabel:'Link', fields:[
     { key:'label', label:'Link label', type:'text' },
     { key:'url', label:'YouTube URL', type:'text' },
@@ -404,6 +426,39 @@ window.ENN_SCHEMA = [
       { key:'--enn', label:'Brand blue' }, { key:'--enn-bright', label:'Blue hover' },
       { key:'--live', label:'Tally red' }, { key:'--ink', label:'Text' },
       { key:'--steel', label:'Muted text' },
+    ]
+  },
+
+  /* ═══════════ STUDENT ROSTER ═══════════ */
+  { id:'roster1', icon:'1️⃣', label:'Roster · Period 1', group:'Student Roster',
+    desc:'Period 1 — 10 leadership slots and 8 production groups of up to 8 students. Type each student\'s ID and name into a slot; leave unused slots blank.',
+    file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
+    fields:[ { key:'period1', label:'Period 1', type:'object', fields:PERIOD_ROSTER } ]
+  },
+
+  { id:'roster4', icon:'4️⃣', label:'Roster · Period 4', group:'Student Roster',
+    desc:'Period 4 — 10 leadership slots and 8 production groups of up to 8 students.',
+    file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
+    fields:[ { key:'period4', label:'Period 4', type:'object', fields:PERIOD_ROSTER } ]
+  },
+
+  { id:'roster6', icon:'6️⃣', label:'Roster · Period 6', group:'Student Roster',
+    desc:'Period 6 — 10 leadership slots and 8 production groups of up to 8 students.',
+    file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
+    fields:[ { key:'period6', label:'Period 6', type:'object', fields:PERIOD_ROSTER } ]
+  },
+
+  { id:'rosteradv', icon:'🎓', label:'Advisor & Login Codes', group:'Student Roster',
+    desc:'Mr. Nimmo\'s details and the code he types to unlock everything.',
+    file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
+    fields:[
+      { key:'advisorCode', label:'Advisor code', type:'text', help:'Typed instead of a student ID — unlocks all three periods' },
+      { key:'advisor', label:'Faculty Advisor', type:'object', fields:[
+        { key:'first', label:'First name', type:'text' },
+        { key:'last',  label:'Last name', type:'text' },
+        { key:'role',  label:'Title', type:'text' },
+      ]},
+      { key:'baseCallSign', label:'Base call sign', type:'text', help:'The plain code with no personalization (also set in newsroom/config.js)' },
     ]
   },
 

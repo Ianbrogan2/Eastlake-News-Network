@@ -91,27 +91,25 @@
 <main class="nr-wrap">
   <a class="nr-back" href="/newsroom/">← This Week</a>
   <section class="nr-hero nr-reveal">
-    <div class="nr-eyebrow"><b>Schedule</b><span>Fall 2026 Season</span></div>
+    <div class="nr-eyebrow"><b>Schedule</b><span id="season-tag">Season</span></div>
     <h1 class="nr-title">BULLETIN<br>CALENDAR</h1>
-    <p class="sub" style="margin-top:16px"><b>Fall 2026</b> · 60 bulletins · 10:31–10:41 AM · 20 per period</p>
+    <p class="sub" style="margin-top:16px" id="season-sub"></p>
   </section>
 
   <div class="enncal nr-reveal">
     <div id="next"></div>
 
     <div class="filters">
-      <button class="chip active" data-filter="all">All bulletins</button>
-      <button class="chip" data-filter="p1"><span class="dot"></span>Period 1 · 20</button>
-      <button class="chip" data-filter="p4"><span class="dot"></span>Period 4 · 20</button>
-      <button class="chip" data-filter="p6"><span class="dot"></span>Period 6 · 20</button>
+      <button class="chip active" data-filter="all" id="chip-all">All bulletins</button>
+      <button class="chip" data-filter="p1"><span class="dot"></span>Period 1 · <b data-count="P1">0</b></button>
+      <button class="chip" data-filter="p4"><span class="dot"></span>Period 4 · <b data-count="P4">0</b></button>
+      <button class="chip" data-filter="p6"><span class="dot"></span>Period 6 · <b data-count="P6">0</b></button>
     </div>
 
     <div id="cal" data-filter="all"></div>
 
     <div class="notes">
-      <b>How it's built.</b> A bulletin airs only on days whose bell schedule includes the
-      10:31–10:41 slot (schedule types A, B, and N). Periods rotate P1 → P4 → P6 down the list,
-      landing exactly 20 each. <br>
+      <b>How it's built.</b> <span id="cal-note"></span><br>
       <b>No bulletins on:</b> Labor Day (Sep 7), Fall Break (Sep 21–Oct 2), Veterans Day (Nov 11),
       Thanksgiving week (Nov 23–27), finals &amp; minimum days (Dec 14–18), and “Full Day” Tuesdays
       (Sep 8, Oct 6, Dec 14). Fridays have no bulletin — except <b>Nov 13</b>, an “N” schedule day
@@ -121,37 +119,23 @@
 </main>
 <div data-foot></div>
 
+<script src="/EDIT/21-BULLETINS.js"></script>
 <script src="/newsroom/assets/hub.js"></script>
 <script>
-  /* ===================== DATA (Website Controller — edit here only) ===================== */
-  const BULLETINS = [
-    "2026-08-03","2026-08-04","2026-08-05","2026-08-06","2026-08-10","2026-08-11","2026-08-12","2026-08-13",
-    "2026-08-17","2026-08-18","2026-08-19","2026-08-20","2026-08-24","2026-08-25","2026-08-26","2026-08-27",
-    "2026-08-31",
-    "2026-09-01","2026-09-02","2026-09-03","2026-09-09","2026-09-10","2026-09-14","2026-09-15","2026-09-16","2026-09-17",
-    "2026-10-07","2026-10-08","2026-10-12","2026-10-13","2026-10-14","2026-10-15","2026-10-19","2026-10-20",
-    "2026-10-21","2026-10-22","2026-10-26","2026-10-27","2026-10-28","2026-10-29",
-    "2026-11-02","2026-11-03","2026-11-04","2026-11-05","2026-11-09","2026-11-10","2026-11-12","2026-11-13",
-    "2026-11-16","2026-11-17","2026-11-18","2026-11-19","2026-11-30",
-    "2026-12-01","2026-12-02","2026-12-03","2026-12-07","2026-12-08","2026-12-09","2026-12-10"
-  ];
-  const ROTATION = ["P1","P4","P6"];   // P1 → P4 → P6, repeating (20 each). #1 is P1.
+  /* ===================== DATA — now lives in EDIT/21-BULLETINS.js ===================== */
+  /* Everything below is read from EDIT/21-BULLETINS.js — the one place the
+     season is defined. The home-page countdown reads the same file, so the
+     two can never disagree. Edit dates THERE, not here. */
+  const SEASON    = (typeof ENN_BULLETINS !== 'undefined') ? ENN_BULLETINS : null;
+  const BULLETINS = (SEASON && SEASON.dates)    ? SEASON.dates    : [];
+  const ROTATION  = (SEASON && SEASON.rotation) ? SEASON.rotation : ["P1","P4","P6"];
+  const ANNOT     = (SEASON && SEASON.offDays)  ? SEASON.offDays  : {};
 
-  const ANNOT = {};
-  const put = (y,m,d,t)=>ANNOT[`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`]=t;
-  put(2026,9,7,"Holiday"); put(2026,9,8,"Full Day");
-  for(let d=21;d<=25;d++) put(2026,9,d,"Fall Break");
-  for(let d=28;d<=30;d++) put(2026,9,d,"Fall Break");
-  put(2026,10,1,"Fall Break"); put(2026,10,2,"Fall Break");
-  put(2026,10,5,"No School"); put(2026,10,6,"Full Day");
-  put(2026,11,11,"Veterans Day");
-  for(let d=23;d<=25;d++) put(2026,11,d,"No School");
-  put(2026,11,26,"Thanksgiving"); put(2026,11,27,"Holiday");
-  put(2026,12,14,"Full Day");
-  for(let d=15;d<=17;d++) put(2026,12,d,"Finals");
-  put(2026,12,18,"Min Day");
+  // months are stored 1-12 in the edit file; JS wants 0-11 here
+  const MONTHS = (SEASON && SEASON.months)
+    ? SEASON.months.map(([y,m]) => [y, m - 1])
+    : [[2026,7],[2026,8],[2026,9],[2026,10],[2026,11]];
 
-  const MONTHS = [[2026,7],[2026,8],[2026,9],[2026,10],[2026,11]]; // 0-indexed months: Aug..Dec
   /* ==================================================================================== */
 
   const MAP = {};
@@ -188,6 +172,32 @@
     wrap.appendChild(grid);
     return wrap;
   }
+
+  /* ── Header: season name, totals, and per-period counts ── */
+  (function(){
+    const counts = {};
+    BULLETINS.forEach((_,i)=>{ const p=ROTATION[i%ROTATION.length]; counts[p]=(counts[p]||0)+1; });
+
+    const tag = document.getElementById("season-tag");
+    if(tag) tag.textContent = (SEASON && SEASON.season ? SEASON.season : "Fall 2026") + " Season";
+
+    const sub = document.getElementById("season-sub");
+    if(sub){
+      const per = Object.keys(counts).map(k=>counts[k]);
+      const even = per.length && per.every(n=>n===per[0]);
+      sub.innerHTML = "<b>" + (SEASON && SEASON.season ? SEASON.season : "Fall 2026") + "</b> · "
+        + BULLETINS.length + " bulletins · "
+        + (SEASON && SEASON.airTimeLabel ? SEASON.airTimeLabel : "10:31–10:41 AM")
+        + (even ? " · " + per[0] + " per period" : "");
+    }
+
+    document.querySelectorAll("[data-count]").forEach(el=>{
+      el.textContent = counts[el.dataset.count] || 0;
+    });
+  })();
+
+  (function(){ const n=document.getElementById("cal-note");
+    if(n) n.textContent = (SEASON && SEASON.calendarNote) ? SEASON.calendarNote : ""; })();
 
   const cal = document.getElementById("cal");
   MONTHS.forEach(([y,m])=> cal.appendChild(monthEl(y,m)));

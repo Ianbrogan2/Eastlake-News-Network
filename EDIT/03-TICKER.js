@@ -22,8 +22,10 @@
 // ║    { k: 'Sports', t: 'Titans win league championship' },        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_TICKER = [
-  { k: 'Welcome',  t: 'Welcome back Titans — first day of school is Wednesday, July 22!' },
-  { k: 'ENN',      t: 'The new season of the bulletin is in production — premiere date coming soon' },
-  { k: 'Events',   t: 'Open House is Thursday, August 13 — come see the ENN studio!' },
+  { k: 'Welcome',  t: 'Welcome back Titans — the 2026–2027 school year is underway!' },
+  { k: 'ENN',      t: 'Season premiere: the first bulletin of the year airs Monday, August 3 at 10:31 AM' },
+  { k: 'ENN',      t: 'Fall 2026 season — 60 bulletins, 20 each from Periods 1, 4 and 6' },
+  { k: 'Sports',   t: 'Fall sports are here: football, volleyball, flag football, cross country and water polo' },
   { k: 'ENN',      t: 'Coverage requests open — submit at least one week before your event!' },
+  { k: 'Join',     t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN' },
 ];

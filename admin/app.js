@@ -9,7 +9,11 @@
   const CFG = window.ENN_ADMIN || {};
   const SCHEMA = window.ENN_SCHEMA || [];
   const BACKEND = (CFG.BACKEND_URL || '').trim();
-  const LIVE = !!BACKEND && !/REPLACE/i.test(BACKEND);
+  /* Add ?preview=1 to the address to open the manager in PREVIEW mode:
+     every screen works and Save shows exactly what would be written, but
+     nothing is published. Handy for trying things out or training someone. */
+  const FORCE_PREVIEW = /[?&]preview=1\b/.test(location.search);
+  const LIVE = !FORCE_PREVIEW && !!BACKEND && !/REPLACE/i.test(BACKEND);
   const $ = (s,r=document)=>r.querySelector(s);
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
