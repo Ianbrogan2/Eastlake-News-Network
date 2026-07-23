@@ -287,3 +287,69 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
   .nr-reveal.in,.nr-stagger.in > *,.nr-lower3.in,.nr-titlecard.in{transition:none}
   *{scroll-behavior:auto !important}
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   PERSONAL DASHBOARD  ·  the panel a signed-in student sees
+   Rendered by NR.myDesk() into [data-mydesk] on the hub front page.
+   ══════════════════════════════════════════════════════════════════ */
+.nr-desk{
+  position:relative;overflow:hidden;
+  border:1px solid var(--edge);border-radius:16px;
+  background:
+    radial-gradient(120% 140% at 0% 0%,rgba(26,86,219,0.16),transparent 60%),
+    linear-gradient(180deg,var(--panel),var(--panel-2));
+  padding:22px 24px;margin:0 0 26px;
+}
+/* thin brand bar down the left edge */
+.nr-desk::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--enn-bright),var(--enn));
+}
+.nr-desk-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.nr-desk-hi{font-family:var(--display);font-size:clamp(26px,4.4vw,36px);line-height:1;letter-spacing:.02em;color:var(--steel)}
+.nr-desk-hi b{color:var(--ink);font-weight:400}
+.nr-desk-role{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7DD8FF;margin-top:7px}
+.nr-desk-tag{
+  flex:none;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--steel);border:1px solid var(--edge);border-radius:999px;padding:6px 12px;background:var(--panel-2);
+}
+
+.nr-desk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:20px 0 0}
+.nr-desk-grid dt{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-bottom:5px}
+.nr-desk-grid dd{font-size:14.5px;color:#c9cfda;line-height:1.45}
+.nr-desk-grid dd strong{color:var(--ink)}
+
+.nr-desk-mates,.nr-desk-dates{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:18px;padding-top:16px;border-top:1px solid var(--edge);
+}
+.nr-desk-mates span,.nr-desk-dates span{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-right:2px;
+}
+.nr-desk-mates b,.nr-desk-dates b{
+  font-weight:500;font-size:12.5px;color:#c9cfda;
+  border:1px solid var(--edge);border-radius:999px;padding:5px 11px;background:var(--panel-2);
+}
+.nr-desk-dates b{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:#7DD8FF}
+
+.nr-desk-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px}
+.nr-desk-out{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--steel);transition:color .16s;
+}
+.nr-desk-out:hover{color:var(--ink)}
+
+/* signed-in chip in the top rail */
+.nr-who{display:inline-flex;align-items:center;gap:10px;margin-left:auto}
+.nr-who b{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink);font-weight:500}
+.nr-who a{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--steel);transition:color .16s;
+}
+.nr-who a:hover{color:var(--live)}
+
+@media (max-width:640px){
+  .nr-desk{padding:18px 16px}
+  .nr-desk-actions{gap:10px}
+  .nr-who b{display:none}
+}

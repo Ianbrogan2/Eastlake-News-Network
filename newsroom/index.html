@@ -9,9 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css">
-<link rel="stylesheet" href="/newsroom/colors.css">
-<script src="/newsroom/config.js"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=2">
+<link rel="stylesheet" href="/newsroom/colors.css?v=2">
+<script src="/newsroom/config.js?v=2"></script>
+<script src="/EDIT/21-BULLETINS.js?v=2"></script>
+<script src="/EDIT/22-ROSTER.js?v=2"></script>
+<script src="/newsroom/assets/identity.js?v=2"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -23,6 +26,10 @@
     <h1 class="nr-title">THIS WEEK<br>AT ENN</h1>
     <p class="nr-lede">The desk is live. Here's what's due, who's on the anchor chair, and this week's challenge. Broadcast runs Monday–Thursday, 10:31–10:41 AM.</p>
   </section>
+
+  <!-- Personal dashboard — only appears when someone signed in with a
+       student ID. Guests using the plain call sign see nothing here. -->
+  <div data-mydesk></div>
 
   <!-- Top strip: broadcast clock + next-airtime countdown -->
   <section class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:8px">
@@ -73,9 +80,9 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js"></script>
-<script src="/newsroom/text.js"></script>
-<script src="/newsroom/assets/hub.js"></script>
+<script src="/newsroom/boards.js?v=2"></script>
+<script src="/newsroom/text.js?v=2"></script>
+<script src="/newsroom/assets/hub.js?v=2"></script>
 <script>
 /* Live countdown to the next broadcast (Mon–Thu 10:31 AM PT) */
 (function(){

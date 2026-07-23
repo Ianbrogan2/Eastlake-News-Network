@@ -26,14 +26,37 @@
     ['Studio','/newsroom/studio/'],
     ['Newsroom','/newsroom/newsroom/']
   ];
+  /* Who's signed in (null if the identity layer isn't loaded) */
+  NR.me = function(){ return window.ENN_ID ? window.ENN_ID.me() : null; };
+
   NR.rail = function(current){
-    const nav = SECTIONS.map(([label,href]) =>
+    const me = NR.me();
+    const sections = SECTIONS.slice();
+
+    /* Leaders and the advisor get one extra tab that students don't see */
+    if(window.ENN_ID && window.ENN_ID.isLeader(me)){
+      sections.push(['Leadership','/newsroom/leadership/']);
+    }
+
+    const nav = sections.map(([label,href]) =>
       `<a href="${href}"${current===label?' aria-current="page"':''}>${label}</a>`).join('');
+
+    /* Signed-in chip — name, and a way off a shared computer */
+    let who = '';
+    if(window.ENN_ID && me && me.kind !== 'guest'){
+      const name = window.ENN_ID.displayName(me);
+      who = `<span class="nr-who">
+        <b>${NR.esc(name)}</b>
+        <a href="#" data-signout title="Sign out of this computer">Sign out</a>
+      </span>`;
+    }
+
     return `<header class="nr-rail">
       <a class="nr-rail-logo" href="/" title="Back to eastlakenewsnetwork.com" aria-label="Back to the main ENN site">
         <img src="/enn-logo.png" alt="ENN"><span>NEWSROOM</span>
       </a>
       <nav aria-label="Newsroom sections">${nav}</nav>
+      ${who}
       <span class="nr-tally" title="Live studio"><i></i>ON&nbsp;AIR</span>
     </header>`;
   };
@@ -44,6 +67,14 @@
   NR.mountChrome = function(current){
     const railHost = $('[data-rail]'); if(railHost) railHost.outerHTML = NR.rail(current);
     const footHost = $('[data-foot]'); if(footHost) footHost.outerHTML = NR.foot();
+
+    /* Sign out → forget this person and send them back to the gate */
+    const so = $('[data-signout]');
+    if(so) so.addEventListener('click', e => {
+      e.preventDefault();
+      if(window.ENN_ID) window.ENN_ID.signOut();
+      location.href = '/enn-callsign-gate.html';
+    });
   };
 
   /* Apply this page's hero text from newsroom/text.js (guarded — a missing
@@ -191,12 +222,100 @@
     return false;
   };
 
+  /* ── Personal dashboard ────────────────────────────────────────
+     Rendered into [data-mydesk] on the hub's front page. Shows the
+     signed-in student their group, their next air date and what's due.
+     Renders nothing at all for a guest, so the plain ENN code still
+     gets the exact hub everyone had before. */
+  NR.myDesk = function(host){
+    if(!host || !window.ENN_ID) return;
+    const me = NR.me();
+    if(!me || me.kind === 'guest') return;
+
+    const name = window.ENN_ID.displayName(me);
+    const role = window.ENN_ID.roleLine(me);
+
+    /* Air dates come from the same season file the public countdown uses */
+    let next = null, upcoming = [];
+    if(typeof ENN_SEASON !== 'undefined'){
+      const tag = window.ENN_ID.periodTag(me);
+      if(window.ENN_ID.isAdvisor(me)){
+        next = ENN_SEASON.next();
+        upcoming = ENN_SEASON.upcomingFor('').slice(0, 4);
+      } else if(tag){
+        next = ENN_SEASON.next(tag);
+        upcoming = ENN_SEASON.upcomingFor(tag).slice(0, 4);
+      }
+    }
+
+    const days = d => Math.max(0, Math.ceil((d - Date.now()) / 86400000));
+
+    /* the piece is due before class on the air day */
+    let dueLine = '—';
+    if(next){
+      const due = new Date(next.date.getTime());
+      due.setDate(due.getDate() - 1);
+      dueLine = ENN_SEASON.longDate(due) + ', end of day';
+    }
+
+    const rows = [];
+    if(me.period) rows.push(['Your period', 'Period ' + me.period]);
+    if(me.groupName) rows.push(['Your group', NR.esc(me.groupName)]);
+    if(role) rows.push(['Your role', NR.esc(role)]);
+    if(next){
+      rows.push(['Your next air date',
+        '<strong>' + ENN_SEASON.longDate(next.date) + '</strong> · in ' + days(next.date) + ' days']);
+      rows.push(['Piece due', dueLine]);
+    }
+
+    const mates = (me.groupMates && me.groupMates.length)
+      ? `<div class="nr-desk-mates"><span>Your group</span>${
+          me.groupMates.map(m => `<b>${NR.esc(m)}</b>`).join('')}</div>`
+      : '';
+
+    const dates = upcoming.length
+      ? `<div class="nr-desk-dates"><span>Coming up</span>${
+          upcoming.map(b => `<b>${NR.esc(ENN_SEASON.shortDate(b.date))}${
+            window.ENN_ID.isAdvisor(me) ? ' · ' + b.period : ''}</b>`).join('')}</div>`
+      : '';
+
+    host.innerHTML = `
+      <section class="nr-desk nr-reveal">
+        <div class="nr-desk-head">
+          <div>
+            <div class="nr-desk-hi">Hello, <b>${NR.esc(name)}</b></div>
+            ${role ? `<div class="nr-desk-role">${NR.esc(role)}</div>` : ''}
+          </div>
+          <span class="nr-desk-tag">${window.ENN_ID.isAdvisor(me) ? 'Advisor' :
+            (window.ENN_ID.isLeader(me) ? 'Leadership' : 'Crew')}</span>
+        </div>
+        ${rows.length ? `<dl class="nr-desk-grid">${rows.map(([k,v]) =>
+          `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>` : ''}
+        ${mates}
+        ${dates}
+        <div class="nr-desk-actions">
+          <a class="nr-btn" href="/newsroom/submit/">Submit your piece →</a>
+          ${window.ENN_ID.isLeader(me)
+            ? '<a class="nr-btn ghost" href="/newsroom/leadership/">Leadership tools →</a>' : ''}
+          <a class="nr-desk-out" href="#" data-signout2>Not you? Sign out</a>
+        </div>
+      </section>`;
+
+    const out = host.querySelector('[data-signout2]');
+    if(out) out.addEventListener('click', e => {
+      e.preventDefault(); window.ENN_ID.signOut();
+      location.href = '/enn-callsign-gate.html';
+    });
+    NR.observe(host);
+  };
+
   /* Auto-init on DOM ready */
   function init(){
     if(!NR.enforceGate()) return;              // bounced to the gate — stop here
     const section = document.body.getAttribute('data-section') || '';
     NR.mountChrome(section);
     NR.applyText(section);
+    NR.myDesk(document.querySelector('[data-mydesk]'));
     NR.observe(document);
     NR.startClock();
   }

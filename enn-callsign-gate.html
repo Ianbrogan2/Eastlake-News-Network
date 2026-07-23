@@ -81,17 +81,19 @@ a{text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
-<script src="newsroom/config.js"></script>
+<script src="newsroom/config.js?v=2"></script>
+<script src="EDIT/22-ROSTER.js?v=2"></script>
+<script src="newsroom/assets/identity.js?v=2"></script>
 
 <div class="gate" id="gate">
   <span class="tally" id="tally"><i></i>OFF AIR · STANDBY</span>
   <img class="logo" src="enn-logo.png" alt="ENN"/>
   <div class="eyebrow">Restricted Feed · Crew Access</div>
   <h1>ENTER THE<br>NEWSROOM</h1>
-  <p class="hint">Type the call sign to go behind the desk. If you're in the class, you've been told the word.</p>
+  <p class="hint">Type your <strong>student ID</strong> to see your group, your air dates and your deadlines.<br>Don't have one yet? The class call sign still gets you in.</p>
   <form id="form" autocomplete="off">
     <div class="input-wrap">
-      <input id="call" type="text" inputmode="text" aria-label="Call sign" placeholder="CALL SIGN" maxlength="24" autocapitalize="characters" spellcheck="false"/>
+      <input id="call" type="text" inputmode="text" aria-label="Student ID or call sign" placeholder="STUDENT ID OR CALL SIGN" maxlength="24" autocapitalize="characters" spellcheck="false"/>
     </div>
     <div class="err" id="err" role="alert">Signal lost — try again</div>
     <button type="submit">◉ Go Live</button>
@@ -105,8 +107,8 @@ a{text-decoration:none;color:inherit}
 <div class="locked" id="locked" aria-hidden="true">
   <span class="locked-tally"><i></i>ON AIR</span>
   <img class="locked-logo" src="enn-logo.png" alt=""/>
-  <b>SIGNAL LOCKED</b>
-  <span class="locked-sub">Cutting to the feed…</span>
+  <b id="locked-title">SIGNAL LOCKED</b>
+  <span class="locked-sub" id="locked-sub">Cutting to the feed…</span>
 </div>
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
@@ -121,28 +123,67 @@ a{text-decoration:none;color:inherit}
       input=document.getElementById('call'), tally=document.getElementById('tally'),
       locked=document.getElementById('locked'), wipe=document.getElementById('wipe');
 
-  function remember(){ try{ sessionStorage.setItem('enn_gate_ok','1'); }catch(e){} }
+  var ID = window.ENN_ID;
+  var lockedTitle = document.getElementById('locked-title'),
+      lockedSub   = document.getElementById('locked-sub');
 
-  function enter(){
-    remember();
+  function remember(identity){
+    if(ID && identity) ID.save(identity);
+    else { try{ sessionStorage.setItem('enn_gate_ok','1'); }catch(e){} }
+  }
+
+  /* The confirmation screen greets whoever just signed in, by name. */
+  function dressLockScreen(identity){
+    if(!lockedTitle || !identity) return;
+    if(identity.kind === 'guest'){
+      lockedTitle.textContent = 'SIGNAL LOCKED';
+      if(lockedSub) lockedSub.textContent = 'Cutting to the feed…';
+      return;
+    }
+    var name = ID ? ID.displayName(identity) : '';
+    var role = ID ? ID.roleLine(identity)    : '';
+    lockedTitle.textContent = name ? ('WELCOME, ' + name.toUpperCase()) : 'SIGNAL LOCKED';
+    if(lockedSub){
+      if(role)                         lockedSub.textContent = role;
+      else if(identity.groupName)      lockedSub.textContent = 'Period ' + identity.period + ' · ' + identity.groupName;
+      else if(identity.period)         lockedSub.textContent = 'Period ' + identity.period;
+      else                             lockedSub.textContent = 'Cutting to the feed…';
+    }
+  }
+
+  function enter(identity){
+    remember(identity);
+    dressLockScreen(identity);
     tally.classList.add('hot');
     tally.innerHTML = '<i></i>ON AIR';
     if(reduce){ window.location.href = HUB; return; }
     /* 1) confirmation screen covers the form, 2) hold so it reads,
-       3) wipe cut, 4) redirect into the hub */
+       3) wipe cut, 4) redirect into the hub.
+       Named sign-ins hold a beat longer so the greeting is readable. */
+    var named = identity && identity.kind !== 'guest';
+    var cutAt = named ? 1150 : 640, goAt = named ? 1600 : 1080;
     locked.classList.add('on');
-    setTimeout(function(){ wipe.classList.add('cut'); }, 640);
-    setTimeout(function(){ window.location.href = HUB; }, 1080);
+    setTimeout(function(){ wipe.classList.add('cut'); }, cutAt);
+    setTimeout(function(){ window.location.href = HUB; }, goAt);
+  }
+
+  function reject(){
+    gate.classList.remove('wrong'); void gate.offsetWidth; gate.classList.add('wrong');
+    input.select();
   }
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    var val = (input.value||'').trim().toLowerCase();
-    if(val === CALL){ enter(); }
-    else {
-      gate.classList.remove('wrong'); void gate.offsetWidth; gate.classList.add('wrong');
-      input.select();
-    }
+    var raw = (input.value||'').trim();
+    if(!raw) return reject();
+
+    /* Ask the roster who this is. Falls back to the plain call sign
+       check if the roster file failed to load, so the class can always
+       still get in. */
+    var identity = ID ? ID.resolve(raw) : null;
+    if(identity){ enter(identity); return; }
+    if(raw.toLowerCase() === CALL){ enter({kind:'guest'}); return; }
+    reject();
   });
   input.focus();
 })();

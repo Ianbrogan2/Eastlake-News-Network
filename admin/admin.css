@@ -140,3 +140,48 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .notice.warn{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.05)}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ══════════════════════════════════════════════════════════════════
+   COMPACT ROW LISTS  ·  used by the roster editors
+   One slim row per person instead of a big card each, so a whole
+   production group fits on one screen.
+   ══════════════════════════════════════════════════════════════════ */
+.rowlist{margin-top:4px}
+.rowlist-head{
+  display:grid;gap:8px;align-items:center;padding:0 2px 6px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);
+}
+.rowlist-row{display:grid;gap:8px;align-items:center;margin-bottom:6px}
+.rowlist-row input{
+  width:100%;padding:8px 10px;font-size:13.5px;border-radius:8px;
+  background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);
+  transition:border-color .15s,box-shadow .15s;
+}
+.rowlist-row input::placeholder{color:#46506a}
+.rowlist-row input:focus{outline:none;border-color:var(--enn);box-shadow:0 0 0 2px rgba(26,86,219,0.18)}
+.rowlist-row input.mono{font-family:var(--mono);letter-spacing:.06em}
+.rowlist-num{
+  font-family:var(--mono);font-size:10.5px;color:var(--steel);text-align:right;padding-right:2px;user-select:none;
+}
+.rowlist-rm{
+  width:26px;height:26px;padding:0;line-height:1;border-radius:7px;cursor:pointer;
+  background:transparent;border:1px solid var(--edge);color:var(--steel);font-size:11px;
+  transition:color .15s,border-color .15s,background .15s;
+}
+.rowlist-rm:hover{color:#fff;border-color:rgba(255,59,48,0.55);background:rgba(255,59,48,0.14)}
+.rowlist .add-btn{margin-top:8px}
+
+/* a production group = a tight bordered block, not a giant card */
+.group .group{
+  margin-top:10px;padding:12px 14px;border-radius:10px;
+  background:rgba(255,255,255,0.015);
+}
+.group .group .group-head{margin-bottom:8px}
+
+@media (max-width:560px){
+  /* stack the row inputs on a phone rather than squeezing them */
+  .rowlist-head{display:none}
+  .rowlist-row{grid-template-columns:1fr !important;gap:6px;
+    padding:10px;margin-bottom:10px;border:1px solid var(--edge);border-radius:10px}
+  .rowlist-num{text-align:left}
+}

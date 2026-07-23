@@ -15,25 +15,30 @@
     { key:'email', label:'Email', type:'text' },
     { key:'photo', label:'Headshot', type:'image', folder:'img/team/crew' },
   ];
-  // one student in a production group
+  // one student in a production group — rendered as a single slim row
   var STUDENT = [
-    { key:'id',    label:'Student ID', type:'text', help:'What they type to log in' },
+    { key:'id',    label:'Student ID', type:'text', w:'1.1fr', mono:true },
     { key:'first', label:'First name', type:'text' },
     { key:'last',  label:'Last name',  type:'text' },
   ];
   // one leadership slot — same, plus the role title
   var LEADER = [
-    { key:'role',  label:'Role', type:'text', help:'Studio Director, Anchor, etc.' },
-    { key:'id',    label:'Student ID', type:'text', help:'Leave blank if nobody holds this role' },
+    { key:'role',  label:'Role', type:'text', w:'1.4fr' },
+    { key:'id',    label:'Student ID', type:'text', w:'1.1fr', mono:true },
     { key:'first', label:'First name', type:'text' },
     { key:'last',  label:'Last name',  type:'text' },
   ];
-  // the two lists that make up one period
+  // the two lists that make up one period.
+  // compact:true = one row per person instead of a card each, so a whole
+  // production group fits on a single screen.
   var PERIOD_ROSTER = [
-    { key:'leadership', label:'Leadership', type:'list', itemLabel:'Role', fields:LEADER },
+    { key:'leadership', label:'Leadership — 10 slots', type:'list', itemLabel:'role',
+      compact:true, fields:LEADER,
+      help:'Leave the ID blank for any role nobody holds this semester.' },
     { key:'groups', label:'Production Groups', type:'list', itemLabel:'Group', fields:[
       { key:'name', label:'Group name', type:'text' },
-      { key:'members', label:'Members', type:'list', itemLabel:'Student', fields:STUDENT },
+      { key:'members', label:'Members — up to 8', type:'list', itemLabel:'student',
+        compact:true, fields:STUDENT },
     ]},
   ];
 

@@ -153,7 +153,68 @@
   function labelEl(f){ const l=document.createElement('label'); l.innerHTML=esc(f.label)+(f.help?`<span class="help">${esc(f.help)}</span>`:''); return l; }
 
   /* repeatable list of object rows */
+  /* Compact list — one slim ROW per entry instead of a big titled box.
+     Used for rosters, where 8 students as 8 stacked cards is unusable.
+     Field labels print once as a header; each row is just the inputs. */
+  function compactListField(f, arr){
+    const box = document.createElement('div');
+    box.className = 'rowlist';
+    const cols = f.fields.filter(sf => sf.type !== 'list' && sf.type !== 'object');
+    const tmpl = '28px ' + cols.map(c => c.w || '1fr').join(' ') + ' 30px';
+
+    function draw(){
+      box.innerHTML = '';
+      const head = document.createElement('div');
+      head.className = 'rowlist-head';
+      head.style.gridTemplateColumns = tmpl;
+      head.innerHTML = '<span></span>' +
+        cols.map(c => `<span>${esc(c.label)}</span>`).join('') + '<span></span>';
+      box.appendChild(head);
+
+      arr.forEach((row, i) => {
+        const r = document.createElement('div');
+        r.className = 'rowlist-row';
+        r.style.gridTemplateColumns = tmpl;
+
+        const num = document.createElement('span');
+        num.className = 'rowlist-num';
+        num.textContent = i + 1;
+        r.appendChild(num);
+
+        cols.forEach(sf => {
+          const inp = document.createElement('input');
+          inp.type = 'text';
+          inp.value = row[sf.key] == null ? '' : String(row[sf.key]);
+          inp.placeholder = sf.label;
+          if(sf.mono) inp.className = 'mono';
+          inp.oninput = () => { row[sf.key] = inp.value; };
+          r.appendChild(inp);
+        });
+
+        const rm = document.createElement('button');
+        rm.className = 'rowlist-rm'; rm.type = 'button';
+        rm.textContent = '✕'; rm.title = 'Remove this row';
+        rm.onclick = () => { arr.splice(i,1); draw(); };
+        r.appendChild(rm);
+
+        box.appendChild(r);
+      });
+
+      const add = document.createElement('button');
+      add.className = 'add-btn'; add.type = 'button';
+      add.textContent = '+ Add ' + (f.itemLabel || 'row');
+      add.onclick = () => {
+        const blank = {};
+        f.fields.forEach(sf => blank[sf.key] = sf.type==='list' ? [] : sf.type==='object' ? {} : '');
+        arr.push(blank); draw();
+      };
+      box.appendChild(add);
+    }
+    draw(); return box;
+  }
+
   function listField(f, arr){
+    if(f.compact) return compactListField(f, arr);
     const box = document.createElement('div');
     function draw(){
       box.innerHTML='';
