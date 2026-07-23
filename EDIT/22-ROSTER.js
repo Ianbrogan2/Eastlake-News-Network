@@ -797,9 +797,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Newsroom Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1595814',
+        first: 'Alejandro',
+        last: 'Schejola'
       },
       {
         role: 'Creative Director',
