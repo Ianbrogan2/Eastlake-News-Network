@@ -297,29 +297,29 @@ var ENN_ROSTER = {
         name: 'Group 7',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1595262',
+            first: 'Kike',
+            last: 'Perez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1596239',
+            first: 'Andrew',
+            last: 'Baffico'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1592672',
+            first: 'David',
+            last: 'Branco'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1604388',
+            first: 'Emilio',
+            last: 'Uribe'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1594735',
+            first: 'Caleb',
+            last: 'Foss'
           }
         ]
       },
