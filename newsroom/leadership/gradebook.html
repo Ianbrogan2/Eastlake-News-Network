@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gradebook — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=2">
+<link rel="stylesheet" href="/newsroom/colors.css?v=2">
+<script src="/newsroom/config.js?v=2"></script>
+<script src="/EDIT/21-BULLETINS.js?v=2"></script>
+<script src="/EDIT/22-ROSTER.js?v=2"></script>
+<script src="/newsroom/assets/identity.js?v=2"></script>
+</head>
+<body class="nr" data-section="Leadership">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/leadership/">← Leadership</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Restricted</b><span>Records</span></div>
+    <h1 class="nr-title">GRADEBOOK</h1>
+    <p class="nr-lede">Every grade recorded from this computer. Export it to a spreadsheet whenever you need to hand it in.</p>
+  </section>
+  <div id="gb-body"></div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js?v=2"></script>
+<script>
+(function(){
+  var body = document.getElementById('gb-body');
+  var me = NR.me();
+  if(!window.ENN_ID || !window.ENN_ID.isLeader(me)){
+    body.innerHTML = NR.emptyState('🔒','Leadership only',
+      'Sign in with a leadership student ID to see the gradebook.') +
+      '<div style="margin-top:18px"><a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a></div>';
+    NR.observe(document); return;
+  }
+
+  var STORE = 'enn_grades';
+  function rows(){ try{ return JSON.parse(localStorage.getItem(STORE)||'[]'); }catch(e){ return []; } }
+
+  function draw(){
+    var list = rows();
+    var html = '';
+
+    if(!list.length){
+      html = NR.emptyState('📒','No grades recorded yet',
+        'Grades you record on the Grading page show up here. They are stored in this browser, so use the same computer — or export a CSV to move them.') +
+        '<div style="margin-top:18px"><a class="nr-btn" href="/newsroom/leadership/grade.html">Grade a piece →</a></div>';
+      body.innerHTML = html; NR.observe(body); return;
+    }
+
+    /* headline numbers */
+    var avg = list.reduce(function(a,r){ return a + (+r.total||0); }, 0) / list.length;
+    var lows = list.filter(function(r){ return (+r.total||0) < 70; }).length;
+    html += '<div class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:24px">' +
+      '<div class="nr-panel"><div class="nr-tile-k" style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Recorded</div>' +
+        '<div style="font-family:var(--display);font-size:44px;margin-top:6px">'+list.length+'</div></div>' +
+      '<div class="nr-panel"><div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Class average</div>' +
+        '<div style="font-family:var(--display);font-size:44px;margin-top:6px;color:#7DD8FF">'+(Math.round(avg*10)/10)+'</div></div>' +
+      '<div class="nr-panel"><div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Below 70</div>' +
+        '<div style="font-family:var(--display);font-size:44px;margin-top:6px'+(lows?';color:#ff8a84':'')+'">'+lows+'</div></div>' +
+      '</div>';
+
+    html += '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">' +
+      '<button class="nr-btn" id="gb-csv" type="button">↓ Download CSV</button>' +
+      (NR.cfg('GRADEBOOK_SHEET_URL')
+        ? '<a class="nr-btn ghost" href="'+NR.esc(NR.cfg('GRADEBOOK_SHEET_URL'))+'" target="_blank" rel="noopener">Open the shared gradebook ↗</a>' : '') +
+      '<button class="nr-btn ghost" id="gb-clear" type="button">Clear this computer</button>' +
+      '</div>';
+
+    html += '<div class="nr-panel nr-reveal"><div class="nr-board-wrap"><table class="nr-board">' +
+      '<thead><tr><th>Air date</th><th>Period</th><th>Group</th><th>Piece</th>' +
+      '<th>Prod</th><th>Dir</th><th>Ed</th><th>Total</th><th>Grader</th></tr></thead><tbody>' +
+      list.slice().reverse().map(function(r){
+        var s = r.scores || {};
+        var col = (+r.total >= 90) ? '#4ade80' : (+r.total < 70 ? '#ff8a84' : '#7DD8FF');
+        return '<tr>' +
+          '<td>'+NR.esc(r.airDate||'—')+'</td>' +
+          '<td>'+NR.esc(r.period||'—')+'</td>' +
+          '<td><strong>'+NR.esc(r.group||'—')+'</strong></td>' +
+          '<td>'+NR.esc(r.title||r.type||'—')+'</td>' +
+          '<td>'+(s.Producer==null?'—':s.Producer)+'</td>' +
+          '<td>'+(s.Director==null?'—':s.Director)+'</td>' +
+          '<td>'+(s.Editor==null?'—':s.Editor)+'</td>' +
+          '<td style="color:'+col+'"><strong>'+r.total+'</strong> '+NR.esc(r.letter||'')+'</td>' +
+          '<td>'+NR.esc(r.grader||'—')+'</td>' +
+        '</tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<p style="font-family:var(--mono);font-size:10.5px;color:var(--steel);margin-top:12px;letter-spacing:.08em">' +
+      'Stored in this browser only. Export a CSV to move it or hand it in.</p></div>';
+
+    body.innerHTML = html;
+
+    document.getElementById('gb-csv').onclick = function(){
+      var head = ['When','Grader','Period','Group','Members','Student IDs','Air date','Type','Title',
+                  'Producer','Director','Editor','Deductions','Total','Letter'];
+      var csv = [head.join(',')].concat(rows().map(function(r){
+        var s = r.scores || {};
+        return [r.when,r.grader,r.period,r.group,r.members,r.ids,r.airDate,r.type,r.title,
+                s.Producer,s.Director,s.Editor,(r.deductions||[]).join('; '),r.total,r.letter]
+          .map(function(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }).join(',');
+      })).join('\n');
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+      a.download = 'enn-gradebook.csv'; a.click();
+    };
+    document.getElementById('gb-clear').onclick = function(){
+      if(!confirm('Delete all '+rows().length+' grades stored in this browser?\n\nExport a CSV first if you need them.')) return;
+      localStorage.removeItem(STORE); draw();
+    };
+    NR.observe(body);
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>

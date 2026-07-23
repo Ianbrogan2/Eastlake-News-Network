@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rundown Builder — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=2">
+<link rel="stylesheet" href="/newsroom/colors.css?v=2">
+<script src="/newsroom/config.js?v=2"></script>
+<script src="/EDIT/21-BULLETINS.js?v=2"></script>
+<script src="/EDIT/22-ROSTER.js?v=2"></script>
+<script src="/newsroom/assets/identity.js?v=2"></script>
+<style>
+.rd-row{display:grid;grid-template-columns:26px 1fr 150px 74px 74px 30px;gap:8px;align-items:center;margin-bottom:6px}
+.rd-head{display:grid;grid-template-columns:26px 1fr 150px 74px 74px 30px;gap:8px;padding:0 2px 6px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+.rd-row input,.rd-row select{width:100%;padding:8px 10px;font-size:13.5px;border-radius:8px;
+  background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);font-family:var(--body)}
+.rd-row input.t{font-family:var(--mono);text-align:center;letter-spacing:.05em}
+.rd-row .run{font-family:var(--mono);font-size:12px;color:#7DD8FF;text-align:center}
+.rd-row input:focus,.rd-row select:focus{outline:none;border-color:var(--enn)}
+.rd-num{font-family:var(--mono);font-size:10.5px;color:var(--steel);text-align:right}
+.rd-rm{width:26px;height:26px;padding:0;border-radius:7px;cursor:pointer;background:transparent;
+  border:1px solid var(--edge);color:var(--steel);font-size:11px}
+.rd-rm:hover{color:#fff;border-color:rgba(255,59,48,.55);background:rgba(255,59,48,.14)}
+.rd-total{position:sticky;bottom:0;margin-top:18px;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;border:1px solid var(--edge);border-radius:14px;padding:16px 20px;
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));box-shadow:0 -10px 30px -18px rgba(0,0,0,.9)}
+.rd-clock{font-family:var(--display);font-size:52px;line-height:1}
+.rd-clock.over{color:#ff8a84}
+.rd-clock.good{color:#4ade80}
+.rd-hint{font-family:var(--mono);font-size:11px;color:var(--steel);letter-spacing:.08em;margin-top:5px}
+@media print{
+  .nr-rail,.nr-foot,.nr-back,.rd-rm,.rd-total .nr-btn,#rd-add{display:none !important}
+  body{background:#fff;color:#000}
+  .rd-row input,.rd-row select{border:0;background:transparent;color:#000}
+  .nr-panel{border:1px solid #ccc}
+}
+@media (max-width:680px){
+  .rd-head{display:none}
+  .rd-row{grid-template-columns:1fr;gap:6px;padding:10px;margin-bottom:10px;border:1px solid var(--edge);border-radius:10px}
+}
+</style>
+</head>
+<body class="nr" data-section="Leadership">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/leadership/">← Leadership</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Restricted</b><span>Show builder</span></div>
+    <h1 class="nr-title">RUNDOWN<br>BUILDER</h1>
+    <p class="nr-lede">Build the running order, assign each segment to a group, and land the show on ten minutes. Saves as you type. Print it for the booth.</p>
+  </section>
+  <div id="rd-body"></div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js?v=2"></script>
+<script>
+(function(){
+  var body = document.getElementById('rd-body');
+  var me = NR.me();
+  if(!window.ENN_ID || !window.ENN_ID.isLeader(me)){
+    body.innerHTML = NR.emptyState('🔒','Leadership only',
+      'Sign in with a leadership student ID to build a rundown.') +
+      '<div style="margin-top:18px"><a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a></div>';
+    NR.observe(document); return;
+  }
+
+  var TARGET = +(NR.cfg('SHOW_LENGTH_SECONDS') || 600);
+  var STORE  = 'enn_rundown';
+
+  var DEFAULT = [
+    ['Cold Open / Intro','0:30'],['Top Story','1:30'],['Feature','2:00'],['Sports Corner','1:30'],
+    ['Club / Interview','1:30'],['PSA / Mini-game','1:00'],['Trivia / Comedy','1:00'],['Outro / Birthdays','1:00']
+  ];
+
+  function load(){
+    try { var s = JSON.parse(localStorage.getItem(STORE)); if(s && s.rows) return s; } catch(e){}
+    return { date:'', period:String(me.period||''), rows: DEFAULT.map(function(d){
+      return {seg:d[0], time:d[1], group:''}; }) };
+  }
+  var state = load();
+  function save(){ try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+
+  function secs(t){
+    var p = String(t||'').split(':');
+    if(p.length === 2) return (+p[0]||0)*60 + (+p[1]||0);
+    return +t || 0;
+  }
+  function mmss(s){
+    s = Math.max(0, Math.round(s));
+    return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+  }
+
+  function groupsFor(p){
+    var R = (typeof ENN_ROSTER!=='undefined') ? ENN_ROSTER : null;
+    var per = R ? R['period'+p] : null;
+    return per ? (per.groups||[]) : [];
+  }
+
+  var periods = window.ENN_ID.isAdvisor(me) ? window.ENN_ID.periods : [me.period];
+
+  var html = '';
+  html += '<div class="nr-panel nr-reveal" style="margin-bottom:20px"><div class="gr-pick" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">';
+  html += '<div><label style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-bottom:6px">Period</label>' +
+    '<select id="rd-period" style="width:100%;padding:10px 12px;border-radius:9px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink)">' +
+    periods.map(function(p){ return '<option value="'+p+'"'+(String(p)===state.period?' selected':'')+'>Period '+p+'</option>'; }).join('') +
+    '</select></div>';
+  html += '<div><label style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-bottom:6px">Show date</label>' +
+    '<select id="rd-date" style="width:100%;padding:10px 12px;border-radius:9px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink)"></select></div>';
+  html += '</div></div>';
+
+  html += '<div class="nr-panel nr-reveal">';
+  html += '<div class="rd-head"><span></span><span>Segment</span><span>Group</span><span>Target</span><span>Running</span><span></span></div>';
+  html += '<div id="rd-rows"></div>';
+  html += '<button class="add-btn nr-btn ghost" id="rd-add" type="button" style="margin-top:10px">+ Add segment</button>';
+  html += '</div>';
+
+  html += '<div class="rd-total nr-reveal">' +
+    '<div><div class="rd-clock" id="rd-clock">0:00</div>' +
+      '<div class="rd-hint" id="rd-hint">Target ' + mmss(TARGET) + '</div></div>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+      '<button class="nr-btn ghost" id="rd-reset" type="button">Reset to standard</button>' +
+      '<button class="nr-btn" id="rd-print" type="button">Print rundown</button>' +
+    '</div></div>';
+
+  body.innerHTML = html;
+
+  var dateSel = document.getElementById('rd-date');
+  function fillDates(){
+    if(typeof ENN_SEASON === 'undefined'){ dateSel.innerHTML='<option>—</option>'; return; }
+    var p = document.getElementById('rd-period').value;
+    var up = ENN_SEASON.upcomingFor('P'+p);
+    dateSel.innerHTML = up.length
+      ? up.map(function(b){ return '<option value="'+b.iso+'"'+(b.iso===state.date?' selected':'')+'>'+ENN_SEASON.longDate(b.date)+'</option>'; }).join('')
+      : '<option>No dates left this season</option>';
+    state.date = dateSel.value; save();
+  }
+
+  function drawRows(){
+    var host = document.getElementById('rd-rows');
+    var p = document.getElementById('rd-period').value;
+    var gs = groupsFor(p);
+    var run = 0;
+    host.innerHTML = '';
+    state.rows.forEach(function(r, i){
+      run += secs(r.time);
+      var el = document.createElement('div');
+      el.className = 'rd-row';
+      el.innerHTML =
+        '<span class="rd-num">'+(i+1)+'</span>' +
+        '<input type="text" value="'+NR.esc(r.seg||'')+'" placeholder="Segment" data-f="seg" data-i="'+i+'">' +
+        '<select data-f="group" data-i="'+i+'"><option value="">—</option>' +
+          gs.map(function(g,gi){
+            var nm = g.name || ('Group '+(gi+1));
+            return '<option'+(r.group===nm?' selected':'')+'>'+NR.esc(nm)+'</option>';
+          }).join('') + '</select>' +
+        '<input class="t" type="text" value="'+NR.esc(r.time||'')+'" placeholder="0:30" data-f="time" data-i="'+i+'">' +
+        '<span class="run">'+mmss(run)+'</span>' +
+        '<button class="rd-rm" type="button" data-rm="'+i+'" title="Remove">✕</button>';
+      host.appendChild(el);
+    });
+    updateTotal();
+  }
+
+  function updateTotal(){
+    var total = state.rows.reduce(function(a,r){ return a + secs(r.time); }, 0);
+    var el = document.getElementById('rd-clock');
+    el.textContent = mmss(total);
+    el.className = 'rd-clock' + (total > TARGET ? ' over' : (total === TARGET ? ' good' : ''));
+    var diff = total - TARGET;
+    document.getElementById('rd-hint').textContent =
+      diff === 0 ? 'Exactly on target' :
+      diff > 0   ? mmss(diff) + ' over — trim something' :
+                   mmss(-diff) + ' short of ' + mmss(TARGET);
+  }
+
+  body.addEventListener('input', function(e){
+    var f = e.target.dataset.f;
+    if(!f) return;
+    state.rows[+e.target.dataset.i][f] = e.target.value;
+    save();
+    if(f === 'time') drawRows(); else updateTotal();
+  });
+  body.addEventListener('change', function(e){
+    if(e.target.dataset.f === 'group'){
+      state.rows[+e.target.dataset.i].group = e.target.value; save();
+    }
+    if(e.target.id === 'rd-period'){ state.period = e.target.value; save(); fillDates(); drawRows(); }
+    if(e.target.id === 'rd-date'){ state.date = e.target.value; save(); }
+  });
+  body.addEventListener('click', function(e){
+    if(e.target.dataset.rm !== undefined){
+      state.rows.splice(+e.target.dataset.rm, 1); save(); drawRows();
+    }
+    if(e.target.id === 'rd-add'){
+      state.rows.push({seg:'', time:'0:30', group:''}); save(); drawRows();
+    }
+    if(e.target.id === 'rd-reset'){
+      state.rows = DEFAULT.map(function(d){ return {seg:d[0], time:d[1], group:''}; });
+      save(); drawRows();
+    }
+    if(e.target.id === 'rd-print') window.print();
+  });
+
+  fillDates(); drawRows();
+  NR.observe(document);
+})();
+</script>
+</body>
+</html>

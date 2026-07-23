@@ -129,12 +129,16 @@
   });
 
   /* ── What's still being built ── */
-  html += '<h2 class="nr-h2 nr-reveal">Coming to this page</h2>' +
-    '<div class="nr-grid nr-stagger">' +
-    '<div class="nr-panel"><h3 class="nr-h3">Grading</h3><p style="color:var(--steel);font-size:13.5px">Score pieces against the 100-point rubric and submit grades. <span class="nr-draft">In build</span></p></div>' +
-    '<div class="nr-panel"><h3 class="nr-h3">Grade queue</h3><p style="color:var(--steel);font-size:13.5px">Everything waiting on you, counted. <span class="nr-draft">In build</span></p></div>' +
-    '<div class="nr-panel"><h3 class="nr-h3">Late &amp; missing</h3><p style="color:var(--steel);font-size:13.5px">Auto-flagged when a deadline passes with no submission. <span class="nr-draft">In build</span></p></div>' +
-    '<div class="nr-panel"><h3 class="nr-h3">Rundown builder</h3><p style="color:var(--steel);font-size:13.5px">Build the show order, assign segments, print it. <span class="nr-draft">In build</span></p></div>' +
+  html += '<h2 class="nr-h2 nr-reveal">Your Tools</h2>';
+  html += '<div class="nr-grid nr-stagger">' +
+    '<a class="nr-tile" href="/newsroom/leadership/grade.html"><div class="k">Grading</div><h3>Grade a Piece</h3>' +
+      '<p>The 100-point rubric, scored and totalled for you. Saves as you go.</p><span class="go">→</span></a>' +
+    '<a class="nr-tile" href="/newsroom/leadership/rundown.html"><div class="k">The show</div><h3>Rundown Builder</h3>' +
+      '<p>Build the segment order, assign groups, land it on ten minutes, print it.</p><span class="go">→</span></a>' +
+    '<a class="nr-tile" href="/newsroom/leadership/gradebook.html"><div class="k">Records</div><h3>Gradebook</h3>' +
+      '<p>Every grade recorded on this computer, exportable to a spreadsheet.</p><span class="go">→</span></a>' +
+    '<a class="nr-tile" href="/newsroom/catalog/"><div class="k">Submissions</div><h3>Catalog</h3>' +
+      '<p>What\'s been turned in, by group and air date.</p><span class="go">→</span></a>' +
     '</div>';
 
   body.innerHTML = html;

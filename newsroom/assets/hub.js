@@ -29,6 +29,45 @@
   /* Who's signed in (null if the identity layer isn't loaded) */
   NR.me = function(){ return window.ENN_ID ? window.ENN_ID.me() : null; };
 
+  /* ── Config-driven links ───────────────────────────────────────
+     Every "go do this thing" button on the hub points at a slot in
+     newsroom/config.js. Paste a URL in and the button turns on; leave
+     it blank and students get a tidy note instead of a dead button.
+
+       NR.cfg('TIP_LINE_URL')            → the URL, or ''
+       NR.linkBtn('TIP_LINE_URL','Send a tip')
+       NR.linkBtn('X','Label',{ghost:true, note:'Ask the director'})   */
+  NR.cfg = function(key){
+    var v = (window.ENN || {})[key];
+    return (typeof v === 'string') ? v.trim() : (v == null ? '' : v);
+  };
+  NR.hasLink = function(key){ return !!NR.cfg(key); };
+
+  NR.linkBtn = function(key, label, opts){
+    opts = opts || {};
+    var url = NR.cfg(key);
+    if(url){
+      var cls = 'nr-btn' + (opts.ghost ? ' ghost' : '');
+      var ext = /^https?:/i.test(url) ? ' target="_blank" rel="noopener"' : '';
+      return '<a class="' + cls + '" href="' + NR.esc(url) + '"' + ext + '>' +
+             NR.esc(label) + (ext ? ' ↗' : ' →') + '</a>';
+    }
+    return '<span class="nr-notlinked" title="A leader adds this link at /admin → Newsroom Settings">' +
+           NR.esc(label) + ' — not linked yet</span>' +
+           (opts.note ? '<span class="nr-notlinked-note">' + NR.esc(opts.note) + '</span>' : '');
+  };
+
+  /* Replace every <span data-link="KEY" data-label="…"> on the page */
+  NR.mountLinks = function(root){
+    (root || document).querySelectorAll('[data-link]').forEach(function(el){
+      el.outerHTML = NR.linkBtn(
+        el.getAttribute('data-link'),
+        el.getAttribute('data-label') || 'Open',
+        { ghost: el.hasAttribute('data-ghost'), note: el.getAttribute('data-note') || '' }
+      );
+    });
+  };
+
   NR.rail = function(current){
     const me = NR.me();
     const sections = SECTIONS.slice();
@@ -315,6 +354,7 @@
     const section = document.body.getAttribute('data-section') || '';
     NR.mountChrome(section);
     NR.applyText(section);
+    NR.mountLinks(document);
     NR.myDesk(document.querySelector('[data-mydesk]'));
     NR.observe(document);
     NR.startClock();

@@ -29,7 +29,7 @@
 
   <!-- Lessons library -->
   <h2 class="nr-h2 nr-reveal">Lessons Library</h2>
-  <p class="nr-sub nr-reveal">Grouped by skill. Start anywhere — each lesson is short and hands-on. <span class="nr-draft">Draft — lessons being written</span></p>
+  <p class="nr-sub nr-reveal">Grouped by skill. Start anywhere — every lesson is one idea you can use the same day.</p>
   <div class="nr-grid nr-stagger" id="lessons"></div>
 
   <!-- Weekly challenge -->
@@ -75,15 +75,69 @@
 <script src="/newsroom/text.js?v=2"></script>
 <script src="/newsroom/assets/hub.js?v=2"></script>
 <script>
+/* ── Lessons library ────────────────────────────────────────────
+   Each lesson is: what it is, how to do it, and the mistake that
+   costs points on the rubric. Written to be read in two minutes and
+   used the same day. Leaders can add to any list.               */
 var CATS=[
-  ['Shooting','Camera basics, movement, coverage'],['Framing','Rule of thirds, headroom, composition'],
-  ['Audio','Mics, levels, clean sound'],['Lighting','Three-point, available light, exposure'],
-  ['Editing','Cuts, pacing, B-roll, transitions'],['Scriptwriting','Writing for the ear, structure'],
-  ['Interviewing','Questions, listening, getting soundbites'],['On-Camera Delivery','Presence, pacing, eye line'],
-  ['Directing','Running a set, calling the show']
+  ['Shooting','Camera basics, movement, coverage',[
+    ['Hold the shot longer than feels right','Count five full seconds before you stop recording. Editors cannot cut what you did not shoot, and a clip that ends the instant the action does is unusable.'],
+    ['Shoot wide, medium, close — every time','Three sizes of every subject gives the editor a way to cut without a jump. It costs thirty seconds on set and saves the whole piece.'],
+    ['Move the camera, or move the subject — not both','Pick one. Two moves at once reads as chaos on a ten-inch screen.']
+  ]],
+  ['Framing','Rule of thirds, headroom, composition',[
+    ['Eyes on the top third','Not the middle of the frame. Put your subject\'s eyes about a third of the way down and the shot instantly looks professional.'],
+    ['Leave room where they are looking','If someone faces camera-left, give them space on the left. Framed tight against their own face reads as a mistake.'],
+    ['Check the background before you roll','A trash can growing out of someone\'s head is the most common avoidable error in student video. Look behind them first.']
+  ]],
+  ['Audio','Mics, levels, clean sound',[
+    ['Get the mic close','Distance is the enemy. A cheap mic six inches away beats an expensive mic six feet away, every single time.'],
+    ['Watch your levels, not your gut','Aim to peak around −12 to −6 dB. Too quiet and the noise floor comes up when you boost it; too hot and it clips permanently.'],
+    ['Record 10 seconds of room tone','Silence in the room, camera rolling. Your editor uses it to patch gaps invisibly. Takes ten seconds, saves an hour.']
+  ]],
+  ['Lighting','Three-point, available light, exposure',[
+    ['Face the window, do not stand in front of it','Backlight turns your subject into a silhouette. Turn them around and the window becomes a free key light.'],
+    ['Three-point in plain terms','Key light on one side, softer fill on the other so shadows are not black, and a light behind to separate them from the wall.'],
+    ['Expose for the face','Everything else can be a little dark. If the face is right, the shot reads.']
+  ]],
+  ['Editing','Cuts, pacing, B-roll, transitions',[
+    ['Cut on motion','A cut in the middle of a movement hides itself. A cut between two still shots announces itself.'],
+    ['B-roll covers everything','Cover a jump cut, compress a rambling answer, show what someone is describing. Shoot far more B-roll than you think you need.'],
+    ['The transition is almost always a cut','Star wipes and cube spins date your piece instantly. Use a plain cut, and a dissolve only to signal time passing.'],
+    ['Cut it shorter','Whatever length you have, it is probably 20% too long. Tighten the front of every clip.']
+  ]],
+  ['Scriptwriting','Writing for the ear, structure',[
+    ['Write how you talk','Read it out loud. If you stumble, rewrite it. Viewers hear this once — they cannot re-read a sentence.'],
+    ['One idea per sentence','Short sentences. Commas kill delivery on camera.'],
+    ['Front-load the point','Say what happened in the first line. Do not build to it — this is news, not a mystery.'],
+    ['Numbers get rounded','"Almost half the school" lands. "47.3 percent" does not.']
+  ]],
+  ['Interviewing','Questions, listening, getting soundbites',[
+    ['Never ask a yes/no question','"Was it fun?" gets you "yeah." "What was the hardest part?" gets you a soundbite.'],
+    ['Ask them to answer in a full sentence','Say so up front: "Start your answer with the question in it." Otherwise your clip is a floating "about three weeks."'],
+    ['Then shut up','Silence makes people keep talking, and the second thing they say is usually the honest one. Do not fill the gap.'],
+    ['Get the name spelled out on camera','Saves a frantic text later when you are building the lower third.']
+  ]],
+  ['On-Camera Delivery','Presence, pacing, eye line',[
+    ['Talk to the lens like it is one person','Not an audience. One friend, standing where the lens is.'],
+    ['Slow down about 20%','Nerves speed everyone up. What feels slow to you sounds normal on playback.'],
+    ['Land the last word','Do not trail off or look away until you have finished the sentence and held a beat. That beat is your editor\'s out point.'],
+    ['Mistakes are free','Stop, breathe, start the sentence again. It is edited — nobody sees the retake.']
+  ]],
+  ['Directing','Running a set, calling the show',[
+    ['Call the shot before you need it','Your crew cannot read your mind. Say what is happening next, out loud, early.'],
+    ['One voice on set','Everyone takes direction from the director. Three people giving notes is how a shoot loses twenty minutes.'],
+    ['Know the runtime before you roll','If the segment is 1:30, everyone should know that at the start, not in the edit.'],
+    ['Protect the deadline over the vision','A finished good piece airs. A perfect unfinished one is a zero. Ship it.']
+  ]]
 ];
+
 document.getElementById('lessons').innerHTML = CATS.map(function(c){
-  return '<div class="nr-panel"><h3 class="nr-h3">'+NR.esc(c[0])+'</h3><p style="color:#c9cfda;font-size:13px;margin:4px 0 8px">'+NR.esc(c[1])+'</p><p style="color:var(--steel);font-size:12px">1–2 starter lessons <span class="nr-draft">Draft</span></p></div>';
+  return '<div class="nr-panel"><h3 class="nr-h3">'+NR.esc(c[0])+'</h3>' +
+    '<p style="color:#c9cfda;font-size:13px;margin:4px 0 12px">'+NR.esc(c[1])+'</p>' +
+    '<ul class="nr-lessons">' + c[2].map(function(l){
+      return '<li><b>'+NR.esc(l[0])+'</b><span>'+NR.esc(l[1])+'</span></li>';
+    }).join('') + '</ul></div>';
 }).join('');
 NR.observe(document.getElementById('lessons'));
 

@@ -41,10 +41,9 @@
   <h2 class="nr-h2 nr-reveal">Room Booking</h2>
   <p class="nr-sub nr-reveal">The Podcast/Interview Room and the Anchor Room.</p>
   <div class="nr-grid nr-stagger">
-    <div class="nr-panel"><h3 class="nr-h3">Podcast / Interview Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Book a slot before you shoot so two groups don't collide.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or a booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
-    <div class="nr-panel"><h3 class="nr-h3">Anchor Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Reserved for anchor filming 9:00–9:30; open after.</p><a class="nr-btn ghost" href="#" onclick="alert('Link the studio Google Calendar or a booking form here.');return false;">Book a slot →</a><br><span class="nr-draft" style="margin-top:10px;display:inline-block">Draft — link booking calendar</span></div>
+    <div class="nr-panel"><h3 class="nr-h3">Podcast / Interview Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Book a slot before you shoot so two groups don't collide.</p><span data-link="PODCAST_ROOM_URL" data-label="Book a slot" data-ghost data-note="Ask the Studio Director to reserve it for you."></span></div>
+    <div class="nr-panel"><h3 class="nr-h3">Anchor Room</h3><p style="color:var(--steel);font-size:13.5px;margin-bottom:12px">Reserved for anchor filming 9:00–9:30; open after.</p><span data-link="ANCHOR_ROOM_URL" data-label="Book a slot" data-ghost data-note="Ask the Studio Director to reserve it for you."></span></div>
   </div>
-  <!-- TODO: link the studio Google Calendar or a booking form -->
 
   <!-- Daily rundown -->
   <h2 class="nr-h2 nr-reveal">Daily Rundown · Show Builder</h2>
@@ -58,9 +57,7 @@
   <h2 class="nr-h2 nr-reveal">Want a Role?</h2>
   <div class="nr-panel nr-reveal">
     <p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:14px">Roles are <strong>earned each semester</strong> — talk to Mr. Nimmo. Show up early, hit deadlines, and help your group, and you'll be on the shortlist.</p>
-    <a class="nr-btn" href="#" onclick="alert('Link the leadership application form here.');return false;">Apply for a role →</a>
-    <span class="nr-draft" style="margin-left:10px">Draft — link application form</span>
-    <!-- TODO: link the leadership application form -->
+    <span data-link="ROLE_APPLICATION_URL" data-label="Apply for a role" data-note="Applications open near the end of each semester — talk to Mr. Nimmo."></span>
   </div>
 </main>
 <div data-foot></div>

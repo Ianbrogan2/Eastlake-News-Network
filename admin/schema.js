@@ -412,13 +412,43 @@ window.ENN_SCHEMA = [
   },
 
   { id:'nrconfig', icon:'🔑', label:'Newsroom Settings', group:'Student Newsroom',
-    desc:'The call sign students type, and the Google Form links.',
+    desc:'Every link the student hub uses. Paste a link in and that button turns on; leave one blank and students see a tidy "not linked yet" note instead of a broken button.',
     file:'newsroom/config.js', kind:'jsobject', varName:'ENN',
     fields:[
-      { key:'CALL_SIGN', label:'Call sign (password)', type:'text' },
-      { key:'SUBMIT_FORM_URL', label:'Submission form link', type:'text' },
-      { key:'CATALOG_SHEET_URL', label:'Submissions sheet link', type:'text' },
-      { key:'PITCH_FORM_URL', label:'Pitch form link', type:'text' },
+      { key:'CALL_SIGN', label:'Call sign (for people without a student ID)', type:'text',
+        help:'Students sign in with their own ID instead' },
+
+      { key:'SUBMIT_FORM_URL', label:'① Submission form', type:'text',
+        help:'The Google Form students turn pieces in through — the most important one' },
+      { key:'CATALOG_SHEET_URL', label:'② Submissions sheet', type:'text',
+        help:'The Sheet that form feeds — becomes the Catalog' },
+      { key:'PITCH_FORM_URL', label:'Pitch a story form', type:'text' },
+      { key:'EXPORT_PRESET_URL', label:'Standard export preset file', type:'text' },
+
+      { key:'GRADE_FORM_URL', label:'③ Grade form', type:'text',
+        help:'Receives finished grades from the grading page' },
+      { key:'GRADEBOOK_SHEET_URL', label:'④ Gradebook sheet', type:'text',
+        help:'The Sheet the grade form feeds' },
+
+      { key:'PODCAST_ROOM_URL', label:'Podcast/Interview room booking', type:'text' },
+      { key:'ANCHOR_ROOM_URL', label:'Anchor room booking', type:'text' },
+      { key:'GEAR_ISSUE_URL', label:'Report broken gear form', type:'text' },
+
+      { key:'TIP_LINE_URL', label:'Tip line form', type:'text',
+        help:'Leave blank to use the site\'s own Contact page' },
+      { key:'RELEASE_TALENT_URL', label:'Talent / interview release form', type:'text' },
+      { key:'RELEASE_LOCATION_URL', label:'Location release form', type:'text' },
+      { key:'RELEASE_PARENTAL_URL', label:'Parental consent form', type:'text' },
+      { key:'ROLE_APPLICATION_URL', label:'Leadership application form', type:'text' },
+
+      { key:'BRAND_LOGOS_URL', label:'Logo pack', type:'text' },
+      { key:'BRAND_LOWER3_URL', label:'Lower-third templates', type:'text' },
+      { key:'BRAND_STINGERS_URL', label:'Intro / outro stingers', type:'text' },
+      { key:'MUSIC_LIBRARY_URL', label:'Class music library', type:'text' },
+
+      { key:'SHOW_LENGTH_SECONDS', label:'Show length in seconds', type:'number',
+        help:'600 = a ten-minute show. Used by the rundown builder.' },
+      { key:'YOUTUBE_HANDLE', label:'YouTube handle', type:'text' },
     ]
   },
 

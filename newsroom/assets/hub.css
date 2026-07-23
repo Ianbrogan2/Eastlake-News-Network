@@ -353,3 +353,21 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
   .nr-desk-actions{gap:10px}
   .nr-who b{display:none}
 }
+
+/* ── A link slot that hasn't been filled in yet ──────────────────
+   Reads as a deliberate "not yet", never as a broken button. */
+.nr-notlinked{
+  display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  color:var(--steel);border:1px dashed var(--edge);border-radius:9px;
+  padding:9px 13px;background:rgba(255,255,255,0.012);
+}
+.nr-notlinked-note{
+  display:block;margin-top:7px;font-size:12.5px;color:var(--steel);opacity:.85;line-height:1.45;
+}
+
+/* ── Lessons list on Learn ─────────────────────────────────────── */
+.nr-lessons{list-style:none;margin:0;padding:0}
+.nr-lessons li{padding:9px 0;border-top:1px solid rgba(255,255,255,.05)}
+.nr-lessons li:first-child{border-top:0;padding-top:0}
+.nr-lessons b{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:3px;line-height:1.35}
+.nr-lessons span{display:block;font-size:12.5px;color:var(--steel);line-height:1.55}
