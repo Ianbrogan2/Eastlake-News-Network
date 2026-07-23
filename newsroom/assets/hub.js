@@ -24,7 +24,8 @@
     ['Make','/newsroom/make/'],
     ['Learn','/newsroom/learn/'],
     ['Studio','/newsroom/studio/'],
-    ['Newsroom','/newsroom/newsroom/']
+    ['Newsroom','/newsroom/newsroom/'],
+    ['Crew','/newsroom/crew/']
   ];
   /* Who's signed in (null if the identity layer isn't loaded) */
   NR.me = function(){ return window.ENN_ID ? window.ENN_ID.me() : null; };
@@ -318,9 +319,16 @@
       rows.push(['Submissions', 'Not applicable — you’re not on a production group']);
     }
 
-    const mates = (me.groupMates && me.groupMates.length)
+    /* The whole group, including them — their own name marked so the
+       list reads as "here is my crew" rather than "here are the others". */
+    const roster = me.groupRoster && me.groupRoster.length
+      ? me.groupRoster
+      : (me.groupMates || []).map(n => ({name:n, you:false}));
+    const mates = roster.length
       ? `<div class="nr-desk-mates"><span>Your group</span>${
-          me.groupMates.map(m => `<b>${NR.esc(m)}</b>`).join('')}</div>`
+          roster.map(m => `<b${m.you ? ' class="is-you"' : ''}>${NR.esc(m.name)}${
+            m.you ? ' <i>you</i>' : ''}</b>`).join('')}
+         <a class="nr-desk-all" href="/newsroom/crew/">See every group →</a></div>`
       : '';
 
     const dates = upcoming.length

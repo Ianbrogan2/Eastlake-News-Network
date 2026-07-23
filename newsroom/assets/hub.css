@@ -391,3 +391,73 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
   border:1px solid rgba(125,216,255,.4);border-radius:999px;padding:8px 14px;
   background:rgba(125,216,255,.07);
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   THE CREW  ·  every group and every leadership role
+   ══════════════════════════════════════════════════════════════════ */
+.crew-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+.crew-filters .chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--steel);background:var(--panel-2);border:1px solid var(--edge);
+  border-radius:999px;padding:9px 15px;cursor:pointer;transition:color .15s,border-color .15s,background .15s;
+}
+.crew-filters .chip:hover{color:var(--ink)}
+.crew-filters .chip.active{color:var(--ink);border-color:var(--enn);background:rgba(26,86,219,.14)}
+
+.crew-yours{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:#7DD8FF;border:1px solid rgba(125,216,255,.4);border-radius:999px;
+  padding:4px 10px;background:rgba(125,216,255,.08);vertical-align:middle;margin-left:8px;
+}
+
+.crew-leads{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:12px}
+.crew-lead{border:1px solid var(--edge);border-radius:10px;padding:11px 13px;background:var(--panel-2)}
+.crew-lead b{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.3}
+.crew-lead span{
+  display:block;margin-top:3px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);
+}
+.crew-lead.is-you{border-color:rgba(125,216,255,.55);background:rgba(125,216,255,.07)}
+.crew-lead i,.crew-members i,.nr-desk-mates i{
+  font-style:normal;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:#7DD8FF;border:1px solid rgba(125,216,255,.45);border-radius:999px;padding:1px 6px;margin-left:5px;
+}
+
+.crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:32px}
+.crew-card{
+  border:1px solid var(--edge);border-radius:14px;padding:16px 17px;
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+}
+.crew-card.is-mine{
+  border-color:rgba(125,216,255,.55);
+  box-shadow:0 0 0 3px rgba(125,216,255,.12), 0 12px 30px -20px rgba(125,216,255,.9);
+}
+.crew-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.crew-card-head h3{font-family:var(--display);font-size:24px;letter-spacing:.02em;font-weight:400;color:var(--ink)}
+.crew-badge{
+  flex:none;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:#7DD8FF;border:1px solid rgba(125,216,255,.45);border-radius:999px;padding:3px 8px;
+}
+.crew-meta{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--steel);margin:4px 0 11px;
+}
+.crew-members{list-style:none;margin:0;padding:0;counter-reset:crew}
+.crew-members li{
+  counter-increment:crew;position:relative;padding:6px 0 6px 26px;
+  font-size:13.5px;color:#c9cfda;border-top:1px solid rgba(255,255,255,.05);
+}
+.crew-members li:first-child{border-top:0}
+.crew-members li::before{
+  content:counter(crew);position:absolute;left:0;top:6px;
+  font-family:var(--mono);font-size:10px;color:var(--steel);
+}
+.crew-members li.is-you{color:var(--ink);font-weight:600}
+
+/* "See every group" link on the dashboard */
+.nr-desk-all{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--steel);transition:color .16s;margin-left:4px;
+}
+.nr-desk-all:hover{color:#7DD8FF}
+.nr-desk-mates b.is-you{border-color:rgba(125,216,255,.5);background:rgba(125,216,255,.09);color:var(--ink)}

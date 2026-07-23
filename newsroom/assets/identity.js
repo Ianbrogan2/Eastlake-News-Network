@@ -79,10 +79,19 @@
           hit.group       = gi + 1;
           hit.groupCount  = (per.groups || []).length;
           hit.groupName   = txt(g.name) || ('Group ' + (gi + 1));
+          /* everyone else on the group */
           hit.groupMates = (g.members || [])
             .filter(function(x){ return x && txt(x.id) && txt(x.id) !== want; })
             .map(fullName)
             .filter(Boolean);
+          /* the WHOLE group, including this person, flagged so the
+             screen can say which one is them */
+          hit.groupRoster = (g.members || [])
+            .filter(function(x){ return x && (txt(x.id) || txt(x.first) || txt(x.last)); })
+            .map(function(x){
+              return { name: fullName(x), id: txt(x.id), you: txt(x.id) === want };
+            })
+            .filter(function(x){ return x.name; });
         });
       });
 

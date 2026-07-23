@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The Crew — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
+<link rel="stylesheet" href="/newsroom/colors.css?v=3">
+<script src="/newsroom/config.js?v=3"></script>
+<script src="/EDIT/21-BULLETINS.js?v=3"></script>
+<script src="/EDIT/22-ROSTER.js?v=3"></script>
+<script src="/newsroom/assets/identity.js?v=3"></script>
+</head>
+<body class="nr" data-section="Crew">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Roster</b><span id="crew-tag">Everyone at ENN</span></div>
+    <h1 class="nr-title">THE CREW</h1>
+    <p class="nr-lede">Every production group and every leadership role, across all three periods. Your own group is highlighted.</p>
+  </section>
+
+  <div class="crew-filters" id="crew-filters"></div>
+  <div id="crew-body"></div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js?v=3"></script>
+<script>
+(function(){
+  var body = document.getElementById('crew-body');
+  var R  = (typeof ENN_ROSTER !== 'undefined') ? ENN_ROSTER : null;
+  var me = NR.me();
+  var myGroup  = (me && me.group)  ? me.group  : null;
+  var myPeriod = (me && me.period) ? me.period : null;
+  var myId     = (me && me.id)     ? String(me.id).trim() : '';
+
+  if(!R){
+    body.innerHTML = NR.emptyState('👥','Roster not loaded','Try refreshing the page.');
+    return;
+  }
+
+  var PERIODS = [1,4,6];
+  function nameOf(p){
+    var n = ((p.first||'') + ' ' + (p.last||'')).trim();
+    return n;
+  }
+  function filled(list){
+    return (list||[]).filter(function(x){ return x && (x.first || x.last || x.id); });
+  }
+
+  /* ── Period filter chips ───────────────────────────────────── */
+  var filters = document.getElementById('crew-filters');
+  filters.innerHTML = '<button class="chip active" data-p="all">All periods</button>' +
+    PERIODS.map(function(p){
+      return '<button class="chip" data-p="'+p+'">Period '+p+
+             (myPeriod === p ? ' · yours' : '')+'</button>';
+    }).join('');
+
+  /* ── Build every period ────────────────────────────────────── */
+  var html = '';
+
+  PERIODS.forEach(function(p){
+    var per = R['period'+p];
+    if(!per) return;
+
+    var leaders = filled(per.leadership);
+    var groups  = (per.groups||[]).map(function(g,i){
+      return { n:i+1, name:g.name || ('Group '+(i+1)), members: filled(g.members) };
+    });
+    var withPeople = groups.filter(function(g){ return g.members.length; });
+    var headcount  = withPeople.reduce(function(a,g){ return a + g.members.length; }, 0);
+
+    html += '<section class="crew-period" data-period="'+p+'">';
+    html += '<h2 class="nr-h2 nr-reveal">Period ' + p +
+      (myPeriod === p ? ' <span class="crew-yours">your period</span>' : '') + '</h2>';
+    html += '<p class="nr-sub nr-reveal">' +
+      (withPeople.length ? withPeople.length + ' group' + (withPeople.length===1?'':'s') +
+        ' · ' + headcount + ' student' + (headcount===1?'':'s') : 'No groups filled in yet') +
+      (leaders.length ? ' · ' + leaders.length + ' leadership role' + (leaders.length===1?'':'s') : '') +
+      '</p>';
+
+    /* leadership */
+    if(leaders.length){
+      html += '<div class="nr-panel nr-reveal" style="margin-bottom:18px">' +
+        '<h3 class="nr-h3">Leadership</h3><div class="crew-leads">' +
+        leaders.map(function(l){
+          var isYou = myId && String(l.id).trim() === myId;
+          return '<div class="crew-lead' + (isYou ? ' is-you' : '') + '">' +
+            '<b>' + NR.esc(nameOf(l) || '—') + (isYou ? ' <i>you</i>' : '') + '</b>' +
+            '<span>' + NR.esc(l.role || '') + '</span></div>';
+        }).join('') + '</div></div>';
+    }
+
+    /* groups */
+    if(withPeople.length){
+      html += '<div class="crew-grid nr-stagger">';
+      html += withPeople.map(function(g){
+        var isMine = (myPeriod === p && myGroup === g.n);
+        var wave = (typeof ENN_SEASON !== 'undefined') ? ENN_SEASON.waveOf(g.n, groups.length) : null;
+        var nx = (typeof ENN_SEASON !== 'undefined')
+          ? ENN_SEASON.nextForGroup('P'+p, g.n, groups.length) : null;
+        return '<div class="crew-card' + (isMine ? ' is-mine' : '') + '">' +
+          '<div class="crew-card-head">' +
+            '<h3>' + NR.esc(g.name) + '</h3>' +
+            (isMine ? '<span class="crew-badge">your group</span>' : '') +
+          '</div>' +
+          '<div class="crew-meta">' +
+            (wave !== null ? (wave === 0 ? 'First wave' : 'Second wave') : '') +
+            (nx ? ' · airs ' + NR.esc(ENN_SEASON.shortDate(nx.date)) : '') +
+          '</div>' +
+          '<ol class="crew-members">' +
+            g.members.map(function(m){
+              var isYou = myId && String(m.id).trim() === myId;
+              return '<li' + (isYou ? ' class="is-you"' : '') + '>' +
+                NR.esc(nameOf(m)) + (isYou ? ' <i>you</i>' : '') + '</li>';
+            }).join('') +
+          '</ol></div>';
+      }).join('');
+      html += '</div>';
+    } else {
+      html += NR.emptyState('👥','No groups in Period ' + p + ' yet',
+        'Groups appear here as soon as they are entered in the roster.');
+    }
+
+    html += '</section>';
+  });
+
+  body.innerHTML = html;
+
+  /* filter chips */
+  filters.addEventListener('click', function(e){
+    var btn = e.target.closest('.chip'); if(!btn) return;
+    filters.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('active', c === btn); });
+    var want = btn.dataset.p;
+    body.querySelectorAll('.crew-period').forEach(function(sec){
+      sec.style.display = (want === 'all' || sec.dataset.period === want) ? '' : 'none';
+    });
+  });
+
+  NR.observe(body);
+})();
+</script>
+</body>
+</html>
