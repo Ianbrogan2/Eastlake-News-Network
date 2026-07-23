@@ -168,8 +168,8 @@ var ENN_ROSTER = {
           },
           {
             id: '',
-            first: '',
-            last: ''
+            first: 'Barac',
+            last: 'Salinas'
           }
         ]
       },
