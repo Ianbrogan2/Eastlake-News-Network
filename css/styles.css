@@ -1280,8 +1280,10 @@ img{display:block;max-width:100%}
 }
 .footer-meta a:hover{color:#fff}
 /* quiet crew-access door — a decorative record dot; only those told about it click it */
-.crew-door{color:rgba(255,255,255,0.14);text-decoration:none;padding:0 2px;transition:color .3s,text-shadow .3s}
-.crew-door:hover{color:#FF3B30;text-shadow:0 0 8px rgba(255,59,48,0.6)}
+.crew-door{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;margin-left:6px;vertical-align:middle;
+  font-size:20px;line-height:1;color:rgba(255,255,255,0.5);text-decoration:none;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.14);transition:color .3s,text-shadow .3s,border-color .3s,background .3s}
+.crew-door:hover,.crew-door:focus-visible{color:#FF3B30;border-color:rgba(255,59,48,0.5);background:rgba(255,59,48,0.08);text-shadow:0 0 10px rgba(255,59,48,0.7)}
 
 @media (prefers-reduced-motion: reduce){
   /* Collapse scroll space so the hero doesn't pin for 5+ screen-heights */
