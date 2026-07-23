@@ -17,7 +17,7 @@
 // ║    as a form field — you just type the name and ID into it.       ║
 // ╠═══════════════════════════════════════════════════════════════╣
 // ║  HOW THE SLOTS WORK:                                             ║
-// ║    Each period has 10 LEADERSHIP slots and 8 GROUPS of up to 8.  ║
+// ║    Each period has 11 LEADERSHIP slots and 8 GROUPS of up to 8.  ║
 // ║    Empty slots are simply ignored — leave any you don't use       ║
 // ║    blank. Nothing breaks and nothing shows up on the site.        ║
 // ║                                                                  ║
@@ -53,6 +53,12 @@ var ENN_ROSTER = {
       },
       {
         role: 'Newsroom Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Creative Director',
         id: '',
         first: '',
         last: ''
@@ -484,6 +490,12 @@ var ENN_ROSTER = {
         last: ''
       },
       {
+        role: 'Creative Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
         role: 'Assistant Director',
         id: '',
         first: '',
@@ -905,6 +917,12 @@ var ENN_ROSTER = {
       },
       {
         role: 'Newsroom Director',
+        id: '',
+        first: '',
+        last: ''
+      },
+      {
+        role: 'Creative Director',
         id: '',
         first: '',
         last: ''

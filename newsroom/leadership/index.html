@@ -93,13 +93,41 @@
 
     /* leadership table */
     var leaders = (per.leadership||[]).filter(function(l){ return l && (l.first || l.last || l.id); });
+
+    /* Plenty of leaders also produce with a group. Look each one up by
+       ID so the table can show that second hat, and flag anyone who
+       holds more than one leadership role. */
+    function alsoIn(id){
+      if(!id) return '';
+      var hits = [];
+      (per.groups||[]).forEach(function(g, gi){
+        (g.members||[]).forEach(function(m){
+          if(m && String(m.id).trim() === String(id).trim()) hits.push(g.name || ('Group '+(gi+1)));
+        });
+      });
+      return hits.join(', ');
+    }
+    function otherRoles(id, thisRole){
+      if(!id) return [];
+      return leaders.filter(function(x){
+        return String(x.id).trim() === String(id).trim() && x.role !== thisRole;
+      }).map(function(x){ return x.role; });
+    }
+
     html += '<div class="nr-panel nr-reveal" style="margin-bottom:18px">' +
       '<h3 class="nr-h3">Leadership</h3>';
     if(leaders.length){
-      html += '<div class="nr-board-wrap"><table class="nr-board"><thead><tr><th>Role</th><th>Who</th></tr></thead><tbody>' +
+      html += '<div class="nr-board-wrap"><table class="nr-board"><thead><tr>' +
+        '<th>Role</th><th>Who</th><th>Also</th></tr></thead><tbody>' +
         leaders.map(function(l){
+          var group = alsoIn(l.id);
+          var others = otherRoles(l.id, l.role);
+          var also = [];
+          if(group)         also.push('produces with <strong>' + NR.esc(group) + '</strong>');
+          if(others.length) also.push('also ' + NR.esc(others.join(' &amp; ')));
           return '<tr><td><strong>' + NR.esc(l.role||'—') + '</strong></td><td>' +
-                 NR.esc(window.ENN_ID.fullName(l) || '—') + '</td></tr>';
+                 NR.esc(window.ENN_ID.fullName(l) || '—') + '</td><td style="color:var(--steel);font-size:13px">' +
+                 (also.length ? also.join(' · ') : '—') + '</td></tr>';
         }).join('') + '</tbody></table></div>';
     } else {
       html += '<p style="color:var(--steel);font-size:13.5px">No leadership roles filled for this period yet.</p>';
