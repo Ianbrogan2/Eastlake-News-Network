@@ -23,6 +23,13 @@ window.ENN = {
   EXPORT_PRESET_URL: '',
   GRADE_FORM_URL: '',
   GRADEBOOK_SHEET_URL: '',
+
+  // The shared GRADE STORE — a Google Apps Script that reads/writes a
+  // grades Sheet. Set this and grading goes LIVE: every grader sees each
+  // other's scores within a few seconds, students see their own grades,
+  // and the leaderboard works. Leave blank and grades stay on one
+  // computer. See admin/GRADES-SETUP.md.
+  GRADES_API_URL: "",
   PODCAST_ROOM_URL: '',
   ANCHOR_ROOM_URL: '',
   GEAR_ISSUE_URL: '',

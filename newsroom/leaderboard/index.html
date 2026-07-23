@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Leaderboard — ENN Newsroom</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=5">
+<link rel="stylesheet" href="/newsroom/colors.css?v=5">
+<script src="/newsroom/config.js?v=5"></script>
+<script src="/EDIT/21-BULLETINS.js?v=5"></script>
+<script src="/EDIT/23-SECTIONS.js?v=5"></script>
+<script src="/EDIT/22-ROSTER.js?v=5"></script>
+<script src="/newsroom/assets/identity.js?v=5"></script>
+<script src="/newsroom/assets/grades.js?v=5"></script>
+<style>
+.lb-rank{display:flex;align-items:center;gap:16px;padding:14px 16px;border:1px solid var(--edge);border-radius:14px;background:linear-gradient(180deg,var(--panel),var(--panel-2));margin-bottom:10px}
+.lb-rank.top{border-color:rgba(255,207,107,.5);box-shadow:0 0 0 3px rgba(255,207,107,.1)}
+.lb-pos{font-family:var(--display);font-size:38px;line-height:1;width:46px;text-align:center;color:var(--steel)}
+.lb-rank.top .lb-pos{color:#ffcf6b}
+.lb-main{flex:1;min-width:0}
+.lb-main b{font-family:var(--display);font-size:22px;letter-spacing:.02em;color:var(--ink);display:block}
+.lb-main span{font-size:12.5px;color:var(--steel)}
+.lb-score{text-align:right;font-family:var(--mono);white-space:nowrap}
+.lb-score .n{font-size:20px;color:#7DD8FF}
+.lb-score .v{display:block;font-size:11px;color:var(--steel);margin-top:2px}
+.lb-vote{flex:none}
+.lb-votebtn{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;border-radius:999px;border:1px solid var(--edge);background:var(--panel-2);color:var(--ink);cursor:pointer}
+.lb-votebtn.voted{border-color:rgba(255,207,107,.6);background:rgba(255,207,107,.12);color:#ffcf6b}
+.lb-past{border:1px solid var(--edge);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel-2)}
+.lb-past h4{font-family:var(--display);font-size:20px;letter-spacing:.02em;margin-bottom:8px}
+.lb-past ol{margin:0;padding-left:20px;color:#c9cfda;font-size:13.5px;line-height:1.7}
+@media (max-width:560px){ .lb-rank{flex-wrap:wrap} .lb-vote{width:100%} }
+</style>
+</head>
+<body class="nr" data-section="Leaderboard">
+<div data-rail></div>
+
+<main class="nr-wrap">
+  <a class="nr-back" href="/newsroom/">← This Week</a>
+  <section class="nr-hero nr-reveal">
+    <div class="nr-eyebrow"><b>Every two weeks</b><span id="lb-live">Best of the bulletin</span></div>
+    <h1 class="nr-title">LEADER<br>BOARD</h1>
+    <p class="nr-lede">The best pieces, decided by the leaders every two weeks. Everyone can see the standings; leaders cast the votes; the advisor locks in each edition.</p>
+  </section>
+  <div id="lb-body"></div>
+</main>
+<div data-foot></div>
+
+<script src="/newsroom/assets/hub.js?v=5"></script>
+<script>
+(function(){
+  var body = document.getElementById('lb-body');
+  var me = NR.me();
+
+  if(typeof NR.sectionOn === 'function' && !NR.sectionOn('pageLeaderboard')){ NR.showDisabled(); return; }
+
+  var G = window.ENN_GRADES;
+  var canVote = window.ENN_ID && window.ENN_ID.isLeader(me);
+  var advisor = window.ENN_ID && window.ENN_ID.isAdvisor(me);
+  var meName  = window.ENN_ID ? window.ENN_ID.displayName(me) : '';
+  document.getElementById('lb-live').textContent = G.live() ? 'Best of the bulletin · live' : 'Best of the bulletin';
+
+  function standings(){
+    var win = G.windowId();
+    var votes = G.votesFor(win);                 // {leaderName: pieceKey}
+    var tally = {};
+    Object.keys(votes).forEach(function(name){ tally[votes[name]] = (tally[votes[name]]||0) + 1; });
+
+    return G.all().filter(function(r){ return G.total(r).graded > 0; })
+      .map(function(r){ return { rec:r, total:G.total(r).total, votes: tally[r.key]||0 }; })
+      .sort(function(a,b){ return (b.votes - a.votes) || (b.total - a.total); });
+  }
+
+  function draw(){
+    var win = G.windowId();
+    var votes = G.votesFor(win);
+    var myVote = votes[meName];
+    var rows = standings();
+    var html = '';
+
+    /* ── current edition ── */
+    html += '<h2 class="nr-h2 nr-reveal">This Edition</h2>';
+    html += '<p class="nr-sub nr-reveal">' +
+      (canVote ? 'Tap ★ to cast your vote for the best piece — one vote each, change it anytime before the advisor publishes.'
+               : 'Ranked by leader votes, then by score. The leaders publish a new edition every two weeks.') + '</p>';
+
+    if(!rows.length){
+      html += NR.emptyState('🏆','Nothing graded yet','Once pieces are graded, the standings build here automatically.');
+    } else {
+      html += rows.slice(0, 12).map(function(x, i){
+        var r = x.rec;
+        var voted = myVote === r.key;
+        return '<div class="lb-rank' + (i===0?' top':'') + '">' +
+          '<div class="lb-pos">' + (i+1) + '</div>' +
+          '<div class="lb-main"><b>' + NR.esc(r.groupName||'—') + '</b>' +
+            '<span>' + NR.esc(r.title || r.type || 'Piece') + ' · Period ' + NR.esc(r.period||'?') +
+              (r.airDate ? ' · ' + NR.esc(r.airDate) : '') + '</span></div>' +
+          '<div class="lb-score"><span class="n">' + x.total + '</span>' +
+            '<span class="v">' + x.votes + ' vote' + (x.votes===1?'':'s') + '</span></div>' +
+          (canVote ? '<div class="lb-vote"><button class="lb-votebtn' + (voted?' voted':'') + '" data-vote="' + NR.esc(r.key) + '">' +
+              (voted ? '★ your vote' : '☆ vote') + '</button></div>' : '') +
+        '</div>';
+      }).join('');
+    }
+
+    /* ── advisor publishes the edition ── */
+    if(advisor && rows.length){
+      html += '<div class="nr-panel nr-reveal" style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+        '<div style="color:#c9cfda;font-size:13.5px">Lock in the current top 3 as this fortnight’s leaderboard — students see it published.</div>' +
+        '<button class="nr-btn" id="lb-publish" type="button">◉ Publish this edition</button></div>';
+    }
+
+    /* ── past editions ── */
+    var boards = G.leaderboards();
+    if(boards.length){
+      html += '<h2 class="nr-h2 nr-reveal" style="margin-top:34px">Published Editions</h2>';
+      html += boards.map(function(b){
+        return '<div class="lb-past"><h4>' + NR.esc(b.title || ('Edition ' + b.window)) + '</h4><ol>' +
+          (b.entries||[]).map(function(e){
+            return '<li><strong>' + NR.esc(e.groupName) + '</strong> — ' + NR.esc(e.title||'') +
+                   ' · ' + e.total + (e.votes ? ' · ' + e.votes + ' votes' : '') + '</li>';
+          }).join('') + '</ol></div>';
+      }).join('');
+    }
+
+    body.innerHTML = html;
+
+    body.querySelectorAll('[data-vote]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        G.vote(btn.dataset.vote, meName);   // one vote per leader per window
+      });
+    });
+    var pub = document.getElementById('lb-publish');
+    if(pub) pub.addEventListener('click', function(){
+      var top = standings().slice(0, 3).map(function(x){
+        return { groupName:x.rec.groupName, title:x.rec.title||x.rec.type||'Piece',
+                 period:x.rec.period, total:x.total, votes:x.votes };
+      });
+      var label = prompt('Name this edition (e.g. "Weeks of Aug 3–14"):', 'Edition ' + G.windowId());
+      if(label === null) return;
+      G.publish({ window: G.windowId(), title: label, entries: top });
+    });
+
+    NR.observe(body);
+  }
+
+  G.onChange(draw);
+  G.ready().then(function(){ draw(); G.startSync(5000); });
+})();
+</script>
+</body>
+</html>

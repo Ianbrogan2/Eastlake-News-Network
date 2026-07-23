@@ -70,6 +70,7 @@ var ENN_SECTIONS = {
     pageStudio:     true,   // roles, equipment, rooms
     pageDesk:       true,   // pitch board, standards, tip line
     pageCrew:       true,   // every group and leadership role
+    pageLeaderboard: true, // biweekly best-of, visible to all students
     pageLeadership: true,   // leaders' tools (grading, rundown)
 
     // ── Leadership tools (inside the Leadership tab) ─────────────

@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
-<link rel="stylesheet" href="/newsroom/colors.css?v=3">
-<script src="/newsroom/config.js?v=3"></script>
-<script src="/EDIT/21-BULLETINS.js?v=3"></script>
-<script src="/EDIT/23-SECTIONS.js?v=3"></script>
-<script src="/EDIT/22-ROSTER.js?v=3"></script>
-<script src="/newsroom/assets/identity.js?v=3"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=5">
+<link rel="stylesheet" href="/newsroom/colors.css?v=5">
+<script src="/newsroom/config.js?v=5"></script>
+<script src="/EDIT/21-BULLETINS.js?v=5"></script>
+<script src="/EDIT/23-SECTIONS.js?v=5"></script>
+<script src="/EDIT/22-ROSTER.js?v=5"></script>
+<script src="/newsroom/assets/identity.js?v=5"></script>
+<script src="/newsroom/assets/grades.js?v=5"></script>
 </head>
 <body class="nr" data-section="Learn">
 <div data-rail></div>
@@ -43,7 +44,7 @@
 
   <!-- The rubric, in the open -->
   <h2 class="nr-h2 nr-reveal">The Rubric — In the Open</h2>
-  <p class="nr-sub nr-reveal">Grade yourself before you submit. 100 points across three roles, plus automatic deductions.</p>
+  <p class="nr-sub nr-reveal">No secrets — here's exactly how the leadership team scores every piece. 100 points across three roles, plus automatic deductions.</p>
   <div class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
     <div class="nr-panel"><div class="nr-chip is-approved" style="margin-bottom:10px">Producer · 40 pts</div><ul class="nr-prose" style="max-width:none;color:#c9cfda;font-size:13.5px"><li>Deadline met</li><li>Length compliance</li><li>Appropriateness</li><li>Planning / pre-pro quality</li><li>Use of script / plan</li><li>Organization</li><li>Member contribution</li><li>Correct category</li></ul></div>
     <div class="nr-panel"><div class="nr-chip is-producing" style="margin-bottom:10px">Director · 40 pts</div><ul class="nr-prose" style="max-width:none;color:#c9cfda;font-size:13.5px"><li>Creativity</li><li>Innovation</li><li>Visual quality</li><li>Framing</li><li>Professionalism</li><li>Presentation / effort</li><li>Entertainment value</li></ul></div>
@@ -54,27 +55,12 @@
     <p style="color:#c9cfda;font-size:13.5px;line-height:1.7">Late work · poor audio · missing lower thirds · spelling mistakes · no B-roll (sports/reporting) · incorrect export · unprofessionalism · can't air · low quality.</p>
   </div>
 
-  <!-- Exemplar reel -->
-  <h2 class="nr-h2 nr-reveal">Exemplar Reel</h2>
-  <p class="nr-sub nr-reveal">Past pieces that nailed it, and <em>why</em>. Only pieces already public on <a href="https://www.youtube.com/@ennbulletin" target="_blank" rel="noopener" style="color:#7DD8FF">@ennbulletin</a> — anything not already public needs consent first. <span class="nr-draft">Draft — add embeds</span></p>
-  <div class="nr-grid nr-stagger" id="exemplars"></div>
-  <!-- TODO: embed exemplar pieces (only already-public @ennbulletin videos) with a note on why each works -->
-
-  <!-- CTE / career -->
-  <h2 class="nr-h2 nr-reveal">CTE &amp; Career</h2>
-  <div class="nr-grid nr-stagger">
-    <div class="nr-panel"><h3 class="nr-h3">Adobe Certification</h3><p style="color:var(--steel);font-size:13.5px">Premiere Pro certification path for editors. <span class="nr-draft">Draft — add links</span></p></div>
-    <div class="nr-panel"><h3 class="nr-h3">Competitions</h3><p style="color:var(--steel);font-size:13.5px">SkillsUSA, student journalism &amp; film awards. <span class="nr-draft">Draft — add links</span></p></div>
-    <div class="nr-panel"><h3 class="nr-h3">Demo Reel &amp; Portfolio</h3><p style="color:var(--steel);font-size:13.5px">How to cut a reel that gets you hired or admitted. <span class="nr-draft">Draft</span></p></div>
-    <div class="nr-panel"><h3 class="nr-h3">Internships</h3><p style="color:var(--steel);font-size:13.5px">Local media &amp; production opportunities. <span class="nr-draft">Draft — add links</span></p></div>
-  </div>
-  <!-- TODO: fill CTE/career links -->
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=3"></script>
-<script src="/newsroom/text.js?v=3"></script>
-<script src="/newsroom/assets/hub.js?v=3"></script>
+<script src="/newsroom/boards.js?v=5"></script>
+<script src="/newsroom/text.js?v=5"></script>
+<script src="/newsroom/assets/hub.js?v=5"></script>
 <script>
 /* ── Lessons library ────────────────────────────────────────────
    Each lesson is: what it is, how to do it, and the mistake that
@@ -153,9 +139,6 @@ NR.board('challenge').then(function(res){
     emptyIcon:'🏆',emptyTitle:'Leaderboard is empty',emptyBody:'Standings show up here once entries are scored.',
     row:function(r){return [NR.esc(r.Week||'—'),NR.esc(r.Leaderboard||'—')];}});
 });
-document.getElementById('exemplars').innerHTML =
-  NR.emptyState('🎬','Exemplars coming soon','Annotated best-of pieces (already public on @ennbulletin) will be embedded here with a note on why each one works.');
-NR.observe(document.getElementById('exemplars').parentElement);
 </script>
 </body>
 </html>

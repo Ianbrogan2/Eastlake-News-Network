@@ -187,6 +187,34 @@
     me = me || load();
     return !!me && me.kind === 'advisor';
   }
+
+  /* Who's allowed on the grading page: the advisor, and any leader whose
+     role is one of the grading roles (Studio Director, Newsroom Director,
+     Main Editor). Other leadership roles don't grade. */
+  var GRADER_ROLES = ['studio director','newsroom director','main editor','editor'];
+  function canGrade(me){
+    me = me || load();
+    if(!me) return false;
+    if(me.kind === 'advisor') return true;
+    if(!me.roles || !me.roles.length) return false;
+    return me.roles.some(function(r){
+      var rl = low(r);
+      return GRADER_ROLES.some(function(g){ return rl.indexOf(g) >= 0; });
+    });
+  }
+  /* Which of the 40/40/20 lanes this person "owns" (highlighted for
+     them). Advisor owns none in particular — they see all. */
+  function homeLane(me){
+    me = me || load();
+    if(!me || !me.roles) return '';
+    var map = { 'newsroom director':'producer', 'studio director':'director',
+                'main editor':'editor', 'editor':'editor' };
+    for(var i=0;i<me.roles.length;i++){
+      var rl = low(me.roles[i]);
+      for(var k in map){ if(rl.indexOf(k) >= 0) return map[k]; }
+    }
+    return '';
+  }
   /* 'P4' for the season helpers */
   function periodTag(me){
     me = me || load();
@@ -246,6 +274,8 @@
     periods:       PERIODS,
     inGroup:       inGroup,
     canSubmit:     canSubmit,
+    canGrade:      canGrade,
+    homeLane:      homeLane,
     myWave:        myWave,
     myAirDates:    myAirDates,
     myNextAirDate: myNextAirDate

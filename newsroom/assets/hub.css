@@ -461,3 +461,32 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 }
 .nr-desk-all:hover{color:#7DD8FF}
 .nr-desk-mates b.is-you{border-color:rgba(125,216,255,.5);background:rgba(125,216,255,.09);color:var(--ink)}
+
+/* ── Leadership air schedule — who airs, and when ────────────────── */
+.lead-sched{margin-top:12px;display:flex;flex-direction:column;gap:2px}
+.lead-sched-row{
+  display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:start;
+  padding:12px 0;border-top:1px solid rgba(255,255,255,.05);
+}
+.lead-sched-row:first-child{border-top:0}
+.lead-sched-row.is-next{
+  background:linear-gradient(90deg,rgba(125,216,255,.06),transparent 70%);
+  border-radius:10px;padding:12px;margin:0 -12px;border-top:0;
+}
+.lead-sched-when{
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:#c9cfda;line-height:1.5;
+}
+.lead-next-tag{
+  display:inline-block;margin-left:4px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:#7DD8FF;border:1px solid rgba(125,216,255,.45);border-radius:999px;padding:1px 7px;vertical-align:middle;
+}
+.lead-sched-groups{display:flex;flex-direction:column;gap:9px}
+.lead-sched-group b{
+  display:block;font-family:var(--display);font-size:19px;letter-spacing:.02em;color:var(--ink);line-height:1.1;
+}
+.lead-sched-group span{display:block;margin-top:2px;font-size:13px;color:var(--steel);line-height:1.5}
+.lead-sched-empty{font-size:13px;color:var(--steel);font-style:italic}
+@media (max-width:600px){
+  .lead-sched-row{grid-template-columns:1fr;gap:6px}
+  .lead-sched-row.is-next{margin:0}
+}

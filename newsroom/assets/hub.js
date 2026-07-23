@@ -25,7 +25,8 @@
     ['Learn','/newsroom/learn/'],
     ['Studio','/newsroom/studio/'],
     ['Newsroom','/newsroom/newsroom/'],
-    ['Crew','/newsroom/crew/']
+    ['Crew','/newsroom/crew/'],
+    ['Leaderboard','/newsroom/leaderboard/']
   ];
   /* Who's signed in (null if the identity layer isn't loaded) */
   NR.me = function(){ return window.ENN_ID ? window.ENN_ID.me() : null; };
@@ -78,32 +79,31 @@
     'Make':       'pageMake',
     'Learn':      'pageLearn',
     'Studio':     'pageStudio',
-    'Newsroom':   'pageDesk',
-    'Crew':       'pageCrew',
-    'Leadership': 'pageLeadership',
+    'Newsroom':    'pageDesk',
+    'Crew':        'pageCrew',
+    'Leaderboard': 'pageLeaderboard',
+    'Leadership':  'pageLeadership',
   };
   NR.sectionOn = function(key){
     return (typeof ENN_TOGGLE === 'undefined') ? true : ENN_TOGGLE.newsroom(key);
   };
+
+  /* Submit and Learn are only for people who produce a piece. Someone
+     who can't submit (a leader with no group, or a guest) has nothing to
+     turn in and doesn't need the lessons, so these two tabs disappear
+     for them entirely — no tab, and the address falls back to the hub. */
+  const PRODUCER_TABS = { 'Submit':true, 'Learn':true };
   NR.tabOn = function(label){
     const k = TAB_SWITCH[label];
-    return !k || NR.sectionOn(k);
+    if(k && !NR.sectionOn(k)) return false;                 // switched off in /admin
+    if(PRODUCER_TABS[label] && window.ENN_ID && !window.ENN_ID.canSubmit(NR.me())) return false;
+    return true;
   };
 
-  /* The screen someone gets if they open a switched-off page directly. */
+  /* A switched-off (or not-for-you) page just disappears: the visitor is
+     sent back to the hub rather than shown a placeholder screen. */
   NR.showDisabled = function(){
-    const t = (typeof ENN_TOGGLE !== 'undefined') ? ENN_TOGGLE.title() : 'Not available right now';
-    const m = (typeof ENN_TOGGLE !== 'undefined') ? ENN_TOGGLE.message() : '';
-    const main = $('.nr-wrap');
-    if(!main) return;
-    main.innerHTML =
-      '<section class="nr-hero nr-reveal">' +
-        '<div class="nr-eyebrow"><b>Paused</b><span>Switched off</span></div>' +
-        '<h1 class="nr-title">' + NR.esc(t).toUpperCase() + '</h1>' +
-        '<p class="nr-lede">' + NR.esc(m) + '</p>' +
-      '</section>' +
-      '<div style="margin-top:8px"><a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a></div>';
-    NR.observe(main);
+    location.replace('/newsroom/');
   };
 
   NR.rail = function(current){
@@ -409,6 +409,52 @@
     NR.observe(host);
   };
 
+  /* ── A student's own grades ────────────────────────────────────
+     Grades belong to the GROUP, so every member sees the same scores
+     and the same feedback for each of their group's pieces. Renders
+     into [data-mygrades]; nothing for guests or people not on a group. */
+  NR.myGrades = function(host){
+    if(!host || !window.ENN_ID || !window.ENN_GRADES) return;
+    const me = NR.me();
+    if(!me || me.kind === 'guest' || !window.ENN_ID.inGroup(me)) return;
+
+    const G = window.ENN_GRADES;
+    const draw = () => {
+      const mine = G.all().filter(r =>
+        String(r.period) === String(me.period) && String(r.group) === String(me.group))
+        .filter(r => G.total(r).graded > 0 || r.locked)
+        .sort((a,b) => String(b.airDate).localeCompare(String(a.airDate)));
+      if(!mine.length){ host.innerHTML = ''; return; }
+
+      host.innerHTML =
+        '<h2 class="nr-h2 nr-reveal">Your Grades</h2>' +
+        '<p class="nr-sub nr-reveal">Your whole group shares each grade. These are graded by the leadership team.</p>' +
+        '<div class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">' +
+        mine.map(r => {
+          const t = G.total(r);
+          const col = t.total>=90?'#4ade80':(t.total<70?'#ff8a84':'#7DD8FF');
+          const lane = k => { const l=r.lanes&&r.lanes[k]; return l&&typeof l.score==='number'?l.score:'—'; };
+          return '<div class="nr-panel">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">' +
+              '<h3 class="nr-h3" style="margin:0">' + NR.esc(r.title || r.type || 'Piece') + '</h3>' +
+              '<span style="font-family:var(--display);font-size:30px;color:'+col+'">' + (t.graded?t.total:'—') + '</span></div>' +
+            '<div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--steel);margin:4px 0 10px">' +
+              NR.esc(r.airDate||'') + (r.locked?' · final':(t.graded<3?' · in progress':'')) + '</div>' +
+            '<div style="display:flex;gap:14px;font-size:12.5px;color:#c9cfda;margin-bottom:'+(r.feedback&&r.feedback.text?'10px':'0')+'">' +
+              '<span>Producer <b>'+lane('producer')+'</b></span>' +
+              '<span>Director <b>'+lane('director')+'</b></span>' +
+              '<span>Editor <b>'+lane('editor')+'</b></span></div>' +
+            (r.feedback && r.feedback.text
+              ? '<div style="border-top:1px solid rgba(255,255,255,.06);padding-top:9px;font-size:13px;color:#c9cfda;line-height:1.5">💬 ' + NR.esc(r.feedback.text) + '</div>'
+              : '') +
+          '</div>';
+        }).join('') + '</div>';
+      NR.observe(host);
+    };
+    G.onChange(draw);
+    G.ready().then(() => { draw(); G.startSync(6000); });
+  };
+
   /* Auto-init on DOM ready */
   function init(){
     if(!NR.enforceGate()) return;              // bounced to the gate — stop here
@@ -431,6 +477,7 @@
     NR.applyText(section);
     NR.mountLinks(document);
     if(NR.sectionOn('myDashboard')) NR.myDesk(document.querySelector('[data-mydesk]'));
+    NR.myGrades(document.querySelector('[data-mygrades]'));
     NR.observe(document);
     NR.startClock();
   }

@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
-<link rel="stylesheet" href="/newsroom/colors.css?v=3">
-<script src="/newsroom/config.js?v=3"></script>
-<script src="/EDIT/21-BULLETINS.js?v=3"></script>
-<script src="/EDIT/23-SECTIONS.js?v=3"></script>
-<script src="/EDIT/22-ROSTER.js?v=3"></script>
-<script src="/newsroom/assets/identity.js?v=3"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=5">
+<link rel="stylesheet" href="/newsroom/colors.css?v=5">
+<script src="/newsroom/config.js?v=5"></script>
+<script src="/EDIT/21-BULLETINS.js?v=5"></script>
+<script src="/EDIT/23-SECTIONS.js?v=5"></script>
+<script src="/EDIT/22-ROSTER.js?v=5"></script>
+<script src="/newsroom/assets/identity.js?v=5"></script>
+<script src="/newsroom/assets/grades.js?v=5"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -31,6 +32,9 @@
   <!-- Personal dashboard — only appears when someone signed in with a
        student ID. Guests using the plain call sign see nothing here. -->
   <div data-mydesk></div>
+
+  <!-- A student's own grades (their group's pieces + feedback) -->
+  <div data-mygrades></div>
 
   <!-- Top strip: broadcast clock + next-airtime countdown -->
   <section data-clock-strip class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:8px">
@@ -72,7 +76,7 @@
     <a class="nr-tile" href="/newsroom/calendar/"><div class="k">00 · When you air</div><h3>Calendar</h3><p>The full Fall 2026 bulletin schedule — all 60 shows, color-coded by period.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/submit/"><div class="k">01 · Turn it in</div><h3>Submit</h3><p>Drop your piece, run the pre-submit checklist, beat the deadline.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/make/"><div class="k">02 · Build it</div><h3>Make</h3><p>Piece guides, the idea bank, templates, brand kit, gear how-tos.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/learn/"><div class="k">03 · Get better</div><h3>Learn</h3><p>Lessons, the weekly challenge, the rubric in the open, exemplars.</p><span class="go">→</span></a>
+    <a class="nr-tile" href="/newsroom/learn/"><div class="k">03 · Get better</div><h3>Learn</h3><p>Lessons, the weekly challenge, and the grading rubric in the open.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/studio/"><div class="k">04 · Run it</div><h3>Studio</h3><p>Role hubs, equipment checkout, room booking, the daily rundown.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/newsroom/"><div class="k">05 · The desk</div><h3>Newsroom</h3><p>Pitch board, announcements, standards, release forms, tip line.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/crew/"><div class="k">06 · Who's who</div><h3>The Crew</h3><p>Every production group and leadership role, across all three periods.</p><span class="go">→</span></a>
@@ -82,9 +86,9 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=3"></script>
-<script src="/newsroom/text.js?v=3"></script>
-<script src="/newsroom/assets/hub.js?v=3"></script>
+<script src="/newsroom/boards.js?v=5"></script>
+<script src="/newsroom/text.js?v=5"></script>
+<script src="/newsroom/assets/hub.js?v=5"></script>
 <script>
 /* Countdown to the next real bulletin.
    Reads EDIT/21-BULLETINS.js, so it counts to a day the show actually

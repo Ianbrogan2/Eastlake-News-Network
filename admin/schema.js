@@ -430,6 +430,9 @@ window.ENN_SCHEMA = [
       { key:'GRADEBOOK_SHEET_URL', label:'④ Gradebook sheet', type:'text',
         help:'The Sheet the grade form feeds' },
 
+      { key:'GRADES_API_URL', label:'⑤ Live grade store', type:'text',
+        help:'Apps Script URL that makes grading live & student-visible — see admin/GRADES-SETUP.md' },
+
       { key:'PODCAST_ROOM_URL', label:'Podcast/Interview room booking', type:'text' },
       { key:'ANCHOR_ROOM_URL', label:'Anchor room booking', type:'text' },
       { key:'GEAR_ISSUE_URL', label:'Report broken gear form', type:'text' },
@@ -537,6 +540,7 @@ window.ENN_SCHEMA = [
         { key:'pageStudio',     label:'Studio tab', type:'toggleBool' },
         { key:'pageDesk',       label:'Newsroom (desk) tab', type:'toggleBool' },
         { key:'pageCrew',       label:'Crew tab', type:'toggleBool' },
+        { key:'pageLeaderboard', label:'Leaderboard tab', type:'toggleBool' },
         { key:'pageLeadership', label:'Leadership tab', type:'toggleBool' },
 
         { key:'toolGrading',    label:'Leadership — grading', type:'toggleBool' },
@@ -549,8 +553,6 @@ window.ENN_SCHEMA = [
         { key:'skillChallenge', label:'Front page — skill challenge', type:'toggleBool' },
         { key:'announcements',  label:'Front page — announcements', type:'toggleBool' },
       ]},
-      { key:'disabledTitle',   label:'"Switched off" screen — heading', type:'text' },
-      { key:'disabledMessage', label:'"Switched off" screen — message', type:'textarea' },
     ]
   },
 

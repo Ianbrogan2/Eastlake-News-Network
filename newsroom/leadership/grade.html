@@ -9,65 +9,53 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
-<link rel="stylesheet" href="/newsroom/colors.css?v=3">
-<script src="/newsroom/config.js?v=3"></script>
-<script src="/EDIT/21-BULLETINS.js?v=3"></script>
-<script src="/EDIT/23-SECTIONS.js?v=3"></script>
-<script src="/EDIT/22-ROSTER.js?v=3"></script>
-<script src="/newsroom/assets/identity.js?v=3"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=5">
+<link rel="stylesheet" href="/newsroom/colors.css?v=5">
+<script src="/newsroom/config.js?v=5"></script>
+<script src="/EDIT/21-BULLETINS.js?v=5"></script>
+<script src="/EDIT/23-SECTIONS.js?v=5"></script>
+<script src="/EDIT/22-ROSTER.js?v=5"></script>
+<script src="/newsroom/assets/identity.js?v=5"></script>
+<script src="/newsroom/assets/grades.js?v=5"></script>
 <style>
-/* ── Grading sheet ─────────────────────────────────────────────── */
-.gr-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:8px}
+.gr-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
 .gr-pick label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-bottom:6px}
-.gr-pick select,.gr-pick input{
-  width:100%;padding:10px 12px;font-size:14px;border-radius:9px;font-family:var(--body);
-  background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);
-}
+.gr-pick select,.gr-pick input{width:100%;padding:10px 12px;font-size:14px;border-radius:9px;font-family:var(--body);background:var(--panel-2);border:1px solid var(--edge);color:var(--ink)}
 .gr-pick select:focus,.gr-pick input:focus{outline:none;border-color:var(--enn);box-shadow:0 0 0 2px rgba(26,86,219,.18)}
 
-.gr-cat{margin-bottom:18px}
-.gr-cat-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-.gr-cat-score{font-family:var(--mono);font-size:12px;color:#7DD8FF;white-space:nowrap}
-.gr-item{display:grid;grid-template-columns:1fr 92px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.gr-item:last-child{border-bottom:0}
-.gr-item span{font-size:13.5px;color:#c9cfda}
-.gr-item input{
-  width:100%;padding:7px 9px;text-align:center;font-family:var(--mono);font-size:13px;border-radius:7px;
-  background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);
-}
-.gr-item input:focus{outline:none;border-color:var(--enn)}
-.gr-item .max{font-family:var(--mono);font-size:10px;color:var(--steel)}
+.gr-live{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel);border:1px solid var(--edge);border-radius:999px;padding:6px 12px;background:var(--panel-2)}
+.gr-live i{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px 1px rgba(74,222,128,.7)}
+.gr-live.local i{background:var(--steel);box-shadow:none}
+
+.gr-lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0}
+.gr-lane{border:1px solid var(--edge);border-radius:14px;padding:16px 17px;background:linear-gradient(180deg,var(--panel),var(--panel-2))}
+.gr-lane.mine{border-color:rgba(125,216,255,.5);box-shadow:0 0 0 3px rgba(125,216,255,.1)}
+.gr-lane-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}
+.gr-lane-name{font-family:var(--display);font-size:22px;letter-spacing:.02em;color:var(--ink)}
+.gr-lane-owner{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+.gr-lane-input{display:flex;align-items:center;gap:8px}
+.gr-lane-input input{width:78px;padding:10px;text-align:center;font-family:var(--mono);font-size:20px;border-radius:9px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink)}
+.gr-lane-input input:focus{outline:none;border-color:var(--enn)}
+.gr-lane-input .max{font-family:var(--mono);font-size:13px;color:var(--steel)}
+.gr-lane-meta{margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--steel);min-height:14px}
+.gr-lane-meta.fresh{color:#7DD8FF}
+.gr-lane-help{margin-top:12px;border-top:1px solid rgba(255,255,255,.05);padding-top:10px}
+.gr-lane-help summary{cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel)}
+.gr-lane-help ul{list-style:none;margin:8px 0 0;padding:0}
+.gr-lane-help li{font-size:12px;color:#c9cfda;padding:3px 0}
+.gr-lane-help .maxp{font-family:var(--mono);font-size:10px;color:var(--steel);margin-left:4px}
 
 .gr-ded{display:flex;flex-wrap:wrap;gap:8px}
-.gr-ded label{
-  display:inline-flex;align-items:center;gap:7px;cursor:pointer;
-  font-size:12.5px;color:#c9cfda;border:1px solid var(--edge);border-radius:999px;
-  padding:7px 12px;background:var(--panel-2);transition:border-color .15s,color .15s,background .15s;
-}
-.gr-ded label:hover{border-color:rgba(255,59,48,.4)}
-.gr-ded input:checked + span{color:#ff8a84}
-.gr-ded label:has(input:checked){border-color:rgba(255,59,48,.55);background:rgba(255,59,48,.09)}
+.gr-ded label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;color:#c9cfda;border:1px solid var(--edge);border-radius:999px;padding:7px 12px;background:var(--panel-2)}
+.gr-ded label:has(input:checked){border-color:rgba(255,59,48,.55);background:rgba(255,59,48,.09);color:#ff8a84}
 
-.gr-total{
-  position:sticky;bottom:0;z-index:5;margin-top:20px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  border:1px solid var(--edge);border-radius:14px;padding:16px 20px;
-  background:linear-gradient(180deg,var(--panel),var(--panel-2));
-  box-shadow:0 -10px 30px -18px rgba(0,0,0,.9);
-}
-.gr-total-num{font-family:var(--display);font-size:52px;line-height:1;letter-spacing:.02em}
-.gr-total-num small{font-family:var(--mono);font-size:13px;color:var(--steel);letter-spacing:.1em;margin-left:6px}
-.gr-total-break{font-family:var(--mono);font-size:11px;color:var(--steel);letter-spacing:.08em;margin-top:6px}
-.gr-total-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.gr-saved{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#4ade80}
-
-.gr-grade{font-family:var(--display);font-size:26px;letter-spacing:.04em;color:var(--steel);margin-left:10px}
-
-@media (max-width:620px){
-  .gr-total{position:static}
-  .gr-total-num{font-size:40px}
-}
+.gr-total{position:sticky;bottom:0;z-index:5;margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border:1px solid var(--edge);border-radius:14px;padding:16px 20px;background:linear-gradient(180deg,var(--panel),var(--panel-2));box-shadow:0 -10px 30px -18px rgba(0,0,0,.9)}
+.gr-total-num{font-family:var(--display);font-size:52px;line-height:1}
+.gr-total-num small{font-family:var(--mono);font-size:13px;color:var(--steel);margin-left:6px}
+.gr-grade{font-family:var(--display);font-size:26px;color:var(--steel);margin-left:10px}
+.gr-total-break{font-family:var(--mono);font-size:11px;color:var(--steel);margin-top:6px}
+.gr-locked-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#4ade80}
+@media (max-width:620px){ .gr-total{position:static} .gr-total-num{font-size:40px} }
 </style>
 </head>
 <body class="nr" data-section="Leadership">
@@ -78,323 +66,249 @@
   <section class="nr-hero nr-reveal">
     <div class="nr-eyebrow"><b>Restricted</b><span id="gr-who">Grading</span></div>
     <h1 class="nr-title">GRADE A<br>PIECE</h1>
-    <p class="nr-lede">The same 100-point rubric students can already read on Learn. Score it, and the total works itself out.</p>
+    <p class="nr-lede">Each leader owns a lane — you can adjust any of them, and the advisor has the final say. Everyone grading this piece sees the same numbers.</p>
   </section>
-
   <div id="gr-body"></div>
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/assets/hub.js?v=3"></script>
+<script src="/newsroom/assets/hub.js?v=5"></script>
 <script>
 (function(){
   var body = document.getElementById('gr-body');
-  var me   = NR.me();
+  var me = NR.me();
 
-  /* switched off in /admin → say so and stop */
-  if(!NR.sectionOn('toolGrading')){ NR.showDisabled(); return; }
+  if(typeof NR.sectionOn === 'function' && !NR.sectionOn('toolGrading')){ NR.showDisabled(); return; }
 
-
-  /* Only leadership grades. */
-  if(!window.ENN_ID || !window.ENN_ID.isLeader(me)){
-    document.getElementById('gr-who').textContent = 'Crew only';
-    body.innerHTML = NR.emptyState('🔒','Grading is for leadership',
-      'Sign in with a leadership student ID — or Mr. Nimmo’s code — to open the grading sheet.') +
+  if(!window.ENN_ID || !window.ENN_ID.canGrade(me)){
+    document.getElementById('gr-who').textContent = 'No access';
+    body.innerHTML = NR.emptyState('🔒','Grading is for the grading roles',
+      'Only the Studio Director, Newsroom Director, Main Editor and Mr. Nimmo can grade. Sign in with one of those IDs.') +
       '<div style="margin-top:18px"><a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a></div>';
-    NR.observe(document);
-    return;
+    NR.observe(document); return;
   }
+
+  var G = window.ENN_GRADES;
+  var meName = window.ENN_ID.displayName(me);
+  var advisor = window.ENN_ID.isAdvisor(me);
+  var myLane = window.ENN_ID.homeLane(me);
   document.getElementById('gr-who').textContent = window.ENN_ID.roleLine(me) || 'Leadership';
 
-  /* ── The rubric, exactly as published on /newsroom/learn/ ── */
-  var RUBRIC = [
-    { key:'producer', name:'Producer', total:40, chip:'is-approved', items:[
-      ['deadline','Deadline met',5],['length','Length compliance',5],['appropriate','Appropriateness',5],
-      ['planning','Planning / pre-production quality',5],['script','Use of script / plan',5],
-      ['organization','Organization',5],['contribution','Member contribution',5],['category','Correct category',5]
-    ]},
-    { key:'director', name:'Director', total:40, chip:'is-producing', items:[
-      ['creativity','Creativity',6],['innovation','Innovation',6],['visual','Visual quality',6],
-      ['framing','Framing',6],['professionalism','Professionalism',6],
-      ['presentation','Presentation / effort',5],['entertainment','Entertainment value',5]
-    ]},
-    { key:'editor', name:'Editor', total:20, chip:'is-open', items:[
-      ['audio','Audio quality',5],['format','Formatting / resolution',5],
-      ['upload','Upload method & file naming',5],['polish','Technical polish',5]
-    ]}
-  ];
-
-  var DEDUCTIONS = [
-    ['late','Late work',-100],['audio_bad','Poor audio',-5],['no_l3','Missing lower thirds',-5],
-    ['spelling','Spelling mistakes',-5],['no_broll','No B-roll (sports/reporting)',-5],
-    ['export','Incorrect export',-5],['unprofessional','Unprofessionalism',-10],
-    ['cant_air','Can’t air',-20],['low_quality','Low quality',-5]
-  ];
-
   var R = (typeof ENN_ROSTER !== 'undefined') ? ENN_ROSTER : null;
-  var periods = window.ENN_ID.isAdvisor(me) ? window.ENN_ID.periods : [me.period];
+  var periods = advisor ? window.ENN_ID.periods : [me.period];
+  var curKey = null;
 
-  /* ── Build the page ── */
   var html = '';
-
-  /* who / what is being graded */
-  html += '<h2 class="nr-h2 nr-reveal">What are you grading?</h2>';
-  html += '<div class="nr-panel nr-reveal" style="margin-bottom:24px"><div class="gr-pick">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">' +
+    '<h2 class="nr-h2 nr-reveal" style="margin:0">What are you grading?</h2>' +
+    '<span class="gr-live ' + (G.live() ? '' : 'local') + '"><i></i>' +
+      (G.live() ? 'Live · everyone sees this' : 'This computer only') + '</span></div>';
+  html += '<div class="nr-panel nr-reveal" style="margin-bottom:20px"><div class="gr-pick">';
   html += '<div><label>Period</label><select id="f-period">' +
-    periods.map(function(p){ return '<option value="'+p+'">Period '+p+'</option>'; }).join('') +
-    '</select></div>';
+    periods.map(function(p){ return '<option value="'+p+'">Period '+p+'</option>'; }).join('') + '</select></div>';
   html += '<div><label>Group</label><select id="f-group"></select></div>';
   html += '<div><label>Air date</label><select id="f-date"></select></div>';
   html += '<div><label>Piece type</label><select id="f-type">' +
     ['Top Story','Feature','Sports Corner','Club / Interview','PSA / Mini-game','Trivia / Comedy','Other']
       .map(function(t){ return '<option>'+t+'</option>'; }).join('') + '</select></div>';
-  html += '</div><div class="gr-pick" style="margin-top:12px">' +
-    '<div style="grid-column:1/-1"><label>Piece title</label><input id="f-title" type="text" placeholder="What was the piece called?"></div>' +
-    '</div>';
-  html += '<div id="gr-members" style="margin-top:14px"></div></div>';
-
-  /* rubric categories */
-  html += '<h2 class="nr-h2 nr-reveal">The Rubric</h2>';
-  html += '<p class="nr-sub nr-reveal">Leave a box blank to give full marks for that line. Type a lower number to take points off.</p>';
-  RUBRIC.forEach(function(cat){
-    html += '<div class="nr-panel nr-reveal gr-cat">' +
-      '<div class="gr-cat-head">' +
-        '<div class="nr-chip '+cat.chip+'">'+cat.name+' · '+cat.total+' pts</div>' +
-        '<div class="gr-cat-score" data-cat-score="'+cat.key+'">'+cat.total+' / '+cat.total+'</div>' +
-      '</div>';
-    cat.items.forEach(function(it){
-      html += '<div class="gr-item">' +
-        '<span>'+NR.esc(it[1])+' <b class="max">max '+it[2]+'</b></span>' +
-        '<input type="number" min="0" max="'+it[2]+'" step="0.5" placeholder="'+it[2]+'" ' +
-               'data-score data-cat="'+cat.key+'" data-max="'+it[2]+'">' +
-      '</div>';
-    });
-    html += '</div>';
-  });
-
-  /* deductions */
-  html += '<h2 class="nr-h2 nr-reveal">Automatic Deductions</h2>';
-  html += '<p class="nr-sub nr-reveal">Tick anything that applies. <strong style="color:#ff8a84">Late work is an automatic 0</strong> — that’s the published rule.</p>';
-  html += '<div class="nr-panel nr-reveal" style="margin-bottom:20px"><div class="gr-ded">' +
-    DEDUCTIONS.map(function(d){
-      return '<label><input type="checkbox" data-ded value="'+d[0]+'" data-pts="'+d[2]+'"><span>'+
-             NR.esc(d[1])+' <b style="font-family:var(--mono);font-size:10px;opacity:.7">'+d[2]+'</b></span></label>';
-    }).join('') + '</div></div>';
-
-  /* notes */
-  html += '<h2 class="nr-h2 nr-reveal">Feedback for the group</h2>';
-  html += '<div class="nr-panel nr-reveal" style="margin-bottom:20px">' +
-    '<textarea id="f-notes" rows="4" placeholder="What worked, and the one thing to fix next time." ' +
-    'style="width:100%;padding:12px;border-radius:10px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);font-family:var(--body);font-size:14px;resize:vertical"></textarea></div>';
-
-  /* running total */
-  html += '<div class="gr-total nr-reveal">' +
-    '<div><div class="gr-total-num"><span id="gr-num">100</span><small>/ 100</small>' +
-      '<span class="gr-grade" id="gr-letter">A</span></div>' +
-      '<div class="gr-total-break" id="gr-break">Producer 40 · Director 40 · Editor 20</div></div>' +
-    '<div class="gr-total-actions">' +
-      '<span class="gr-saved" id="gr-saved"></span>' +
-      '<button class="nr-btn ghost" id="gr-reset" type="button">Clear</button>' +
-      '<button class="nr-btn" id="gr-submit" type="button">◉ Record this grade</button>' +
-    '</div></div>';
-
-  html += '<div id="gr-after" style="margin-top:22px"></div>';
-
+  html += '</div><div class="gr-pick" style="margin-top:12px"><div style="grid-column:1/-1">' +
+    '<label>Piece title</label><input id="f-title" type="text" placeholder="What was the piece called?"></div></div>' +
+    '<div id="gr-members" style="margin-top:12px"></div></div>';
+  html += '<div id="gr-sheet"></div>';
   body.innerHTML = html;
 
-  /* ── Wiring ────────────────────────────────────────────────── */
   var $ = function(s){ return document.querySelector(s); };
-  var periodSel = $('#f-period'), groupSel = $('#f-group'), dateSel = $('#f-date');
+  var periodSel = $('#f-period'), groupSel = $('#f-group'), dateSel = $('#f-date'),
+      typeSel = $('#f-type'), titleInp = $('#f-title');
 
-  function groupsFor(p){
-    var per = R ? R['period'+p] : null;
-    return per ? (per.groups||[]) : [];
+  function groupsFor(p){ var per = R ? R['period'+p] : null; return per ? (per.groups||[]) : []; }
+  function membersOf(p, gi){
+    var gs = groupsFor(p); var g = (gi!=='' && gs[gi]) ? gs[gi] : null;
+    return g ? (g.members||[]).filter(function(m){ return m && (m.first||m.last||m.id); }) : [];
   }
-
   function fillGroups(){
-    var p = periodSel.value;
-    var gs = groupsFor(p);
+    var gs = groupsFor(periodSel.value);
     groupSel.innerHTML = gs.length
       ? gs.map(function(g,i){ return '<option value="'+i+'">'+NR.esc(g.name||('Group '+(i+1)))+'</option>'; }).join('')
-      : '<option value="">— roster not filled in —</option>';
-    fillMembers();
-  }
-  function fillMembers(){
-    var p = periodSel.value, gi = groupSel.value;
-    var gs = groupsFor(p);
-    var host = $('#gr-members');
-    var g = (gi !== '' && gs[gi]) ? gs[gi] : null;
-    var mem = g ? (g.members||[]).filter(function(m){ return m && (m.first||m.last||m.id); }) : [];
-    if(!mem.length){
-      host.innerHTML = '<div style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel)">' +
-        (R ? 'No students in this group yet — add them at /admin.' : 'Roster not loaded.') + '</div>';
-      return;
-    }
-    host.innerHTML = '<div style="font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-bottom:8px">Grading for</div>' +
-      '<div class="nr-desk-mates" style="margin:0;padding:0;border:0">' +
-      mem.map(function(m){ return '<b>'+NR.esc(window.ENN_ID.fullName(m))+'</b>'; }).join('') + '</div>';
+      : '<option value="">— roster empty —</option>';
   }
   function fillDates(){
     dateSel.innerHTML = '';
-    if(typeof ENN_SEASON === 'undefined'){ dateSel.innerHTML = '<option>—</option>'; return; }
+    if(typeof ENN_SEASON === 'undefined'){ dateSel.innerHTML='<option>—</option>'; return; }
     var p = periodSel.value;
-    var all = ENN_SEASON.all().filter(function(b){ return b.period === 'P'+p; });
+    var all = ENN_SEASON.all().filter(function(b){ return b.period==='P'+p; });
     var now = Date.now();
-    /* most recent aired first — you grade what just aired */
-    var past = all.filter(function(b){ return b.date.getTime() <= now; }).reverse();
-    var future = all.filter(function(b){ return b.date.getTime() > now; });
+    var past = all.filter(function(b){ return b.date.getTime()<=now; }).reverse();
+    var future = all.filter(function(b){ return b.date.getTime()>now; });
     dateSel.innerHTML =
       past.map(function(b){ return '<option value="'+b.iso+'">'+ENN_SEASON.shortDate(b.date)+' (aired)</option>'; }).join('') +
       future.map(function(b){ return '<option value="'+b.iso+'">'+ENN_SEASON.shortDate(b.date)+'</option>'; }).join('');
-    if(!dateSel.innerHTML) dateSel.innerHTML = '<option>—</option>';
+    if(!dateSel.innerHTML) dateSel.innerHTML = '<option value="">—</option>';
+  }
+  function fillMembers(){
+    var mem = membersOf(periodSel.value, groupSel.value);
+    var host = $('#gr-members');
+    host.innerHTML = mem.length
+      ? '<div style="font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);margin-bottom:6px">Grade shared by</div>' +
+        '<div class="nr-desk-mates" style="margin:0;padding:0;border:0">' +
+          mem.map(function(m){ return '<b>'+NR.esc(window.ENN_ID.fullName(m))+'</b>'; }).join('') + '</div>'
+      : '<div style="font-family:var(--mono);font-size:11px;color:var(--steel)">No students in this group yet.</div>';
   }
 
-  periodSel.addEventListener('change', function(){ fillGroups(); fillDates(); recalc(); });
-  groupSel.addEventListener('change', function(){ fillMembers(); recalc(); });
-  fillGroups(); fillDates();
-
-  function letter(n){
-    if(n>=90) return 'A'; if(n>=80) return 'B'; if(n>=70) return 'C'; if(n>=60) return 'D'; return 'F';
-  }
-
-  function recalc(){
-    var subtotal = 0, breaks = [];
-    RUBRIC.forEach(function(cat){
-      var got = 0;
-      /* a blank box means full marks for that line */
-      document.querySelectorAll('[data-score][data-cat="'+cat.key+'"]').forEach(function(el){
-        var max = +el.dataset.max;
-        var v = el.value === '' ? max : Math.min(max, Math.max(0, +el.value || 0));
-        got += v;
-      });
-      breaks.push(cat.name + ' ' + (Math.round(got*10)/10));
-      document.querySelector('[data-cat-score="'+cat.key+'"]').textContent =
-        (Math.round(got*10)/10) + ' / ' + cat.total;
-      subtotal += got;
-    });
-
-    var ded = 0, zeroed = false;
-    document.querySelectorAll('[data-ded]:checked').forEach(function(cb){
-      if(cb.value === 'late') zeroed = true;
-      else ded += Math.abs(+cb.dataset.pts || 0);
-    });
-
-    var final = zeroed ? 0 : Math.max(0, subtotal - ded);
-    final = Math.round(final*10)/10;
-
-    $('#gr-num').textContent = final;
-    $('#gr-letter').textContent = letter(final);
-    $('#gr-break').textContent = breaks.join(' · ') +
-      (ded ? '  −' + ded + ' deductions' : '') +
-      (zeroed ? '  · LATE → automatic 0' : '');
-    return final;
-  }
-
-  document.addEventListener('input', function(e){
-    if(e.target.matches('[data-score]')) recalc();
-  });
-  document.addEventListener('change', function(e){
-    if(e.target.matches('[data-ded]')) recalc();
-  });
-  recalc();
-
-  $('#gr-reset').addEventListener('click', function(){
-    document.querySelectorAll('[data-score]').forEach(function(i){ i.value=''; });
-    document.querySelectorAll('[data-ded]').forEach(function(c){ c.checked=false; });
-    $('#f-title').value=''; $('#f-notes').value='';
-    $('#gr-saved').textContent='';
-    $('#gr-after').innerHTML='';
-    recalc();
-  });
-
-  /* ── Recording a grade ──────────────────────────────────────
-     Saved on this computer immediately, so nothing is ever lost.
-     If a grade Form is linked in config, it also opens prefilled
-     so the Sheet behind it becomes the shared gradebook. */
-  var STORE = 'enn_grades';
-  function saved(){ try{ return JSON.parse(localStorage.getItem(STORE)||'[]'); }catch(e){ return []; } }
-
-  $('#gr-submit').addEventListener('click', function(){
-    var final = recalc();
-    var p = periodSel.value, gi = groupSel.value;
-    var gs = groupsFor(p);
-    var g = (gi !== '' && gs[gi]) ? gs[gi] : null;
-    var mem = g ? (g.members||[]).filter(function(m){ return m && (m.first||m.last||m.id); }) : [];
-
-    var per_cat = {};
-    RUBRIC.forEach(function(cat){
-      var got = 0;
-      document.querySelectorAll('[data-score][data-cat="'+cat.key+'"]').forEach(function(el){
-        var max = +el.dataset.max;
-        got += el.value === '' ? max : Math.min(max, Math.max(0, +el.value || 0));
-      });
-      per_cat[cat.name] = Math.round(got*10)/10;
-    });
-
-    var deds = [];
-    document.querySelectorAll('[data-ded]:checked').forEach(function(cb){
-      deds.push(cb.parentElement.textContent.trim().replace(/\s+-?\d+$/,''));
-    });
-
-    var rec = {
-      when:    new Date().toISOString(),
-      grader:  window.ENN_ID.displayName(me),
-      role:    window.ENN_ID.roleLine(me),
-      period:  p,
-      group:   g ? (g.name || ('Group '+(+gi+1))) : '',
+  function selectPiece(){
+    var p = periodSel.value, gi = groupSel.value, iso = dateSel.value;
+    if(gi === '' || !iso){ curKey = null; renderSheet(); return; }
+    var gs = groupsFor(p), g = gs[gi];
+    curKey = G.keyFor(p, +gi+1, iso);
+    var mem = membersOf(p, gi);
+    G.setMeta({
+      key: curKey, period: p, group: +gi+1,
+      groupName: g.name || ('Group '+(+gi+1)),
       members: mem.map(function(m){ return window.ENN_ID.fullName(m); }).join(', '),
-      ids:     mem.map(function(m){ return m.id; }).filter(Boolean).join(' '),
-      airDate: dateSel.value || '',
-      type:    $('#f-type').value,
-      title:   $('#f-title').value,
-      scores:  per_cat,
-      deductions: deds,
-      total:   final,
-      letter:  letter(final)
-    };
+      airDate: iso, type: typeSel.value, title: titleInp.value, by: meName
+    });
+    renderSheet();
+  }
 
-    var list = saved(); list.push(rec);
-    try { localStorage.setItem(STORE, JSON.stringify(list)); } catch(e){}
-    $('#gr-saved').textContent = '✓ Saved (' + list.length + ' on this computer)';
+  periodSel.addEventListener('change', function(){ fillGroups(); fillDates(); fillMembers(); selectPiece(); });
+  groupSel.addEventListener('change', function(){ fillMembers(); selectPiece(); });
+  dateSel.addEventListener('change', selectPiece);
+  typeSel.addEventListener('change', function(){ if(curKey) G.setMeta({key:curKey, type:typeSel.value, by:meName}); });
+  titleInp.addEventListener('input', function(){ if(curKey) G.setMeta({key:curKey, title:titleInp.value, by:meName}); });
 
-    var formUrl = NR.cfg('GRADE_FORM_URL');
-    var after = '<div class="nr-panel">' +
-      '<h3 class="nr-h3">Recorded — ' + NR.esc(rec.group || 'group') + ' · ' + rec.total + '/100 (' + rec.letter + ')</h3>' +
-      '<p style="color:#c9cfda;font-size:13.5px;line-height:1.6;margin-bottom:14px">' +
-        'Saved on this computer. ' +
-        (formUrl ? 'Send it to the shared gradebook too:' :
-          'Link a grade Form at <strong>/admin → Newsroom Settings → GRADE_FORM_URL</strong> to also push grades to a shared Sheet.') +
-      '</p><div style="display:flex;gap:10px;flex-wrap:wrap">' +
-      (formUrl ? '<a class="nr-btn" href="'+NR.esc(formUrl)+'" target="_blank" rel="noopener">Open the grade form ↗</a>' : '') +
-      '<button class="nr-btn ghost" id="gr-copy" type="button">Copy this grade</button>' +
-      '<button class="nr-btn ghost" id="gr-csv" type="button">Download all grades (CSV)</button>' +
-      '</div></div>';
-    $('#gr-after').innerHTML = after;
+  fillGroups(); fillDates(); fillMembers();
 
-    document.getElementById('gr-copy').onclick = function(){
-      var line = [rec.period, rec.group, rec.members, rec.airDate, rec.type, rec.title,
-                  rec.scores.Producer, rec.scores.Director, rec.scores.Editor,
-                  rec.deductions.join('; '), rec.total, rec.letter, rec.grader].join('\t');
-      navigator.clipboard && navigator.clipboard.writeText(line);
-      this.textContent = '✓ Copied — paste into the Sheet';
-    };
-    document.getElementById('gr-csv').onclick = function(){
-      var rows = saved();
-      var head = ['When','Grader','Period','Group','Members','Student IDs','Air date','Type','Title',
-                  'Producer','Director','Editor','Deductions','Total','Letter'];
-      var csv = [head.join(',')].concat(rows.map(function(r){
-        return [r.when,r.grader,r.period,r.group,r.members,r.ids,r.airDate,r.type,r.title,
-                r.scores.Producer,r.scores.Director,r.scores.Editor,
-                (r.deductions||[]).join('; '),r.total,r.letter]
-          .map(function(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }).join(',');
-      })).join('\n');
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-      a.download = 'enn-grades.csv'; a.click();
-    };
+  function ago(iso){
+    if(!iso) return '';
+    var s = Math.max(0, (Date.now() - new Date(iso).getTime())/1000);
+    if(s < 12) return 'just now';
+    if(s < 90) return Math.round(s) + 's ago';
+    if(s < 5400) return Math.round(s/60) + 'm ago';
+    return Math.round(s/3600) + 'h ago';
+  }
+
+  function renderSheet(){
+    var host = $('#gr-sheet');
+    if(!curKey){ host.innerHTML = '<p class="nr-sub">Pick a group and air date to start grading.</p>'; return; }
+    var rec = G.get(curKey);
+
+    var laneHTML = G.LANES.map(function(L){
+      var lane = rec && rec.lanes ? rec.lanes[L.key] : null;
+      var mine = (L.key === myLane);
+      var val = lane && typeof lane.score === 'number' ? lane.score : '';
+      var meta = lane ? ('Set by ' + NR.esc(lane.by||'?') + ' · ' + ago(lane.at)) : 'Not graded yet';
+      return '<div class="gr-lane' + (mine ? ' mine' : '') + '">' +
+        '<div class="gr-lane-head"><div class="gr-lane-name">' + L.label + '</div>' +
+          '<div class="gr-lane-owner">' + (mine ? 'your lane' : NR.esc(L.home)) + '</div></div>' +
+        '<div class="gr-lane-input"><input type="number" min="0" max="' + L.max + '" step="0.5" ' +
+          'value="' + val + '" placeholder="0" data-lane="' + L.key + '"><span class="max">/ ' + L.max + '</span></div>' +
+        '<div class="gr-lane-meta" data-lanemeta="' + L.key + '">' + meta + '</div>' +
+        '<details class="gr-lane-help"><summary>What this covers</summary><ul>' +
+          L.items.map(function(it){ return '<li>' + NR.esc(it[1]) + '<span class="maxp">'+it[2]+'</span></li>'; }).join('') +
+        '</ul></details></div>';
+    }).join('');
+
+    var deds = (rec && rec.deductions) || [];
+    var dedHTML = G.DEDUCTIONS.map(function(d){
+      return '<label><input type="checkbox" data-ded value="'+d[0]+'"'+(deds.indexOf(d[0])>=0?' checked':'')+'>'+
+             '<span>'+NR.esc(d[1])+' <b style="font-family:var(--mono);font-size:10px;opacity:.7">'+d[2]+'</b></span></label>';
+    }).join('');
+
+    var fb = (rec && rec.feedback) ? rec.feedback.text : '';
+    var fbMeta = (rec && rec.feedback && rec.feedback.by) ? ('Last edited by ' + NR.esc(rec.feedback.by) + ' · ' + ago(rec.feedback.at)) : '';
+    var locked = rec && rec.locked;
+
+    host.innerHTML =
+      '<h2 class="nr-h2 nr-reveal">The Three Lanes</h2>' +
+      '<p class="nr-sub nr-reveal">' + (G.live()
+        ? 'Type a score in any lane. Everyone grading this piece sees your change within a few seconds.'
+        : 'Type a score in any lane. Link a grade store in /admin to share this with the other leaders live.') + '</p>' +
+      '<div class="gr-lanes">' + laneHTML + '</div>' +
+      '<h2 class="nr-h2 nr-reveal">Automatic Deductions</h2>' +
+      '<div class="nr-panel nr-reveal" style="margin-bottom:20px"><div class="gr-ded">' + dedHTML + '</div></div>' +
+      '<h2 class="nr-h2 nr-reveal">Feedback for the Group</h2>' +
+      '<p class="nr-sub nr-reveal">Every student in this group sees this on their own screen.</p>' +
+      '<div class="nr-panel nr-reveal" style="margin-bottom:20px">' +
+        '<textarea id="gr-fb" rows="4" placeholder="What worked, and the one thing to fix next time." ' +
+          'style="width:100%;padding:12px;border-radius:10px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);font-family:var(--body);font-size:14px;resize:vertical">' + NR.esc(fb) + '</textarea>' +
+        '<div style="font-family:var(--mono);font-size:10px;color:var(--steel);margin-top:8px" id="gr-fb-meta">' + fbMeta + '</div>' +
+      '</div>' +
+      '<div class="gr-total nr-reveal">' +
+        '<div><div class="gr-total-num"><span id="gr-num">0</span><small>/ 100</small><span class="gr-grade" id="gr-letter">—</span></div>' +
+          '<div class="gr-total-break" id="gr-break"></div></div>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">' +
+          '<span id="gr-lockmsg" class="gr-locked-tag">' + (locked ? '✓ Accepted as final' : '') + '</span>' +
+          (advisor
+            ? '<button class="nr-btn ' + (locked?'ghost':'') + '" id="gr-lock" type="button">' + (locked ? 'Unlock' : '◉ Accept as final') + '</button>'
+            : '') +
+        '</div>' +
+      '</div>';
+
+    wireSheet();
+    recompute();
+  }
+
+  function wireSheet(){
+    document.querySelectorAll('[data-lane]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        var L = G.LANES.filter(function(x){ return x.key===inp.dataset.lane; })[0];
+        if(inp.value === '') G.clearLane(curKey, inp.dataset.lane, meName);
+        else G.setLane(curKey, inp.dataset.lane, Math.max(0, Math.min(L.max, +inp.value||0)), meName);
+        recompute();
+      });
+    });
+    document.querySelectorAll('[data-ded]').forEach(function(cb){
+      cb.addEventListener('change', function(){
+        var arr = [];
+        document.querySelectorAll('[data-ded]:checked').forEach(function(x){ arr.push(x.value); });
+        G.setDeductions(curKey, arr, meName); recompute();
+      });
+    });
+    var fb = $('#gr-fb');
+    if(fb){
+      var t=null;
+      fb.addEventListener('input', function(){
+        clearTimeout(t); t = setTimeout(function(){ G.setFeedback(curKey, fb.value, meName); }, 500);
+      });
+    }
+    var lock = $('#gr-lock');
+    if(lock) lock.addEventListener('click', function(){
+      var rec = G.get(curKey);
+      G.setLocked(curKey, !(rec && rec.locked), meName).then(renderSheet);
+    });
+  }
+
+  function recompute(){
+    var rec = G.get(curKey);
+    var t = G.total(rec);
+    var numEl=$('#gr-num'), letEl=$('#gr-letter'), brEl=$('#gr-break');
+    if(numEl) numEl.textContent = t.total;
+    if(letEl) letEl.textContent = t.letter;
+    if(brEl) brEl.textContent = 'Producer + Director + Editor = ' + t.subtotal +
+      (t.deducted ? '  −' + t.deducted + ' deductions' : '') +
+      (t.late ? '  · LATE → automatic 0' : '') +
+      '  ·  ' + t.graded + '/3 lanes in';
+  }
+
+  G.onChange(function(){
+    if(!curKey) return;
+    var rec = G.get(curKey);
+    if(!rec) return;
+    document.querySelectorAll('[data-lane]').forEach(function(inp){
+      if(document.activeElement === inp) return;
+      var lane = rec.lanes ? rec.lanes[inp.dataset.lane] : null;
+      var v = lane && typeof lane.score==='number' ? String(lane.score) : '';
+      if(inp.value !== v) inp.value = v;
+      var m = document.querySelector('[data-lanemeta="'+inp.dataset.lane+'"]');
+      if(m){ m.textContent = lane ? ('Set by '+ (lane.by||'?') +' · '+ ago(lane.at)) : 'Not graded yet';
+             m.classList.toggle('fresh', !!lane); }
+    });
+    var fb = document.getElementById('gr-fb');
+    if(fb && document.activeElement !== fb && rec.feedback && fb.value !== rec.feedback.text) fb.value = rec.feedback.text;
+    recompute();
   });
 
-  NR.observe(document);
+  G.ready().then(function(){ selectPiece(); G.startSync(4000); });
 })();
 </script>
 </body>

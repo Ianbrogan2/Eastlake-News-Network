@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=3">
-<link rel="stylesheet" href="/newsroom/colors.css?v=3">
-<script src="/newsroom/config.js?v=3"></script>
-<script src="/EDIT/21-BULLETINS.js?v=3"></script>
-<script src="/EDIT/23-SECTIONS.js?v=3"></script>
-<script src="/EDIT/22-ROSTER.js?v=3"></script>
-<script src="/newsroom/assets/identity.js?v=3"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=5">
+<link rel="stylesheet" href="/newsroom/colors.css?v=5">
+<script src="/newsroom/config.js?v=5"></script>
+<script src="/EDIT/21-BULLETINS.js?v=5"></script>
+<script src="/EDIT/23-SECTIONS.js?v=5"></script>
+<script src="/EDIT/22-ROSTER.js?v=5"></script>
+<script src="/newsroom/assets/identity.js?v=5"></script>
+<script src="/newsroom/assets/grades.js?v=5"></script>
 </head>
 <body class="nr" data-section="Leadership">
 <div data-rail></div>
@@ -34,7 +35,7 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/assets/hub.js?v=3"></script>
+<script src="/newsroom/assets/hub.js?v=5"></script>
 <script>
 (function(){
   var body = document.getElementById('lead-body');
@@ -82,13 +83,54 @@
 
     html += '<h2 class="nr-h2 nr-reveal">Period ' + p + '</h2>';
 
-    /* upcoming air dates for this period */
+    var pGroups = (per.groups||[]).map(function(g,i){
+      return { n:i+1, name:g.name || ('Group '+(i+1)),
+               members:(g.members||[]).filter(function(m){ return m && (m.first||m.last||m.id); }) };
+    });
+    var groupCount = pGroups.length;
+
+    /* ── Who airs, and when ────────────────────────────────────
+       Groups alternate in two waves, so each upcoming bulletin has a
+       specific group on it. Show the next several dates with the group
+       that airs and everyone in it, so a leader can see the runway at a
+       glance and know exactly who to chase for each show. */
     if(typeof ENN_SEASON !== 'undefined'){
-      var up = ENN_SEASON.upcomingFor('P'+p).slice(0,6);
-      if(up.length){
-        html += '<p class="nr-sub nr-reveal">Next air dates: ' +
-          up.map(function(b){ return '<strong>' + NR.esc(ENN_SEASON.shortDate(b.date)) + '</strong>'; }).join(' &middot; ') +
-          '</p>';
+      var upNext = ENN_SEASON.upcomingFor('P'+p).slice(0, 8);
+      if(upNext.length){
+        html += '<div class="nr-panel nr-reveal" style="margin-bottom:18px">' +
+          '<h3 class="nr-h3">Air Schedule — Who\\'s Up Next</h3>' +
+          '<div class="lead-sched">';
+        html += upNext.map(function(b, idx){
+          /* every group whose own alternating dates include this bulletin */
+          var airing = pGroups.filter(function(g){
+            if(!g.members.length) return false;
+            var gn = ENN_SEASON.datesForGroup('P'+p, g.n, groupCount);
+            return gn.some(function(x){ return x.iso === b.iso; });
+          });
+          var when = ENN_SEASON.longDate(b.date);
+          var soon = (idx === 0) ? ' is-next' : '';
+          if(!airing.length){
+            return '<div class="lead-sched-row' + soon + '">' +
+              '<div class="lead-sched-when">' + NR.esc(when) +
+                (idx===0 ? ' <span class="lead-next-tag">next</span>' : '') + '</div>' +
+              '<div class="lead-sched-groups"><span class="lead-sched-empty">No group assigned yet</span></div>' +
+            '</div>';
+          }
+          return '<div class="lead-sched-row' + soon + '">' +
+            '<div class="lead-sched-when">' + NR.esc(when) +
+              (idx===0 ? ' <span class="lead-next-tag">next</span>' : '') + '</div>' +
+            '<div class="lead-sched-groups">' +
+              airing.map(function(g){
+                return '<div class="lead-sched-group">' +
+                  '<b>' + NR.esc(g.name) + '</b>' +
+                  '<span>' + g.members.map(function(m){
+                    return NR.esc(window.ENN_ID.fullName(m)); }).filter(Boolean).join(', ') + '</span>' +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>';
+        }).join('');
+        html += '</div></div>';
       }
     }
 
@@ -157,18 +199,27 @@
     html += '</div>';
   });
 
-  /* ── What's still being built ── */
-  /* Tools can be switched off individually in /admin */
+  /* ── Your tools ──────────────────────────────────────────────
+     Grading is only for the grading roles; the rest are for any leader.
+     Each can also be switched off in /admin. Columns:
+       [switch, needsGrader, url, kicker, title, blurb]              */
+  var canGrade = window.ENN_ID.canGrade(me);
   var TOOLS = [
-    ['toolGrading',  '/newsroom/leadership/grade.html',     'Grading',     'Grade a Piece',
-     'The 100-point rubric, scored and totalled for you. Saves as you go.'],
-    ['toolRundown',  '/newsroom/leadership/rundown.html',   'The show',    'Rundown Builder',
+    ['toolGrading',   true,  '/newsroom/leadership/grade.html',     'Grading',     'Grade a Piece',
+     'Your lane of the 40·40·20 rubric, shared live with the other graders.'],
+    ['toolGradebook', false, '/newsroom/leadership/gradebook.html', 'Records',     'Gradebook',
+     'Every graded piece, with scores and feedback. Export to a spreadsheet.'],
+    [null,            false, '/newsroom/leaderboard/',              'Every 2 weeks','Leaderboard',
+     'The running record, and the biweekly vote for the best piece.'],
+    ['toolRundown',   false, '/newsroom/leadership/rundown.html',   'The show',    'Rundown Builder',
      'Build the segment order, assign groups, land it on ten minutes, print it.'],
-    ['toolGradebook','/newsroom/leadership/gradebook.html', 'Records',     'Gradebook',
-     'Every grade recorded on this computer, exportable to a spreadsheet.'],
-    [null,           '/newsroom/catalog/',                  'Submissions', 'Catalog',
+    [null,            false, '/newsroom/catalog/',                  'Submissions', 'Catalog',
      'What\'s been turned in, by group and air date.']
-  ].filter(function(x){ return !x[0] || NR.sectionOn(x[0]); });
+  ].filter(function(x){
+    if(x[0] && !NR.sectionOn(x[0])) return false;   // switched off in admin
+    if(x[1] && !canGrade) return false;             // grading role required
+    return true;
+  }).map(function(x){ return [x[0], x[2], x[3], x[4], x[5]]; });
 
   if(TOOLS.length){
     html += '<h2 class="nr-h2 nr-reveal">Your Tools</h2>';
