@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="/newsroom/colors.css?v=3">
 <script src="/newsroom/config.js?v=3"></script>
 <script src="/EDIT/21-BULLETINS.js?v=3"></script>
+<script src="/EDIT/23-SECTIONS.js?v=3"></script>
 <script src="/EDIT/22-ROSTER.js?v=3"></script>
 <script src="/newsroom/assets/identity.js?v=3"></script>
 </head>
@@ -157,17 +158,25 @@
   });
 
   /* ── What's still being built ── */
-  html += '<h2 class="nr-h2 nr-reveal">Your Tools</h2>';
-  html += '<div class="nr-grid nr-stagger">' +
-    '<a class="nr-tile" href="/newsroom/leadership/grade.html"><div class="k">Grading</div><h3>Grade a Piece</h3>' +
-      '<p>The 100-point rubric, scored and totalled for you. Saves as you go.</p><span class="go">→</span></a>' +
-    '<a class="nr-tile" href="/newsroom/leadership/rundown.html"><div class="k">The show</div><h3>Rundown Builder</h3>' +
-      '<p>Build the segment order, assign groups, land it on ten minutes, print it.</p><span class="go">→</span></a>' +
-    '<a class="nr-tile" href="/newsroom/leadership/gradebook.html"><div class="k">Records</div><h3>Gradebook</h3>' +
-      '<p>Every grade recorded on this computer, exportable to a spreadsheet.</p><span class="go">→</span></a>' +
-    '<a class="nr-tile" href="/newsroom/catalog/"><div class="k">Submissions</div><h3>Catalog</h3>' +
-      '<p>What\'s been turned in, by group and air date.</p><span class="go">→</span></a>' +
-    '</div>';
+  /* Tools can be switched off individually in /admin */
+  var TOOLS = [
+    ['toolGrading',  '/newsroom/leadership/grade.html',     'Grading',     'Grade a Piece',
+     'The 100-point rubric, scored and totalled for you. Saves as you go.'],
+    ['toolRundown',  '/newsroom/leadership/rundown.html',   'The show',    'Rundown Builder',
+     'Build the segment order, assign groups, land it on ten minutes, print it.'],
+    ['toolGradebook','/newsroom/leadership/gradebook.html', 'Records',     'Gradebook',
+     'Every grade recorded on this computer, exportable to a spreadsheet.'],
+    [null,           '/newsroom/catalog/',                  'Submissions', 'Catalog',
+     'What\'s been turned in, by group and air date.']
+  ].filter(function(x){ return !x[0] || NR.sectionOn(x[0]); });
+
+  if(TOOLS.length){
+    html += '<h2 class="nr-h2 nr-reveal">Your Tools</h2>';
+    html += '<div class="nr-grid nr-stagger">' + TOOLS.map(function(x){
+      return '<a class="nr-tile" href="' + x[1] + '"><div class="k">' + NR.esc(x[2]) + '</div>' +
+             '<h3>' + NR.esc(x[3]) + '</h3><p>' + NR.esc(x[4]) + '</p><span class="go">→</span></a>';
+    }).join('') + '</div>';
+  }
 
   body.innerHTML = html;
   NR.observe(body);

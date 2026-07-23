@@ -427,6 +427,43 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     return dow>=1 && dow<=5 && m>=start && m<end;
   }
 
+  /* ── Section switches (EDIT/23-SECTIONS.js) ──────────────────────
+     Anything switched off is removed from the page and from the menus,
+     and its address falls back to Home. Missing file = everything on. */
+  const TOGGLE = (typeof ENN_TOGGLE !== 'undefined') ? ENN_TOGGLE : null;
+  const ROUTE_SWITCH = {
+    about:    'pageAbout',
+    team:     'pageTeam',
+    studio:   'pageStudio',
+    calendar: 'pageCalendar',
+    contact:  'pageContact',
+    bullpen:  'pageGames',
+  };
+  function routeEnabled(name){
+    if(!TOGGLE || !ROUTE_SWITCH[name]) return true;   // home is never switchable
+    return TOGGLE.main(ROUTE_SWITCH[name]);
+  }
+  if(TOGGLE){
+    /* drop the menu links and the page bodies for anything switched off */
+    Object.keys(ROUTE_SWITCH).forEach(r => {
+      if(routeEnabled(r)) return;
+      $$(`.nav-link[data-route="${r}"], .mobile-link[data-route="${r}"]`).forEach(a => a.remove());
+      const body = $('#page-' + r); if(body) body.remove();
+    });
+    /* home-page sections and site chrome */
+    TOGGLE.applyTo('mainSite', {
+      heroAnimation:  '#hero',
+      latestBulletin: ['#sec-latest-head', '#sec-latest-player'],
+      weeklySchedule: '#sec-schedule-col',
+      spiritWeek:     '#spiritweek-root',
+      newsStories:    ['#sec-news-head', '#sec-news-grid'],
+      newsTicker:     '.ticker',
+      onAirBadge:     '#onair-badge',
+      studioClock:    '#clock',
+      crewDoor:       '.crew-door',
+    });
+  }
+
   /* ── Router ──────────────────────────────────────────────────── */
   const pages = {
     home:     $('#page-home'),
@@ -437,8 +474,9 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     calendar: $('#page-calendar'),
     bullpen:  $('#page-bullpen'),
   };
+  Object.keys(pages).forEach(k => { if(!pages[k]) delete pages[k]; });
   function route(name){
-    if(!pages[name]) name='home';
+    if(!pages[name] || !routeEnabled(name)) name='home';
     Object.entries(pages).forEach(([k,el]) => el.classList.toggle('active', k===name));
     $$('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.route===name));
     window.scrollTo({top:0, behavior:'instant'});
@@ -725,7 +763,8 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
 
     /* ── Optional schedule countdown card ── */
     const cdCfg = (typeof ENN_SCHEDULE_COUNTDOWN !== 'undefined') ? ENN_SCHEDULE_COUNTDOWN : null;
-    if(cdCfg && cdCfg.enabled){
+    const cdSwitchedOn = (typeof ENN_TOGGLE === 'undefined') || ENN_TOGGLE.main('countdownCard');
+    if(cdCfg && cdCfg.enabled && cdSwitchedOn){
       const theme   = cdCfg.theme || 'orange';
 
       /* Auto mode: follow the season in EDIT/21-BULLETINS.js so the card

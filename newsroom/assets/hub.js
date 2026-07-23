@@ -69,14 +69,54 @@
     });
   };
 
+  /* ── Section switches (EDIT/23-SECTIONS.js) ────────────────────
+     Which newsroom tab maps to which on/off switch. "This Week" has no
+     switch — it's the newsroom's home and everything falls back to it. */
+  const TAB_SWITCH = {
+    'Calendar':   'pageCalendar',
+    'Submit':     'pageSubmit',
+    'Make':       'pageMake',
+    'Learn':      'pageLearn',
+    'Studio':     'pageStudio',
+    'Newsroom':   'pageDesk',
+    'Crew':       'pageCrew',
+    'Leadership': 'pageLeadership',
+  };
+  NR.sectionOn = function(key){
+    return (typeof ENN_TOGGLE === 'undefined') ? true : ENN_TOGGLE.newsroom(key);
+  };
+  NR.tabOn = function(label){
+    const k = TAB_SWITCH[label];
+    return !k || NR.sectionOn(k);
+  };
+
+  /* The screen someone gets if they open a switched-off page directly. */
+  NR.showDisabled = function(){
+    const t = (typeof ENN_TOGGLE !== 'undefined') ? ENN_TOGGLE.title() : 'Not available right now';
+    const m = (typeof ENN_TOGGLE !== 'undefined') ? ENN_TOGGLE.message() : '';
+    const main = $('.nr-wrap');
+    if(!main) return;
+    main.innerHTML =
+      '<section class="nr-hero nr-reveal">' +
+        '<div class="nr-eyebrow"><b>Paused</b><span>Switched off</span></div>' +
+        '<h1 class="nr-title">' + NR.esc(t).toUpperCase() + '</h1>' +
+        '<p class="nr-lede">' + NR.esc(m) + '</p>' +
+      '</section>' +
+      '<div style="margin-top:8px"><a class="nr-btn ghost" href="/newsroom/">← Back to This Week</a></div>';
+    NR.observe(main);
+  };
+
   NR.rail = function(current){
     const me = NR.me();
-    const sections = SECTIONS.slice();
+    let sections = SECTIONS.slice();
 
     /* Leaders and the advisor get one extra tab that students don't see */
     if(window.ENN_ID && window.ENN_ID.isLeader(me)){
       sections.push(['Leadership','/newsroom/leadership/']);
     }
+
+    /* drop anything switched off in the admin */
+    sections = sections.filter(([label]) => NR.tabOn(label));
 
     const nav = sections.map(([label,href]) =>
       `<a href="${href}"${current===label?' aria-current="page"':''}>${label}</a>`).join('');
@@ -374,9 +414,23 @@
     if(!NR.enforceGate()) return;              // bounced to the gate — stop here
     const section = document.body.getAttribute('data-section') || '';
     NR.mountChrome(section);
+
+    /* If this page itself is switched off, replace it and stop. */
+    if(!NR.tabOn(section)){ NR.showDisabled(); return; }
+
+    /* Front-page sections that can be switched off individually */
+    if(typeof ENN_TOGGLE !== 'undefined'){
+      ENN_TOGGLE.applyTo('newsroom', {
+        clockStrip:     '[data-clock-strip]',
+        whatsDue:       '[data-sec-due]',
+        skillChallenge: '[data-sec-challenge]',
+        announcements:  '[data-sec-ann]',
+      });
+    }
+
     NR.applyText(section);
     NR.mountLinks(document);
-    NR.myDesk(document.querySelector('[data-mydesk]'));
+    if(NR.sectionOn('myDashboard')) NR.myDesk(document.querySelector('[data-mydesk]'));
     NR.observe(document);
     NR.startClock();
   }

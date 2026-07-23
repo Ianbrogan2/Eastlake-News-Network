@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="/newsroom/colors.css?v=3">
 <script src="/newsroom/config.js?v=3"></script>
 <script src="/EDIT/21-BULLETINS.js?v=3"></script>
+<script src="/EDIT/23-SECTIONS.js?v=3"></script>
 <script src="/EDIT/22-ROSTER.js?v=3"></script>
 <script src="/newsroom/assets/identity.js?v=3"></script>
 </head>
@@ -32,7 +33,7 @@
   <div data-mydesk></div>
 
   <!-- Top strip: broadcast clock + next-airtime countdown -->
-  <section class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:8px">
+  <section data-clock-strip class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:8px">
     <div class="nr-panel">
       <div class="nr-tile-k" style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Studio Clock · Pacific</div>
       <div class="nr-clock" data-clock style="font-family:var(--display);font-size:44px;letter-spacing:.04em;margin-top:6px">--:--:-- PT</div>
@@ -53,17 +54,17 @@
   </section>
 
   <!-- What's due / who airs -->
-  <h2 class="nr-h2 nr-reveal">What's Due</h2>
+  <h2 class="nr-h2 nr-reveal" data-sec-due>What's Due</h2>
   <p class="nr-sub nr-reveal">Each group produces one piece per week — pieces are due <strong>before class starts</strong> on your air day. Sign in with your student ID to see your own group’s dates.</p>
-  <div id="board-due" class="nr-reveal"></div>
+  <div id="board-due" class="nr-reveal" data-sec-due></div>
 
   <!-- Skill challenge -->
-  <h2 class="nr-h2 nr-reveal">Skill Challenge of the Week</h2>
-  <div id="board-challenge" class="nr-reveal"></div>
+  <h2 class="nr-h2 nr-reveal" data-sec-challenge>Skill Challenge of the Week</h2>
+  <div id="board-challenge" class="nr-reveal" data-sec-challenge></div>
 
   <!-- Announcements strip -->
-  <h2 class="nr-h2 nr-reveal">Announcements</h2>
-  <div id="board-ann" class="nr-reveal"></div>
+  <h2 class="nr-h2 nr-reveal" data-sec-ann>Announcements</h2>
+  <div id="board-ann" class="nr-reveal" data-sec-ann></div>
 
   <!-- The six sections -->
   <h2 class="nr-h2 nr-reveal">The Newsroom</h2>

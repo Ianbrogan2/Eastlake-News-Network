@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="/newsroom/colors.css?v=3">
 <script src="/newsroom/config.js?v=3"></script>
 <script src="/EDIT/21-BULLETINS.js?v=3"></script>
+<script src="/EDIT/23-SECTIONS.js?v=3"></script>
 <script src="/EDIT/22-ROSTER.js?v=3"></script>
 <script src="/newsroom/assets/identity.js?v=3"></script>
 <style>
@@ -66,6 +67,10 @@
 (function(){
   var body = document.getElementById('rd-body');
   var me = NR.me();
+
+  /* switched off in /admin → say so and stop */
+  if(!NR.sectionOn('toolRundown')){ NR.showDisabled(); return; }
+
   if(!window.ENN_ID || !window.ENN_ID.isLeader(me)){
     body.innerHTML = NR.emptyState('🔒','Leadership only',
       'Sign in with a leadership student ID to build a rundown.') +

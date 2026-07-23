@@ -497,5 +497,62 @@ window.ENN_SCHEMA = [
     ]
   },
 
+  /* ═══════════ SECTION PAGES — turn things on and off ═══════════ */
+  { id:'secmain', icon:'🌐', label:'Main Site', group:'Section Pages',
+    desc:'Switch any page or section of eastlakenewsnetwork.com on or off. Off means hidden from the menus, and anyone typing the address goes to Home instead. Nothing is deleted — flip it back whenever you want.',
+    file:'EDIT/23-SECTIONS.js', kind:'jsobject', varName:'ENN_SECTIONS',
+    fields:[
+      { key:'mainSite', label:'Main Site', type:'object', fields:[
+        { key:'pageAbout',      label:'About page', type:'toggleBool' },
+        { key:'pageTeam',       label:'Team page', type:'toggleBool' },
+        { key:'pageStudio',     label:'Studio page', type:'toggleBool' },
+        { key:'pageCalendar',   label:'Calendar page', type:'toggleBool' },
+        { key:'pageContact',    label:'Contact page', type:'toggleBool' },
+        { key:'pageGames',      label:'Games page', type:'toggleBool' },
+
+        { key:'heroAnimation',  label:'Home — intro animation', type:'toggleBool' },
+        { key:'latestBulletin', label:'Home — latest bulletin player', type:'toggleBool' },
+        { key:'weeklySchedule', label:'Home — this week\'s schedule', type:'toggleBool' },
+        { key:'countdownCard',  label:'Home — countdown card', type:'toggleBool' },
+        { key:'spiritWeek',     label:'Home — spirit week', type:'toggleBool' },
+        { key:'newsStories',    label:'Home — On Our Desk news', type:'toggleBool' },
+
+        { key:'newsTicker',     label:'Every page — news ticker', type:'toggleBool' },
+        { key:'onAirBadge',     label:'Every page — ON AIR badge', type:'toggleBool' },
+        { key:'studioClock',    label:'Every page — studio clock', type:'toggleBool' },
+        { key:'crewDoor',       label:'Every page — crew door (◉ in footer)', type:'toggleBool' },
+      ]},
+    ]
+  },
+
+  { id:'secnews', icon:'🎬', label:'Newsroom', group:'Section Pages',
+    desc:'Switch any part of the student newsroom on or off. A switched-off page shows students a short "not available right now" screen instead.',
+    file:'EDIT/23-SECTIONS.js', kind:'jsobject', varName:'ENN_SECTIONS',
+    fields:[
+      { key:'newsroom', label:'Student Newsroom', type:'object', fields:[
+        { key:'pageCalendar',   label:'Calendar tab', type:'toggleBool' },
+        { key:'pageSubmit',     label:'Submit tab', type:'toggleBool' },
+        { key:'pageMake',       label:'Make tab', type:'toggleBool' },
+        { key:'pageLearn',      label:'Learn tab', type:'toggleBool' },
+        { key:'pageStudio',     label:'Studio tab', type:'toggleBool' },
+        { key:'pageDesk',       label:'Newsroom (desk) tab', type:'toggleBool' },
+        { key:'pageCrew',       label:'Crew tab', type:'toggleBool' },
+        { key:'pageLeadership', label:'Leadership tab', type:'toggleBool' },
+
+        { key:'toolGrading',    label:'Leadership — grading', type:'toggleBool' },
+        { key:'toolGradebook',  label:'Leadership — gradebook', type:'toggleBool' },
+        { key:'toolRundown',    label:'Leadership — rundown builder', type:'toggleBool' },
+
+        { key:'myDashboard',    label:'Front page — personal dashboard', type:'toggleBool' },
+        { key:'clockStrip',     label:'Front page — clock & next broadcast', type:'toggleBool' },
+        { key:'whatsDue',       label:'Front page — What\'s Due', type:'toggleBool' },
+        { key:'skillChallenge', label:'Front page — skill challenge', type:'toggleBool' },
+        { key:'announcements',  label:'Front page — announcements', type:'toggleBool' },
+      ]},
+      { key:'disabledTitle',   label:'"Switched off" screen — heading', type:'text' },
+      { key:'disabledMessage', label:'"Switched off" screen — message', type:'textarea' },
+    ]
+  },
+
 ];
 })();

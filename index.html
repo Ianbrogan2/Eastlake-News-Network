@@ -34,8 +34,8 @@
 <!-- Preload the first VISIBLE hero frame so it starts downloading during HTML parse (before main.js runs) -->
 <link rel="preload" as="image" href="ANIMATION/frames/f0210.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="EDIT/07-COLORS.css">
+<link rel="stylesheet" href="css/styles.css?v=1">
+<link rel="stylesheet" href="EDIT/07-COLORS.css?v=1">
 </head>
 <body>
 
@@ -100,7 +100,7 @@
 
   <section class="section">
     <div class="container">
-      <div class="sec-head reveal">
+      <div class="sec-head reveal" id="sec-latest-head">
         <div>
           <div class="eyebrow" id="latest-eyebrow">On Air Today</div>
           <div class="sec-title" id="latest-title">LATEST BULLETIN</div>
@@ -109,7 +109,7 @@
       </div>
 
       <div class="broadcast-grid">
-        <div class="card reveal left">
+        <div class="card reveal left" id="sec-latest-player">
           <div class="player-head">
             <div class="meta">
               <div class="ttl" id="vid-title">Loading latest broadcast…</div>
@@ -128,7 +128,7 @@
           </div>
         </div>
 
-        <div class="reveal right">
+        <div class="reveal right" id="sec-schedule-col">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
             <div class="eyebrow" style="margin:0" id="slate-label">This Week's Slate</div>
             <div class="mono" style="font-size:11px;color:var(--muted-2);letter-spacing:.18em" id="slate-week">WK · —</div>
@@ -140,7 +140,7 @@
       <!-- Spirit Week — rendered from EDIT/19-SPIRITWEEK.js (hidden when disabled) -->
       <div id="spiritweek-root"></div>
 
-      <div style="margin-top: 72px" class="reveal">
+      <div style="margin-top: 72px" class="reveal" id="sec-news-head">
         <div class="sec-head">
           <div>
             <div class="eyebrow" id="desk-eyebrow">Newsroom</div>
@@ -150,7 +150,7 @@
         </div>
       </div>
 
-      <div class="news-grid">
+      <div class="news-grid" id="sec-news-grid">
         <div id="news-featured"></div>
         <div class="news-list" id="news-sidebar"></div>
       </div>
@@ -327,26 +327,27 @@
      Site logic is in js/main.js.
 ═══════════════════════════════════════════════════════════════ -->
 <script src="ANIMATION/frames.js"></script>
-<script src="EDIT/01-CHANNEL.js"></script>
-<script src="EDIT/02-ONAIR.js"></script>
-<script src="EDIT/03-TICKER.js"></script>
-<script src="EDIT/04-SCHEDULE.js"></script>
-<script src="EDIT/05-NEWS.js"></script>
-<script src="EDIT/06-TEAM.js"></script>
-<script src="EDIT/08-ABOUT.js"></script>
-<script src="EDIT/09-CONTACT.js"></script>
-<script src="EDIT/10-STUDIO.js"></script>
-<script src="EDIT/11-CALENDAR.js"></script>
-<script src="EDIT/12-HERO.js"></script>
-<script src="EDIT/13-OVERRIDE.js"></script>
-<script src="EDIT/14-FACTS.js"></script>
-<script src="EDIT/15-BINGO.js"></script>
-<script src="EDIT/16-CHANGELOG.js"></script>
-<script src="EDIT/17-MAINTENANCE.js"></script>
-<script src="EDIT/18-STUDIONEWS.js"></script>
-<script src="EDIT/19-SPIRITWEEK.js"></script>
-<script src="EDIT/20-SITE-TEXT.js"></script>
-<script src="EDIT/21-BULLETINS.js"></script>
-<script src="js/main.js"></script>
+<script src="EDIT/01-CHANNEL.js?v=1"></script>
+<script src="EDIT/02-ONAIR.js?v=1"></script>
+<script src="EDIT/03-TICKER.js?v=1"></script>
+<script src="EDIT/04-SCHEDULE.js?v=1"></script>
+<script src="EDIT/05-NEWS.js?v=1"></script>
+<script src="EDIT/06-TEAM.js?v=1"></script>
+<script src="EDIT/08-ABOUT.js?v=1"></script>
+<script src="EDIT/09-CONTACT.js?v=1"></script>
+<script src="EDIT/10-STUDIO.js?v=1"></script>
+<script src="EDIT/11-CALENDAR.js?v=1"></script>
+<script src="EDIT/12-HERO.js?v=1"></script>
+<script src="EDIT/13-OVERRIDE.js?v=1"></script>
+<script src="EDIT/14-FACTS.js?v=1"></script>
+<script src="EDIT/15-BINGO.js?v=1"></script>
+<script src="EDIT/16-CHANGELOG.js?v=1"></script>
+<script src="EDIT/17-MAINTENANCE.js?v=1"></script>
+<script src="EDIT/18-STUDIONEWS.js?v=1"></script>
+<script src="EDIT/19-SPIRITWEEK.js?v=1"></script>
+<script src="EDIT/20-SITE-TEXT.js?v=1"></script>
+<script src="EDIT/21-BULLETINS.js?v=1"></script>
+<script src="EDIT/23-SECTIONS.js?v=1"></script>
+<script src="js/main.js?v=1"></script>
 </body>
 </html>
