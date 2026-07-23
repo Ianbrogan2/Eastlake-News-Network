@@ -36,7 +36,7 @@
 // ╚═══════════════════════════════════════════════════════════════╝
 
 var ENN_ROSTER = {
-  advisorCode: 'ENNADM26',
+  advisorCode: 'A113',
   advisor: {
     first: 'Mr.',
     last: 'Nimmo',
@@ -53,9 +53,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Newsroom Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1592547',
+        first: 'Ava',
+        last: 'Ridgeway'
       },
       {
         role: 'Creative Director',
@@ -65,15 +65,15 @@ var ENN_ROSTER = {
       },
       {
         role: 'Assistant Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1592985',
+        first: 'Maddy',
+        last: 'Mcgee'
       },
       {
         role: 'Assistant Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1594938',
+        first: 'Christian',
+        last: 'Stevens'
       },
       {
         role: 'Camera Operator',
@@ -117,19 +117,19 @@ var ENN_ROSTER = {
         name: 'Group 1',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1593912',
+            first: 'Erina',
+            last: 'Tsuya'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1085049',
+            first: 'Sophia',
+            last: 'Meza'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1592985',
+            first: 'Maddy',
+            last: 'Mcgee'
           },
           {
             id: '',
