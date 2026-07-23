@@ -9,14 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=5">
-<link rel="stylesheet" href="/newsroom/colors.css?v=5">
-<script src="/newsroom/config.js?v=5"></script>
-<script src="/EDIT/21-BULLETINS.js?v=5"></script>
-<script src="/EDIT/23-SECTIONS.js?v=5"></script>
-<script src="/EDIT/22-ROSTER.js?v=5"></script>
-<script src="/newsroom/assets/identity.js?v=5"></script>
-<script src="/newsroom/assets/grades.js?v=5"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=6">
+<link rel="stylesheet" href="/newsroom/colors.css?v=6">
+<script src="/newsroom/config.js?v=6"></script>
+<script src="/EDIT/21-BULLETINS.js?v=6"></script>
+<script src="/EDIT/23-SECTIONS.js?v=6"></script>
+<script src="/EDIT/22-ROSTER.js?v=6"></script>
+<script src="/newsroom/assets/identity.js?v=6"></script>
+<script src="/newsroom/assets/grades.js?v=6"></script>
 </head>
 <body class="nr" data-section="Crew">
 <div data-rail></div>
@@ -34,7 +34,7 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/assets/hub.js?v=5"></script>
+<script src="/newsroom/assets/hub.js?v=6"></script>
 <script>
 (function(){
   var body = document.getElementById('crew-body');
@@ -106,9 +106,10 @@
       html += '<div class="crew-grid nr-stagger">';
       html += withPeople.map(function(g){
         var isMine = (myPeriod === p && myGroup === g.n);
-        var wave = (typeof ENN_SEASON !== 'undefined') ? ENN_SEASON.waveOf(g.n, groups.length) : null;
-        var nx = (typeof ENN_SEASON !== 'undefined')
-          ? ENN_SEASON.nextForGroup('P'+p, g.n, groups.length) : null;
+        /* waves split by filled groups (8→4/4), via the identity layer */
+        var wave = window.ENN_ID ? window.ENN_ID.groupWave(p, g.n) : null;
+        var gd = window.ENN_ID ? window.ENN_ID.groupDates(p, g.n) : [];
+        var nx = gd.filter(function(x){ return x.date && x.date.getTime() > Date.now(); })[0] || null;
         return '<div class="crew-card' + (isMine ? ' is-mine' : '') + '">' +
           '<div class="crew-card-head">' +
             '<h3>' + NR.esc(g.name) + '</h3>' +

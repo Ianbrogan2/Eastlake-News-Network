@@ -241,21 +241,54 @@
     return inGroup(me);
   }
 
-  /* Which alternating wave this person's group is in, and its dates. */
+  /* ── The alternating waves, split by REAL groups ───────────────
+     Groups take turns: half air one bulletin, the other half the next.
+     The split is by the number of groups that ACTUALLY have students —
+     so 8 groups is 4/4, 7 is 4/3, 10 is 5/5 — not by how many empty
+     group slots the roster happens to have. Empty slots are skipped,
+     and a group's wave is decided by its rank among the filled ones. */
+  function periodNum(period){ return String(period == null ? '' : period).replace(/^P/i, ''); }
+
+  function filledGroupSlots(period){
+    var R = roster(); if(!R) return [];
+    var per = R['period' + periodNum(period)];
+    if(!per || !per.groups) return [];
+    var out = [];
+    per.groups.forEach(function(g, i){
+      var has = (g.members || []).some(function(m){ return m && (txt(m.id) || txt(m.first) || txt(m.last)); });
+      if(has) out.push(i + 1);                 // 1-based slot number
+    });
+    return out;
+  }
+  /* 0 = first wave, 1 = second wave, null if the group isn't filled */
+  function groupWave(period, slot){
+    var slots = filledGroupSlots(period);
+    var rank = slots.indexOf(Number(slot));
+    if(rank < 0) return null;
+    var firstWave = Math.ceil(slots.length / 2);   // 8→4, 7→4, 10→5, 6→3
+    return rank < firstWave ? 0 : 1;
+  }
+  /* the bulletins that group actually airs, in order */
+  function groupDates(period, slot){
+    var w = groupWave(period, slot);
+    if(w == null || typeof ENN_SEASON === 'undefined') return [];
+    return ENN_SEASON.waveDates('P' + periodNum(period), w);
+  }
+
   function myWave(me){
     me = me || load();
-    if(!me || !me.group || typeof ENN_SEASON === 'undefined') return null;
-    return ENN_SEASON.waveOf(me.group, me.groupCount);
+    if(!me || !me.group) return null;
+    return groupWave(me.period, me.group);
   }
   function myAirDates(me){
     me = me || load();
-    if(!me || !me.group || typeof ENN_SEASON === 'undefined') return [];
-    return ENN_SEASON.datesForGroup(periodTag(me), me.group, me.groupCount);
+    if(!me || !me.group) return [];
+    return groupDates(me.period, me.group);
   }
   function myNextAirDate(me){
     me = me || load();
-    if(!me || !me.group || typeof ENN_SEASON === 'undefined') return null;
-    return ENN_SEASON.nextForGroup(periodTag(me), me.group, me.groupCount);
+    var list = myAirDates(me).filter(function(b){ return b.date && b.date.getTime() > Date.now(); });
+    return list.length ? list[0] : null;
   }
 
   window.ENN_ID = {
@@ -278,6 +311,8 @@
     homeLane:      homeLane,
     myWave:        myWave,
     myAirDates:    myAirDates,
-    myNextAirDate: myNextAirDate
+    myNextAirDate: myNextAirDate,
+    groupWave:     groupWave,
+    groupDates:    groupDates
   };
 })();
