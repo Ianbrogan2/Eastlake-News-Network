@@ -809,7 +809,7 @@ var ENN_ROSTER = {
       },
       {
         role: 'Assistant Director',
-        id: '',
+        id: '1613106',
         first: 'Rondell',
         last: 'Minor'
       },
