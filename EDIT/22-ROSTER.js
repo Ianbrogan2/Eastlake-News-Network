@@ -111,19 +111,19 @@ var ENN_ROSTER = {
         name: 'Group 1',
         members: [
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1593912',
+            first: 'Erina',
+            last: 'Tsuya'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1085049',
+            first: 'Sophia',
+            last: 'Meza'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1592985',
+            first: 'Maddy',
+            last: 'Mcgee'
           },
           {
             id: '',
