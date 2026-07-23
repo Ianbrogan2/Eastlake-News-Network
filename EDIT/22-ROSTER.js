@@ -479,9 +479,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Equipment Manager',
-        id: '',
-        first: '',
-        last: ''
+        id: '1595647',
+        first: 'Logan',
+        last: 'Serrano-Wirth'
       }
     ],
     groups: [
@@ -645,7 +645,7 @@ var ENN_ROSTER = {
           },
           {
             id: '1606413',
-            first: 'lucas',
+            first: 'Lucas',
             last: 'Yriqui'
           },
           {
