@@ -37,7 +37,7 @@
       help:'Leave the ID blank for any role nobody holds this semester.' },
     { key:'groups', label:'Production Groups', type:'list', itemLabel:'Group', fields:[
       { key:'name', label:'Group name', type:'text' },
-      { key:'members', label:'Members — up to 8', type:'list', itemLabel:'student',
+      { key:'members', label:'Members — up to 5', type:'list', itemLabel:'student',
         compact:true, fields:STUDENT },
     ]},
   ];
@@ -466,19 +466,19 @@ window.ENN_SCHEMA = [
 
   /* ═══════════ STUDENT ROSTER ═══════════ */
   { id:'roster1', icon:'1️⃣', label:'Roster · Period 1', group:'Student Roster',
-    desc:'Period 1 — 11 leadership slots and 8 production groups of up to 8 students. Type each student\'s ID and name into a slot; leave unused slots blank.',
+    desc:'Period 1 — 11 leadership slots and 10 production groups of up to 5 students. Type each student\'s ID and name into a slot; leave unused slots blank.',
     file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
     fields:[ { key:'period1', label:'Period 1', type:'object', fields:PERIOD_ROSTER } ]
   },
 
   { id:'roster4', icon:'4️⃣', label:'Roster · Period 4', group:'Student Roster',
-    desc:'Period 4 — 11 leadership slots and 8 production groups of up to 8 students.',
+    desc:'Period 4 — 11 leadership slots and 10 production groups of up to 5 students.',
     file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
     fields:[ { key:'period4', label:'Period 4', type:'object', fields:PERIOD_ROSTER } ]
   },
 
   { id:'roster6', icon:'6️⃣', label:'Roster · Period 6', group:'Student Roster',
-    desc:'Period 6 — 11 leadership slots and 8 production groups of up to 8 students.',
+    desc:'Period 6 — 11 leadership slots and 10 production groups of up to 5 students.',
     file:'EDIT/22-ROSTER.js', kind:'jsobject', varName:'ENN_ROSTER',
     fields:[ { key:'period6', label:'Period 6', type:'object', fields:PERIOD_ROSTER } ]
   },

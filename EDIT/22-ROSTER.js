@@ -17,7 +17,7 @@
 // ║    as a form field — you just type the name and ID into it.       ║
 // ╠═══════════════════════════════════════════════════════════════╣
 // ║  HOW THE SLOTS WORK:                                             ║
-// ║    Each period has 11 LEADERSHIP slots and 8 GROUPS of up to 8.  ║
+// ║    Each period has 11 LEADERSHIP slots and 10 GROUPS of up to 5.  ║
 // ║    Empty slots are simply ignored — leave any you don't use       ║
 // ║    blank. Nothing breaks and nothing shows up on the site.        ║
 // ║                                                                  ║
@@ -140,42 +140,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 2',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -230,42 +200,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 4',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -320,42 +260,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 6',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -410,21 +320,6 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -446,6 +341,51 @@ var ENN_ROSTER = {
             first: '',
             last: ''
           },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 9',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 10',
+        members: [
           {
             id: '',
             first: '',
@@ -572,42 +512,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 2',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -662,42 +572,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 4',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -752,42 +632,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 6',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -842,21 +692,6 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -878,6 +713,51 @@ var ENN_ROSTER = {
             first: '',
             last: ''
           },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 9',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 10',
+        members: [
           {
             id: '',
             first: '',
@@ -1004,42 +884,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 2',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -1094,42 +944,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 4',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -1184,42 +1004,12 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
       {
         name: 'Group 6',
         members: [
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
           {
             id: '',
             first: '',
@@ -1274,21 +1064,6 @@ var ENN_ROSTER = {
             id: '',
             first: '',
             last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -1310,6 +1085,51 @@ var ENN_ROSTER = {
             first: '',
             last: ''
           },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 9',
+        members: [
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          },
+          {
+            id: '',
+            first: '',
+            last: ''
+          }
+        ]
+      },
+      {
+        name: 'Group 10',
+        members: [
           {
             id: '',
             first: '',
