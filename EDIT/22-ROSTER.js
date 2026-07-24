@@ -320,6 +320,11 @@ var ENN_ROSTER = {
             id: '1594735',
             first: 'Caleb',
             last: 'Foss'
+          },
+          {
+            id: '1584843',
+            first: 'Noah',
+            last: 'McCurty'
           }
         ]
       },
