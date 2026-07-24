@@ -59,9 +59,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Creative Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1594333',
+        first: 'Hayden',
+        last: 'Macale'
       },
       {
         role: 'Assistant Director',
