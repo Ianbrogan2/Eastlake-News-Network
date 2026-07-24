@@ -544,9 +544,9 @@ var ENN_ROSTER = {
             last: 'Fuenzalida'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1623777',
+            first: 'Sofia',
+            last: 'Rodriguez'
           }
         ]
       },
