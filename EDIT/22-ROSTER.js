@@ -1036,9 +1036,9 @@ var ENN_ROSTER = {
             last: 'Ramirez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607050',
+            first: 'Andres',
+            last: 'Cuevas'
           }
         ]
       },
