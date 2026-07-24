@@ -378,6 +378,24 @@
             window.ENN_ID.isAdvisor(me) ? ' · ' + b.period : ''}</b>`).join('')}</div>`
       : '';
 
+    /* The group's current project (EDIT/24-ASSIGNMENTS.js) — shown big at
+       the top of the desk so it's the first thing the crew sees. */
+    let assignment = '';
+    if(typeof ENN_ASSIGN !== 'undefined' && window.ENN_ID.inGroup(me)){
+      const a = ENN_ASSIGN.forGroup(me.period, me.group);
+      if(a){
+        const due = ENN_ASSIGN.due();
+        assignment =
+          `<div class="nr-desk-assign">
+            <div class="nr-desk-assign-k">${NR.esc(ENN_ASSIGN.heading())}${
+              a.category ? ` <b>${NR.esc(a.category)}</b>` : ''}</div>
+            <div class="nr-desk-assign-t">${NR.esc(a.title || '')}</div>
+            ${a.brief ? `<p>${NR.esc(a.brief)}</p>` : ''}
+            ${due ? `<div class="nr-desk-assign-due">${NR.esc(due)}</div>` : ''}
+          </div>`;
+      }
+    }
+
     host.innerHTML = `
       <section class="nr-desk nr-reveal">
         <div class="nr-desk-head">
@@ -388,6 +406,7 @@
           <span class="nr-desk-tag">${window.ENN_ID.isAdvisor(me) ? 'Advisor' :
             (window.ENN_ID.isLeader(me) ? 'Leadership' : 'Crew')}</span>
         </div>
+        ${assignment}
         ${rows.length ? `<dl class="nr-desk-grid">${rows.map(([k,v]) =>
           `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>` : ''}
         ${mates}

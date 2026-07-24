@@ -47,6 +47,20 @@
     { key:'url', label:'YouTube URL', type:'text' },
   ]};
 
+  // one group's current project (Group Assignments)
+  var PROJECT = [
+    { key:'category', label:'Category', type:'text', help:'PSA · Skit · Interview · Interactive · Feature' },
+    { key:'title',    label:'Title', type:'text' },
+    { key:'brief',    label:'What it is', type:'textarea' },
+  ];
+  function ASSIGN_PERIOD(p){
+    var fields=[];
+    for(var g=1; g<=10; g++){
+      fields.push({ key:String(g), label:'Group '+g, type:'object', fields:PROJECT });
+    }
+    return { key:'period'+p, label:'Period '+p, type:'object', fields:fields };
+  }
+
 window.ENN_SCHEMA = [
 
   /* ═══════════ HOME PAGE ═══════════ */
@@ -553,6 +567,19 @@ window.ENN_SCHEMA = [
         { key:'skillChallenge', label:'Front page — skill challenge', type:'toggleBool' },
         { key:'announcements',  label:'Front page — announcements', type:'toggleBool' },
       ]},
+    ]
+  },
+
+  /* ═══════════ GROUP ASSIGNMENTS ═══════════ */
+  { id:'assign', icon:'🎬', label:'Group Assignments', group:'Student Newsroom',
+    desc:'The project each production group is working on now — shown at the top of every student\'s newsroom home screen. Fill in a group; leave the rest blank.',
+    file:'EDIT/24-ASSIGNMENTS.js', kind:'jsobject', varName:'ENN_ASSIGNMENTS',
+    fields:[
+      { key:'heading', label:'Card heading', type:'text' },
+      { key:'due',     label:'Due line', type:'text', help:'e.g. Due Monday, July 27 — end of class' },
+      ASSIGN_PERIOD(1),
+      ASSIGN_PERIOD(4),
+      ASSIGN_PERIOD(6),
     ]
   },
 
