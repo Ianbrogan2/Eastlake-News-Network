@@ -1280,14 +1280,16 @@ img{display:block;max-width:100%}
 }
 .footer-meta a:hover{color:#fff}
 /* quiet crew-access door — a decorative record dot; only those told about it click it */
-/* Crew-access button: a clean ring with one perfectly-centred dot.
-   Drawn in CSS (not the ◉ glyph) so it's evenly centred at any size. */
-.crew-door{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-left:9px;
-  vertical-align:middle;border-radius:50%;box-sizing:border-box;
+/* Crew-access button: a clean ring with ONE dot, drawn in CSS and
+   absolutely centred so nothing can shift it. font-size:0 + transparent
+   text hide any old cached ◉ glyph, so there's never a second dot. */
+.crew-door{position:relative;display:inline-block;width:28px;height:28px;margin-left:9px;
+  vertical-align:middle;border-radius:50%;box-sizing:border-box;font-size:0;line-height:0;color:transparent;text-indent:-9999px;
   border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.03);
   transition:border-color .25s ease,background .25s ease,box-shadow .25s ease}
-.crew-door::before{content:"";width:6px;height:6px;border-radius:50%;
-  background:rgba(255,255,255,0.6);transition:background .25s ease,box-shadow .25s ease}
+.crew-door::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.6);
+  transition:background .25s ease,box-shadow .25s ease}
 .crew-door:hover,.crew-door:focus-visible{border-color:rgba(255,59,48,0.55);background:rgba(255,59,48,0.07)}
 .crew-door:hover::before,.crew-door:focus-visible::before{background:#FF3B30;box-shadow:0 0 8px rgba(255,59,48,0.75)}
 
