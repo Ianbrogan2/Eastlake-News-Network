@@ -59,9 +59,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Creative Director',
-        id: '',
-        first: '',
-        last: ''
+        id: '1594333',
+        first: 'Hayden',
+        last: 'Macale'
       },
       {
         role: 'Assistant Director',
@@ -170,6 +170,11 @@ var ENN_ROSTER = {
             id: '1594976',
             first: 'Myia',
             last: 'Ruiz'
+          },
+          {
+            id: '1663505',
+            first: 'Barac',
+            last: 'Salinas'
           }
         ]
       },
@@ -225,11 +230,6 @@ var ENN_ROSTER = {
             id: '1595007',
             first: 'Adrian',
             last: 'Infante'
-          },
-          {
-            id: '01010101',
-            first: 'Barac',
-            last: 'Salinas'
           }
         ]
       },
@@ -320,6 +320,11 @@ var ENN_ROSTER = {
             id: '1594735',
             first: 'Caleb',
             last: 'Foss'
+          },
+          {
+            id: '1584843',
+            first: 'Noah',
+            last: 'McCurty'
           }
         ]
       },
