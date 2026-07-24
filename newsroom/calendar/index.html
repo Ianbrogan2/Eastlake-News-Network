@@ -95,6 +95,11 @@
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1;
   }
   .enncal .day .dnum{font-size:11px}
+  /* Your own group's cells already get the blue highlight ring (and the
+     banner names your group), so the in-cell "Group N" tag has no room
+     next to the big P-label — it would sit on top of it. Hide it on
+     phones; the ring is the marker. */
+  .enncal .day.bull.mine .mytag{display:none}
 }
 </style>
 </head>
