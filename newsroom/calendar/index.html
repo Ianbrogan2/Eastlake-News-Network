@@ -82,11 +82,19 @@
 .enncal .notes b{color:var(--clight)}
 
 @media (max-width:640px){
-  .enncal .day{min-height:64px;padding:4px 5px}
+  .enncal .day{min-height:58px;padding:4px 4px}
   .enncal .day .time,.enncal .day.bull .bnum{display:none}
-  .enncal .day.bull .plabel{font-size:15px;transform:translateY(-40%)}
-  .enncal .day .note{font-size:9px}
+  .enncal .day.bull .plabel{font-size:15px;transform:translateY(-42%)}
   .enncal .grid{gap:4px}
+  /* Off-day labels are long single words (Thanksgiving, Fall Break…)
+     that letter-stack in a narrow cell. Keep them to ONE tidy line and
+     ellipsize what doesn't fit — the full names are listed in the notes
+     block below. */
+  .enncal .day .note{
+    font-size:8.5px;left:3px;right:3px;top:auto;bottom:5px;transform:none;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1;
+  }
+  .enncal .day .dnum{font-size:11px}
 }
 </style>
 </head>
