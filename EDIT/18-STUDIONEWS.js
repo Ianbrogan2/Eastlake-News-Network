@@ -19,76 +19,39 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 
 var ENN_STUDIO_NEWS = {
-
-  // Section header text (shown above the three cards)
   eyebrow: 'What\'s Happening',
   sectionTitle: 'INDUSTRY NEWS',
-
   cards: [
-
-    // ── CARD 1 — HERO (large left card) ─────────────────────────────
     {
-      type:     'countdown',          // live ticking timer
-
+      type: 'countdown',
       category: 'GAMING',
-      badge:    'ROCKSTAR GAMES',
-
-      // Main headline — displayed in large display type
+      badge: 'ROCKSTAR GAMES',
       headline: 'GRAND THEFT AUTO VI',
-
-      // Smaller text below the headline
-      subhead:  'The most anticipated game in history returns to Vice City.',
-
-      // ISO date string — the moment the countdown targets
-      // When this date passes the card automatically flips to "OUT NOW"
+      subhead: 'The most anticipated game in history returns to Vice City.',
       countdownTarget: '2026-11-19T00:00:00',
-
-      // Label shown beneath the timer blocks
       countdownLabel: 'Until Launch',
-
-      // Where to send the user on click
       link: 'https://www.rockstargames.com/VI',
-
-      // Colour scheme
-      theme: 'gta',
+      theme: 'gta'
     },
-
-    // ── CARD 2 — top-right card ──────────────────────────────────────
     {
-      type:     'news',
-
-      category: 'ANIMATION',
-      badge:    'PIXAR · DISNEY',
-
-      headline: 'Toy Story 5 Wraps Principal Photography',
-
-      subhead:  'Woody and Buzz are back — Pixar confirms post-production has begun.',
-
-      body: 'After years of development, Toy Story 5 has officially wrapped shooting at Pixar Animation Studios. The film is targeting a summer 2027 theatrical release.',
-
-      link: 'https://variety.com',
-
-      theme: 'blue',
-    },
-
-    // ── CARD 3 — bottom-right card ───────────────────────────────────
-    {
-      type:     'news',
-
+      type: 'news',
       category: 'FILM',
-      badge:    'DREAMWORKS · UNIVERSAL',
-
-      headline: 'How to Train Your Dragon Sequel Greenlit',
-
-      subhead:  'Universal greenlights a fourth chapter following the live-action reboot\'s success.',
-
-      body: 'Riding the wave of the live-action How to Train Your Dragon\'s global box office run, DreamWorks and Universal have fast-tracked a sequel with the original creative team returning.',
-
-      link: 'https://deadline.com',
-
-      theme: 'green',
+      badge: 'MARVEL · DISNEY',
+      headline: 'Spider-Man: Brand New Day releases July 31st',
+      subhead: 'Peter Parker is back!',
+      body: 'Peter Parker devotes his life to protecting New York City as a full-time Spider-Man. But as the demands on him intensify, the pressure sparks a surprising physical evolution that threatens his existence, even as a strange new pattern of crimes gives rise to one of the most powerful threats he\'s ever faced.',
+      link: 'https://variety.com',
+      theme: 'blue'
     },
-
-  ],
-
+    {
+      type: 'news',
+      category: 'FILM',
+      badge: 'DREAMWORKS · UNIVERSAL',
+      headline: 'How to Train Your Dragon Sequel Greenlit',
+      subhead: 'Universal greenlights a fourth chapter following the live-action reboot\'s success.',
+      body: 'Riding the wave of the live-action How to Train Your Dragon\'s global box office run, DreamWorks and Universal have fast-tracked a sequel with the original creative team returning.',
+      link: 'https://deadline.com',
+      theme: 'green'
+    }
+  ]
 };
