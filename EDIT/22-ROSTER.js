@@ -797,7 +797,7 @@ var ENN_ROSTER = {
       {
         role: 'Studio Director',
         id: '1594460',
-        first: 'GiuGiu',
+        first: 'JuJu',
         last: 'Bischoffer'
       },
       {
@@ -856,9 +856,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Equipment Manager',
-        id: '',
-        first: '',
-        last: ''
+        id: '1623225',
+        first: 'Gibran',
+        last: 'Espinoza'
       }
     ],
     groups: [
