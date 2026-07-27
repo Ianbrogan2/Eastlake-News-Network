@@ -18,7 +18,7 @@ window.ENN = {
   CALL_SIGN: 'ENN',
   HUB_URL: '/newsroom/',
   SUBMIT_FORM_URL: 'https://docs.google.com/forms/d/e/1FAIpQLScUGVMRUBgiunPBxwgfDaCv-FnOyqC67W4tu3HvXwROdjLbOQ/viewform?usp=publish-editor',
-  CATALOG_SHEET_URL: 'https://docs.google.com/spreadsheets/d/1kMhbX75i0Vpo1YiJBUgw6Zuggsd90hjFbHBQRKWn_Gw/edit?usp=sharing',
+  CATALOG_SHEET_URL: 'https://script.google.com/macros/s/AKfycbw6OLZNOXupjoJ0HhixN9yC0Vt98SUn0Bgv9Y8vJwNKL0BONAtXHXEvEuk3B9wCLAaC/exec',
   PITCH_FORM_URL: '',
   EXPORT_PRESET_URL: '',
   GRADE_FORM_URL: '',
