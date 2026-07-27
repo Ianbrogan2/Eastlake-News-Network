@@ -71,6 +71,11 @@ function applyOp_(db, op){
   db.records = db.records || {};
   db.votes = db.votes || {};
   db.leaderboards = db.leaderboards || [];
+  db.assignments = db.assignments || {};
+  db.agrades = db.agrades || {};
+  db.categories = db.categories || null;
+  db.audit = db.audit || [];
+  db.gsettings = db.gsettings || {};
   var now = new Date().toISOString();
 
   function blank(o){
@@ -108,6 +113,38 @@ function applyOp_(db, op){
   } else if(op.op === 'publish'){
     db.leaderboards.unshift(op.board);
     db.leaderboards = db.leaderboards.slice(0, 30);
+  }
+  /* ── Advanced gradebook ops (mirror newsroom/assets/grades.js) ── */
+  else if(op.op === 'asg.save'){
+    var a0 = db.assignments[op.a.id] || {};
+    var merged = a0; for(var kk in op.a){ merged[kk] = op.a[kk]; }
+    merged.updatedAt = now; merged.updatedBy = op.by;
+    db.assignments[op.a.id] = merged;
+    db.audit.unshift({ ts:now, user:op.by, action: a0.id ? 'edit-assignment':'create-assignment', assignmentId:op.a.id, detail:op.a.title||'' });
+  } else if(op.op === 'asg.delete'){
+    delete db.assignments[op.id];
+    Object.keys(db.agrades).forEach(function(k){ if(k.indexOf(op.id+'::')===0) delete db.agrades[k]; });
+    db.audit.unshift({ ts:now, user:op.by, action:'delete-assignment', assignmentId:op.id });
+  } else if(op.op === 'grade.set'){
+    var prev = db.agrades[op.key] || null;
+    var g = prev || { assignmentId:op.assignmentId, period:op.period, group:op.group, groupName:op.groupName||'', members:op.members||'' };
+    ['score','comment','note','submissionUrl','draft'].forEach(function(f){ if(op[f] !== undefined) g[f] = op[f]; });
+    g.gradedBy = op.by; g.gradedAt = now;
+    db.agrades[op.key] = g;
+    db.audit.unshift({ ts:now, user:op.by, action: prev ? (op.reason?'override-grade':'edit-grade') : 'grade',
+      assignmentId:op.assignmentId, group:op.period+'/'+op.group, from: prev?prev.score:null, to:g.score, reason:op.reason||'' });
+  } else if(op.op === 'grade.delete'){
+    var old = db.agrades[op.key]; delete db.agrades[op.key];
+    db.audit.unshift({ ts:now, user:op.by, action:'delete-grade', assignmentId:old?old.assignmentId:'', group:old?(old.period+'/'+old.group):'', from:old?old.score:null, to:null, reason:op.reason||'' });
+  } else if(op.op === 'categories'){
+    db.categories = op.categories || []; db.audit.unshift({ ts:now, user:op.by, action:'edit-categories' });
+  } else if(op.op === 'gsettings'){
+    for(var sk in (op.settings||{})){ db.gsettings[sk] = op.settings[sk]; }
+  } else if(op.op === 'reset'){
+    if(op.what==='all'||op.what==='grades'){ db.agrades = {}; db.records = {}; }
+    if(op.what==='all'||op.what==='assignments'){ db.assignments = {}; }
+    if(op.what==='all'){ db.votes = {}; db.leaderboards = []; }
+    db.audit.unshift({ ts:now, user:op.by, action:'reset', detail:op.what });
   }
   return db;
 }

@@ -69,7 +69,10 @@
     var u = (window.ENN && window.ENN.GRADES_API_URL) || '';
     return txt(u);
   }
-  function isCloud(){ return !!apiURL(); }
+  /* ?store=local forces the on-device store — handy for testing, and a
+     safe fallback if the cloud script is mid-update. */
+  function forcedLocal(){ try { return /[?&]store=local\b/.test(location.search); } catch(e){ return false; } }
+  function isCloud(){ return !forcedLocal() && !!apiURL(); }
 
   /* ── The grade record shape ─────────────────────────────────────
      key      P{period}::G{group}::{airISO}   (unique per piece)
@@ -164,6 +167,66 @@
     db.records = db.records || {};
     db.votes = db.votes || {};
     db.leaderboards = db.leaderboards || [];
+    /* ── Advanced gradebook stores ── */
+    db.assignments = db.assignments || {};   // id → assignment
+    db.agrades     = db.agrades || {};        // assignmentId::P{p}G{g} → grade
+    db.categories  = db.categories || null;   // [{id,name,weight}] (null = defaults)
+    db.audit       = db.audit || [];          // immutable change log
+    db.gsettings   = db.gsettings || {};      // weighted:false, rolePeriods:{}, …
+
+    /* create / edit an assignment */
+    if(op.op === 'asg.save'){
+      var a = db.assignments[op.a.id] || {};
+      db.assignments[op.a.id] = Object.assign({}, a, op.a, { updatedAt: nowISO(), updatedBy: op.by });
+      db.audit.unshift({ ts:nowISO(), user:op.by, action: a.id ? 'edit-assignment' : 'create-assignment',
+                         assignmentId: op.a.id, detail: op.a.title||'' });
+    }
+    else if(op.op === 'asg.delete'){
+      delete db.assignments[op.id];
+      Object.keys(db.agrades).forEach(function(k){ if(k.indexOf(op.id+'::')===0) delete db.agrades[k]; });
+      db.audit.unshift({ ts:nowISO(), user:op.by, action:'delete-assignment', assignmentId: op.id });
+    }
+    /* set / edit / override a grade (one assignment × one group) */
+    else if(op.op === 'grade.set'){
+      var gk = op.key, prev = db.agrades[gk] || null;
+      var g = Object.assign({
+        assignmentId: op.assignmentId, period: op.period, group: op.group,
+        groupName: op.groupName || '', members: op.members || ''
+      }, prev || {});
+      ['score','comment','note','submissionUrl','draft'].forEach(function(f){
+        if(op[f] !== undefined) g[f] = op[f];
+      });
+      g.gradedBy = op.by; g.gradedAt = nowISO();
+      if(op.draft === undefined && prev) g.draft = prev.draft;   // keep draft flag unless set
+      db.agrades[gk] = g;
+      db.audit.unshift({ ts:nowISO(), user:op.by,
+        action: prev ? (op.reason ? 'override-grade' : 'edit-grade') : 'grade',
+        assignmentId: op.assignmentId, group: op.period+'/'+op.group,
+        from: prev ? prev.score : null, to: g.score,
+        reason: op.reason || '' });
+    }
+    else if(op.op === 'grade.delete'){
+      var old = db.agrades[op.key];
+      delete db.agrades[op.key];
+      db.audit.unshift({ ts:nowISO(), user:op.by, action:'delete-grade',
+        assignmentId: old?old.assignmentId:'', group: old?(old.period+'/'+old.group):'',
+        from: old?old.score:null, to:null, reason: op.reason||'' });
+    }
+    /* grading categories (with optional weights) */
+    else if(op.op === 'categories'){
+      db.categories = op.categories || [];
+      db.audit.unshift({ ts:nowISO(), user:op.by, action:'edit-categories' });
+    }
+    else if(op.op === 'gsettings'){
+      db.gsettings = Object.assign({}, db.gsettings, op.settings || {});
+    }
+    /* wipe test data — advisor only, from Settings */
+    else if(op.op === 'reset'){
+      if(op.what === 'all' || op.what === 'grades'){ db.agrades = {}; db.records = {}; }
+      if(op.what === 'all' || op.what === 'assignments'){ db.assignments = {}; }
+      if(op.what === 'all'){ db.votes = {}; db.leaderboards = []; }
+      db.audit.unshift({ ts:nowISO(), user:op.by, action:'reset', detail: op.what });
+    }
 
     if(op.op === 'meta'){
       var r = db.records[op.key] || blankRecord(op);
@@ -210,8 +273,20 @@
      PUBLIC API
      ══════════════════════════════════════════════════════════════ */
   var store = isCloud() ? CloudStore : LocalStore;
-  var cache = { records:{}, votes:{}, leaderboards:[] };
+  var cache = { records:{}, votes:{}, leaderboards:[], assignments:{}, agrades:{}, categories:null, audit:[], gsettings:{} };
   var listeners = [];
+
+  /* Default grading categories (used until the advisor customises them). */
+  var DEFAULT_CATEGORIES = [
+    { id:'morning',   name:'Morning Broadcast', weight:0 },
+    { id:'packages',  name:'Packages',          weight:0 },
+    { id:'graphics',  name:'Graphics',          weight:0 },
+    { id:'scripts',   name:'Scripts',           weight:0 },
+    { id:'live',      name:'Live Productions',  weight:0 },
+    { id:'prof',      name:'Professionalism',   weight:0 },
+    { id:'special',   name:'Special Projects',  weight:0 }
+  ];
+  function pctToLetter(p){ return p>=90?'A':p>=80?'B':p>=70?'C':p>=60?'D':'F'; }
   var pollTimer = null;
 
   function emit(){ listeners.forEach(function(cb){ try{ cb(cache); }catch(e){} }); }
@@ -272,6 +347,123 @@
     votesFor: function(windowId){ return (cache.votes || {})[windowId || this.windowId()] || {}; },
     publish: function(board){ return op({op:'publish', board:board}); },
     leaderboards: function(){ return cache.leaderboards || []; },
+
+    /* ══════════════════════════════════════════════════════════════
+       ADVANCED GRADEBOOK  (assignments · grades · analytics)
+       ══════════════════════════════════════════════════════════════ */
+    pctToLetter: pctToLetter,
+
+    categories: function(){
+      return (cache.categories && cache.categories.length) ? cache.categories : DEFAULT_CATEGORIES;
+    },
+    setCategories: function(cats, by){ return op({op:'categories', categories:cats, by:by}); },
+    settings: function(){ return cache.gsettings || {}; },
+    setSettings: function(s, by){ return op({op:'gsettings', settings:s, by:by}); },
+
+    /* ── assignments ── */
+    assignments: function(){
+      return Object.keys(cache.assignments||{}).map(function(k){ return cache.assignments[k]; })
+        .sort(function(a,b){ return String(b.due||'').localeCompare(String(a.due||'')) || String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')); });
+    },
+    assignment: function(id){ return (cache.assignments||{})[id] || null; },
+    saveAssignment: function(a, by){
+      if(!a.id) a.id = 'a' + Math.abs((a.title||'x').split('').reduce(function(h,c){return (h*31+c.charCodeAt(0))|0;},7)) + '_' + (cache.audit?cache.audit.length:0) + '_' + Object.keys(cache.assignments||{}).length;
+      return op({op:'asg.save', a:a, by:by}).then(function(){ return a.id; });
+    },
+    deleteAssignment: function(id, by){ return op({op:'asg.delete', id:id, by:by}); },
+
+    /* which (period, group) an assignment is assigned to; [] or ['all'] */
+    assignedTargets: function(a){
+      if(!a) return [];
+      if(a.allGroups) return 'all';
+      return a.targets || [];   // ['P1G3', …]
+    },
+
+    /* ── grades (assignment × group) ── */
+    gradeKey: function(assignmentId, period, group){ return assignmentId + '::P' + txt(period) + 'G' + txt(group); },
+    grade: function(assignmentId, period, group){
+      return (cache.agrades||{})[this.gradeKey(assignmentId, period, group)] || null;
+    },
+    gradesForAssignment: function(assignmentId){
+      var out=[]; var pre=assignmentId+'::';
+      Object.keys(cache.agrades||{}).forEach(function(k){ if(k.indexOf(pre)===0) out.push(cache.agrades[k]); });
+      return out;
+    },
+    gradesForGroup: function(period, group){
+      var suf='::P'+txt(period)+'G'+txt(group); var out=[];
+      Object.keys(cache.agrades||{}).forEach(function(k){ if(k.slice(-suf.length)===suf) out.push(cache.agrades[k]); });
+      return out;
+    },
+    setGrade: function(o){ o.op='grade.set'; o.key=this.gradeKey(o.assignmentId,o.period,o.group); return op(o); },
+    deleteGrade: function(assignmentId, period, group, by, reason){
+      return op({op:'grade.delete', key:this.gradeKey(assignmentId,period,group), by:by, reason:reason});
+    },
+
+    /* percentage for a grade = score / assignment.maxPoints */
+    pctOf: function(gr, a){
+      if(!gr || gr.score==null || !a || !a.maxPoints) return null;
+      return Math.round((gr.score / a.maxPoints) * 1000)/10;
+    },
+
+    /* ── analytics ── */
+    /* average % for a set of {grade,assignment} pairs, honouring weights */
+    _avg: function(pairs){
+      pairs = pairs.filter(function(p){ return p.pct != null; });
+      if(!pairs.length) return null;
+      var cats = this.categories();
+      var weighted = cats.some(function(c){ return +c.weight > 0; });
+      if(!weighted){
+        var s = pairs.reduce(function(a,p){ return a + p.pct; }, 0);
+        return Math.round((s/pairs.length)*10)/10;
+      }
+      /* weighted by category */
+      var byCat = {}; pairs.forEach(function(p){ (byCat[p.cat]=byCat[p.cat]||[]).push(p.pct); });
+      var totW=0, acc=0;
+      cats.forEach(function(c){
+        var arr=byCat[c.id]; if(!arr||!arr.length||!(+c.weight>0)) return;
+        var m=arr.reduce(function(a,b){return a+b;},0)/arr.length;
+        acc += m*(+c.weight); totW += (+c.weight);
+      });
+      return totW ? Math.round((acc/totW)*10)/10 : null;
+    },
+    groupAverage: function(period, group){
+      var self=this;
+      var pairs = self.gradesForGroup(period, group).map(function(g){
+        var a=self.assignment(g.assignmentId); return { pct:self.pctOf(g,a), cat:a?a.category:'' };
+      });
+      return self._avg(pairs);
+    },
+    assignmentAverage: function(assignmentId){
+      var self=this, a=self.assignment(assignmentId);
+      var arr=self.gradesForAssignment(assignmentId).map(function(g){ return self.pctOf(g,a); }).filter(function(x){return x!=null;});
+      if(!arr.length) return null;
+      return Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10;
+    },
+    periodAverage: function(period){
+      var self=this, arr=[];
+      Object.keys(cache.agrades||{}).forEach(function(k){
+        var g=cache.agrades[k]; if(String(g.period)!==String(period)) return;
+        var a=self.assignment(g.assignmentId); var p=self.pctOf(g,a); if(p!=null) arr.push(p);
+      });
+      return arr.length ? Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10 : null;
+    },
+    overallAverage: function(){
+      var self=this, arr=[];
+      Object.keys(cache.agrades||{}).forEach(function(k){
+        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); var p=self.pctOf(g,a); if(p!=null) arr.push(p);
+      });
+      return arr.length ? Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10 : null;
+    },
+    distribution: function(){
+      var self=this, d={A:0,B:0,C:0,D:0,F:0};
+      Object.keys(cache.agrades||{}).forEach(function(k){
+        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); var p=self.pctOf(g,a);
+        if(p!=null) d[pctToLetter(p)]++;
+      });
+      return d;
+    },
+    auditLog: function(){ return cache.audit || []; },
+    reset: function(what, by){ return op({op:'reset', what:what||'all', by:by}); },
 
     /* change notifications (poll or local edit) */
     onChange: function(cb){ listeners.push(cb); return cache; },

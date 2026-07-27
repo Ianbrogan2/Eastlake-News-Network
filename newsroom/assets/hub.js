@@ -439,32 +439,35 @@
 
     const G = window.ENN_GRADES;
     const draw = () => {
-      const mine = G.all().filter(r =>
-        String(r.period) === String(me.period) && String(r.group) === String(me.group))
-        .filter(r => G.total(r).graded > 0 || r.locked)
-        .sort((a,b) => String(b.airDate).localeCompare(String(a.airDate)));
-      if(!mine.length){ host.innerHTML = ''; return; }
+      /* Read the advanced gradebook: this group's assignment grades. A
+         grade belongs to the whole group, so every member sees the same
+         scores and feedback. Drafts are hidden until published. */
+      const grades = (G.gradesForGroup ? G.gradesForGroup(me.period, me.group) : [])
+        .filter(gr => gr && gr.score != null && !gr.draft)
+        .map(gr => ({ gr, a: G.assignment(gr.assignmentId) }))
+        .filter(x => x.a)
+        .sort((a,b) => String(b.a.due||'').localeCompare(String(a.a.due||'')));
+      if(!grades.length){ host.innerHTML = ''; return; }
+
+      const overall = G.groupAverage(me.period, me.group);
+      const oc = overall==null ? '#6B7688' : (overall>=90?'#4ade80':overall>=80?'#7DD8FF':overall>=70?'#ffcf6b':'#ff8a84');
 
       host.innerHTML =
         '<h2 class="nr-h2 nr-reveal">Your Grades</h2>' +
-        '<p class="nr-sub nr-reveal">Your whole group shares each grade. These are graded by the leadership team.</p>' +
+        '<p class="nr-sub nr-reveal">Your whole group shares each grade — graded by the leadership team.' +
+          (overall!=null ? ' Overall: <strong style="color:'+oc+'">'+overall+'% '+G.pctToLetter(overall)+'</strong>.' : '') + '</p>' +
         '<div class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">' +
-        mine.map(r => {
-          const t = G.total(r);
-          const col = t.total>=90?'#4ade80':(t.total<70?'#ff8a84':'#7DD8FF');
-          const lane = k => { const l=r.lanes&&r.lanes[k]; return l&&typeof l.score==='number'?l.score:'—'; };
+        grades.map(({gr,a}) => {
+          const pct = G.pctOf(gr, a);
+          const col = pct==null?'#6B7688':(pct>=90?'#4ade80':pct>=80?'#7DD8FF':pct>=70?'#ffcf6b':'#ff8a84');
           return '<div class="nr-panel">' +
             '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">' +
-              '<h3 class="nr-h3" style="margin:0">' + NR.esc(r.title || r.type || 'Piece') + '</h3>' +
-              '<span style="font-family:var(--display);font-size:30px;color:'+col+'">' + (t.graded?t.total:'—') + '</span></div>' +
+              '<h3 class="nr-h3" style="margin:0">' + NR.esc(a.title) + '</h3>' +
+              '<span style="font-family:var(--display);font-size:30px;color:'+col+'">' + (pct==null?'—':pct+'%') + '</span></div>' +
             '<div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--steel);margin:4px 0 10px">' +
-              NR.esc(r.airDate||'') + (r.locked?' · final':(t.graded<3?' · in progress':'')) + '</div>' +
-            '<div style="display:flex;gap:14px;font-size:12.5px;color:#c9cfda;margin-bottom:'+(r.feedback&&r.feedback.text?'10px':'0')+'">' +
-              '<span>Producer <b>'+lane('producer')+'</b></span>' +
-              '<span>Director <b>'+lane('director')+'</b></span>' +
-              '<span>Editor <b>'+lane('editor')+'</b></span></div>' +
-            (r.feedback && r.feedback.text
-              ? '<div style="border-top:1px solid rgba(255,255,255,.06);padding-top:9px;font-size:13px;color:#c9cfda;line-height:1.5">💬 ' + NR.esc(r.feedback.text) + '</div>'
+              NR.esc(gr.score + ' / ' + a.maxPoints + ' · ' + G.pctToLetter(pct||0)) + '</div>' +
+            (gr.comment
+              ? '<div style="border-top:1px solid rgba(255,255,255,.06);padding-top:9px;font-size:13px;color:#c9cfda;line-height:1.5">💬 ' + NR.esc(gr.comment) + '</div>'
               : '') +
           '</div>';
         }).join('') + '</div>';
