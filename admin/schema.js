@@ -433,7 +433,7 @@ window.ENN_SCHEMA = [
         help:'Students sign in with their own ID instead' },
 
       { key:'SUBMIT_FORM_URL', label:'① Submission form', type:'text',
-        help:'The Google Form students turn pieces in through — the most important one' },
+        help:'The Google Form students turn pieces in through. Use a short-answer “Drive link” question — NOT file upload (uploads fill your Drive).' },
       { key:'CATALOG_SHEET_URL', label:'② Submissions sheet', type:'text',
         help:'The Sheet that form feeds — becomes the Catalog' },
       { key:'PITCH_FORM_URL', label:'Pitch a story form', type:'text' },

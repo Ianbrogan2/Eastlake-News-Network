@@ -9,14 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=7">
-<link rel="stylesheet" href="/newsroom/colors.css?v=7">
-<script src="/newsroom/config.js?v=7"></script>
-<script src="/EDIT/21-BULLETINS.js?v=7"></script>
-<script src="/EDIT/23-SECTIONS.js?v=7"></script>
-<script src="/EDIT/22-ROSTER.js?v=7"></script>
-<script src="/newsroom/assets/identity.js?v=7"></script>
-<script src="/newsroom/assets/grades.js?v=7"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=8">
+<link rel="stylesheet" href="/newsroom/colors.css?v=8">
+<script src="/newsroom/config.js?v=8"></script>
+<script src="/EDIT/21-BULLETINS.js?v=8"></script>
+<script src="/EDIT/23-SECTIONS.js?v=8"></script>
+<script src="/EDIT/22-ROSTER.js?v=8"></script>
+<script src="/newsroom/assets/identity.js?v=8"></script>
+<script src="/newsroom/assets/grades.js?v=8"></script>
 </head>
 <body class="nr" data-section="Submit">
 <div data-rail></div>
@@ -26,7 +26,7 @@
   <section class="nr-hero nr-reveal">
     <div class="nr-eyebrow"><b>Portal</b><span>Turn in your piece</span></div>
     <h1 class="nr-title">SUBMIT</h1>
-    <p class="nr-lede">Run the checklist, then turn in your finished piece through the submission form. The form saves your video straight to the ENN Drive and lands it on the producer's desk.</p>
+    <p class="nr-lede">Run the checklist, then turn in your finished piece by pasting its <strong>Google Drive link</strong> into the submission form — no more uploading the whole video.</p>
   </section>
 
   <!-- Deadline rules -->
@@ -47,24 +47,39 @@
       <li><input type="checkbox" id="c5"><label for="c5"><strong>B-roll included</strong> <span class="req">(required on Sports &amp; Reporting pieces)</span></label></li>
       <li><input type="checkbox" id="c6"><label for="c6">Exported with the <strong>correct preset / resolution / format</strong></label></li>
       <li><input type="checkbox" id="c7"><label for="c7">Content is <strong>appropriate and can air</strong>; overall quality is broadcast-ready</label></li>
+      <li><input type="checkbox" id="c8"><label for="c8">Your Drive link is set to <strong>“Anyone with the link — Viewer”</strong> <span class="req">(so leaders can watch it)</span></label></li>
     </ul>
     <p style="margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel)">
       <span data-link="EXPORT_PRESET_URL" data-label="↓ Standard export preset" data-ghost data-note="Until this is posted, match the settings in Make → Export."></span>
     </p>
   </div>
 
+  <!-- Get your Drive link -->
+  <h2 class="nr-h2 nr-reveal">Get Your Drive Link</h2>
+  <p class="nr-sub nr-reveal">We turn in a <strong>link</strong>, not the file — it keeps our Drive from filling up. Takes 30 seconds:</p>
+  <div class="nr-panel nr-reveal" style="margin-bottom:26px">
+    <ol style="margin:0;padding-left:22px;color:#c9cfda;font-size:14px;line-height:1.9">
+      <li>Upload your exported video to <strong>your own Google Drive</strong> (your school account).</li>
+      <li>Right-click the file → <strong>Share</strong>.</li>
+      <li>Under “General access,” switch <strong>Restricted → “Anyone with the link.”</strong> Leave the role as <strong>Viewer</strong>.</li>
+      <li>Click <strong>Copy link</strong>.</li>
+      <li>Paste that link into the submission form below.</li>
+    </ol>
+    <p style="margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--steel)">If a leader can’t open your link, it isn’t shared — re-check step 3. YouTube (unlisted) links work too.</p>
+  </div>
+
   <!-- Turn it in -->
   <h2 class="nr-h2 nr-reveal">Turn It In</h2>
   <div class="nr-panel nr-panel-lg nr-reveal" id="submit-box">
-    <p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:8px">Checklist done? Open the submission form. Sign in with your <strong>school Google account</strong>, fill in the details (name, period, group, piece type, title), and upload your exported file.</p>
-    <p style="color:var(--steel);font-size:13px;margin-bottom:20px">Your upload goes to the ENN Drive automatically — you'll get a confirmation from Google when it's in.</p>
+    <p style="color:#c9cfda;font-size:14.5px;line-height:1.6;margin-bottom:8px">Checklist done and link copied? Open the submission form, fill in the details (name, period, group, piece type, title), and <strong>paste your Drive link</strong> — you don’t upload the video itself.</p>
+    <p style="color:var(--steel);font-size:13px;margin-bottom:20px">The link lands on the producer’s desk and plays right inside the gradebook when it’s graded.</p>
     <div id="submit-cta"></div>
   </div>
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/text.js?v=7"></script>
-<script src="/newsroom/assets/hub.js?v=7"></script>
+<script src="/newsroom/text.js?v=8"></script>
+<script src="/newsroom/assets/hub.js?v=8"></script>
 <script>
 (function(){
   var url = (window.ENN && window.ENN.SUBMIT_FORM_URL || '').trim();

@@ -18,7 +18,7 @@ window.ENN_NR_TEXT = {
     eyebrowTag:   "Portal",
     eyebrowLabel: "Turn in your piece",
     title:        "SUBMIT",
-    lede:         "Run the checklist, then turn in your finished piece through the submission form. The form saves your video straight to the ENN Drive and lands it on the producer's desk.",
+    lede:         "Run the checklist, then turn in your finished piece by pasting its Google Drive link into the submission form — no more uploading the whole video.",
   },
 
   "Make": {
