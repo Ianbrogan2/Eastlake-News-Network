@@ -247,11 +247,6 @@ var ENN_ROSTER = {
             last: 'Harry'
           },
           {
-            id: '1592859',
-            first: 'Andres',
-            last: 'solorzano'
-          },
-          {
             id: '1593401',
             first: 'Clark',
             last: 'Del Rosario'
@@ -274,7 +269,7 @@ var ENN_ROSTER = {
           {
             id: '1593760',
             first: 'Farid',
-            last: 'Al-ayyoub'
+            last: 'Al-ayyoub (Pos. Transf. Out)'
           },
           {
             id: '1593963',
@@ -290,6 +285,11 @@ var ENN_ROSTER = {
             id: '1594809',
             first: 'Aidan',
             last: 'Castillo'
+          },
+          {
+            id: '1592859',
+            first: 'Andres',
+            last: 'Solorzano'
           }
         ]
       },
