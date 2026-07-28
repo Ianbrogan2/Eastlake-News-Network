@@ -859,6 +859,11 @@ var ENN_ROSTER = {
             id: '1593860',
             first: 'Zoe',
             last: 'Tirado'
+          },
+          {
+            id: '',
+            first: 'Jaylen',
+            last: 'Madore'
           }
         ]
       },
