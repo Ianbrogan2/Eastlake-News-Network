@@ -602,6 +602,45 @@ img{display:block;max-width:100%}
   border-color:rgba(0,212,255,.5);
   box-shadow:0 0 0 1px rgba(0,212,255,.28), 0 0 34px -6px rgba(0,212,255,.35);
 }
+
+/* ── Crossed off: a day that's over ── */
+.sw-done{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;font-weight:600;
+  padding:4px 10px;border-radius:999px;
+  background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.4);color:var(--cyan);
+}
+.sw-check{font-size:11px;line-height:1}
+.sw-strike{
+  position:absolute;left:6%;right:6%;top:51%;z-index:4;height:5px;border-radius:5px;
+  pointer-events:none;opacity:0;transform:scaleX(0) rotate(-3.5deg);transform-origin:left center;
+  background:linear-gradient(90deg, rgba(0,212,255,0), var(--cyan) 12%, #eafcff 50%, var(--cyan) 88%, rgba(0,212,255,0));
+  box-shadow:0 0 18px 2px rgba(0,212,255,.55);
+}
+.sw-card--done{border-color:var(--border)}
+.sw-card--done:hover{transform:none;box-shadow:0 24px 48px -16px rgba(0,0,0,.7);border-color:var(--border)}
+.sw-card--done .sw-art,
+.sw-card--done .sw-card-body,
+.sw-card--done .sw-chip{transition:filter 1s var(--ease) .28s, opacity 1s var(--ease) .28s}
+.sw-card--done.in .sw-art{filter:grayscale(.7) brightness(.5) saturate(.6)}
+.sw-card--done.in .sw-card-body{opacity:.5}
+.sw-card--done.in .sw-chip{opacity:.6}
+.sw-card--done.in .sw-strike{animation:sw-cross .72s cubic-bezier(.66,0,.28,1) .42s forwards}
+@keyframes sw-cross{
+  0%{transform:scaleX(0) rotate(-3.5deg);opacity:0}
+  9%{opacity:1}
+  100%{transform:scaleX(1) rotate(-3.5deg);opacity:1}
+}
+/* The whole bar dissolves right after the last day is crossed off */
+.sw-bar--dissolving{
+  transition:opacity 1.4s var(--ease), transform 1.4s var(--ease), filter 1.4s var(--ease);
+  opacity:0;transform:translateY(-10px) scale(.985);filter:blur(3px);pointer-events:none;
+}
+@media (prefers-reduced-motion: reduce){
+  .sw-card--done.in .sw-strike{animation:none;opacity:1;transform:scaleX(1) rotate(-3.5deg)}
+  .sw-bar--dissolving{transition:opacity .3s linear;transform:none;filter:none}
+}
+
 .sw-card-body{position:relative;z-index:2}
 .sw-title{
   font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,2.4vw,30px);

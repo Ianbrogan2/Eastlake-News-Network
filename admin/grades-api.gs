@@ -127,7 +127,9 @@ function applyOp_(db, op){
     db.audit.unshift({ ts:now, user:op.by, action:'delete-assignment', assignmentId:op.id });
   } else if(op.op === 'grade.set'){
     var prev = db.agrades[op.key] || null;
-    var g = prev || { assignmentId:op.assignmentId, period:op.period, group:op.group, groupName:op.groupName||'', members:op.members||'' };
+    var g = prev || { assignmentId:op.assignmentId, period:op.period, group:op.group,
+      student:(op.student!=null&&op.student!=='')?op.student:null, studentName:op.studentName||'',
+      groupName:op.groupName||'', members:op.members||'' };
     ['score','comment','note','submissionUrl','draft'].forEach(function(f){ if(op[f] !== undefined) g[f] = op[f]; });
     g.gradedBy = op.by; g.gradedAt = now;
     db.agrades[op.key] = g;

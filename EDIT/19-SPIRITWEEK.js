@@ -65,6 +65,12 @@ var ENN_SPIRIT = {
   // One-line description under the title
   sub: 'Five days, five fits. Dress up with the whole district — here\'s the lineup.',
 
+  // When the school day ends (24-hour clock, Pacific time). Each day
+  // automatically crosses itself off once this time passes on that date,
+  // and the whole Spirit Week bar disappears after the LAST day ends.
+  // (3:40 PM = '15:40'.)  Leave blank to use 15:40.
+  dayEndsAt: '15:40',
+
   // ── THE DAYS ──────────────────────────────────────────────────────
   days: [
 

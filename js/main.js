@@ -900,18 +900,34 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     };
     const fmtChip = dt => `${DAY_NAMES[dt.getDay()]} · ${MONTHS[dt.getMonth()]} ${dt.getDate()}`;
 
-    /* Today in Pacific time, midnight-normalized */
+    /* Today in Pacific time (real wall clock, not midnight-normalized) */
     const nowPT  = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Los_Angeles'}));
     const todayKey = `${nowPT.getFullYear()}-${String(nowPT.getMonth()+1).padStart(2,'0')}-${String(nowPT.getDate()).padStart(2,'0')}`;
 
+    /* The moment a given day "ends" — that date at the school-day end time,
+       in Pacific wall-clock terms. Because nowPT is also built from PT wall
+       clock, subtracting the two gives the true interval until that moment. */
+    const [endH, endM] = String(cfg.dayEndsAt || '15:40').split(':').map(Number);
+    const dayEnd = str => {
+      const [y,m,d] = String(str).split('-').map(Number);
+      return new Date(y, m-1, d, endH||15, endM||0, 0);
+    };
+    const isDone = str => nowPT >= dayEnd(str);
+
+    /* Once the LAST day is over, the whole bar is gone until it's set up
+       again (new dates, or the toggle flipped back on). */
+    const lastDate = cfg.days[cfg.days.length-1].date;
+    if(isDone(lastDate)){ root.innerHTML=''; return; }
+
     /* Date-range chip for the header */
     const first = parseDay(cfg.days[0].date);
-    const last  = parseDay(cfg.days[cfg.days.length-1].date);
+    const last  = parseDay(lastDate);
     const range = `${MONTHS[first.getMonth()]} ${first.getDate()} – ${MONTHS[last.getMonth()]} ${last.getDate()}`;
 
     const cards = cfg.days.map((d, i) => {
       const dt      = parseDay(d.date);
-      const isToday = d.date === todayKey;
+      const done    = isDone(d.date);
+      const isToday = d.date === todayKey && !done;   // "today" until it's crossed off
       /* A photo (if provided) overrides the themed CSS art entirely */
       const hasPhoto = d.photo && d.photo.trim();
       const photoClass = hasPhoto ? ' sw-card--photo' : '';
@@ -919,12 +935,18 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         ? `<div class="sw-art" aria-hidden="true" style="background-image:url('${d.photo.trim()}')"></div>
            <div class="sw-photo-scrim" aria-hidden="true"></div>`
         : `<div class="sw-art" aria-hidden="true"></div>`;
+      const badge = done
+        ? '<span class="sw-done"><span class="sw-check">✓</span>DONE</span>'
+        : (isToday ? '<span class="sw-today"><span class="d"></span>TODAY</span>' : '');
+      const cls = `sw-card sw-card--${d.theme||'home'}${photoClass} reveal d${Math.min(6,i+1)}`
+        + (done ? ' sw-card--done' : (isToday ? ' sw-card--today' : ''));
       return `
-        <div class="sw-card sw-card--${d.theme||'home'}${photoClass} reveal d${Math.min(6,i+1)}${isToday ? ' sw-card--today' : ''}">
+        <div class="${cls}" data-sw-date="${d.date}">
           ${art}
+          <div class="sw-strike" aria-hidden="true"></div>
           <div class="sw-card-top">
             <span class="sw-chip">${fmtChip(dt)}</span>
-            ${isToday ? '<span class="sw-today"><span class="d"></span>TODAY</span>' : ''}
+            ${badge}
           </div>
           <div class="sw-card-body">
             <div class="sw-title">${d.title}</div>
@@ -947,6 +969,29 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         </div>
         <div class="sw-grid sw-grid--${cfg.days.length}">${cards}</div>
       </div>`;
+
+    /* Cross a day off the moment it ends, even while the page sits open —
+       and dissolve the whole bar right after the last day's cross-off. */
+    const crossOff = card => {
+      if(!card || card.classList.contains('sw-card--done')) return;
+      card.classList.add('sw-card--done','in');          // .in guarantees the sweep plays
+      card.classList.remove('sw-card--today');
+      const b = card.querySelector('.sw-today, .sw-done');
+      if(b){ b.className='sw-done'; b.innerHTML='<span class="sw-check">✓</span>DONE'; }
+    };
+    cfg.days.forEach(d => {
+      if(isDone(d.date)) return;
+      const delay = dayEnd(d.date).getTime() - nowPT.getTime();
+      if(delay <= 0 || delay > 2147483647) return;       // setTimeout ceiling (~24 days)
+      setTimeout(() => {
+        const card = root.querySelector(`.sw-card[data-sw-date="${d.date}"]`);
+        crossOff(card);
+        if(d.date === lastDate){
+          const bar = root.querySelector('.spiritweek');
+          if(bar){ bar.classList.add('sw-bar--dissolving'); setTimeout(() => { root.innerHTML=''; }, 1600); }
+        }
+      }, delay);
+    });
   })();
 
   /* ── Team cards (Period 1 / 4 / 6 tabs + cinematic expand) ───── */

@@ -56,13 +56,19 @@
     var out=[];
     scopedAssignments().forEach(function(a){
       assignedGroups(a).forEach(function(g){
+        if(a.extraCredit && a.ecPerStudent){
+          /* per-student EC is optional; it leaves the queue once anyone's scored */
+          var any = g.members.some(function(m,i){ var pg=G.grade(a.id,g.period,g.n,i); return pg && pg.score!=null; });
+          if(!any) out.push({ a:a, g:g, gr:null });
+          return;
+        }
         var gr = G.grade(a.id, g.period, g.n);
         if(!gr || gr.score==null || gr.draft) out.push({ a:a, g:g, gr:gr });
       });
     });
     return out;
   }
-  function isMissing(item){ return item.a.due && item.a.due < today(); }
+  function isMissing(item){ return !item.a.extraCredit && item.a.due && item.a.due < today(); }
 
   function letterClass(p){ return p==null ? 'gb-gNone' : ('gb-g'+G.pctToLetter(p)); }
   function pctLabel(p){ return p==null ? '—' : (p + '% ' + G.pctToLetter(p)); }
@@ -191,7 +197,8 @@
     if(!items.length){ html += '<div class="gb-empty">🎉 Nothing waiting — every assigned piece in your period'+(ADVISOR?'s':'')+' is graded.</div>'; }
     else html += '<div class="gb-list">'+items.map(function(it){
       var due = it.a.due ? new Date(it.a.due+'T00:00:00') : null;
-      var pill = isMissing(it) ? '<span class="gb-pill due">Missing</span>' : (it.gr&&it.gr.draft?'<span class="gb-pill need">Draft</span>':'<span class="gb-pill need">Needs grading</span>');
+      var pill = it.a.extraCredit ? '<span class="gb-pill" style="background:rgba(125,216,255,.14);color:#7DD8FF;border-color:rgba(125,216,255,.4)">Extra credit</span>'
+        : isMissing(it) ? '<span class="gb-pill due">Missing</span>' : (it.gr&&it.gr.draft?'<span class="gb-pill need">Draft</span>':'<span class="gb-pill need">Needs grading</span>');
       return '<a class="gb-row" href="#grade/'+it.a.id+'/'+it.g.period+'/'+it.g.n+'">' +
         '<div class="main"><b>'+esc(it.g.name)+' — '+esc(it.a.title)+'</b>' +
         '<span>Period '+it.g.period+' · '+esc(catName(it.a.category))+(it.a.due?' · due '+esc(it.a.due):'')+'</span></div>' +
@@ -204,14 +211,14 @@
   function renderStudents(){
     setTab('students');
     var rowsHTML = allGroups().map(function(g){
-      var avg=G.groupAverage(g.period,g.n);
       return g.members.map(function(m,i){
+        var savg=G.studentAverage(g.period,g.n,i), bonus=G.studentBonus(g.period,g.n,i);
         return '<a class="gb-row" href="#student/'+g.period+'/'+g.n+'/'+i+'">' +
-          '<div class="main"><b>'+esc(personName(m))+'</b><span>'+esc(g.name)+' · Period '+g.period+'</span></div>' +
-          '<div class="grade '+letterClass(avg)+'">'+(avg==null?'—':avg)+'</div></a>';
+          '<div class="main"><b>'+esc(personName(m))+'</b><span>'+esc(g.name)+' · Period '+g.period+(bonus>0?' · +'+bonus+' extra credit':'')+'</span></div>' +
+          '<div class="grade '+letterClass(savg)+'">'+(savg==null?'—':savg)+'</div></a>';
       }).join('');
     }).join('');
-    view().innerHTML = '<div class="gb-h">Students</div><p class="nr-sub">A student\'s grade is their production group\'s grade. Tap for the full record.</p>' +
+    view().innerHTML = '<div class="gb-h">Students</div><p class="nr-sub">A student\'s grade is their group\'s grade plus any personal extra credit. Tap for the full record.</p>' +
       (rowsHTML ? '<div class="gb-list">'+rowsHTML+'</div>' : '<div class="gb-empty">No students in your period'+(ADVISOR?'s':'')+' yet.</div>');
     NR.observe(view());
   }
@@ -239,7 +246,14 @@
       '<a class="nr-btn" href="#assign/new">＋ New assignment</a></div>';
     if(!list.length) html += '<div class="gb-empty">No assignments yet. Create one to start grading.</div>';
     else html += '<div class="gb-list">'+list.map(function(a){
-      var av=G.assignmentAverage(a.id), done=G.gradesForAssignment(a.id).filter(function(x){return x.score!=null;}).length, tot=assignedGroups(a).length;
+      var done=G.gradesForAssignment(a.id).filter(function(x){return x.score!=null;}).length, tot=assignedGroups(a).length;
+      if(a.extraCredit){
+        var ecpill='<span class="gb-pill" style="background:rgba(125,216,255,.14);color:#7DD8FF;border-color:rgba(125,216,255,.4)">Extra credit</span>';
+        return '<a class="gb-row" href="#assign/'+a.id+'">' +
+          '<div class="main"><b>'+esc(a.title)+'</b><span>'+esc(catName(a.category))+' · Period '+a.period+' · '+(a.ecPerStudent?'per student':'whole group')+' · '+done+' awarded'+(a.due?' · due '+esc(a.due):'')+'</span></div>' +
+          ecpill+'<span class="chip">up to +'+(a.maxPoints||0)+'</span></a>';
+      }
+      var av=G.assignmentAverage(a.id);
       return '<a class="gb-row" href="#assign/'+a.id+'">' +
         '<div class="main"><b>'+esc(a.title)+'</b><span>'+esc(catName(a.category))+' · Period '+a.period+' · '+done+'/'+tot+' graded'+(a.due?' · due '+esc(a.due):'')+'</span></div>' +
         '<span class="chip">'+(a.maxPoints||0)+' pts</span><div class="grade '+letterClass(av)+'">'+(av==null?'—':av)+'</div></a>';
@@ -269,6 +283,15 @@
         cols.forEach(function(a){
           var applies = a.period===g.period && assignedGroups(a).some(function(x){return x.n===g.n;});
           if(!applies){ h+='<td class="empty">·</td>'; return; }
+          if(a.extraCredit){
+            var ecTotal=0, anyEC=false;
+            if(a.ecPerStudent){ g.members.forEach(function(m,si){ var pg=G.grade(a.id,g.period,g.n,si); if(pg&&pg.score!=null){ ecTotal+=pg.score; anyEC=true; } }); }
+            else { var pg0=G.grade(a.id,g.period,g.n); if(pg0&&pg0.score!=null){ ecTotal=pg0.score; anyEC=true; } }
+            var ecShow = fs==='graded'?anyEC : fs==='ungraded'?!anyEC : fs==='missing'?false : true;
+            if(!ecShow){ h+='<td class="empty">·</td>'; return; }
+            h+='<td class="cell"><a href="#grade/'+a.id+'/'+g.period+'/'+g.n+'">'+(anyEC?'<span style="color:#7DD8FF">+'+(Math.round(ecTotal*10)/10)+'</span>':'<span style="color:var(--steel)">·</span>')+'</a></td>';
+            return;
+          }
           var gr=G.grade(a.id,g.period,g.n), pct=G.pctOf(gr,a);
           var show=true;
           if(fs==='graded') show = pct!=null && !(gr&&gr.draft);
@@ -282,8 +305,8 @@
         h+='<td class="'+letterClass(av)+'"><strong>'+(av==null?'—':av)+'</strong></td></tr>';
       });
       /* assignment averages row */
-      h+='<tr class="avg"><th>Avg</th>'+cols.map(function(a){var av=G.assignmentAverage(a.id);return '<td>'+(av==null?'—':av)+'</td>';}).join('')+'<td>'+(G.overallAverage()==null?'—':G.overallAverage())+'</td></tr>';
-      h+='</tbody></table></div><p class="nr-sub" style="margin-top:8px">Cells show points. * = draft. Tap any cell to grade or edit.</p>';
+      h+='<tr class="avg"><th>Avg</th>'+cols.map(function(a){ if(a.extraCredit) return '<td style="color:#7DD8FF">EC</td>'; var av=G.assignmentAverage(a.id);return '<td>'+(av==null?'—':av)+'</td>';}).join('')+'<td>'+(G.overallAverage()==null?'—':G.overallAverage())+'</td></tr>';
+      h+='</tbody></table></div><p class="nr-sub" style="margin-top:8px">Cells show points. <span style="color:#7DD8FF">+n</span> = extra credit bonus. * = draft. Tap any cell to grade or edit.</p>';
       document.getElementById('gb-grid-host').innerHTML=h;
     }
     view().innerHTML = html + '<div id="gb-grid-host"></div>';
@@ -310,6 +333,7 @@
     setTab('');
     var a=G.assignment(aid), g=groupObj(period,gnum);
     if(!a || !g){ view().innerHTML='<div class="gb-empty">That assignment or group no longer exists. <a href="#tograde">Back to To Grade</a></div>'; return; }
+    if(a.extraCredit && a.ecPerStudent) return renderGradePerStudent(a, g, period, gnum);
     var gr=G.grade(aid,period,gnum) || {};
     var pct=G.pctOf(gr,a), letter=pct==null?'—':G.pctToLetter(pct);
     var members=g.members.map(personName).join(', ');
@@ -384,6 +408,40 @@
     NR.observe(view());
   }
 
+  /* ── Per-student extra credit: one score box per student ── */
+  function renderGradePerStudent(a, g, period, gnum){
+    var rows = g.members.map(function(m, i){
+      var gr = G.grade(a.id, period, gnum, i) || {};
+      return '<div class="gb-row" style="cursor:default">' +
+        '<div class="main"><b>'+esc(personName(m))+'</b><span>bonus points (0–'+(a.maxPoints||0)+')</span></div>' +
+        '<input class="gb-score-in" style="width:88px;font-size:20px" type="number" min="0" max="'+(a.maxPoints||0)+'" step="0.5" data-si="'+i+'" value="'+(gr.score==null?'':gr.score)+'">' +
+      '</div>';
+    }).join('');
+    view().innerHTML =
+      '<a class="nr-back" href="#tograde" data-back>← To Grade</a>' +
+      '<div class="gb-h">'+esc(a.title)+' <span class="gb-pill need">Extra credit · per student</span></div>' +
+      '<p class="nr-sub">'+esc(g.name)+' · Period '+period+' · up to '+(a.maxPoints||0)+' bonus points each. Blank = not awarded (no penalty).</p>' +
+      (a.description?'<div class="gb-panel"><div style="font-size:14px;color:#c9cfda;line-height:1.6">'+esc(a.description)+'</div></div>':'') +
+      '<div class="gb-list">'+rows+'</div>' +
+      '<div class="gb-actions" style="margin-top:16px"><button class="nr-btn" id="ps-save">◉ Save extra credit</button>' +
+        '<span id="ps-msg" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:#4ade80"></span></div>';
+    document.getElementById('ps-save').addEventListener('click', function(){
+      var inputs=[].slice.call(document.querySelectorAll('[data-si]')), n=0;
+      inputs.forEach(function(inp){
+        var i=+inp.dataset.si, cur=G.grade(a.id,period,gnum,i);
+        var v = inp.value==='' ? null : Math.max(0, Math.min(a.maxPoints||0, +inp.value||0));
+        var prevScore = cur ? cur.score : null;
+        if(v===prevScore) return;                       // unchanged
+        if(v==null){ if(cur) { G.deleteGrade(a.id,period,gnum,meName,'cleared EC',i); n++; } return; }
+        G.setGrade({ assignmentId:a.id, period:Number(period), group:Number(gnum), student:i,
+          studentName:personName(g.members[i]), groupName:g.name, score:v, by:meName });
+        n++;
+      });
+      document.getElementById('ps-msg').textContent = n ? ('✓ Saved '+n) : 'No changes';
+    });
+    NR.observe(view());
+  }
+
   /* ── Assignment editor ── */
   function renderAssignEditor(id){
     setTab('assignments');
@@ -408,21 +466,31 @@
           '<div class="gb-field"><label>Due date</label><input id="a-due" type="date" value="'+esc(a.due||'')+'"></div>' +
         '</div>' +
         '<div class="gb-field"><label>Assigned groups (none checked = all)</label><div id="a-groups">'+groupChecks(a.period)+'</div></div>' +
+        '<div class="gb-field"><label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:14px;color:#c9cfda;cursor:pointer">' +
+          '<input id="a-ec" type="checkbox"'+(a.extraCredit?' checked':'')+'> <strong>Extra credit</strong> — points add as a bonus and never count against anyone who skips it</label>' +
+          '<div id="a-ec-opts" style="margin-top:8px;'+(a.extraCredit?'':'display:none')+'">' +
+            '<label style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);margin-bottom:6px">Award to</label>' +
+            '<select id="a-ec-mode" style="max-width:280px"><option value="group"'+(!a.ecPerStudent?' selected':'')+'>Whole group (everyone gets it)</option><option value="student"'+(a.ecPerStudent?' selected':'')+'>Per student (score each individually)</option></select>' +
+            '<div style="font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--steel);margin-top:6px">Set “Max points” to the bonus cap (e.g. 5 = up to +5% on the average).</div></div></div>' +
         '<div class="gb-field"><label>Rubric (optional)</label><textarea id="a-rubric" rows="4" placeholder="Paste the rubric or point breakdown.">'+esc(a.rubric||'')+'</textarea></div>' +
         '<div class="gb-actions"><button class="nr-btn" id="a-save">◉ Save assignment</button>' +
           (a.id&&ADVISOR?'<button class="nr-btn ghost" id="a-del" style="border-color:rgba(255,59,48,.4);color:#ff8a84">Delete</button>':'')+'</div>' +
       '</div>';
     var pEl=document.getElementById('a-period');
     if(pEl) pEl.addEventListener('change', function(){ document.getElementById('a-groups').innerHTML=groupChecks(pEl.value); });
+    var ecEl=document.getElementById('a-ec');
+    ecEl.addEventListener('change', function(){ document.getElementById('a-ec-opts').style.display = ecEl.checked ? '' : 'none'; });
     document.getElementById('a-save').addEventListener('click', function(){
       var title=document.getElementById('a-title').value.trim();
       if(!title){ alert('Give the assignment a title.'); return; }
       var checks=[].slice.call(document.querySelectorAll('.gb-gchk')), all=checks.length && checks.every(function(c){return c.checked;});
       var groups= all ? [] : checks.filter(function(c){return c.checked;}).map(function(c){return +c.value;});
+      var ec=ecEl.checked, perStudent = ec && document.getElementById('a-ec-mode').value==='student';
       var obj={ id:a.id, title:title, description:document.getElementById('a-desc').value.trim(),
         category:document.getElementById('a-cat').value, period:Number(pEl.value),
         maxPoints:+document.getElementById('a-max').value||100, due:document.getElementById('a-due').value,
-        groups:groups, rubric:document.getElementById('a-rubric').value.trim() };
+        groups:groups, rubric:document.getElementById('a-rubric').value.trim(),
+        extraCredit:ec, ecPerStudent:perStudent };
       G.saveAssignment(obj, meName).then(function(newId){ location.hash='#assign/'+newId; });
     });
     var adel=document.getElementById('a-del');
@@ -434,17 +502,28 @@
   function renderAssignDetail(id){
     setTab('assignments');
     var a=G.assignment(id); if(!a){ view().innerHTML='<div class="gb-empty">Assignment not found. <a href="#assignments">Back</a></div>'; return; }
-    var gs=assignedGroups(a), av=G.assignmentAverage(id);
+    var gs=assignedGroups(a), isEC=!!a.extraCredit, av=G.assignmentAverage(id);
     var rows=gs.map(function(g){
+      if(isEC){
+        if(a.ecPerStudent){
+          var awarded=g.members.filter(function(m,i){ var pg=G.grade(id,g.period,g.n,i); return pg&&pg.score!=null; }).length;
+          return '<a class="gb-row" href="#grade/'+id+'/'+g.period+'/'+g.n+'"><div class="main"><b>'+esc(g.name)+'</b><span>'+awarded+' / '+g.members.length+' students awarded</span></div>'+(awarded?'<span class="gb-pill done">'+awarded+' awarded</span>':'<span class="gb-pill need">None yet</span>')+'<span class="gb-row-go" style="color:var(--steel)">→</span></a>';
+        }
+        var egr=G.grade(id,g.period,g.n);
+        return '<a class="gb-row" href="#grade/'+id+'/'+g.period+'/'+g.n+'"><div class="main"><b>'+esc(g.name)+'</b><span>'+(egr&&egr.score!=null?'bonus '+egr.score+' pts':'—')+'</span></div>'+(egr&&egr.score!=null?'<span class="gb-pill done">+'+egr.score+'</span>':'<span class="gb-pill need">Not awarded</span>')+'<span class="gb-row-go" style="color:var(--steel)">→</span></a>';
+      }
       var gr=G.grade(id,g.period,g.n), pct=G.pctOf(gr,a);
       var status = pct==null ? (a.due&&a.due<today()?'<span class="gb-pill due">Missing</span>':'<span class="gb-pill need">Not graded</span>') : (gr.draft?'<span class="gb-pill need">Draft</span>':'<span class="gb-pill done">Graded</span>');
       return '<a class="gb-row" href="#grade/'+id+'/'+g.period+'/'+g.n+'"><div class="main"><b>'+esc(g.name)+'</b><span>'+(gr&&gr.score!=null?gr.score+' / '+a.maxPoints:'—')+'</span></div>'+status+'<div class="grade '+letterClass(pct)+'">'+(pct==null?'—':pct)+'</div></a>';
     }).join('');
+    var bigBlock = isEC
+      ? '<div class="gb-big"><div class="pct" style="color:#7DD8FF">+'+(a.maxPoints||0)+'</div><div class="let" style="color:#7DD8FF">EC</div><div style="color:var(--steel)">extra credit · '+(a.ecPerStudent?'per student':'whole group')+' · bonus never counts against anyone</div></div>'
+      : '<div class="gb-big"><div class="pct '+letterClass(av)+'">'+(av==null?'—':av)+'</div><div class="let">'+(av==null?'':G.pctToLetter(av))+'</div><div style="color:var(--steel)">class average</div></div>';
     view().innerHTML =
       '<a class="nr-back" href="#assignments" data-back>← Assignments</a>' +
-      '<div class="gb-toolbar"><div class="gb-h" style="margin:0;flex:1">'+esc(a.title)+'</div><a class="nr-btn ghost" href="#assign/'+id+'/edit">Edit</a></div>' +
-      '<div class="gb-panel"><div class="gb-big"><div class="pct '+letterClass(av)+'">'+(av==null?'—':av)+'</div><div class="let">'+(av==null?'':G.pctToLetter(av))+'</div><div style="color:var(--steel)">class average</div></div>' +
-        '<dl class="gb-kv"><div><dt>Category</dt><dd>'+esc(catName(a.category))+'</dd></div><div><dt>Period</dt><dd>'+a.period+'</dd></div><div><dt>Max points</dt><dd>'+(a.maxPoints||0)+'</dd></div><div><dt>Due</dt><dd>'+(a.due||'—')+'</dd></div></dl>' +
+      '<div class="gb-toolbar"><div class="gb-h" style="margin:0;flex:1">'+esc(a.title)+(isEC?' <span class="gb-pill" style="background:rgba(125,216,255,.14);color:#7DD8FF;border-color:rgba(125,216,255,.4)">Extra credit</span>':'')+'</div><a class="nr-btn ghost" href="#assign/'+id+'/edit">Edit</a></div>' +
+      '<div class="gb-panel">' + bigBlock +
+        '<dl class="gb-kv"><div><dt>Category</dt><dd>'+esc(catName(a.category))+'</dd></div><div><dt>Period</dt><dd>'+a.period+'</dd></div><div><dt>'+(isEC?'Bonus cap':'Max points')+'</dt><dd>'+(a.maxPoints||0)+'</dd></div><div><dt>Due</dt><dd>'+(a.due||'—')+'</dd></div></dl>' +
         (a.description?'<div style="margin-top:14px;color:#c9cfda;font-size:14px;line-height:1.6">'+esc(a.description)+'</div>':'') + '</div>' +
       '<div class="gb-h" style="font-size:20px">Groups</div><div class="gb-list">'+(rows||'<div class="gb-empty">No groups assigned.</div>')+'</div>';
     NR.observe(view());
@@ -463,10 +542,18 @@
       '<div class="gb-h" style="font-size:20px">Assignments</div>' + groupAssignmentList(g);
     NR.observe(view());
   }
-  function groupAssignmentList(g){
+  function groupAssignmentList(g, sidx){
     var items=scopedAssignments().filter(function(a){ return a.period===g.period && assignedGroups(a).some(function(x){return x.n===g.n;}); });
     if(!items.length) return '<div class="gb-empty">No assignments for this group yet.</div>';
     return '<div class="gb-list">'+items.map(function(a){
+      if(a.extraCredit){
+        /* per-student EC uses the student's own score when we know who we're looking at */
+        var perStu = a.ecPerStudent && sidx!=null;
+        var ecg = perStu ? G.grade(a.id,g.period,g.n,sidx) : G.grade(a.id,g.period,g.n);
+        var pts = ecg&&ecg.score!=null ? '+'+ecg.score : '—';
+        var ecpill = '<span class="gb-pill" style="background:rgba(125,216,255,.14);color:#7DD8FF;border-color:rgba(125,216,255,.4)">Extra credit</span>';
+        return '<a class="gb-row" href="#grade/'+a.id+'/'+g.period+'/'+g.n+'"><div class="main"><b>'+esc(a.title)+'</b><span>'+esc(catName(a.category))+' · bonus'+(a.ecPerStudent?' · per student':'')+'</span></div>'+ecpill+'<div class="grade '+(ecg&&ecg.score!=null?'gb-gA':'gb-gNone')+'">'+pts+'</div></a>';
+      }
       var gr=G.grade(a.id,g.period,g.n), pct=G.pctOf(gr,a);
       var status = pct==null?(a.due&&a.due<today()?'<span class="gb-pill due">Missing</span>':'<span class="gb-pill need">—</span>'):(gr.draft?'<span class="gb-pill need">Draft</span>':'<span class="gb-pill done">Graded</span>');
       return '<a class="gb-row" href="#grade/'+a.id+'/'+g.period+'/'+g.n+'"><div class="main"><b>'+esc(a.title)+'</b><span>'+esc(catName(a.category))+(gr&&gr.comment?' · 💬 '+esc(gr.comment.slice(0,40)):'')+'</span></div>'+status+'<div class="grade '+letterClass(pct)+'">'+(pct==null?'—':pct)+'</div></a>';
@@ -475,7 +562,7 @@
   function catAverages(period,n){
     var cats=G.categories(), out=[];
     cats.forEach(function(c){
-      var pairs=G.gradesForGroup(period,n).map(function(gr){ var a=G.assignment(gr.assignmentId); return a&&a.category===c.id?G.pctOf(gr,a):null; }).filter(function(x){return x!=null;});
+      var pairs=G.gradesForGroup(period,n).map(function(gr){ var a=G.assignment(gr.assignmentId); return a&&!a.extraCredit&&a.category===c.id?G.pctOf(gr,a):null; }).filter(function(x){return x!=null;});
       if(pairs.length){ var m=Math.round(pairs.reduce(function(x,y){return x+y;},0)/pairs.length*10)/10; out.push('<div><dt>'+esc(c.name)+'</dt><dd class="'+letterClass(m)+'">'+m+'%</dd></div>'); }
     });
     return out.length?'<dl class="gb-kv">'+out.join('')+'</dl>':'';
@@ -485,13 +572,13 @@
   function renderStudentDetail(period,n,idx){
     setTab('students');
     var g=groupObj(period,n); if(!g||!g.members[idx]){ view().innerHTML='<div class="gb-empty">Student not found.</div>'; return; }
-    var m=g.members[idx], av=G.groupAverage(period,n);
+    var m=g.members[idx], gav=G.groupAverage(period,n), bonus=G.studentBonus(period,n,idx), av=G.studentAverage(period,n,idx);
     view().innerHTML =
       '<a class="nr-back" href="#students" data-back>← Students</a>' +
       '<div class="gb-h">'+esc(personName(m))+'</div><p class="nr-sub">'+esc(g.name)+' · Period '+period+(m.id?' · ID '+esc(m.id):'')+'</p>' +
-      '<div class="gb-panel"><div class="gb-big"><div class="pct '+letterClass(av)+'">'+(av==null?'—':av)+'</div><div class="let">'+(av==null?'':G.pctToLetter(av))+'</div><div style="color:var(--steel)">overall — shared with '+esc(g.name)+'</div></div>' +
+      '<div class="gb-panel"><div class="gb-big"><div class="pct '+letterClass(av)+'">'+(av==null?'—':av)+'</div><div class="let">'+(av==null?'':G.pctToLetter(av))+'</div><div style="color:var(--steel)">'+(bonus>0?esc(g.name)+' '+(gav==null?'—':gav)+' + '+bonus+' personal extra credit':'overall — shared with '+esc(g.name))+'</div></div>' +
         catAverages(period,n) + '</div>' +
-      '<div class="gb-h" style="font-size:20px">Assignments</div>' + groupAssignmentList(g);
+      '<div class="gb-h" style="font-size:20px">Assignments</div>' + groupAssignmentList(g, idx);
     NR.observe(view());
   }
 
@@ -530,11 +617,23 @@
     var head=['Period','Group','Members','Assignment','Category','Max','Score','Percent','Letter','Status','Grader','Graded','Feedback'];
     var lines=[head.join(',')];
     scopedAssignments().forEach(function(a){
+      if(a.extraCredit && a.ecPerStudent){
+        /* one row per student who was awarded personal extra credit */
+        assignedGroups(a).forEach(function(g){
+          g.members.forEach(function(m,i){
+            var pg=G.grade(a.id,g.period,g.n,i); if(!pg||pg.score==null) return;
+            lines.push([g.period,g.name,personName(m),a.title,catName(a.category)+' (extra credit)',a.maxPoints||0,
+              '+'+pg.score,'','','extra credit',pg.gradedBy||'',(pg.gradedAt||'').slice(0,10),pg.comment||'']
+              .map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));
+          });
+        });
+        return;
+      }
       assignedGroups(a).forEach(function(g){
-        var gr=G.grade(a.id,g.period,g.n), pct=G.pctOf(gr,a);
-        lines.push([g.period,g.name,g.members.map(personName).join('; '),a.title,catName(a.category),a.maxPoints||0,
-          gr&&gr.score!=null?gr.score:'',pct==null?'':pct,pct==null?'':G.pctToLetter(pct),
-          gr&&gr.score!=null?(gr.draft?'draft':'graded'):(a.due&&a.due<today()?'missing':'ungraded'),
+        var gr=G.grade(a.id,g.period,g.n), pct=G.pctOf(gr,a), ec=a.extraCredit;
+        lines.push([g.period,g.name,g.members.map(personName).join('; '),a.title,catName(a.category)+(ec?' (extra credit)':''),a.maxPoints||0,
+          gr&&gr.score!=null?(ec?'+'+gr.score:gr.score):'',ec?'':(pct==null?'':pct),ec?'':(pct==null?'':G.pctToLetter(pct)),
+          gr&&gr.score!=null?(ec?'extra credit':(gr.draft?'draft':'graded')):(ec?'not awarded':(a.due&&a.due<today()?'missing':'ungraded')),
           gr?gr.gradedBy||'':'',gr?(gr.gradedAt||'').slice(0,10):'',gr?gr.comment||'':'']
           .map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));
       });
@@ -542,20 +641,28 @@
     var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));
     a.download='enn-gradebook.csv'; a.click();
   }
-  function reportRowsForGroup(g){
+  function reportRowsForGroup(g, sidx){
     var items=scopedAssignments().filter(function(a){ return a.period===g.period && assignedGroups(a).some(function(x){return x.n===g.n;}); });
-    return items.map(function(a){ var gr=G.grade(a.id,g.period,g.n),pct=G.pctOf(gr,a);
+    return items.map(function(a){
+      if(a.extraCredit){
+        var perStu=a.ecPerStudent && sidx!=null;
+        var ecg=perStu?G.grade(a.id,g.period,g.n,sidx):G.grade(a.id,g.period,g.n);
+        if(a.ecPerStudent && sidx==null) return '';   // per-student EC has no group-level row
+        return '<tr><td style="text-align:left">'+esc(a.title)+'</td><td>'+esc(catName(a.category))+' · extra credit</td><td>'+(ecg&&ecg.score!=null?'+'+ecg.score:'—')+'</td><td>'+(ecg&&ecg.score!=null?'bonus':'—')+'</td><td style="text-align:left">'+esc((ecg&&ecg.comment)||'')+'</td></tr>';
+      }
+      var gr=G.grade(a.id,g.period,g.n),pct=G.pctOf(gr,a);
       return '<tr><td style="text-align:left">'+esc(a.title)+'</td><td>'+esc(catName(a.category))+'</td><td>'+(gr&&gr.score!=null?gr.score+'/'+a.maxPoints:'—')+'</td><td>'+(pct==null?'—':pct+'% '+G.pctToLetter(pct))+'</td><td style="text-align:left">'+esc((gr&&gr.comment)||'')+'</td></tr>'; }).join('');
   }
-  function reportTable(title, sub, g){
-    return '<h3 style="font-family:var(--display);font-size:24px;margin:18px 0 2px">'+esc(title)+'</h3><div style="color:var(--steel);font-size:12px;margin-bottom:8px">'+esc(sub)+' · average '+(G.groupAverage(g.period,g.n)==null?'—':G.groupAverage(g.period,g.n)+'%')+'</div>'+
-      '<table class="gb-grid" style="min-width:0;width:100%"><thead><tr><th style="text-align:left">Assignment</th><th>Category</th><th>Score</th><th>Grade</th><th style="text-align:left">Feedback</th></tr></thead><tbody>'+reportRowsForGroup(g)+'</tbody></table>';
+  function reportTable(title, sub, g, sidx){
+    var avg = sidx!=null ? G.studentAverage(g.period,g.n,sidx) : G.groupAverage(g.period,g.n);
+    return '<h3 style="font-family:var(--display);font-size:24px;margin:18px 0 2px">'+esc(title)+'</h3><div style="color:var(--steel);font-size:12px;margin-bottom:8px">'+esc(sub)+' · average '+(avg==null?'—':avg+'%')+'</div>'+
+      '<table class="gb-grid" style="min-width:0;width:100%"><thead><tr><th style="text-align:left">Assignment</th><th>Category</th><th>Score</th><th>Grade</th><th style="text-align:left">Feedback</th></tr></thead><tbody>'+reportRowsForGroup(g, sidx)+'</tbody></table>';
   }
   function buildReport(kind, tv){
     var when=new Date().toISOString().slice(0,10);
     var head='<div class="gb-print-title">ENN Gradebook Report</div><div style="color:var(--steel);font-size:12px;margin-bottom:12px">Generated '+when+' by '+esc(meName)+'</div>';
     if(kind==='group'){ var pr=tv.split('/'); var g=groupObj(pr[0],pr[1]); return head+reportTable(g.name,'Period '+g.period,g); }
-    if(kind==='student'){ var s=tv.split('/'); var gg=groupObj(s[0],s[1]); var m=gg.members[s[2]]; return head+reportTable(personName(m),gg.name+' · Period '+gg.period,gg); }
+    if(kind==='student'){ var s=tv.split('/'); var gg=groupObj(s[0],s[1]); var m=gg.members[s[2]]; return head+reportTable(personName(m),gg.name+' · Period '+gg.period,gg,Number(s[2])); }
     if(kind==='period'){ return head+groupsInPeriod(tv).map(function(g){return reportTable(g.name,'Period '+tv,g);}).join(''); }
     return head+allGroups().map(function(g){return reportTable(g.name,'Period '+g.period,g);}).join('');
   }

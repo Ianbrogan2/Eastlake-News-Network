@@ -191,6 +191,8 @@
       var gk = op.key, prev = db.agrades[gk] || null;
       var g = Object.assign({
         assignmentId: op.assignmentId, period: op.period, group: op.group,
+        student: (op.student!=null && op.student!=='') ? op.student : null,
+        studentName: op.studentName || '',
         groupName: op.groupName || '', members: op.members || ''
       }, prev || {});
       ['score','comment','note','submissionUrl','draft'].forEach(function(f){
@@ -379,24 +381,55 @@
       return a.targets || [];   // ['P1G3', …]
     },
 
-    /* ── grades (assignment × group) ── */
-    gradeKey: function(assignmentId, period, group){ return assignmentId + '::P' + txt(period) + 'G' + txt(group); },
-    grade: function(assignmentId, period, group){
-      return (cache.agrades||{})[this.gradeKey(assignmentId, period, group)] || null;
+    /* ── grades (assignment × group, or × one student for personal EC) ──
+       A grade is normally keyed to a GROUP. Extra credit can also be
+       awarded to a single student — those carry a `student` index and get
+       an ::S suffix so they sit alongside the group grade without
+       clobbering it. */
+    gradeKey: function(assignmentId, period, group, student){
+      var k = assignmentId + '::P' + txt(period) + 'G' + txt(group);
+      return (student!=null && student!=='') ? (k + '::S' + txt(student)) : k;
+    },
+    grade: function(assignmentId, period, group, student){
+      return (cache.agrades||{})[this.gradeKey(assignmentId, period, group, student)] || null;
     },
     gradesForAssignment: function(assignmentId){
       var out=[]; var pre=assignmentId+'::';
       Object.keys(cache.agrades||{}).forEach(function(k){ if(k.indexOf(pre)===0) out.push(cache.agrades[k]); });
       return out;
     },
+    /* group-level grades only (regular work + whole-group extra credit) */
     gradesForGroup: function(period, group){
-      var suf='::P'+txt(period)+'G'+txt(group); var out=[];
-      Object.keys(cache.agrades||{}).forEach(function(k){ if(k.slice(-suf.length)===suf) out.push(cache.agrades[k]); });
+      var out=[];
+      Object.keys(cache.agrades||{}).forEach(function(k){
+        var g=cache.agrades[k];
+        if(String(g.period)===String(period) && String(g.group)===String(group) && (g.student==null||g.student===''))
+          out.push(g);
+      });
       return out;
     },
-    setGrade: function(o){ o.op='grade.set'; o.key=this.gradeKey(o.assignmentId,o.period,o.group); return op(o); },
-    deleteGrade: function(assignmentId, period, group, by, reason){
-      return op({op:'grade.delete', key:this.gradeKey(assignmentId,period,group), by:by, reason:reason});
+    setGrade: function(o){ o.op='grade.set'; o.key=this.gradeKey(o.assignmentId,o.period,o.group,o.student); return op(o); },
+    deleteGrade: function(assignmentId, period, group, by, reason, student){
+      return op({op:'grade.delete', key:this.gradeKey(assignmentId,period,group,student), by:by, reason:reason});
+    },
+
+    /* one student's personal extra-credit bonus (points, summed) */
+    studentBonus: function(period, group, student){
+      var self=this, b=0;
+      Object.keys(cache.agrades||{}).forEach(function(k){
+        var g=cache.agrades[k];
+        if(String(g.period)===String(period) && String(g.group)===String(group) && String(g.student)===String(student)){
+          var a=self.assignment(g.assignmentId);
+          if(a && a.extraCredit && typeof g.score==='number') b += g.score;
+        }
+      });
+      return Math.round(b*10)/10;
+    },
+    /* a student's overall = their group's average + their personal EC */
+    studentAverage: function(period, group, student){
+      var base=this.groupAverage(period,group), bonus=this.studentBonus(period,group,student);
+      if(base==null) return bonus>0 ? bonus : null;
+      return Math.round((base+bonus)*10)/10;
     },
 
     /* percentage for a grade = score / assignment.maxPoints */
@@ -426,12 +459,22 @@
       });
       return totW ? Math.round((acc/totW)*10)/10 : null;
     },
+    /* A group's average = the average of its regular assignments, PLUS
+       any extra-credit points as a straight bonus. Extra-credit
+       assignments never count in the denominator, so a group that skips
+       one is never penalised; a group that does one gets a boost (which
+       can push above 100). Set an assignment's maxPoints to the bonus cap
+       and grade 0..that — the score is added as bonus percentage points. */
     groupAverage: function(period, group){
-      var self=this;
-      var pairs = self.gradesForGroup(period, group).map(function(g){
-        var a=self.assignment(g.assignmentId); return { pct:self.pctOf(g,a), cat:a?a.category:'' };
+      var self=this, reg=[], bonus=0;
+      self.gradesForGroup(period, group).forEach(function(g){
+        var a=self.assignment(g.assignmentId); if(!a) return;
+        if(a.extraCredit){ if(typeof g.score==='number') bonus += g.score; }
+        else { reg.push({ pct:self.pctOf(g,a), cat:a.category }); }
       });
-      return self._avg(pairs);
+      var base=self._avg(reg);
+      if(base==null) return bonus>0 ? Math.round(bonus*10)/10 : null;
+      return Math.round((base+bonus)*10)/10;
     },
     assignmentAverage: function(assignmentId){
       var self=this, a=self.assignment(assignmentId);
@@ -439,26 +482,31 @@
       if(!arr.length) return null;
       return Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10;
     },
+    /* Class-wide aggregates use regular graded work only — extra credit is
+       a per-group bonus, not a class assignment, so it never distorts the
+       period/overall averages or the distribution. */
     periodAverage: function(period){
       var self=this, arr=[];
       Object.keys(cache.agrades||{}).forEach(function(k){
         var g=cache.agrades[k]; if(String(g.period)!==String(period)) return;
-        var a=self.assignment(g.assignmentId); var p=self.pctOf(g,a); if(p!=null) arr.push(p);
+        var a=self.assignment(g.assignmentId); if(!a||a.extraCredit) return;
+        var p=self.pctOf(g,a); if(p!=null) arr.push(p);
       });
       return arr.length ? Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10 : null;
     },
     overallAverage: function(){
       var self=this, arr=[];
       Object.keys(cache.agrades||{}).forEach(function(k){
-        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); var p=self.pctOf(g,a); if(p!=null) arr.push(p);
+        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); if(!a||a.extraCredit) return;
+        var p=self.pctOf(g,a); if(p!=null) arr.push(p);
       });
       return arr.length ? Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10 : null;
     },
     distribution: function(){
       var self=this, d={A:0,B:0,C:0,D:0,F:0};
       Object.keys(cache.agrades||{}).forEach(function(k){
-        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); var p=self.pctOf(g,a);
-        if(p!=null) d[pctToLetter(p)]++;
+        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); if(!a||a.extraCredit) return;
+        var p=self.pctOf(g,a); if(p!=null) d[pctToLetter(p)]++;
       });
       return d;
     },
