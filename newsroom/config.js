@@ -23,7 +23,7 @@ window.ENN = {
   EXPORT_PRESET_URL: '',
   GRADE_FORM_URL: '',
   GRADEBOOK_SHEET_URL: '',
-  GRADES_API_URL: 'https://script.google.com/macros/s/AKfycbw6OLZNOXupjoJ0HhixN9yC0Vt98SUn0Bgv9Y8vJwNKL0BONAtXHXEvEuk3B9wCLAaC/exec',
+  GRADES_API_URL: 'https://script.google.com/macros/s/AKfycbxhilLGTWWGfvZCHwaap-SweQC835f6MjR0vpw3yAsCCWfGKaS4trb63sTdare6mn01/exec',
   PODCAST_ROOM_URL: '',
   ANCHOR_ROOM_URL: '',
   GEAR_ISSUE_URL: '',
