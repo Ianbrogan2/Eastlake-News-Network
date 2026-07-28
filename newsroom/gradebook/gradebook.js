@@ -562,8 +562,12 @@
   function catAverages(period,n){
     var cats=G.categories(), out=[];
     cats.forEach(function(c){
-      var pairs=G.gradesForGroup(period,n).map(function(gr){ var a=G.assignment(gr.assignmentId); return a&&!a.extraCredit&&a.category===c.id?G.pctOf(gr,a):null; }).filter(function(x){return x!=null;});
-      if(pairs.length){ var m=Math.round(pairs.reduce(function(x,y){return x+y;},0)/pairs.length*10)/10; out.push('<div><dt>'+esc(c.name)+'</dt><dd class="'+letterClass(m)+'">'+m+'%</dd></div>'); }
+      var earned=0, possible=0, any=false;
+      G.gradesForGroup(period,n).forEach(function(gr){
+        var a=G.assignment(gr.assignmentId);
+        if(a && !a.extraCredit && a.category===c.id && gr.score!=null && a.maxPoints){ earned+=gr.score; possible+=a.maxPoints; any=true; }
+      });
+      if(any && possible>0){ var m=Math.round((earned/possible)*1000)/10; out.push('<div><dt>'+esc(c.name)+'</dt><dd class="'+letterClass(m)+'">'+m+'%</dd></div>'); }
     });
     return out.length?'<dl class="gb-kv">'+out.join('')+'</dl>':'';
   }

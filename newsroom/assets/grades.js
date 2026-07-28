@@ -425,11 +425,26 @@
       });
       return Math.round(b*10)/10;
     },
-    /* a student's overall = their group's average + their personal EC */
+    /* a student's overall = their group's grade with any PERSONAL extra
+       credit added on top. In points mode their EC points join the top of
+       the group's fraction (so personal +15 on 15/15 = 30/15 = 200%). */
     studentAverage: function(period, group, student){
-      var base=this.groupAverage(period,group), bonus=this.studentBonus(period,group,student);
-      if(base==null) return bonus>0 ? bonus : null;
-      return Math.round((base+bonus)*10)/10;
+      var self=this;
+      if(self._weighted()){
+        var base=self.groupAverage(period,group), bpct=0;
+        Object.keys(cache.agrades||{}).forEach(function(k){
+          var g=cache.agrades[k];
+          if(String(g.period)===String(period) && String(g.group)===String(group) && String(g.student)===String(student)){
+            var a=self.assignment(g.assignmentId); if(a && a.extraCredit){ var p=self.pctOf(g,a); if(p!=null) bpct += p; }
+          }
+        });
+        if(base==null) return bpct>0 ? Math.round(bpct*10)/10 : null;
+        return Math.round((base+bpct)*10)/10;
+      }
+      var pt=self._groupPoints(period,group);
+      if(pt.possible<=0) return null;
+      var pb=self.studentBonus(period,group,student);   // personal EC points
+      return Math.round(((pt.earned+pt.ec+pb)/pt.possible)*1000)/10;
     },
 
     /* percentage for a grade = score / assignment.maxPoints */
@@ -459,22 +474,43 @@
       });
       return totW ? Math.round((acc/totW)*10)/10 : null;
     },
-    /* A group's average = the average of its regular assignments, PLUS
-       any extra-credit points as a straight bonus. Extra-credit
-       assignments never count in the denominator, so a group that skips
-       one is never penalised; a group that does one gets a boost (which
-       can push above 100). Set an assignment's maxPoints to the bonus cap
-       and grade 0..that — the score is added as bonus percentage points. */
-    groupAverage: function(period, group){
-      var self=this, reg=[], bonus=0;
+    /* POINTS-BASED grading (the default).
+       A grade is real points out of the assignment's max, so a 15/15
+       broadcast is 100%. A group's average is every regular point earned
+       over every regular point available. Extra-credit points add to the
+       TOP of the fraction only — never the bottom — so a +15 extra-credit
+       assignment on top of a 15/15 broadcast reads 30/15 = 200%. A group
+       that skips an EC is never penalised (0 added, denominator unchanged).
+
+       If the advisor sets category weights in Settings, we instead use a
+       weighted average of per-assignment percentages, with EC added as
+       bonus percentage points. */
+    _groupPoints: function(period, group){
+      var self=this, earned=0, possible=0, ec=0;
       self.gradesForGroup(period, group).forEach(function(g){
-        var a=self.assignment(g.assignmentId); if(!a) return;
-        if(a.extraCredit){ if(typeof g.score==='number') bonus += g.score; }
-        else { reg.push({ pct:self.pctOf(g,a), cat:a.category }); }
+        var a=self.assignment(g.assignmentId); if(!a || g.score==null) return;
+        if(a.extraCredit){ ec += g.score; }
+        else if(a.maxPoints){ earned += g.score; possible += a.maxPoints; }
       });
-      var base=self._avg(reg);
-      if(base==null) return bonus>0 ? Math.round(bonus*10)/10 : null;
-      return Math.round((base+bonus)*10)/10;
+      return { earned:earned, possible:possible, ec:ec };
+    },
+    _weighted: function(){ return this.categories().some(function(c){ return +c.weight > 0; }); },
+    groupAverage: function(period, group){
+      var self=this;
+      if(self._weighted()){
+        var reg=[], bonus=0;
+        self.gradesForGroup(period, group).forEach(function(g){
+          var a=self.assignment(g.assignmentId); if(!a) return;
+          if(a.extraCredit){ var p=self.pctOf(g,a); if(p!=null) bonus += p; }
+          else reg.push({ pct:self.pctOf(g,a), cat:a.category });
+        });
+        var base=self._avg(reg);
+        if(base==null) return bonus>0 ? Math.round(bonus*10)/10 : null;
+        return Math.round((base+bonus)*10)/10;
+      }
+      var pt=self._groupPoints(period, group);
+      if(pt.possible<=0) return null;
+      return Math.round(((pt.earned+pt.ec)/pt.possible)*1000)/10;
     },
     assignmentAverage: function(assignmentId){
       var self=this, a=self.assignment(assignmentId);
@@ -482,25 +518,29 @@
       if(!arr.length) return null;
       return Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10;
     },
-    /* Class-wide aggregates use regular graded work only — extra credit is
-       a per-group bonus, not a class assignment, so it never distorts the
-       period/overall averages or the distribution. */
+    /* Class-wide aggregates are points totals too: every regular point
+       earned over every regular point available, across the scope, with
+       extra-credit points added to the top. (The letter DISTRIBUTION below
+       still ignores EC — it buckets each real assignment grade.) */
     periodAverage: function(period){
-      var self=this, arr=[];
+      var self=this, earned=0, possible=0, ec=0;
       Object.keys(cache.agrades||{}).forEach(function(k){
-        var g=cache.agrades[k]; if(String(g.period)!==String(period)) return;
-        var a=self.assignment(g.assignmentId); if(!a||a.extraCredit) return;
-        var p=self.pctOf(g,a); if(p!=null) arr.push(p);
+        var g=cache.agrades[k]; if(String(g.period)!==String(period) || g.score==null) return;
+        var a=self.assignment(g.assignmentId); if(!a) return;
+        if(a.extraCredit){ ec += g.score; }
+        else if(a.maxPoints){ earned += g.score; possible += a.maxPoints; }
       });
-      return arr.length ? Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10 : null;
+      return possible>0 ? Math.round(((earned+ec)/possible)*1000)/10 : null;
     },
     overallAverage: function(){
-      var self=this, arr=[];
+      var self=this, earned=0, possible=0, ec=0;
       Object.keys(cache.agrades||{}).forEach(function(k){
-        var g=cache.agrades[k]; var a=self.assignment(g.assignmentId); if(!a||a.extraCredit) return;
-        var p=self.pctOf(g,a); if(p!=null) arr.push(p);
+        var g=cache.agrades[k]; if(g.score==null) return;
+        var a=self.assignment(g.assignmentId); if(!a) return;
+        if(a.extraCredit){ ec += g.score; }
+        else if(a.maxPoints){ earned += g.score; possible += a.maxPoints; }
       });
-      return arr.length ? Math.round((arr.reduce(function(x,y){return x+y;},0)/arr.length)*10)/10 : null;
+      return possible>0 ? Math.round(((earned+ec)/possible)*1000)/10 : null;
     },
     distribution: function(){
       var self=this, d={A:0,B:0,C:0,D:0,F:0};
