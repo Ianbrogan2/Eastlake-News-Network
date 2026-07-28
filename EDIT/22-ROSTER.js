@@ -886,9 +886,9 @@ var ENN_ROSTER = {
             last: 'Korsmo'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1616841',
+            first: 'Triston',
+            last: 'Torres'
           }
         ]
       },
