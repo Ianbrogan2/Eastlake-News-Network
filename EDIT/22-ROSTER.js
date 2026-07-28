@@ -832,8 +832,8 @@ var ENN_ROSTER = {
           },
           {
             id: '',
-            first: '',
-            last: ''
+            first: 'Elise',
+            last: 'Navarrete'
           }
         ]
       },
