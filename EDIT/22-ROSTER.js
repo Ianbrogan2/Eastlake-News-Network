@@ -107,9 +107,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Equipment Manager',
-        id: '',
-        first: '',
-        last: ''
+        id: '1592879',
+        first: 'Nate',
+        last: 'Enano'
       }
     ],
     groups: [
