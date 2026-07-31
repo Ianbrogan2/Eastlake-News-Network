@@ -1640,7 +1640,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     const cfg = (typeof ENN_STUDIO_NEWS !== 'undefined') ? ENN_STUDIO_NEWS : null;
     if(!cfg || !cfg.cards || !cfg.cards.length) return;
 
-    const root = $('#studio-root');
+    const root = $('#studionews-root');   // now lives at the bottom of the home page
     if(!root) return;
 
     const themeClass = t => `snews-card--${t || 'blue'}`;
@@ -1687,7 +1687,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <div class="snews-headline">${card.headline||''}</div>
           <div class="snews-subhead">${card.subhead||''}</div>
           ${cdHtml}
-          <span class="snews-link">Visit Rockstar Games ↗</span>`;
+          <span class="snews-link">${card.linkText || 'Learn more ↗'}</span>`;
 
       } else {
         bodyHtml = `
@@ -1709,7 +1709,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         </div>`;
     }
 
-    const [hero, c2, c3] = cfg.cards;
+    const cards = cfg.cards || [];
     const inner = document.createElement('div');
     inner.className = 'snews';
     inner.innerHTML = `
@@ -1720,19 +1720,13 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         </div>
       </div>
       <div class="snews-grid">
-        ${hero ? renderCard(hero, true) : ''}
-        ${c2   ? renderCard(c2,   false) : ''}
-        ${c3   ? renderCard(c3,   false) : ''}
+        ${cards.map((c, i) => renderCard(c, i === 0)).join('')}
       </div>`;
 
     const section = document.createElement('div');
     section.className = 'snews-section-wrap reveal';
     section.appendChild(inner);
-
-    /* Insert as a sibling BEFORE .studio-body so buildStudio()'s
-       root.innerHTML = ... can't wipe it out */
-    const studioBody = root.closest('.studio-body') || root.parentElement;
-    studioBody.parentElement.insertBefore(section, studioBody);
+    root.appendChild(section);
 
     /* ── Live countdown tickers ── */
     cfg.cards.filter(c => c.type === 'countdown' && c.countdownTarget).forEach(card => {

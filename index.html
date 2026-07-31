@@ -34,7 +34,7 @@
 <!-- Preload the first VISIBLE hero frame so it starts downloading during HTML parse (before main.js runs) -->
 <link rel="preload" as="image" href="ANIMATION/frames/f0210.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=7">
+<link rel="stylesheet" href="css/styles.css?v=8">
 <link rel="stylesheet" href="EDIT/07-COLORS.css?v=1">
 </head>
 <body>
@@ -55,8 +55,6 @@
   <div class="nav-links" role="tablist">
     <a class="nav-link active" data-route="home" href="#home">Home</a>
     <a class="nav-link" data-route="about" href="#about">About</a>
-    <a class="nav-link" data-route="team" href="#team">Team</a>
-    <a class="nav-link" data-route="studio" href="#studio">Studio</a>
     <a class="nav-link" data-route="calendar" href="#calendar">Calendar</a>
     <a class="nav-link" data-route="contact" href="#contact">Contact</a>
     <a class="nav-link" data-route="bullpen" href="#bullpen">Games</a>
@@ -74,8 +72,6 @@
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
   <a class="mobile-link active" data-route="home" href="#home">Home</a>
   <a class="mobile-link" data-route="about" href="#about">About</a>
-  <a class="mobile-link" data-route="team" href="#team">Team</a>
-  <a class="mobile-link" data-route="studio" href="#studio">Studio</a>
   <a class="mobile-link" data-route="calendar" href="#calendar">Calendar</a>
   <a class="mobile-link" data-route="contact" href="#contact">Contact</a>
   <a class="mobile-link" data-route="bullpen" href="#bullpen">Games</a>
@@ -164,6 +160,9 @@
     </div>
   </section>
 
+  <!-- Studio News — industry/entertainment cards, from EDIT/18-STUDIONEWS.js -->
+  <div id="studionews-root"></div>
+
   <div class="footer-meta">
     <div>ENN · EASTLAKE NEWS NETWORK · EHS CHULA VISTA</div>
     <div>BROADCASTING M–TH · 10:31–10:41 AM PST · <a href="https://www.youtube.com/@ennbulletin/" target="_blank" rel="noopener">@ENNBULLETIN</a></div>
@@ -174,17 +173,16 @@
 <!-- ABOUT — content rendered from EDIT/08-ABOUT.js -->
 <main id="page-about" class="page">
   <div id="about-root"></div>
-</main>
 
-<!-- TEAM -->
-<main id="page-team" class="page">
-  <section class="team-hero">
+  <!-- TEAM — merged into About as a compact section at the bottom -->
+  <section class="team-in-about">
     <div class="container">
-      <div class="eyebrow reveal">The Crew</div>
-      <h1 class="reveal d1">THE TEAM BEHIND<br/>THE BULLETIN.</h1>
-      <p class="sub reveal d2">Anchors, reporters, producers, and the faculty advisor who keep ENN on the air every week.</p>
+      <div class="team-in-about-head reveal">
+        <div class="eyebrow">The Crew</div>
+        <h2>THE TEAM.</h2>
+        <p class="sub">Anchors, reporters, producers, and the faculty advisor who keep ENN on the air every week.</p>
+      </div>
     </div>
-  </section>
 
   <!-- Period tab switcher -->
   <div class="team-tabs-wrap">
@@ -262,25 +260,12 @@
       </div>
     </section>
   </div>
+  </section>
 </main>
 
 <!-- CONTACT — content rendered from EDIT/09-CONTACT.js -->
 <main id="page-contact" class="page">
   <div id="contact-root"></div>
-</main>
-
-<!-- STUDIO — content rendered from EDIT/10-STUDIO.js -->
-<main id="page-studio" class="page">
-  <section class="studio-hero">
-    <div class="container">
-      <div class="eyebrow reveal">Archive</div>
-      <h1 class="reveal d1">THE<br/>STUDIO.</h1>
-      <p class="sub reveal d2">Student-produced pieces, Instagram content, and the full VHS archive — everything ENN has ever put on air.</p>
-    </div>
-  </section>
-  <section class="studio-body">
-    <div class="container" id="studio-root"></div>
-  </section>
 </main>
 
 <!-- CALENDAR — content rendered from EDIT/11-CALENDAR.js -->
@@ -350,12 +335,12 @@
 <script src="EDIT/15-BINGO.js?v=1"></script>
 <script src="EDIT/16-CHANGELOG.js?v=1"></script>
 <script src="EDIT/17-MAINTENANCE.js?v=1"></script>
-<script src="EDIT/18-STUDIONEWS.js?v=1"></script>
+<script src="EDIT/18-STUDIONEWS.js?v=2"></script>
 <script src="EDIT/19-SPIRITWEEK.js?v=2"></script>
 <script src="EDIT/20-SITE-TEXT.js?v=1"></script>
 <script src="EDIT/21-BULLETINS.js?v=1"></script>
 <script src="EDIT/23-SECTIONS.js?v=1"></script>
 <script src="EDIT/26-BELLSCHEDULE.js?v=1"></script>
-<script src="js/main.js?v=3"></script>
+<script src="js/main.js?v=4"></script>
 </body>
 </html>
