@@ -107,9 +107,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Equipment Manager',
-        id: '',
-        first: '',
-        last: ''
+        id: '1592879',
+        first: 'Nate',
+        last: 'Enano'
       }
     ],
     groups: [
@@ -130,11 +130,6 @@ var ENN_ROSTER = {
             id: '1592985',
             first: 'Maddy',
             last: 'Mcgee'
-          },
-          {
-            id: '1607409',
-            first: 'Elise',
-            last: 'Navarette'
           },
           {
             id: '',
@@ -333,7 +328,7 @@ var ENN_ROSTER = {
         members: [
           {
             id: '1605506',
-            first: 'Rafael',
+            first: 'Rafael (Emi)',
             last: 'Contreras'
           },
           {
@@ -512,11 +507,6 @@ var ENN_ROSTER = {
             id: '1605611',
             first: 'Jacob',
             last: 'Torres'
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -569,14 +559,14 @@ var ENN_ROSTER = {
             last: 'Gean'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607888',
+            first: 'German Leon ',
+            last: 'Ramirez'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1593084',
+            first: 'Sophia',
+            last: 'Sorano'
           }
         ]
       },
@@ -589,11 +579,6 @@ var ENN_ROSTER = {
             last: 'Ortiz'
           },
           {
-            id: '1638345',
-            first: 'Audrick',
-            last: 'Munsayac'
-          },
-          {
             id: '1593192',
             first: 'Nataly',
             last: 'Meier'
@@ -604,39 +589,9 @@ var ENN_ROSTER = {
             last: 'Kim'
           },
           {
-            id: '',
-            first: '',
-            last: ''
-          }
-        ]
-      },
-      {
-        name: 'Group 5',
-        members: [
-          {
-            id: '1593084',
-            first: 'Sophia',
-            last: 'Soriano'
-          },
-          {
             id: '1624904',
-            first: 'Jaelyn',
+            first: 'Jaylen ',
             last: 'Smith'
-          },
-          {
-            id: '1607888',
-            first: 'German',
-            last: 'Leon Ramirez'
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -657,16 +612,6 @@ var ENN_ROSTER = {
             id: '1607815',
             first: 'Ryan',
             last: 'Tandy'
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -692,11 +637,6 @@ var ENN_ROSTER = {
             id: '1593741',
             first: 'Brian',
             last: 'Banthaw'
-          },
-          {
-            id: '',
-            first: '',
-            last: ''
           }
         ]
       },
@@ -886,9 +826,9 @@ var ENN_ROSTER = {
             last: 'Espinoza'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1607409',
+            first: 'Elise',
+            last: 'Navarrete'
           }
         ]
       },
@@ -916,9 +856,14 @@ var ENN_ROSTER = {
             last: 'Herrera'
           },
           {
+            id: '1593860',
+            first: 'Zoe',
+            last: 'Tirado'
+          },
+          {
             id: '',
-            first: '',
-            last: ''
+            first: 'Jaylen',
+            last: 'Madore'
           }
         ]
       },
@@ -946,9 +891,9 @@ var ENN_ROSTER = {
             last: 'Korsmo'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1616841',
+            first: 'Triston',
+            last: 'Torres'
           }
         ]
       },
