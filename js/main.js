@@ -1878,6 +1878,136 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     });
   })();
 
+  /* ── Period clock (home) — live "what period is it" from EDIT/26 ── */
+  (function buildPeriodClock(){
+    const cfg = (typeof ENN_BELL !== 'undefined') ? ENN_BELL : null;
+    const mount = $('#period-clock');
+    if(!mount) return;
+    if(!cfg || cfg.enabled !== 'T'){ const w = mount.closest('.pclock-section'); (w||mount).remove(); return; }
+
+    const TZ  = cfg.timeZone || 'America/Los_Angeles';
+    const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const msg = cfg.messages || {};
+
+    const nowTZ = () => new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
+    const ymd   = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const fmtDate = d => `${MON[d.getMonth()]} ${d.getDate()}`;
+    function parseTime(str){
+      const m = String(str).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+      if(!m) return null;
+      let h = (+m[1]) % 12; if(/pm/i.test(m[3])) h += 12;
+      return (h*60 + (+m[2])) * 60;            // seconds since midnight
+    }
+    const isBreak = n => /bulletin|nutrition|lunch|assembly|pro hour|break|passing/i.test(n);
+
+    function inNoSchool(ds){
+      return (cfg.noSchool||[]).some(x => Array.isArray(x) ? (ds >= x[0] && ds <= x[1]) : ds === x);
+    }
+    function codeFor(d){
+      const ds = ymd(d);
+      if(ds < cfg.yearStart || ds > cfg.yearEnd) return null;
+      if(inNoSchool(ds)) return null;
+      if(cfg.overrides && cfg.overrides[ds]) return cfg.overrides[ds];
+      return (cfg.weekdayDefault && cfg.weekdayDefault[d.getDay()]) || null;
+    }
+    function dayBlocks(code){
+      const sch = cfg.schedules && cfg.schedules[code];
+      if(!sch) return null;
+      const blocks = (sch.blocks||[]).map(b => ({ name:b.name, s:parseTime(b.start), e:parseTime(b.end), start:b.start, end:b.end }))
+                                     .filter(b => b.s!=null && b.e!=null);
+      return { label: sch.label || '', blocks };
+    }
+    function nextSchoolDay(from){
+      let d = from;
+      for(let i=0;i<400;i++){ d = new Date(d.getFullYear(), d.getMonth(), d.getDate()+1); if(codeFor(d)) return d; }
+      return null;
+    }
+    function hms(sec){
+      sec = Math.max(0, Math.ceil(sec));
+      const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+      return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+                   : `${m}:${String(s).padStart(2,'0')}`;
+    }
+
+    /* Work out the state for a given moment. */
+    function compute(){
+      const now = nowTZ();
+      const nowSec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
+      const code = codeFor(now);
+      const dow  = DOW[now.getDay()];
+
+      if(!code){
+        const weekend = now.getDay()===0 || now.getDay()===6;
+        const nd = nextSchoolDay(now);
+        const big = ymd(now) > cfg.yearEnd ? (msg.summer||'Out for now')
+                  : weekend ? (msg.weekend||'Enjoy the weekend')
+                  : (msg.noSchool||'No school today');
+        return { key:'off', kind:'off', eyebrow:dow, big,
+          sub: nd ? `Next school day · ${DOW[nd.getDay()]} ${fmtDate(nd)}` : '' };
+      }
+
+      const day = dayBlocks(code), blocks = day.blocks;
+      const first = blocks[0], last = blocks[blocks.length-1];
+      const eyebrow = `${dow} · ${day.label}`;
+
+      if(nowSec < first.s){
+        return { key:'before', kind:'before', eyebrow, big:'Before school',
+          countTo:first.s, nowSec, clabel:`${msg.beforeSchool||'School starts in'}`,
+          sub:`First bell · ${first.start}` };
+      }
+      if(nowSec >= last.e){
+        return { key:'after', kind:'after', eyebrow, big:(msg.afterSchool||"School's out"), sub:'' };
+      }
+      let cur=null, nxt=null;
+      for(let i=0;i<blocks.length;i++){
+        if(nowSec >= blocks[i].s && nowSec < blocks[i].e){ cur = blocks[i]; break; }
+        if(nowSec < blocks[i].s){ nxt = blocks[i]; break; }
+      }
+      if(cur){
+        return { key:'in:'+cur.name, kind: isBreak(cur.name) ? 'break' : 'in', eyebrow,
+          big: cur.name, countTo:cur.e, nowSec, clabel:`left in ${cur.name}`,
+          sub:`${cur.start} → ${cur.end}`, progS:cur.s, progE:cur.e };
+      }
+      return { key:'passing:'+(nxt?nxt.name:''), kind:'passing', eyebrow,
+        big:(msg.passing||'Passing period'), countTo: nxt.s, nowSec,
+        clabel:`until ${nxt.name}`, sub:`Next · ${nxt.name} at ${nxt.start}` };
+    }
+
+    let lastKey = null;
+    function shell(st){
+      const hasCount = st.countTo != null;
+      mount.className = 'pclock reveal in pclock--' + st.kind;
+      mount.innerHTML =
+        '<div class="pclock-glow" aria-hidden="true"></div>' +
+        '<div class="pclock-main">' +
+          '<div class="pclock-eyebrow">' + (st.eyebrow||'') + '</div>' +
+          '<div class="pclock-big">' + (st.big||'') + '</div>' +
+          (st.sub ? '<div class="pclock-sub">' + st.sub + '</div>' : '') +
+        '</div>' +
+        (hasCount
+          ? '<div class="pclock-count"><div class="pclock-time" id="pc-time">--:--</div>' +
+            '<div class="pclock-clabel">' + (st.clabel||'') + '</div></div>'
+          : '') +
+        (st.progS != null ? '<div class="pclock-prog"><div class="pclock-prog-fill" id="pc-fill"></div></div>' : '');
+    }
+    function tick(){
+      const st = compute();
+      if(st.key !== lastKey){ shell(st); lastKey = st.key; }
+      if(st.countTo != null){
+        const now = nowTZ();
+        const nowSec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
+        const t = $('#pc-time'); if(t) t.textContent = hms(st.countTo - nowSec);
+        if(st.progS != null){
+          const f = $('#pc-fill');
+          if(f) f.style.width = Math.max(0, Math.min(100, ((nowSec - st.progS)/(st.progE - st.progS))*100)) + '%';
+        }
+      }
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+
   /* ── Scroll reveals ──────────────────────────────────────────── */
   function runReveals(){
     $$('.reveal').forEach(el => {
