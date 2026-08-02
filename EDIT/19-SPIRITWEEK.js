@@ -57,13 +57,13 @@ var ENN_SPIRIT = {
   enabled: 'T',
 
   // Small label above the section title
-  eyebrow: 'District Wide Spirit Week',
+  eyebrow: 'Spirit Week · Aug 3–8',
 
   // Big section title
-  title: 'CALIFORNIA DREAMIN',
+  title: 'LU-WOW!',
 
   // One-line description under the title
-  sub: 'Five days, five fits. Dress up with the whole district — here\'s the lineup.',
+  sub: 'Five days of tropical fits — from floaties to a full luau. Dress up all week, then meet in the Quad Friday night.',
 
   // When the school day ends (24-hour clock, Pacific time). Each day
   // automatically crosses itself off once this time passes on that date,
@@ -75,38 +75,38 @@ var ENN_SPIRIT = {
   days: [
 
     {
-      date:  '2026-07-27',
-      title: 'Malibu Monday',
-      dress: 'Wear beach attire',
-      theme: 'beach',
+      date:  '2026-08-03',
+      title: 'Floaties Day',
+      dress: 'Bring your best pool floatie',
+      theme: 'ocean',
       photo: '',   // e.g. 'img/spirit/monday.jpg'
     },
     {
-      date:  '2026-07-28',
-      title: 'Just Keep Swimming',
-      dress: 'Wear stripes — clownfish style',
-      theme: 'ocean',
-      photo: '',
-    },
-    {
-      date:  '2026-07-29',
-      title: 'West Coast Wednesday',
-      dress: 'Represent California',
+      date:  '2026-08-04',
+      title: 'Country Club vs. Surfers',
+      dress: 'Preppy country club or beachy surfer',
       theme: 'cali',
       photo: '',
     },
     {
-      date:  '2026-07-30',
-      title: 'Ohana Thursday',
-      dress: 'Match with your group',
+      date:  '2026-08-05',
+      title: 'Baywatch & Beach Bum',
+      dress: 'Wear lifeguard attire',
+      theme: 'beach',
+      photo: '',
+    },
+    {
+      date:  '2026-08-06',
+      title: 'Tacky Tourist',
+      dress: 'Go full tacky tourist',
       theme: 'tropic',
       photo: '',
     },
     {
-      date:  '2026-07-31',
-      title: 'Home State, Home Team',
-      dress: 'Wear school colors',
-      theme: 'home',
+      date:  '2026-08-07',
+      title: 'Lu-Wow! Luau',
+      dress: 'Leis & aloha — assembly + evening luau, 5–8 PM in the Quad',
+      theme: 'gold',
       photo: '',
     },
 
