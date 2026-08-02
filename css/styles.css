@@ -945,6 +945,96 @@ img{display:block;max-width:100%}
   animation:sw-twinkle 2.6s ease-in-out infinite;
 }
 
+/* ═══════ THEME: FLOATIES — pool day, candy-striped ring ═══════ */
+.sw-card--floaties{
+  background:linear-gradient(168deg,#8ff0e6 0%,#38cbd0 30%,#12a2c6 58%,#0a6d95 100%);
+}
+.sw-card--floaties .sw-art::before{        /* pool caustics + surface light */
+  content:'';position:absolute;inset:-18% -22%;
+  background:
+    repeating-linear-gradient(110deg, rgba(255,255,255,.09) 0 3px, transparent 3px 22px),
+    radial-gradient(46% 30% at 28% 16%, rgba(255,255,255,.26), transparent 60%);
+  animation:sw-rays 9s ease-in-out infinite;opacity:.6;
+}
+.sw-card--floaties .sw-art::after{         /* inflatable ring floating in the corner */
+  content:'';position:absolute;right:-28px;bottom:-32px;width:150px;height:150px;border-radius:50%;
+  background:repeating-conic-gradient(from 16deg,#ff5d7a 0 30deg,#ffffff 30deg 60deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 34%,#000 36%);
+          mask:radial-gradient(circle,transparent 0 34%,#000 36%);
+  box-shadow:0 14px 30px rgba(0,0,0,.3);transform:rotate(-10deg);
+  animation:sw-float 5.6s ease-in-out infinite;
+}
+@keyframes sw-float{0%,100%{transform:rotate(-10deg) translateY(0)}50%{transform:rotate(-7deg) translateY(-6px)}}
+
+/* ═══════ THEME: CLUBSURF — Country Club vs. Surfers (split) ═══════ */
+.sw-card--clubsurf{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='46'%3E%3Crect x='11' y='4' width='2' height='40' fill='%23f2ead0'/%3E%3Cpath d='M13 5 L23 9 L13 13 Z' fill='%23e04a4a'/%3E%3C/svg%3E") no-repeat 18% 60% / 22px 42px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='96'%3E%3Cpath d='M13 2 C4 22 4 74 13 94 C22 74 22 22 13 2 Z' fill='%23eef4f1'/%3E%3Cline x1='13' y1='10' x2='13' y2='86' stroke='%230f6f97' stroke-width='1.3'/%3E%3C/svg%3E") no-repeat 78% 72% / 24px 88px,
+    radial-gradient(56px 56px at 82% 24%, #fff2c4 0 40%, rgba(255,210,94,0) 68%),
+    linear-gradient(122deg,#123f2e 0 46%,#e9e0c4 46% 49%,#0f6f97 49% 100%);
+}
+.sw-card--clubsurf .sw-art::before{        /* preppy argyle on the club (left) half */
+  content:'';position:absolute;inset:0;clip-path:polygon(0 0,47% 0,44% 100%,0 100%);
+  background:
+    repeating-linear-gradient(45deg, rgba(233,224,196,.16) 0 1.5px, transparent 1.5px 22px),
+    repeating-linear-gradient(-45deg, rgba(233,224,196,.16) 0 1.5px, transparent 1.5px 22px);
+}
+.sw-card--clubsurf .sw-art::after{         /* rolling surf on the beach (right) half */
+  content:'';position:absolute;inset:0;clip-path:polygon(49% 0,100% 0,100% 100%,45% 100%);
+  background:
+    radial-gradient(150% 60% at 66% 122%, rgba(255,255,255,.18), transparent 56%),
+    repeating-linear-gradient(98deg, rgba(255,255,255,.06) 0 3px, transparent 3px 15px);
+  animation:sw-rays 10s ease-in-out infinite;
+}
+
+/* ═══════ THEME: BAYWATCH — lifeguard beach + rescue buoy ═══════ */
+.sw-card--baywatch{
+  background:linear-gradient(180deg,#8fd0ea 0%,#7cc4e2 27%,#2ba0bd 27.1%,#1c7f9d 55%,#f0cf8e 55.1%,#dcae64 100%);
+}
+.sw-card--baywatch .sw-art::before{        /* warm sun */
+  content:'';position:absolute;left:20%;top:12%;width:50px;height:50px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,#fff7db,#ffd571 52%,rgba(255,213,113,0) 72%);
+  box-shadow:0 0 44px 12px rgba(255,210,120,.38);
+  animation:sw-sun 6s ease-in-out infinite;
+}
+.sw-card--baywatch .sw-art::after{         /* red rescue buoy */
+  content:'';position:absolute;right:-8px;bottom:20px;width:120px;height:44px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='44'%3E%3Crect x='4' y='9' width='112' height='27' rx='13' fill='%23e01c1c'/%3E%3Crect x='6' y='10' width='108' height='9' rx='6' fill='%23ff6151'/%3E%3Crect x='45' y='9' width='11' height='27' fill='%23ffd23f'/%3E%3Crect x='29' y='6' width='4' height='33' rx='2' fill='%23141414'/%3E%3Crect x='80' y='6' width='4' height='33' rx='2' fill='%23141414'/%3E%3C/svg%3E") no-repeat center / contain;
+  transform:rotate(-15deg);filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));
+}
+
+/* ═══════ THEME: TACKY — loud aloha-shirt print ═══════ */
+.sw-card--tacky{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cellipse cx='56' cy='16' rx='12' ry='4.5' fill='%230e9f6a' fill-opacity='.85'/%3E%3Cellipse cx='14' cy='60' rx='12' ry='4.5' fill='%230e9f6a' fill-opacity='.85'/%3E%3Cellipse cx='90' cy='42' rx='11' ry='4' fill='%230e9f6a' fill-opacity='.8'/%3E%3Ccircle cx='41' cy='28' r='7' fill='%23ff5d86' fill-opacity='.9'/%3E%3Ccircle cx='33' cy='39' r='7' fill='%23ff5d86' fill-opacity='.9'/%3E%3Ccircle cx='21' cy='35' r='7' fill='%23ff5d86' fill-opacity='.9'/%3E%3Ccircle cx='21' cy='22' r='7' fill='%23ff5d86' fill-opacity='.9'/%3E%3Ccircle cx='33' cy='18' r='7' fill='%23ff5d86' fill-opacity='.9'/%3E%3Ccircle cx='30' cy='28' r='5' fill='%23ffd24a'/%3E%3Ccircle cx='83' cy='70' r='7' fill='%23ff8a4c' fill-opacity='.9'/%3E%3Ccircle cx='75' cy='81' r='7' fill='%23ff8a4c' fill-opacity='.9'/%3E%3Ccircle cx='63' cy='77' r='7' fill='%23ff8a4c' fill-opacity='.9'/%3E%3Ccircle cx='63' cy='64' r='7' fill='%23ff8a4c' fill-opacity='.9'/%3E%3Ccircle cx='75' cy='60' r='7' fill='%23ff8a4c' fill-opacity='.9'/%3E%3Ccircle cx='72' cy='70' r='5' fill='%23ffe07a'/%3E%3C/svg%3E") repeat 0 0 / 90px 90px,
+    linear-gradient(135deg,#ff7a4d 0%,#ffcf3f 44%,#12b0a4 100%);
+}
+.sw-card--tacky .sw-art::before{           /* soften the print so the title reads */
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(8,20,26,0) 40%, rgba(8,20,26,.5) 100%);
+}
+
+/* ═══════ THEME: LUAU — Lu-Wow! sunset, palm + tiki torch ═══════ */
+.sw-card--luau{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='140' viewBox='0 0 120 140'%3E%3Cg fill='%23081a24'%3E%3Cpath d='M63 140c-3-32-2-63 2-82l6 1c-4 21-6 50-3 81z'/%3E%3Cpath d='M65 60C45 45 26 43 11 50c17-3 35 3 50 15zM65 60C52 39 37 27 20 23c15 8 30 23 41 42zM65 60c1-23 12-42 27-52-11 13-20 32-22 55zM65 60c21-15 44-16 56-7-15-5-35 0-49 12zM65 60c15 4 31 17 39 36-13-17-29-30-42-33z'/%3E%3Ccircle cx='65' cy='58' r='6'/%3E%3C/g%3E%3C/svg%3E") no-repeat bottom left / 92px 108px,
+    linear-gradient(179deg,#2a1a4e 0%,#7a3168 24%,#c44f5c 44%,#ff8a4c 62%,#ffce7e 69%,#1b6d8c 69.4%,#0e4a63 100%);
+}
+.sw-card--luau .sw-art::before{            /* sun sitting on the horizon */
+  content:'';position:absolute;left:50%;top:60%;width:74px;height:74px;margin-left:-37px;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%,#fff2cf,#ffcf6b 48%,rgba(255,150,60,0) 72%);
+  box-shadow:0 0 54px 16px rgba(255,170,90,.5);
+  animation:sw-sun 7s ease-in-out infinite;
+}
+.sw-card--luau .sw-art::after{             /* tiki torch with a flickering flame */
+  content:'';position:absolute;right:8px;bottom:-4px;width:44px;height:122px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='122'%3E%3Crect x='19' y='44' width='6' height='76' rx='2' fill='%236b4a2b'/%3E%3Crect x='15' y='40' width='14' height='8' rx='2' fill='%238a5f37'/%3E%3Crect x='17' y='60' width='10' height='2' fill='%233c2a17'/%3E%3Crect x='17' y='80' width='10' height='2' fill='%233c2a17'/%3E%3Crect x='17' y='100' width='10' height='2' fill='%233c2a17'/%3E%3Cpath d='M22 6 C13 20 16 32 22 42 C28 32 31 20 22 6 Z' fill='%23ff9a2e'/%3E%3Cpath d='M22 15 C17 24 18 32 22 40 C26 32 27 24 22 15 Z' fill='%23ffe07a'/%3E%3C/svg%3E") no-repeat bottom center / contain;
+  filter:drop-shadow(0 0 10px rgba(255,150,50,.6));transform-origin:bottom center;
+  animation:sw-flicker 1.9s ease-in-out infinite;
+}
+@keyframes sw-flicker{0%,100%{filter:drop-shadow(0 0 8px rgba(255,150,50,.5));transform:scaleY(1)}50%{filter:drop-shadow(0 0 16px rgba(255,185,80,.85));transform:scaleY(1.03)}}
+
 /* Schedule */
 .schedule{display:flex;flex-direction:column;gap:14px}
 .sched-row{
