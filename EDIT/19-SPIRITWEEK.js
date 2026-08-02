@@ -76,21 +76,21 @@ var ENN_SPIRIT = {
 
     {
       date:  '2026-08-03',
-      title: 'Floaties Day',
+      title: 'Pool',
       dress: 'Bring your best pool floatie',
       theme: 'floaties',
       photo: '',   // e.g. 'img/spirit/monday.jpg'
     },
     {
       date:  '2026-08-04',
-      title: 'Country Club vs. Surfers',
-      dress: 'Preppy country club or beachy surfer',
-      theme: 'clubsurf',
+      title: 'Kooks vs Pogues',
+      dress: 'Preppy Kook or salty Pogue — Outer Banks style',
+      theme: 'kookspogues',
       photo: '',
     },
     {
       date:  '2026-08-05',
-      title: 'Baywatch & Beach Bum',
+      title: 'Baywatch',
       dress: 'Wear lifeguard attire',
       theme: 'baywatch',
       photo: '',
@@ -104,7 +104,7 @@ var ENN_SPIRIT = {
     },
     {
       date:  '2026-08-07',
-      title: 'Lu-Wow! Luau',
+      title: 'Luwow',
       dress: 'Leis & aloha — assembly + evening luau, 5–8 PM in the Quad',
       theme: 'luau',
       photo: '',
