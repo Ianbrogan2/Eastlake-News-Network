@@ -1,227 +1,298 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ENN EDIT FILE  25  —  ATHLETICS  (the Athletics page)          ║
 // ╠══════════════════════════════════════════════════════════════════╣
-// ║  WHAT THIS FILE CONTROLS:                                        ║
-// ║    The whole Athletics page — every sport, every game, the       ║
-// ║    "Next Up" games at the top, and the ticket info.              ║
+// ║  Students come here to see the schedule, know when the next game ║
+// ║  is, and find out how to get tickets.                            ║
 // ║                                                                  ║
-// ║    Students come here to see the schedule, know when the next    ║
-// ║    game is, and find out how to get tickets. That's the job.     ║
-// ╠══════════════════════════════════════════════════════════════════╣
-// ║  HOW TO ADD A SCHEDULE (the main thing you'll do):              ║
-// ║    1. Find the sport below (or copy a whole sport block to make  ║
-// ║       a new one).                                                ║
-// ║    2. Inside its  games: [ ... ]  list, add one line per game:   ║
-// ║         { date:'2026-08-21', time:'7:00 PM', opponent:'Otay Ranch',
-// ║           ha:'home', location:'Titan Stadium', result:'', note:'' },
-// ║    3. That's it. The page sorts games by date on its own, shows  ║
-// ║       upcoming games first, moves finished games to "Results,"   ║
-// ║       and picks the soonest game for the "Next Up" countdown.    ║
-// ╠══════════════════════════════════════════════════════════════════╣
-// ║  EACH GAME — what the fields mean:                               ║
-// ║    date      → the real date, always  YYYY-MM-DD  (e.g. 2026-09-05)
-// ║    time      → shown as-is, e.g. '7:00 PM'  (leave '' for TBD)   ║
-// ║    opponent  → who they're playing                              ║
-// ║    ha        → 'home' or 'away'  (drives the vs / @ and colors)  ║
-// ║    location  → where it's played. Leave '' to use the sport's    ║
-// ║                default  home:  location for home games.          ║
-// ║    result    → leave '' before the game. After, put the score    ║
-// ║                like  'W 21–14'  or  'L 1–2'  and it shows a badge.║
-// ║    note      → OPTIONAL tag, e.g. 'League', 'Senior Night',      ║
-// ║                'Playoffs', 'Homecoming'. Leave '' for none.      ║
-// ║    tickets   → OPTIONAL link just for this game. Leave '' to use ║
-// ║                the main ticket link at the top of this file.     ║
-// ╠══════════════════════════════════════════════════════════════════╣
-// ║  EACH SPORT — the settings above its games:                     ║
-// ║    name    → the sport's name (Football, Girls Volleyball, …)    ║
-// ║    season  → 'fall', 'winter', or 'spring' (groups the filter)   ║
-// ║    theme   → the color/graphic look — pick one from THEMES below ║
-// ║    levels  → OPTIONAL text, e.g. 'Varsity · JV · Frosh'          ║
-// ║    coach   → OPTIONAL head coach name                            ║
-// ║    record  → OPTIONAL season record, e.g. '5–1'                  ║
-// ║    home    → OPTIONAL default location for this sport's home games║
-// ╠══════════════════════════════════════════════════════════════════╣
-// ║  THEMES (each has its own color + sport graphic):               ║
-// ║    football · basketball · baseball · softball · volleyball ·    ║
-// ║    soccer · crosscountry · track · tennis · golf · waterpolo ·   ║
-// ║    swim · wrestling · fieldhockey · lacrosse · flagfootball ·    ║
-// ║    gymnastics · generic                                          ║
-// ╠══════════════════════════════════════════════════════════════════╣
-// ║  TURN THE PAGE ON / OFF:  enabled: 'T' shows it, 'F' hides it.  ║
+// ║  Imported from the Eastlake Master Sports Schedule (Fall 2026).  ║
+// ║  Each game is one line:                                          ║
+// ║    { date:'2026-08-21', time:'7:00 PM', opponent:'Bonita Vista', ║
+// ║      ha:'home', location:'Eastlake HS', level:'Varsity',         ║
+// ║      result:'', note:'' },                                       ║
+// ║  date = YYYY-MM-DD · ha = 'home' or 'away' · result '' until     ║
+// ║  played, then e.g. 'W 21–14'. The page sorts by date, floats the ║
+// ║  next games up top, and moves finished games to Results.         ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 var ENN_ATHLETICS = {
 
   enabled: 'T',
-
-  eyebrow: 'Eastlake Titans · Metro–Mesa League',
+  eyebrow: 'Eastlake Titans · Fall 2026',
   title:   'TITANS ATHLETICS',
   sub:     'Every Titans schedule in one place — see what game is next, when and where it\'s played, and how to get in.',
 
   // ── TICKETS ───────────────────────────────────────────────────────
-  //  Shown in the "Next Up" cards and in the Tickets box at the bottom.
-  //  Put your real ticket link (GoFan, district box office, etc.) here.
+  //  Put your real ticket link (GoFan / district box office) in url.
   tickets: {
-    url:         '',   // e.g. 'https://gofan.co/app/school/CA...'  (leave '' to hide the button)
+    url:         '',
     provider:    'GoFan',
-    price:       'General $8 · Students with ASB free',
-    studentInfo: 'Bring your ASB card to the gate. Buy ahead on GoFan to skip the line.',
+    price:       'Students free with ASB · General admission at the gate',
+    studentInfo: 'Bring your ASB card. Buy ahead on GoFan to skip the line.',
   },
 
-  // ── OPTIONAL QUICK LINKS (Athletics IG, official site, livestream) ─
   links: [
     // { label: 'Titans Athletics on Instagram', url: 'https://instagram.com/eastlake_athletics' },
-    // { label: 'Watch live', url: '' },
   ],
 
-  // ── THE SPORTS ────────────────────────────────────────────────────
-  //  Replace the example games with the real schedules as they come in.
-  //  Copy a whole { ... } sport block to add a sport that isn't here.
   sports: [
-
-    /* ─────────────── FALL ─────────────── */
     {
-      name: 'Football', season: 'fall', theme: 'football',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Stadium',
+      name: 'Football', season: 'fall', theme: 'football', glyph: '🏈',
+      levels: 'JV · Novice · Varsity', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-08-21', time:'7:00 PM', opponent:'Otay Ranch', ha:'home', location:'Titan Stadium', result:'', note:'Season Opener', tickets:'' },
-        { date:'2026-08-28', time:'7:00 PM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista HS', result:'', note:'', tickets:'' },
+        { date:'2026-08-14', time:'TBD', opponent:'Scrimmage vs SP, GMT, CAR', ha:'away', location:'San Pasqual HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-14', time:'TBD', opponent:'Scrimmage vs SP, GMT, CAR', ha:'away', location:'San Pasqual HS', level:'JV', result:'', note:'' },
+        { date:'2026-08-14', time:'TBD', opponent:'San Pasqual; Grossmont; Carlsbad (Scrimmage)', ha:'away', location:'San Pasqual (Scrimmage)', level:'Novice', result:'', note:'' },
+        { date:'2026-08-20', time:'3:30 PM', opponent:'Bonita Vista', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-08-20', time:'3:30 PM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista', level:'Novice', result:'', note:'' },
+        { date:'2026-08-20', time:'5:15 PM', opponent:'Grossmont', ha:'away', location:'Grossmont', level:'Novice', result:'', note:'' },
+        { date:'2026-08-21', time:'6:30 PM', opponent:'Bonita Vista', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-28', time:'7:00 PM', opponent:'Morse', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-28', time:'4:00 PM', opponent:'Morse', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-03', time:'4:00 PM', opponent:'Steele Canyon', ha:'away', location:'Steele Canyon', level:'Novice', result:'', note:'' },
+        { date:'2026-09-04', time:'7:00 PM', opponent:'Steele Canyon', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-04', time:'4:00 PM', opponent:'Steele Canyon', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-10', time:'4:00 PM', opponent:'Scripps Ranch', ha:'home', location:'Eastlake', level:'Novice', result:'', note:'' },
+        { date:'2026-09-11', time:'7:00 PM', opponent:'Scripps Ranch', ha:'away', location:'Scripps Ranch HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-11', time:'3:30 PM', opponent:'Scripps Ranch', ha:'away', location:'Scripps Ranch HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-17', time:'TBD', opponent:'Vista (Pending)', ha:'away', location:'Vista', level:'Novice', result:'', note:'' },
+        { date:'2026-09-18', time:'7:00 PM', opponent:'Vista', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-18', time:'4:00 PM', opponent:'Vista', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-24', time:'4:00 PM', opponent:'Madison', ha:'away', location:'Madison', level:'Novice', result:'', note:'' },
+        { date:'2026-09-25', time:'7:00 PM', opponent:'Madison', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-25', time:'4:00 PM', opponent:'Madison', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-10-01', time:'3:30 PM', opponent:'Otay Ranch', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-10-01', time:'3:30 PM', opponent:'Otay Ranch', ha:'away', location:'Otay Ranch', level:'Novice', result:'', note:'' },
+        { date:'2026-10-02', time:'5:00 PM', opponent:'Otay Ranch', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'Homecoming Game' },
+        { date:'2026-10-08', time:'3:30 PM', opponent:'Montgomery', ha:'away', location:'Montgomery HS', level:'JV', result:'', note:'' },
+        { date:'2026-10-08', time:'TBD', opponent:'Still Looking', ha:'away', location:'', level:'Novice', result:'', note:'' },
+        { date:'2026-10-09', time:'6:30 PM', opponent:'Montgomery', ha:'away', location:'Montgomery HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-15', time:'3:30 PM', opponent:'Mater Dei Catholic', ha:'away', location:'Mater Dei Catholic HS', level:'JV', result:'', note:'' },
+        { date:'2026-10-15', time:'TBD', opponent:'Mater Dei (Pending)', ha:'home', location:'Eastlake', level:'Novice', result:'', note:'' },
+        { date:'2026-10-16', time:'6:30 PM', opponent:'Mater Dei Catholic', ha:'away', location:'Mater Dei Catholic HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-23', time:'TBD', opponent:'Still Looking', ha:'away', location:'', level:'Novice', result:'', note:'' },
+        { date:'2026-10-29', time:'3:30 PM', opponent:'Olympian', ha:'home', location:'Eastlake HS', level:'JV', result:'', note:'' },
+        { date:'2026-10-29', time:'4:00 PM', opponent:'Santana', ha:'home', location:'Eastlake', level:'Novice', result:'', note:'' },
+        { date:'2026-10-30', time:'6:30 PM', opponent:'Olympian', ha:'home', location:'Eastlake HS', level:'Varsity', result:'', note:'' },
       ],
     },
     {
-      name: 'Girls Volleyball', season: 'fall', theme: 'volleyball',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Gym',
+      name: 'Flag Football', season: 'fall', theme: 'flagfootball', glyph: '🏈',
+      levels: 'JV · Varsity', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-08-26', time:'6:00 PM', opponent:'Olympian', ha:'home', location:'Titan Gym', result:'', note:'', tickets:'' },
+        { date:'2026-08-11', time:'7:15 PM', opponent:'El Capitan', ha:'away', location:'El Capitan', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-11', time:'5:45 PM', opponent:'El Capitan', ha:'away', location:'El Capitan', level:'JV', result:'', note:'' },
+        { date:'2026-08-20', time:'7:15 PM', opponent:'Valhalla', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-20', time:'6:00 PM', opponent:'Valhalla', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-08-25', time:'7:15 PM', opponent:'Steele Canyon', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-25', time:'6:00 PM', opponent:'Steele Canyon', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-08-27', time:'7:15 PM', opponent:'Canyon Crest', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-27', time:'6:00 PM', opponent:'Canyon Crest', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-08-31', time:'5:30 PM', opponent:'Del Norte', ha:'away', location:'Del Norte', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-31', time:'4:00 PM', opponent:'Del Norte', ha:'away', location:'Del Norte', level:'JV', result:'', note:'' },
+        { date:'2026-09-01', time:'7:15 PM', opponent:'West Hills', ha:'away', location:'West Hills', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-01', time:'5:45 PM', opponent:'West Hills', ha:'away', location:'West Hills', level:'JV', result:'', note:'' },
+        { date:'2026-09-03', time:'7:15 PM', opponent:'University City', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-03', time:'6:00 PM', opponent:'University City', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-09-08', time:'7:15 PM', opponent:'Vincent Memorial', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-08', time:'6:00 PM', opponent:'Vincent Memorial', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-09-10', time:'7:15 PM', opponent:'Helix', ha:'away', location:'Helix', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-10', time:'5:45 PM', opponent:'Helix', ha:'away', location:'Helix', level:'JV', result:'', note:'' },
+        { date:'2026-09-21', time:'5:00 PM', opponent:'San Ysidro', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-21', time:'3:30 PM', opponent:'San Ysidro', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-09-23', time:'5:30 PM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-23', time:'4:00 PM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista', level:'JV', result:'', note:'' },
+        { date:'2026-09-28', time:'5:30 PM', opponent:'Mater Dei', ha:'away', location:'Mater Dei', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-28', time:'4:00 PM', opponent:'Mater Dei', ha:'away', location:'Mater Dei', level:'JV', result:'', note:'' },
+        { date:'2026-09-30', time:'5:30 PM', opponent:'Otay Ranch', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-30', time:'4:00 PM', opponent:'Otay Ranch', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-10-05', time:'5:30 PM', opponent:'Olympian', ha:'away', location:'Olympian', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-05', time:'4:00 PM', opponent:'Olympian', ha:'away', location:'Olympian', level:'JV', result:'', note:'' },
+        { date:'2026-10-07', time:'5:00 PM', opponent:'Hilltop', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-07', time:'3:30 PM', opponent:'Hilltop', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-10-12', time:'5:00 PM', opponent:'Castle Park', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-12', time:'3:30 PM', opponent:'Castle Park', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-10-15', time:'6:00 PM', opponent:'Olympian', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-15', time:'3:30 PM', opponent:'Olympian', ha:'home', location:'Eastlake', level:'JV', result:'', note:'' },
+        { date:'2026-10-19', time:'5:00 PM', opponent:'Hilltop', ha:'away', location:'Hilltop', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-19', time:'3:30 PM', opponent:'Hilltop', ha:'away', location:'Hilltop', level:'JV', result:'', note:'' },
+        { date:'2026-10-21', time:'6:00 PM', opponent:'Castle Park', ha:'away', location:'Castle Park', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-21', time:'4:30 PM', opponent:'Castle Park', ha:'away', location:'Castle Park', level:'JV', result:'', note:'' },
       ],
     },
     {
-      name: 'Boys Water Polo', season: 'fall', theme: 'waterpolo',
-      levels: 'Varsity · JV', coach: '', record: '',
-      home: 'Titan Aquatics Center',
+      name: 'Girls Volleyball', season: 'fall', theme: 'volleyball', glyph: '🏐',
+      levels: 'JV · Novice · Varsity', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-09-02', time:'5:00 PM', opponent:'Eastlake Rivals TBD', ha:'home', location:'Titan Aquatics Center', result:'', note:'', tickets:'' },
+        { date:'2026-08-18', time:'5:30 PM', opponent:'Bishops', ha:'away', location:'Bishops', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-18', time:'4:00 PM', opponent:'Bishops', ha:'away', location:'Bishops', level:'JV', result:'', note:'' },
+        { date:'2026-08-18', time:'4:00 PM', opponent:'Bishops', ha:'away', location:'Bishops', level:'Novice', result:'', note:'' },
+        { date:'2026-08-19', time:'6:15 PM', opponent:'Point Loma', ha:'away', location:'PLHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-19', time:'4:30 PM', opponent:'Point Loma', ha:'away', location:'PLHS', level:'JV', result:'', note:'' },
+        { date:'2026-08-19', time:'4:30 PM', opponent:'Point Loma', ha:'away', location:'PLHS', level:'Novice', result:'', note:'' },
+        { date:'2026-08-25', time:'6:15 PM', opponent:'Christian', ha:'away', location:'CHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-25', time:'4:30 PM', opponent:'Christian', ha:'away', location:'CHS', level:'JV', result:'', note:'' },
+        { date:'2026-08-25', time:'4:30 PM', opponent:'Christian', ha:'away', location:'CHS', level:'Novice', result:'', note:'' },
+        { date:'2026-08-27', time:'6:30 PM', opponent:'El Capitan', ha:'away', location:'El Capitan HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-27', time:'5:00 PM', opponent:'El Capitan', ha:'away', location:'El Capitan HS', level:'JV', result:'', note:'' },
+        { date:'2026-08-27', time:'5:00 PM', opponent:'El Capitan', ha:'away', location:'El Capitan HS', level:'Novice', result:'', note:'' },
+        { date:'2026-09-01', time:'5:30 PM', opponent:'Francis Parker', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-01', time:'4:00 PM', opponent:'Francis Parker', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-09-05', time:'TBD', opponent:'Titan JV Invitational Tournament', ha:'away', location:'Alliant University', level:'JV', result:'', note:'' },
+        { date:'2026-09-05', time:'TBD', opponent:'Titan Novice Invitational Tournament', ha:'away', location:'Alliant University', level:'Novice', result:'', note:'' },
+        { date:'2026-09-09', time:'6:00 PM', opponent:'Westview', ha:'away', location:'Westview HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-09', time:'4:30 PM', opponent:'Westview', ha:'away', location:'Westview HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-09', time:'4:30 PM', opponent:'Westview', ha:'away', location:'Westview HS', level:'Novice', result:'', note:'' },
+        { date:'2026-09-11', time:'5:30 PM', opponent:'Scripps Ranch', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-11', time:'4:00 PM', opponent:'Scripps Ranch', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-09-11', time:'4:00 PM', opponent:'Scripps Ranch', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-09-15', time:'5:30 PM', opponent:'Patrick Henry', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-15', time:'4:00 PM', opponent:'Patrick Henry', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-09-15', time:'4:00 PM', opponent:'Patrick Henry', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-09-17', time:'5:30 PM', opponent:'OLP', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-17', time:'4:00 PM', opponent:'OLP', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-09-17', time:'4:00 PM', opponent:'OLP', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-09-19', time:'TBD', opponent:'Wolverine JV Invitational', ha:'away', location:'Alliant University', level:'JV', result:'', note:'' },
+        { date:'2026-09-19', time:'TBD', opponent:'Wolverine JV Invitational', ha:'away', location:'Alliant University', level:'Novice', result:'', note:'' },
+        { date:'2026-09-22', time:'5:00 PM', opponent:'Olympian', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-22', time:'3:30 PM', opponent:'Olympian', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-09-22', time:'3:30 PM', opponent:'Olympian', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-09-29', time:'5:00 PM', opponent:'Bonita Vista', ha:'away', location:'BVHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-29', time:'3:30 PM', opponent:'Bonita Vista', ha:'away', location:'BVHS', level:'JV', result:'', note:'' },
+        { date:'2026-09-29', time:'3:30 PM', opponent:'Bonita Vista', ha:'away', location:'BVHS', level:'Novice', result:'', note:'' },
+        { date:'2026-10-01', time:'5:00 PM', opponent:'Mater Dei', ha:'away', location:'MDCHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-01', time:'3:30 PM', opponent:'Mater Dei', ha:'away', location:'MDCHS', level:'JV', result:'', note:'' },
+        { date:'2026-10-01', time:'3:30 PM', opponent:'Mater Dei', ha:'away', location:'MDCHS', level:'Novice', result:'', note:'' },
+        { date:'2026-10-06', time:'5:00 PM', opponent:'Otay Ranch', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-06', time:'3:30 PM', opponent:'Otay Ranch', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-10-06', time:'3:30 PM', opponent:'Otay Ranch', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-10-08', time:'5:00 PM', opponent:'Olympian', ha:'away', location:'OHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-08', time:'3:30 PM', opponent:'Olympian', ha:'away', location:'OHS', level:'JV', result:'', note:'' },
+        { date:'2026-10-08', time:'3:30 PM', opponent:'Olympian', ha:'away', location:'OHS', level:'Novice', result:'', note:'' },
+        { date:'2026-10-15', time:'5:00 PM', opponent:'Bonita Vista', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-15', time:'3:30 PM', opponent:'Bonita Vista', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-10-15', time:'3:30 PM', opponent:'Bonita Vista', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-10-20', time:'5:00 PM', opponent:'Mater Dei', ha:'away', location:'EHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-20', time:'3:30 PM', opponent:'Mater Dei', ha:'away', location:'EHS', level:'JV', result:'', note:'' },
+        { date:'2026-10-20', time:'3:30 PM', opponent:'Mater Dei', ha:'away', location:'EHS', level:'Novice', result:'', note:'' },
+        { date:'2026-10-22', time:'5:00 PM', opponent:'Otay Ranch', ha:'away', location:'ORHS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-22', time:'3:30 PM', opponent:'Otay Ranch', ha:'away', location:'ORHS', level:'JV', result:'', note:'' },
+        { date:'2026-10-22', time:'3:30 PM', opponent:'Otay Ranch', ha:'away', location:'ORHS', level:'Novice', result:'', note:'' },
       ],
     },
     {
-      name: 'Cross Country', season: 'fall', theme: 'crosscountry',
-      levels: 'Boys · Girls', coach: '', record: '',
-      home: 'Titan Course',
+      name: 'Boys Water Polo', season: 'fall', theme: 'waterpolo', glyph: '🤽',
+      levels: 'JV · Varsity', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-09-12', time:'8:00 AM', opponent:'Metro–Mesa Preview', ha:'away', location:'Morley Field', result:'', note:'Invitational', tickets:'' },
+        { date:'2026-08-08', time:'2:00 PM', opponent:'DRAZ Classic', ha:'away', location:'Rancho Bernardo HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-26', time:'TBD', opponent:'Coronado', ha:'away', location:'Coronado HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-08-26', time:'TBD', opponent:'Coronado', ha:'away', location:'Coronado HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-14', time:'5:00 PM', opponent:'Torrey Pines', ha:'away', location:'Torrey Pines HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-14', time:'4:00 PM', opponent:'Torrey Pines', ha:'away', location:'Torrey Pines HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-16', time:'6:00 PM', opponent:'Valhalla', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-09-16', time:'5:00 PM', opponent:'Valhalla', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
+        { date:'2026-09-18', time:'TBD', opponent:'AFC Tourney', ha:'away', location:'Away - TBD', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-19', time:'TBD', opponent:'AFC Tourney', ha:'away', location:'Away - TBD', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-24', time:'5:00 PM', opponent:'Patrick Henry', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-09-24', time:'6:00 PM', opponent:'Patrick Henry', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
+        { date:'2026-09-29', time:'4:00 PM', opponent:'Mater Dei', ha:'away', location:'Mater Dei HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-29', time:'5:00 PM', opponent:'Mater Dei', ha:'away', location:'Mater Dei HS', level:'JV', result:'', note:'' },
+        { date:'2026-09-30', time:'5:00 PM', opponent:'Hilltop', ha:'away', location:'Parkway Aquatic Center', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-30', time:'4:00 PM', opponent:'Hilltop', ha:'away', location:'Parkway Aquatic Center', level:'JV', result:'', note:'' },
+        { date:'2026-10-01', time:'6:30 PM', opponent:'LCC', ha:'away', location:'YMCA Encinitas', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-01', time:'7:30 PM', opponent:'LCC', ha:'away', location:'YMCA Encinitas', level:'JV', result:'', note:'' },
+        { date:'2026-10-02', time:'4:00 PM', opponent:'Mission Bay', ha:'away', location:'Standley Aquatic Center', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-02', time:'5:00 PM', opponent:'Mission Bay', ha:'away', location:'Standley Aquatic Center', level:'JV', result:'', note:'' },
+        { date:'2026-10-06', time:'5:00 PM', opponent:'Otay Ranch', ha:'away', location:'Southwestern College', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-06', time:'4:00 PM', opponent:'Otay Ranch', ha:'away', location:'Southwestern College', level:'JV', result:'', note:'' },
+        { date:'2026-10-08', time:'5:00 PM', opponent:'Olympian', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-10-08', time:'4:00 PM', opponent:'Olympian', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
+        { date:'2026-10-13', time:'5:00 PM', opponent:'Mar Vista', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-10-13', time:'4:00 PM', opponent:'Mar Vista', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
+        { date:'2026-10-15', time:'5:00 PM', opponent:'Mater Dei *', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home; * date/time may change (SD Open conflict)' },
+        { date:'2026-10-15', time:'TBD', opponent:'SD Open', ha:'away', location:'TBD', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-15', time:'4:00 PM', opponent:'Mater Dei *', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home; * date/time may change (SD Open conflict)' },
+        { date:'2026-10-16', time:'TBD', opponent:'SD Open', ha:'away', location:'TBD', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-17', time:'TBD', opponent:'SD Open', ha:'away', location:'TBD', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-20', time:'5:00 PM', opponent:'Hilltop', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-10-20', time:'4:00 PM', opponent:'Hilltop', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
+        { date:'2026-10-22', time:'5:00 PM', opponent:'Otay Ranch', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-10-22', time:'4:00 PM', opponent:'Otay Ranch', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
+        { date:'2026-10-27', time:'5:00 PM', opponent:'Olympian', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Loma Verde, shared pool - not a home game' },
+        { date:'2026-10-27', time:'4:00 PM', opponent:'Olympian', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Loma Verde, shared pool - not a home game' },
+        { date:'2026-10-29', time:'5:00 PM', opponent:'Mar Vista', ha:'away', location:'Mar Vista HS', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-29', time:'4:00 PM', opponent:'Mar Vista', ha:'away', location:'Mar Vista HS', level:'JV', result:'', note:'' },
+        { date:'2026-10-30', time:'8:00 PM', opponent:'Oceanside', ha:'away', location:'Loma Verde', level:'Varsity', result:'', note:'Home' },
+        { date:'2026-10-30', time:'7:00 PM', opponent:'Oceanside', ha:'away', location:'Loma Verde', level:'JV', result:'', note:'Home' },
       ],
     },
     {
-      name: 'Field Hockey', season: 'fall', theme: 'fieldhockey',
-      levels: 'Varsity · JV', coach: '', record: '',
-      home: 'Titan Field',
+      name: 'Field Hockey', season: 'fall', theme: 'fieldhockey', glyph: '🏑',
+      levels: 'JV · Varsity', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-09-04', time:'3:30 PM', opponent:'Mater Dei Catholic', ha:'home', location:'Titan Field', result:'', note:'', tickets:'' },
-      ],
-    },
-
-    /* ─────────────── WINTER ─────────────── */
-    {
-      name: 'Boys Basketball', season: 'winter', theme: 'basketball',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Gym',
-      games: [
-        { date:'2026-12-02', time:'7:00 PM', opponent:'Otay Ranch', ha:'home', location:'Titan Gym', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Girls Basketball', season: 'winter', theme: 'basketball',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Gym',
-      games: [
-        { date:'2026-12-03', time:'6:00 PM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista HS', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Boys Soccer', season: 'winter', theme: 'soccer',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Stadium',
-      games: [
-        { date:'2026-12-09', time:'5:30 PM', opponent:'Olympian', ha:'home', location:'Titan Stadium', result:'', note:'', tickets:'' },
+        { date:'2026-09-01', time:'4:00 PM', opponent:'Clairemont', ha:'away', location:'Away', level:'Varsity', result:'', note:'Non-league (JV 5:15 PM)' },
+        { date:'2026-09-01', time:'5:15 PM', opponent:'Clairemont', ha:'away', location:'Away', level:'JV', result:'', note:'Non-league' },
+        { date:'2026-09-16', time:'7:15 PM', opponent:'Point Loma', ha:'away', location:'Home', level:'Varsity', result:'', note:'Non-league (JV 6:00 PM)' },
+        { date:'2026-09-16', time:'6:00 PM', opponent:'Point Loma', ha:'away', location:'Home', level:'JV', result:'', note:'Non-league' },
+        { date:'2026-09-18', time:'6:15 PM', opponent:'Rancho Bernardo', ha:'away', location:'Away', level:'Varsity', result:'', note:'Non-league (JV 5:00 PM)' },
+        { date:'2026-09-18', time:'5:00 PM', opponent:'Rancho Bernardo', ha:'away', location:'Away', level:'JV', result:'', note:'Non-league' },
+        { date:'2026-09-28', time:'7:15 PM', opponent:'Helix', ha:'away', location:'Home', level:'Varsity', result:'', note:'League (JV 6:00 PM)' },
+        { date:'2026-09-28', time:'6:00 PM', opponent:'Helix', ha:'away', location:'Home', level:'JV', result:'', note:'League' },
+        { date:'2026-10-03', time:'TBA', opponent:'Highlander Cup', ha:'away', location:'Helix', level:'Varsity', result:'', note:'Tournament' },
+        { date:'2026-10-05', time:'5:00 PM', opponent:'Otay Ranch', ha:'away', location:'Away', level:'Varsity', result:'', note:'League' },
+        { date:'2026-10-09', time:'4:00 PM', opponent:'Bonita', ha:'away', location:'Home', level:'Varsity', result:'', note:'League (JV maybe)' },
+        { date:'2026-10-09', time:'TBD', opponent:'Bonita', ha:'away', location:'Home', level:'JV', result:'', note:'League - unconfirmed' },
+        { date:'2026-10-12', time:'5:30 PM', opponent:'Helix', ha:'away', location:'Away', level:'Varsity', result:'', note:'League (JV 7:00 PM)' },
+        { date:'2026-10-12', time:'7:00 PM', opponent:'Helix', ha:'away', location:'Away', level:'JV', result:'', note:'League' },
+        { date:'2026-10-14', time:'4:00 PM', opponent:'Olympian', ha:'away', location:'Home', level:'Varsity', result:'', note:'League (JV 5:15 PM)' },
+        { date:'2026-10-14', time:'5:15 PM', opponent:'Olympian', ha:'away', location:'Home', level:'JV', result:'', note:'League' },
+        { date:'2026-10-16', time:'TBA', opponent:'Highlander Cup', ha:'away', location:'Helix', level:'Varsity', result:'', note:'Tournament' },
+        { date:'2026-10-17', time:'TBA', opponent:'Highlander Cup', ha:'away', location:'Helix', level:'Varsity', result:'', note:'Tournament' },
+        { date:'2026-10-23', time:'6:00 PM', opponent:'Otay Ranch', ha:'away', location:'Home', level:'Varsity', result:'', note:'League - Senior Night' },
+        { date:'2026-10-24', time:'TBA', opponent:'Spooktacular', ha:'away', location:'Del Norte', level:'Varsity', result:'', note:'Tournament' },
+        { date:'2026-10-28', time:'7:00 PM', opponent:'Bonita', ha:'away', location:'Away', level:'Varsity', result:'', note:'League (JV maybe)' },
+        { date:'2026-10-28', time:'TBD', opponent:'Bonita', ha:'away', location:'Away', level:'JV', result:'', note:'League - unconfirmed' },
+        { date:'2026-10-30', time:'6:00 PM', opponent:'Olympian', ha:'away', location:'Away', level:'Varsity', result:'', note:'League (JV 4:30 PM)' },
+        { date:'2026-10-30', time:'4:30 PM', opponent:'Olympian', ha:'away', location:'Away', level:'JV', result:'', note:'League' },
       ],
     },
     {
-      name: 'Girls Soccer', season: 'winter', theme: 'soccer',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Stadium',
+      name: 'Cross Country', season: 'fall', theme: 'crosscountry', glyph: '🏃',
+      levels: 'Varsity & JV', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-12-10', time:'5:30 PM', opponent:'Olympian', ha:'away', location:'Olympian HS', result:'', note:'', tickets:'' },
+        { date:'2026-08-13', time:'3:30 PM', opponent:'Sweetwater', ha:'home', location:'Eastlake', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-08-22', time:'TBA', opponent:'Vaquero Stampede', ha:'away', location:'Lindo Lakes', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-08-28', time:'2:30 PM', opponent:'Ian Cumming/Tim Latham Invitational', ha:'away', location:'Rohr Park', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-09-05', time:'4:30 PM', opponent:'CCA Ravens XC Invitational', ha:'away', location:'Canyon Crest Academy', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-09-19', time:'TBA', opponent:'Woodbridge Classic', ha:'away', location:'Great Park', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-10-09', time:'3:30 PM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-10-16', time:'3:30 PM', opponent:'Otay Ranch', ha:'home', location:'Eastlake', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-10-30', time:'3:30 PM', opponent:'Olympian', ha:'home', location:'Eastlake', level:'Varsity & JV', result:'', note:'' },
+        { date:'2026-11-06', time:'1:00 PM', opponent:'Metro League Finals', ha:'away', location:'Rohr Park', level:'Varsity & JV', result:'', note:'Source listed 11/6/2025; corrected to 2026' },
+        { date:'2026-11-14', time:'TBD', opponent:'CIF SDS Championships', ha:'away', location:'Morley Field', level:'Varsity & JV', result:'', note:'' },
       ],
     },
     {
-      name: 'Wrestling', season: 'winter', theme: 'wrestling',
-      levels: 'Boys · Girls', coach: '', record: '',
-      home: 'Titan Gym',
+      name: 'Girls Tennis', season: 'fall', theme: 'tennis', glyph: '🎾',
+      levels: 'Varsity', coach: '', record: '', home: 'Eastlake HS',
       games: [
-        { date:'2026-12-05', time:'9:00 AM', opponent:'Titan Duals', ha:'home', location:'Titan Gym', result:'', note:'Tournament', tickets:'' },
+        { date:'2026-08-13', time:'3:30 PM', opponent:'San Ysidro', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'Non-league' },
+        { date:'2026-08-20', time:'3:30 PM', opponent:'Sweetwater', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'Non-league' },
+        { date:'2026-08-25', time:'4:00 PM', opponent:'Steele Canyon', ha:'away', location:'Steele Canyon', level:'Varsity', result:'', note:'Non-league, Bus' },
+        { date:'2026-08-27', time:'4:00 PM', opponent:'Coronado', ha:'away', location:'Coronado', level:'Varsity', result:'', note:'Non-league, Bus' },
+        { date:'2026-09-01', time:'3:30 PM', opponent:'San Ysidro', ha:'away', location:'San Ysidro', level:'Varsity', result:'', note:'Non-league, Bus' },
+        { date:'2026-09-08', time:'3:30 PM', opponent:'Otay Ranch', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'League' },
+        { date:'2026-09-10', time:'3:30 PM', opponent:'Mater Dei', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'League' },
+        { date:'2026-09-11', time:'4:00 PM', opponent:'Grossmont', ha:'away', location:'Grossmont', level:'Varsity', result:'', note:'Non-league, Bus' },
+        { date:'2026-09-15', time:'TBD', opponent:'Bye', ha:'away', location:'', level:'Varsity', result:'', note:'' },
+        { date:'2026-09-17', time:'3:30 PM', opponent:'Olympian', ha:'away', location:'Olympian', level:'Varsity', result:'', note:'League, Bus' },
+        { date:'2026-09-21', time:'10:00 AM', opponent:'Otay Ranch', ha:'away', location:'Otay Ranch', level:'Varsity', result:'', note:'League, Bus' },
+        { date:'2026-09-22', time:'10:00 AM', opponent:'Bonita Vista', ha:'away', location:'Bonita Vista', level:'Varsity', result:'', note:'League, Bus' },
+        { date:'2026-10-06', time:'3:30 PM', opponent:'Mater Dei', ha:'away', location:'Mater Dei', level:'Varsity', result:'', note:'League, Bus' },
+        { date:'2026-10-08', time:'TBD', opponent:'Bye', ha:'away', location:'', level:'Varsity', result:'', note:'' },
+        { date:'2026-10-13', time:'3:30 PM', opponent:'Olympian', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'League' },
+        { date:'2026-10-15', time:'3:30 PM', opponent:'Bonita Vista', ha:'home', location:'Eastlake', level:'Varsity', result:'', note:'League' },
       ],
     },
-
-    /* ─────────────── SPRING ─────────────── */
-    {
-      name: 'Baseball', season: 'spring', theme: 'baseball',
-      levels: 'Varsity · JV · Frosh', coach: '', record: '',
-      home: 'Titan Diamond',
-      games: [
-        { date:'2027-02-27', time:'3:30 PM', opponent:'Mater Dei Catholic', ha:'home', location:'Titan Diamond', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Softball', season: 'spring', theme: 'softball',
-      levels: 'Varsity · JV', coach: '', record: '',
-      home: 'Titan Softball Field',
-      games: [
-        { date:'2027-02-28', time:'3:30 PM', opponent:'Olympian', ha:'home', location:'Titan Softball Field', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Track & Field', season: 'spring', theme: 'track',
-      levels: 'Boys · Girls', coach: '', record: '',
-      home: 'Titan Track',
-      games: [
-        { date:'2027-03-06', time:'2:00 PM', opponent:'Metro–Mesa Relays', ha:'home', location:'Titan Track', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Boys Volleyball', season: 'spring', theme: 'volleyball',
-      levels: 'Varsity · JV', coach: '', record: '',
-      home: 'Titan Gym',
-      games: [
-        { date:'2027-03-10', time:'6:00 PM', opponent:'Otay Ranch', ha:'home', location:'Titan Gym', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Boys Tennis', season: 'spring', theme: 'tennis',
-      levels: 'Varsity · JV', coach: '', record: '',
-      home: 'Titan Courts',
-      games: [
-        { date:'2027-03-04', time:'3:00 PM', opponent:'Bonita Vista', ha:'home', location:'Titan Courts', result:'', note:'', tickets:'' },
-      ],
-    },
-    {
-      name: 'Swim & Dive', season: 'spring', theme: 'swim',
-      levels: 'Boys · Girls', coach: '', record: '',
-      home: 'Titan Aquatics Center',
-      games: [
-        { date:'2027-03-13', time:'10:00 AM', opponent:'Titan Invite', ha:'home', location:'Titan Aquatics Center', result:'', note:'Invitational', tickets:'' },
-      ],
-    },
-    {
-      name: 'Lacrosse', season: 'spring', theme: 'lacrosse',
-      levels: 'Boys · Girls', coach: '', record: '',
-      home: 'Titan Stadium',
-      games: [
-        { date:'2027-03-07', time:'5:00 PM', opponent:'Del Norte', ha:'home', location:'Titan Stadium', result:'', note:'', tickets:'' },
-      ],
-    },
-
   ],
 
 };

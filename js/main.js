@@ -432,12 +432,13 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
      and its address falls back to Home. Missing file = everything on. */
   const TOGGLE = (typeof ENN_TOGGLE !== 'undefined') ? ENN_TOGGLE : null;
   const ROUTE_SWITCH = {
-    about:    'pageAbout',
-    team:     'pageTeam',
-    studio:   'pageStudio',
-    calendar: 'pageCalendar',
-    contact:  'pageContact',
-    bullpen:  'pageGames',
+    about:     'pageAbout',
+    athletics: 'pageAthletics',
+    team:      'pageTeam',
+    studio:    'pageStudio',
+    calendar:  'pageCalendar',
+    contact:   'pageContact',
+    bullpen:   'pageGames',
   };
   function routeEnabled(name){
     if(!TOGGLE || !ROUTE_SWITCH[name]) return true;   // home is never switchable
@@ -466,18 +467,20 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
 
   /* ── Router ──────────────────────────────────────────────────── */
   const pages = {
-    home:     $('#page-home'),
-    about:    $('#page-about'),
-    team:     $('#page-team'),
-    contact:  $('#page-contact'),
-    studio:   $('#page-studio'),
-    calendar: $('#page-calendar'),
-    bullpen:  $('#page-bullpen'),
+    home:      $('#page-home'),
+    about:     $('#page-about'),
+    athletics: $('#page-athletics'),
+    team:      $('#page-team'),
+    contact:   $('#page-contact'),
+    studio:    $('#page-studio'),
+    calendar:  $('#page-calendar'),
+    bullpen:   $('#page-bullpen'),
   };
   Object.keys(pages).forEach(k => { if(!pages[k]) delete pages[k]; });
   function route(name){
     if(!pages[name] || !routeEnabled(name)) name='home';
     Object.entries(pages).forEach(([k,el]) => el.classList.toggle('active', k===name));
+    document.body.classList.toggle('is-home', name==='home');
     $$('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.route===name));
     window.scrollTo({top:0, behavior:'instant'});
     requestAnimationFrame(() => requestAnimationFrame(runReveals));
@@ -1870,6 +1873,164 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       void track.offsetWidth;
       track.style.animation = `tk ${(halfW/90).toFixed(1)}s linear infinite`;
     });
+  })();
+
+  /* ── Athletics page (EDIT/25-ATHLETICS.js) ────────────────────── */
+  (function buildAthletics(){
+    const cfg  = (typeof ENN_ATHLETICS !== 'undefined') ? ENN_ATHLETICS : null;
+    const root = $('#athletics-root');
+    if(!root) return;
+    if(!cfg || cfg.enabled !== 'T'){ const p=$('#page-athletics'); if(p) p.remove(); return; }
+
+    const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const DOW3 = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const DOWl = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const MON  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const ptms = () => new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'})).getTime();
+
+    const sports = (cfg.sports||[]).filter(s => s && s.games && s.games.length);
+    const themeCls = t => 'at--' + (t||'generic');
+
+    function parseDT(g){
+      const p = (g.date||'').split('-').map(Number); if(p.length<3 || !p[0]) return null;
+      let hh=18, mm=0;
+      const tm = (g.time||'').match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+      if(tm){ hh=(+tm[1])%12; if(/pm/i.test(tm[3])) hh+=12; mm=+tm[2]; }
+      return new Date(p[0], p[1]-1, p[2], hh, mm);
+    }
+    const isPast = g => { const d=parseDT(g); return d ? (d.getTime()+3*3600000 < ptms()) : false; };
+    const byDateAsc  = (a,b) => (parseDT(a)?.getTime()||0) - (parseDT(b)?.getTime()||0);
+    function chip(g){ const d=parseDT(g); return d ? `${DOW3[d.getDay()]}<span>${MON[d.getMonth()]} ${d.getDate()}</span>` : 'TBD'; }
+    function whenLong(g){ const d=parseDT(g); if(!d) return 'Date TBD';
+      const base=`${DOWl[d.getDay()]}, ${MON[d.getMonth()]} ${d.getDate()}`;
+      return (g.time && g.time!=='TBD') ? `${base} · ${g.time}` : `${base} · Time TBD`; }
+    const hv = g => g.ha==='home' ? 'vs' : '@';
+    function fmtCd(diff){
+      if(diff<=0) return 'Game time';
+      const dd=Math.floor(diff/86400000), hh=Math.floor(diff%86400000/3600000),
+            mm=Math.floor(diff%3600000/60000), ss=Math.floor(diff%60000/1000);
+      return dd>0 ? `${dd}d ${String(hh).padStart(2,'0')}h ${String(mm).padStart(2,'0')}m`
+                  : `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+    }
+
+    const all = []; sports.forEach(s => (s.games||[]).forEach(g => all.push({g,s})));
+    const levels = [...new Set(all.map(x=>x.g.level).filter(Boolean))];
+    const lvO = {Varsity:0, JV:1, Novice:2, Frosh:3};
+    levels.sort((a,b)=>(lvO[a]??9)-(lvO[b]??9) || a.localeCompare(b));
+    const upcomingAll = all.filter(x=>!isPast(x.g)).sort((a,b)=>byDateAsc(a.g,b.g));
+
+    let fSport='all', fLevel='all';
+
+    root.innerHTML = `
+      <section class="at-hero"><div class="container">
+        <div class="eyebrow reveal">${esc(cfg.eyebrow||'Eastlake Titans')}</div>
+        <h1 class="reveal d1">${esc(cfg.title||'ATHLETICS')}</h1>
+        ${cfg.sub?`<p class="sub reveal d2">${esc(cfg.sub)}</p>`:''}
+      </div></section>
+      <section class="at-body"><div class="container">
+        <div id="at-next" class="reveal"></div>
+        <div class="at-filters reveal" id="at-filters"></div>
+        <div id="at-schedule"></div>
+        <div id="at-tickets" class="reveal"></div>
+      </div></section>`;
+
+    /* NEXT UP */
+    (function(){
+      const host=$('#at-next'); if(!host || !upcomingAll.length){ if(host) host.style.display='none'; return; }
+      const next=upcomingAll[0], rest=upcomingAll.slice(1,5);
+      const tix = (cfg.tickets&&cfg.tickets.url) ? `<a class="at-tixbtn" href="${esc(cfg.tickets.url)}" target="_blank" rel="noopener">Get Tickets ↗</a>` : '';
+      host.innerHTML = `
+        <div class="at-nexthead"><span class="eyebrow">Next Up</span><span class="at-ahead">${upcomingAll.length} games ahead</span></div>
+        <div class="at-nextgrid">
+          <div class="at-hero-game ${themeCls(next.s.theme)}">
+            <div class="at-bigglyph" aria-hidden="true">${next.s.glyph||'🏆'}</div>
+            <div class="at-hg-sport">${esc(next.s.name)}${next.g.level?' · '+esc(next.g.level):''}</div>
+            <div class="at-hg-opp"><span class="at-hv">${hv(next.g)}</span> ${esc(next.g.opponent)}</div>
+            <div class="at-hg-count" id="at-count">—</div>
+            <div class="at-hg-when">${esc(whenLong(next.g))} · ${next.g.ha==='home'?'Home':'Away'}${next.g.location?' · '+esc(next.g.location):''}</div>
+            ${next.g.note?`<span class="at-notechip">${esc(next.g.note)}</span>`:''}
+            ${tix}
+          </div>
+          <div class="at-nextlist">
+            ${rest.map(x=>`<div class="at-nc ${themeCls(x.s.theme)}">
+              <span class="at-nc-glyph">${x.s.glyph||'🏆'}</span>
+              <div class="at-nc-main">
+                <div class="at-nc-sport">${esc(x.s.name)}${x.g.level?' · '+esc(x.g.level):''}</div>
+                <div class="at-nc-opp">${hv(x.g)} ${esc(x.g.opponent)}</div>
+                <div class="at-nc-when">${esc(whenLong(x.g))}</div>
+              </div>
+              <span class="at-tag at-tag--${x.g.ha}">${x.g.ha==='home'?'H':'A'}</span>
+            </div>`).join('')}
+          </div>
+        </div>`;
+      const target=parseDT(next.g).getTime();
+      const upd=()=>{ const el=$('#at-count'); if(el) el.textContent=fmtCd(target-ptms()); };
+      upd(); setInterval(upd,1000);
+    })();
+
+    /* FILTERS */
+    $('#at-filters').innerHTML = `
+      <div class="at-chips" id="at-sportchips">
+        <button class="at-chip on" data-sport="all">All sports</button>
+        ${sports.map(s=>`<button class="at-chip" data-sport="${esc(s.name)}"><span>${s.glyph||''}</span>${esc(s.name)}</button>`).join('')}
+      </div>
+      <div class="at-chips at-chips--lv" id="at-levelchips">
+        <button class="at-chip on" data-level="all">All levels</button>
+        ${levels.map(l=>`<button class="at-chip" data-level="${esc(l)}">${esc(l)}</button>`).join('')}
+      </div>`;
+
+    function gameRow(g){
+      const side = g.result
+        ? `<span class="at-result">${esc(g.result)}</span>`
+        : `<span class="at-tag at-tag--${g.ha}">${g.ha==='home'?'HOME':'AWAY'}</span>`;
+      return `<div class="at-game">
+        <div class="at-when">${chip(g)}</div>
+        <div class="at-gmain">
+          <div class="at-vs"><span class="at-hv">${hv(g)}</span> ${esc(g.opponent)}</div>
+          <div class="at-gmeta">${esc(g.level||'')}${g.time&&g.time!=='TBD'?' · '+esc(g.time):''}${g.location?' · '+esc(g.location):''}</div>
+        </div>
+        <div class="at-gside">${g.note?`<span class="at-notechip sm">${esc(g.note)}</span>`:''}${side}</div>
+      </div>`;
+    }
+    function renderSchedule(){
+      const host=$('#at-schedule'); if(!host) return;
+      const list = sports.filter(s => fSport==='all' || s.name===fSport);
+      const lvOK = g => fLevel==='all' || g.level===fLevel;
+      host.innerHTML = list.map(s=>{
+        const up   = (s.games||[]).filter(g=>!isPast(g)).filter(lvOK).sort(byDateAsc);
+        const past = (s.games||[]).filter(g=> isPast(g)).filter(lvOK).sort((a,b)=>byDateAsc(b,a));
+        return `<div class="at-sport ${themeCls(s.theme)} reveal">
+          <div class="at-sport-head">
+            <span class="at-sglyph" aria-hidden="true">${s.glyph||'🏆'}</span>
+            <div class="at-sport-id"><div class="at-sport-name">${esc(s.name)}</div>
+              <div class="at-sport-sub">${esc(s.levels||'')}${s.record?' · '+esc(s.record):''}</div></div>
+            <span class="at-sport-count">${up.length} upcoming</span>
+          </div>
+          ${up.length ? `<div class="at-games">${up.map(gameRow).join('')}</div>`
+                      : `<div class="at-empty-sm">No upcoming games${fLevel!=='all'?' at '+esc(fLevel)+' level':''}.</div>`}
+          ${past.length ? `<details class="at-results"><summary>Results · ${past.length} played</summary><div class="at-games">${past.map(gameRow).join('')}</div></details>` : ''}
+        </div>`;
+      }).join('') || `<div class="at-empty-sm">No games match this filter.</div>`;
+      runReveals();
+    }
+    $$('#at-sportchips .at-chip').forEach(b=>b.addEventListener('click',()=>{ fSport=b.dataset.sport; $$('#at-sportchips .at-chip').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule(); }));
+    $$('#at-levelchips .at-chip').forEach(b=>b.addEventListener('click',()=>{ fLevel=b.dataset.level; $$('#at-levelchips .at-chip').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule(); }));
+    renderSchedule();
+
+    /* TICKETS / how to attend */
+    const t=cfg.tickets||{};
+    const linkBtns=(cfg.links||[]).filter(l=>l&&l.url).map(l=>`<a class="at-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label||l.url)} ↗</a>`).join('');
+    if(t.price || t.studentInfo || t.url || linkBtns){
+      $('#at-tickets').innerHTML = `
+        <div class="at-tix">
+          <div class="at-tix-h">Getting In</div>
+          <div class="at-tix-body">${esc(t.price||'')}${t.studentInfo?`<br>${esc(t.studentInfo)}`:''}</div>
+          <div class="at-tix-actions">
+            ${t.url?`<a class="at-tixbtn" href="${esc(t.url)}" target="_blank" rel="noopener">Buy on ${esc(t.provider||'GoFan')} ↗</a>`:''}
+            ${linkBtns}
+          </div>
+        </div>`;
+    }
   })();
 
   /* ── Period clock (home) — live "what period is it" from EDIT/26 ── */
