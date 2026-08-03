@@ -2587,14 +2587,24 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
   }
 
-  /* ── "First Bulletin Coming Soon" cinematic standby screen ────── */
-  function renderComingSoon(){
+  let premiereTimer = null;
+
+  /* ── "First Bulletin" cinematic standby screen ──────────────────
+     If premiereMs is given, it shows a live countdown to that moment and
+     auto-switches to the broadcast the second the clock hits zero. */
+  function renderComingSoon(premiereMs){
     const frame = $('#player-frame');
     if(!frame) return;
+    if(premiereTimer){ clearInterval(premiereTimer); premiereTimer = null; }
+
+    const hasDate = typeof premiereMs === 'number' && !isNaN(premiereMs);
+    const when = hasDate ? new Date(premiereMs) : null;
+    const dateStr = when ? when.toLocaleString('en-US',{weekday:'long',month:'short',day:'numeric',timeZone:'America/Los_Angeles'}).toUpperCase() : '';
+    const timeStr = when ? when.toLocaleString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/Los_Angeles'}).toUpperCase() : '';
 
     /* Header text + badges */
-    $('#vid-title').textContent = 'First Bulletin Coming Soon';
-    $('#vid-date').textContent  = 'SEASON 2026–2027 · PREMIERE TBA';
+    $('#vid-title').textContent = hasDate ? 'First Bulletin Premieres' : 'First Bulletin Coming Soon';
+    $('#vid-date').textContent  = hasDate ? `${dateStr} · ${timeStr} PT` : 'SEASON 2026–2027 · PREMIERE TBA';
     const syncBadge = $('.badge-sync');
     if(syncBadge){ syncBadge.innerHTML = '<span class="d"></span>Standby'; syncBadge.classList.add('badge-standby'); }
     const liveBadge = $('.badge-live');
@@ -2607,24 +2617,52 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         <div class="csoon-inner">
           <img class="csoon-logo" src="enn-logo.png" alt="" aria-hidden="true"/>
           <div class="csoon-title">FIRST BULLETIN</div>
-          <div class="csoon-sub">COMING SOON</div>
-          <div class="csoon-load" aria-hidden="true"><span></span></div>
-          <div class="csoon-season">SEASON 2026–2027 · PREMIERE DATE TBA</div>
+          <div class="csoon-sub">${hasDate ? 'PREMIERES IN' : 'COMING SOON'}</div>
+          ${hasDate
+            ? `<div class="csoon-countdown" id="csoon-cd">--:--:--</div>`
+            : `<div class="csoon-load" aria-hidden="true"><span></span></div>`}
+          <div class="csoon-season">${hasDate ? `${dateStr} · ${timeStr} PT` : 'SEASON 2026–2027 · PREMIERE DATE TBA'}</div>
         </div>
         <div class="csoon-chip"><span class="csoon-dot"></span>STANDBY</div>
         <div class="csoon-sig">ENN · EASTLAKE NEWS NETWORK</div>
         <div class="csoon-grain" aria-hidden="true"></div>
       </div>`;
+
+    if(hasDate){
+      const cd = $('#csoon-cd');
+      const tick = () => {
+        const diff = premiereMs - Date.now();
+        if(diff <= 0){                       // premiere! hand off to the live/latest player
+          clearInterval(premiereTimer); premiereTimer = null;
+          loadLatestVideo();
+          return;
+        }
+        const dd = Math.floor(diff/86400000), hh = Math.floor(diff%86400000/3600000),
+              mm = Math.floor(diff%3600000/60000), ss = Math.floor(diff%60000/1000);
+        if(cd) cd.textContent = (dd>0 ? dd+'d ' : '') +
+          String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+      };
+      tick();
+      premiereTimer = setInterval(tick, 1000);
+    }
   }
 
   let currentVideoId = null;   // what the Latest Bulletin player is showing
 
   async function loadLatestVideo(){
-    /* ── Coming Soon mode — cinematic standby screen instead of a video ── */
-    if(typeof ENN_OVERRIDE !== 'undefined' && ENN_OVERRIDE.comingSoon === 'T'){
-      renderComingSoon();
+    const ov = (typeof ENN_OVERRIDE !== 'undefined') ? ENN_OVERRIDE : {};
+    /* ── Standby until the premiere ──────────────────────────────────
+       Show the countdown/standby screen when Coming Soon is on, OR when a
+       premiere time is set and we haven't reached it yet. At premiere the
+       countdown calls loadLatestVideo() again, falling through to the
+       live/latest player below. */
+    const premiereMs = ov.premiere ? Date.parse(ov.premiere) : NaN;
+    const beforePremiere = !isNaN(premiereMs) && Date.now() < premiereMs;
+    if(ov.comingSoon === 'T' || beforePremiere){
+      renderComingSoon(beforePremiere ? premiereMs : null);
       return;
     }
+    if(premiereTimer){ clearInterval(premiereTimer); premiereTimer = null; }
 
     const uploadsPlaylist = CHANNEL_ID.replace(/^UC/,'UU');
 
@@ -2702,6 +2740,8 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     if(ov.comingSoon === 'T' || extractVideoId(ov.video || '')) return;
     const uploadsPlaylist = CHANNEL_ID.replace(/^UC/, 'UU');
     setInterval(async () => {
+      const premiereMs = ov.premiere ? Date.parse(ov.premiere) : NaN;
+      if(!isNaN(premiereMs) && Date.now() < premiereMs) return;   // still counting down to premiere
       if(isOnAir()) return;                     // the live embed handles itself
       try {
         const id = await resolveChannelId(); if(!id) return;

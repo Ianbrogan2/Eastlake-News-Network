@@ -36,4 +36,16 @@ var ENN_OVERRIDE = {
   // 'F' → normal player (auto-sync latest video, or pinned video above)
   comingSoon: 'F',
 
+  // ─── PREMIERE / FIRST BROADCAST TIME ─────────────────────────────
+  // Until this date & time (Pacific), the player shows a live COUNTDOWN to
+  // the premiere. The moment it hits, it switches on its own to the live
+  // broadcast, then the uploaded episode — automatically, for everyone
+  // (even tabs already open). Once the time has passed it stays in normal
+  // auto-sync forever, so you never have to touch it again.
+  //
+  // Format:  'YYYY-MM-DDTHH:MM:00-07:00'
+  //   -07:00 = Pacific in summer (PDT, ~Mar–Nov) · -08:00 = winter (PST)
+  // Leave '' to disable the countdown and always show the latest upload.
+  premiere: '2026-08-03T10:31:00-07:00',
+
 };
