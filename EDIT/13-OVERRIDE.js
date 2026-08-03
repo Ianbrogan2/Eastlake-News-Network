@@ -34,6 +34,6 @@ var ENN_OVERRIDE = {
   //        "First Bulletin Coming Soon" standby screen
   //        (use between seasons, before the first episode airs)
   // 'F' → normal player (auto-sync latest video, or pinned video above)
-  comingSoon: 'T',
+  comingSoon: 'F',
 
 };

@@ -2617,6 +2617,8 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       </div>`;
   }
 
+  let currentVideoId = null;   // what the Latest Bulletin player is showing
+
   async function loadLatestVideo(){
     /* ── Coming Soon mode — cinematic standby screen instead of a video ── */
     if(typeof ENN_OVERRIDE !== 'undefined' && ENN_OVERRIDE.comingSoon === 'T'){
@@ -2681,6 +2683,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       const v = recent.find(v => !excluded.has(v.id)) || recent[0];
       if(!v) return;
       buildPlayer(v.id, uploadsPlaylist);
+      currentVideoId = v.id;
       if(v.title)     $('#vid-title').textContent = v.title;
       if(v.published) $('#vid-date').textContent  = fmtDate(v.published);
     } catch(e){
@@ -2688,6 +2691,33 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
   }
   loadLatestVideo();
+
+  /* Premiere watch — when auto-syncing (not Coming Soon, not a pinned video),
+     re-check for a newer upload every minute so an already-open tab (e.g. a
+     classroom projector) flips to the new bulletin the second it posts. Only
+     re-embeds when the newest video actually changes, so it never interrupts
+     an unchanged player. */
+  (function watchForNewUpload(){
+    const ov = (typeof ENN_OVERRIDE !== 'undefined') ? ENN_OVERRIDE : {};
+    if(ov.comingSoon === 'T' || extractVideoId(ov.video || '')) return;
+    const uploadsPlaylist = CHANNEL_ID.replace(/^UC/, 'UU');
+    setInterval(async () => {
+      if(isOnAir()) return;                     // the live embed handles itself
+      try {
+        const id = await resolveChannelId(); if(!id) return;
+        const [excluded, recent] = await Promise.all([
+          fetchExcludedVideoIds().catch(() => new Set()),
+          fetchRecentVideos(id),
+        ]);
+        const v = recent.find(x => !excluded.has(x.id)) || recent[0];
+        if(!v || v.id === currentVideoId) return;   // nothing newer — leave it alone
+        currentVideoId = v.id;
+        buildPlayer(v.id, uploadsPlaylist);
+        if(v.title)     $('#vid-title').textContent = v.title;
+        if(v.published) $('#vid-date').textContent  = fmtDate(v.published);
+      } catch(e){/* transient — try again next tick */}
+    }, 60000);
+  })();
 
   route((location.hash||'#home').slice(1));
 
