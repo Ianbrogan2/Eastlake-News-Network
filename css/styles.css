@@ -556,6 +556,69 @@ img{display:block;max-width:100%}
 body:not(.is-home) .hero-skip{ display:none !important; }
 
 /* ══════════════════════════════════════════════════════════════════
+   ENN CALENDAR — bell schedule + events (EDIT/26 + EDIT/27)
+══════════════════════════════════════════════════════════════════ */
+.cal{ border:1px solid var(--border-hi); border-radius:18px; background:var(--bg-1); overflow:hidden; }
+.cal-top{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:15px 18px; border-bottom:1px solid var(--border); }
+.cal-nav{ display:flex; gap:6px; }
+.cal-btn{ min-width:34px; height:34px; padding:0 13px; border-radius:9px; border:1px solid var(--border-hi); background:var(--bg-2); color:var(--text); font-family:'DM Mono',monospace; font-size:14px; cursor:pointer; transition:.15s; }
+.cal-btn:hover{ border-color:var(--cyan); color:var(--cyan); }
+.cal-btn--today{ font-size:11px; letter-spacing:.08em; }
+.cal-title{ flex:1; text-align:center; font-family:'Bebas Neue',sans-serif; font-size:clamp(24px,3.2vw,34px); letter-spacing:.02em; color:#fff; min-width:160px; }
+.cal-views{ display:flex; gap:4px; background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:3px; }
+.cal-vbtn{ padding:6px 12px; border-radius:7px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--muted); background:transparent; cursor:pointer; transition:.15s; }
+.cal-vbtn:hover{ color:var(--text); }
+.cal-vbtn.on{ background:var(--cyan); color:#08131c; font-weight:600; }
+.cal-dow{ display:grid; grid-template-columns:repeat(7,1fr); padding:8px 8px 0; }
+.cal-dow span{ text-align:center; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted-2); padding:6px 0; }
+.cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; padding:0 8px 8px; }
+.cal-grid--month .cal-cell{ min-height:98px; }
+.cal-grid--week  .cal-cell{ min-height:230px; }
+.cal-cell{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; text-align:left; padding:8px; border-radius:11px; border:1px solid var(--border); background:var(--bg-2); cursor:pointer; transition:border-color .14s, box-shadow .14s; overflow:hidden; }
+.cal-cell:hover{ border-color:var(--border-hi); }
+.cal-cell--dim{ opacity:.38; }
+.cal-cell--wknd{ background:rgba(255,255,255,.012); }
+.cal-cell--off{ background:repeating-linear-gradient(135deg, rgba(240,168,63,.06) 0 6px, transparent 6px 12px), var(--bg-2); }
+.cal-cell--today{ border-color:var(--cyan); box-shadow:0 0 0 1px rgba(0,212,255,.4) inset; }
+.cal-cell--sel{ border-color:#fff; box-shadow:0 0 0 1px #fff inset; }
+.cal-dnum{ font-family:'DM Mono',monospace; font-size:13px; color:var(--text); }
+.cal-cell--today .cal-dnum{ color:var(--cyan); font-weight:600; }
+.cal-code{ font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.04em; padding:2px 7px; border-radius:999px; color:var(--cc); border:1px solid color-mix(in srgb, var(--cc) 40%, transparent); background:color-mix(in srgb, var(--cc) 10%, transparent); white-space:nowrap; }
+.cal-code--off{ --cc:#f0a83f; color:#f0a83f; }
+.cal-evs{ display:flex; flex-direction:column; gap:3px; width:100%; margin-top:auto; }
+.cal-ev{ font-size:10px; line-height:1.3; padding:2px 6px; border-radius:5px; color:#fff; background:color-mix(in srgb, var(--ec) 26%, transparent); border-left:2px solid var(--ec); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.cal-ev-more{ font-family:'DM Mono',monospace; font-size:9px; color:var(--muted-2); }
+.cal-list{ display:flex; flex-direction:column; padding:6px; }
+.cal-litem{ text-align:left; padding:14px; border-bottom:1px solid var(--border); background:transparent; border-radius:11px; cursor:pointer; transition:.14s; }
+.cal-litem:hover{ background:var(--bg-2); }
+.cal-li-date{ font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--muted); display:flex; align-items:center; gap:8px; }
+.cal-dot{ width:8px; height:8px; border-radius:50%; flex:0 0 auto; }
+.cal-li-title{ font-size:16px; font-weight:600; color:#fff; margin:5px 0 3px; }
+.cal-li-desc{ font-size:13px; color:var(--muted); line-height:1.5; }
+.cal-detail{ margin-top:16px; border:1px solid var(--border-hi); border-radius:16px; background:var(--bg-2); padding:20px 22px; }
+.cal-detail-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+.cal-detail-dow{ font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan); }
+.cal-detail-date{ font-family:'Bebas Neue',sans-serif; font-size:30px; color:#fff; line-height:1; margin-top:2px; }
+.cal-detail-badge{ font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.04em; padding:6px 12px; border-radius:999px; color:var(--cc,#7DD8FF); border:1px solid color-mix(in srgb, var(--cc,#7DD8FF) 40%, transparent); background:color-mix(in srgb, var(--cc,#7DD8FF) 10%, transparent); white-space:nowrap; }
+.cal-detail-events{ display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+.cal-devent{ border-left:2px solid var(--border-hi); padding:1px 0 1px 12px; }
+.cal-devent-head{ display:flex; align-items:center; gap:8px; }
+.cal-devent-head b{ color:#fff; font-size:15px; }
+.cal-devent-time{ font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
+.cal-devent-cat{ margin-left:auto; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); }
+.cal-devent-desc{ font-size:13px; color:var(--muted); line-height:1.55; margin-top:4px; }
+.cal-sched-h{ font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted-2); margin-bottom:6px; }
+.cal-per{ display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--border); font-size:14px; }
+.cal-per span:first-child{ color:var(--text); }
+.cal-per-t{ font-family:'DM Mono',monospace; font-size:12.5px; color:var(--muted); }
+.cal-noschool{ font-size:14px; color:var(--muted-2); padding:6px 0; }
+@media(max-width:640px){
+  .cal-grid--month .cal-cell{ min-height:60px; padding:6px; }
+  .cal-grid--month .cal-ev{ display:none; }
+  .cal-title{ order:-1; width:100%; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
    ATHLETICS — Titans schedules (EDIT/25-ATHLETICS.js)
 ══════════════════════════════════════════════════════════════════ */
 .at-hero{ padding:clamp(46px,9vw,100px) 0 6px; }

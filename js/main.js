@@ -1830,45 +1830,201 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   })();
 
   /* ── Calendar page ────────────────────────────────────────────── */
+  /* Real ENN calendar — daily bell schedule (EDIT/26) + events (EDIT/27).
+     Sports are deliberately excluded; they live on the Athletics page. */
   (function buildCalendar(){
     const root = $('#calendar-root');
-    if(!root || !calendar) return;
-    const id = calendar.googleCalendarId||'';
-    const legendHtml = (calendar.legend||[]).map(l =>
-      `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${l.color}"></div>${l.label}</div>`
-    ).join('');
-    if(id){
-      const src = 'https://calendar.google.com/calendar/embed?src=' + encodeURIComponent(id) +
-        '&ctz=America%2FLos_Angeles&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&mode=MONTH';
-      root.innerHTML = `
-        <div class="cal-container reveal">
-          <iframe src="${src}" title="ENN Calendar" frameborder="0" scrolling="no"></iframe>
-        </div>
-        ${legendHtml ? `<div class="cal-legend reveal d1">${legendHtml}</div>` : ''}`;
-    } else {
-      root.innerHTML = `
-        <div class="cal-container reveal">
-          <div class="cal-placeholder">
-            <div class="ph-icon">📅</div>
-            <h3>Calendar Not Connected Yet</h3>
-            <p>Create a public Google Calendar, then paste its Calendar ID into <code>EDIT/11-CALENDAR.js</code> under <code>googleCalendarId</code>.<br><br>Full setup instructions are in that file.</p>
+    if(!root) return;
+    const B  = (typeof ENN_BELL   !== 'undefined') ? ENN_BELL   : null;
+    const EV = (typeof ENN_EVENTS !== 'undefined') ? ENN_EVENTS : [];
+    const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+    const MON  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const DOW  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    const ymd     = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const parseYMD= s => { const p=String(s).split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); };
+    const addDays = (d,n) => new Date(d.getFullYear(), d.getMonth(), d.getDate()+n);
+    const nowPT   = new Date(new Date().toLocaleString('en-US',{timeZone:(B&&B.timeZone)||'America/Los_Angeles'}));
+    const todayKey= ymd(nowPT);
+
+    /* ── bell-schedule resolution ── */
+    const inNoSchool = ds => !!B && (B.noSchool||[]).some(x => Array.isArray(x) ? (ds>=x[0]&&ds<=x[1]) : ds===x);
+    function codeFor(d){
+      if(!B) return null;
+      const ds = ymd(d);
+      if(ds < B.yearStart || ds > B.yearEnd) return null;
+      if(inNoSchool(ds)) return null;
+      if(B.overrides && B.overrides[ds]) return B.overrides[ds];
+      return (B.weekdayDefault && B.weekdayDefault[d.getDay()]) || null;
+    }
+    const SHORT = { A:'1·2·3', N:'1·2·3', B:'4·5·6', C:'Full Day', D:'Pro Hour', M:'Pro Hour', E:'Assembly', F:'Min Day', G:'Finals 1·2', H:'Finals 3·4', I:'Finals 5·6' };
+    const CODECOLOR = { A:'#00D4FF', N:'#00D4FF', B:'#2E6BF0', C:'#22b365', D:'#5B8DF7', M:'#5B8DF7', E:'#a06dff', F:'#f0a83f', G:'#ef4444', H:'#ef4444', I:'#ef4444' };
+
+    /* ── events ── */
+    function eventsOn(ds){
+      return EV.filter(e => { const end = ymd(addDays(parseYMD(e.date), Math.max(1,e.days||1)-1)); return ds>=e.date && ds<=end; });
+    }
+    const CAT = { Spirit:'#e85fa0', Campus:'#2E6BF0', Academics:'#22b365', Arts:'#a06dff', Holiday:'#f0a83f', Schedule:'#8aa0b4', ENN:'#00D4FF' };
+    const catColor = c => CAT[c] || '#7DD8FF';
+
+    /* ── state ── */
+    let view = 'month';
+    let anchor = new Date(nowPT.getFullYear(), nowPT.getMonth(), nowPT.getDate());
+    let selected = todayKey;
+
+    root.innerHTML = `
+      <div class="cal reveal">
+        <div class="cal-top">
+          <div class="cal-nav">
+            <button class="cal-btn" id="cal-prev" aria-label="Previous">‹</button>
+            <button class="cal-btn cal-btn--today" id="cal-today">Today</button>
+            <button class="cal-btn" id="cal-next" aria-label="Next">›</button>
+          </div>
+          <div class="cal-title" id="cal-title"></div>
+          <div class="cal-views">
+            <button class="cal-vbtn" data-view="month">Month</button>
+            <button class="cal-vbtn" data-view="week">Week</button>
+            <button class="cal-vbtn" data-view="list">List</button>
           </div>
         </div>
-        ${legendHtml ? `<div class="cal-legend reveal d1">${legendHtml}</div>` : ''}`;
+        <div id="cal-body"></div>
+      </div>
+      <div id="cal-detail" class="cal-detail reveal"></div>`;
+
+    function cellHTML(d, dimIfOtherMonth){
+      const ds = ymd(d);
+      const dim = dimIfOtherMonth && d.getMonth() !== anchor.getMonth();
+      const code = codeFor(d), off = inNoSchool(ds), wknd = d.getDay()===0 || d.getDay()===6;
+      const evs = eventsOn(ds);
+      let badge = '';
+      if(code) badge = `<span class="cal-code" style="--cc:${CODECOLOR[code]||'#7DD8FF'}">${SHORT[code]||code}</span>`;
+      else if(off) badge = `<span class="cal-code cal-code--off">No School</span>`;
+      const cap = view==='week' ? 5 : 2;
+      const evChips = evs.slice(0,cap).map(e => `<span class="cal-ev" style="--ec:${catColor(e.category)}" title="${esc(e.title)}">${esc(e.title)}</span>`).join('');
+      const more = evs.length>cap ? `<span class="cal-ev-more">+${evs.length-cap} more</span>` : '';
+      return `<button class="cal-cell${dim?' cal-cell--dim':''}${wknd?' cal-cell--wknd':''}${ds===todayKey?' cal-cell--today':''}${ds===selected?' cal-cell--sel':''}${off?' cal-cell--off':''}" data-ds="${ds}">
+        <span class="cal-dnum">${d.getDate()}</span>${badge}
+        <span class="cal-evs">${evChips}${more}</span>
+      </button>`;
     }
+
+    function gridHTML(cells, dimOther){
+      return `<div class="cal-dow">${DOW.map(x=>`<span>${x}</span>`).join('')}</div>
+        <div class="cal-grid cal-grid--${view}">${cells.map(d=>cellHTML(d,dimOther)).join('')}</div>`;
+    }
+
+    function renderBody(){
+      const body = $('#cal-body'), title = $('#cal-title');
+      $$('.cal-vbtn').forEach(b => b.classList.toggle('on', b.dataset.view===view));
+      if(view==='month'){
+        const first = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+        const start = addDays(first, -first.getDay());
+        const dim   = new Date(anchor.getFullYear(), anchor.getMonth()+1, 0).getDate();
+        const weeks = Math.ceil((first.getDay()+dim)/7);
+        const cells = []; for(let i=0;i<weeks*7;i++) cells.push(addDays(start,i));
+        title.textContent = `${MON[anchor.getMonth()]} ${anchor.getFullYear()}`;
+        body.innerHTML = gridHTML(cells, true);
+      } else if(view==='week'){
+        const start = addDays(anchor, -anchor.getDay());
+        const cells = []; for(let i=0;i<7;i++) cells.push(addDays(start,i));
+        const end = addDays(start,6);
+        title.textContent = `${MON3[start.getMonth()]} ${start.getDate()} – ${MON3[end.getMonth()]} ${end.getDate()}, ${end.getFullYear()}`;
+        body.innerHTML = gridHTML(cells, false);
+      } else {
+        title.textContent = 'Upcoming Events';
+        const up = EV.map(e => ({ e, end: ymd(addDays(parseYMD(e.date), Math.max(1,e.days||1)-1)) }))
+                     .filter(x => x.end >= todayKey)
+                     .sort((a,b) => a.e.date.localeCompare(b.e.date));
+        body.innerHTML = up.length ? `<div class="cal-list">${up.map(({e})=>{
+          const d = parseYMD(e.date); const multi = (e.days||1)>1;
+          const endD = addDays(d, Math.max(1,e.days||1)-1);
+          const when = multi ? `${MON3[d.getMonth()]} ${d.getDate()} – ${MON3[endD.getMonth()]} ${endD.getDate()}` : `${DOW[d.getDay()]}, ${MON3[d.getMonth()]} ${d.getDate()}`;
+          return `<button class="cal-litem" data-ds="${e.date}">
+            <div class="cal-li-date"><span class="cal-dot" style="background:${catColor(e.category)}"></span>${when}${e.time?` · ${esc(e.time)}`:''}</div>
+            <div class="cal-li-title">${esc(e.title)}</div>
+            ${e.desc?`<div class="cal-li-desc">${esc(e.desc)}</div>`:''}
+          </button>`;
+        }).join('')}</div>` : `<div class="cal-noschool">No upcoming events.</div>`;
+      }
+      $$('#cal-body [data-ds]').forEach(el => el.addEventListener('click', () => { selected = el.dataset.ds; renderBody(); renderDetail(el.dataset.ds); }));
+    }
+
+    function renderDetail(ds){
+      const host = $('#cal-detail'); if(!host) return;
+      const d = parseYMD(ds), code = codeFor(d), off = inNoSchool(ds), wknd = d.getDay()===0||d.getDay()===6;
+      const evs = eventsOn(ds);
+      let sched;
+      if(code && B.schedules[code]){
+        const s = B.schedules[code];
+        sched = `<div class="cal-sched"><div class="cal-sched-h">${esc(s.label)}</div>${(s.blocks||[]).map(b=>`<div class="cal-per"><span>${esc(b.name)}</span><span class="cal-per-t">${esc(b.start)} – ${esc(b.end)}</span></div>`).join('')}</div>`;
+      } else if(off)  sched = `<div class="cal-noschool">No school this day.</div>`;
+      else if(wknd)   sched = `<div class="cal-noschool">Weekend — no classes.</div>`;
+      else            sched = `<div class="cal-noschool">Not part of the school year.</div>`;
+      const evHtml = evs.map(e => `<div class="cal-devent"><div class="cal-devent-head"><span class="cal-dot" style="background:${catColor(e.category)}"></span><b>${esc(e.title)}</b>${e.time?`<span class="cal-devent-time">${esc(e.time)}</span>`:''}<span class="cal-devent-cat">${esc(e.category||'')}</span></div>${e.desc?`<div class="cal-devent-desc">${esc(e.desc)}</div>`:''}</div>`).join('');
+      host.innerHTML = `
+        <div class="cal-detail-head">
+          <div><div class="cal-detail-dow">${DOW[d.getDay()]}</div><div class="cal-detail-date">${MON[d.getMonth()]} ${d.getDate()}</div></div>
+          ${code?`<span class="cal-detail-badge" style="--cc:${CODECOLOR[code]||'#7DD8FF'}">${SHORT[code]||code}</span>`:(off?`<span class="cal-detail-badge cal-code--off">No School</span>`:'')}
+        </div>
+        ${evHtml?`<div class="cal-detail-events">${evHtml}</div>`:''}
+        ${sched}`;
+    }
+
+    $('#cal-prev').addEventListener('click', () => { anchor = view==='week' ? addDays(anchor,-7) : new Date(anchor.getFullYear(), anchor.getMonth()-1, 1); renderBody(); });
+    $('#cal-next').addEventListener('click', () => { anchor = view==='week' ? addDays(anchor, 7) : new Date(anchor.getFullYear(), anchor.getMonth()+1, 1); renderBody(); });
+    $('#cal-today').addEventListener('click', () => { anchor = new Date(nowPT.getFullYear(), nowPT.getMonth(), nowPT.getDate()); selected = todayKey; renderBody(); renderDetail(todayKey); });
+    $$('.cal-vbtn').forEach(b => b.addEventListener('click', () => { view = b.dataset.view; renderBody(); }));
+
+    renderBody();
+    renderDetail(selected);
   })();
 
   /* ── Ticker ──────────────────────────────────────────────────── */
   (function buildTicker(){
     const track = $('#ticker-track');
     if(!track) return;
-    const render = list => list.map(it =>
+
+    /* Auto-pull the next 3 Titans games from the schedule so the ticker
+       stays current on its own — no manual editing. */
+    function nextGameItems(){
+      const A = (typeof ENN_ATHLETICS !== 'undefined') ? ENN_ATHLETICS : null;
+      if(!A || !A.sports || A.enabled !== 'T') return [];
+      const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'})).getTime();
+      const parse = g => {
+        const p = (g.date||'').split('-').map(Number); if(p.length<3 || !p[0]) return null;
+        let hh=18, mm=0; const tm = (g.time||'').match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if(tm){ hh=(+tm[1])%12; if(/pm/i.test(tm[3])) hh+=12; mm=+tm[2]; }
+        return new Date(p[0], p[1]-1, p[2], hh, mm);
+      };
+      const rows = [];
+      A.sports.forEach(s => (s.games||[]).forEach(g => { const d=parse(g); if(d && d.getTime()+3*3600000 >= now) rows.push({s,g,d}); }));
+      rows.sort((a,b) => a.d - b.d);
+      const seen = new Set(), out = [];
+      for(const r of rows){
+        const key = r.s.name + '|' + r.g.date + '|' + r.g.opponent;
+        if(seen.has(key)) continue; seen.add(key);
+        out.push(r); if(out.length >= 3) break;
+      }
+      return out.map(({s,g,d}) => {
+        const when = `${DOW[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`;
+        const at   = (g.time && g.time!=='TBD') ? ` at ${g.time}` : '';
+        const vs   = g.ha==='home' ? 'vs' : '@';
+        return { k:'Titans', t:`${s.name} ${vs} ${g.opponent} — ${when}${at}${g.ha==='home'?' (Home)':''}` };
+      });
+    }
+
+    const list = nextGameItems().concat(ticker);
+    const render = l => l.map(it =>
       `<div class="tk-item"><strong>${it.k}</strong>${it.t}<span class="bullet">●</span></div>`
     ).join('');
-    track.innerHTML = render(ticker);
+    track.innerHTML = render(list);
     requestAnimationFrame(() => {
       const halfW = track.scrollWidth;
-      track.innerHTML = render(ticker) + render(ticker);
+      track.innerHTML = render(list) + render(list);
       track.style.setProperty('--half-px', `-${halfW}px`);
       void track.offsetWidth;
       track.style.animation = `tk ${(halfW/90).toFixed(1)}s linear infinite`;
