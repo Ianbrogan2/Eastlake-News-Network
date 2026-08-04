@@ -1724,14 +1724,19 @@ a.tcard-val:hover{text-decoration:underline}
 .snews{ margin-bottom:72px; }
 .snews-head{ margin-bottom:28px; }
 
-/* Grid: a wide hero, then the rest flow in an auto-fit row */
+/* Grid: a wide hero, then the rest flow in an auto-fit row.
+   The wrapper divs are flex so each card stretches to fill its cell —
+   that keeps every card in a row the same height (no cramped hero). */
 .snews-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(238px, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
   gap:14px;
+  align-items:stretch;
 }
-.snews-card{ min-height:236px; }
-.snews-card-hero{ grid-column:span 2; min-height:340px; }
+.snews-grid > *{ display:flex; min-width:0; }
+.snews-card{ flex:1; min-height:264px; }
+.snews-card-hero{ grid-column:span 2; }
+.snews-card-hero .snews-card{ min-height:320px; }
 
 /* ── Base card ── */
 .snews-card{
@@ -1957,7 +1962,8 @@ a.tcard-val:hover{text-decoration:underline}
   .snews-grid{
     grid-template-columns:1fr;
   }
-  .snews-card-hero{ grid-column:auto; min-height:280px; }
+  .snews-card-hero{ grid-column:auto; }
+  .snews-card-hero .snews-card{ min-height:240px; }
   .snews-card-hero .snews-card-inner{ padding:26px; }
   .snews-cd-num{ font-size:32px; }
 }

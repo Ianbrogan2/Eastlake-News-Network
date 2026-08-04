@@ -27,52 +27,52 @@ var ENN_STUDIO_NEWS = {
     {
       type: 'news',
       category: 'FILM',
-      badge: 'MARVEL · DISNEY',
+      badge: 'MARVEL · SONY',
       headline: 'Spider-Man: Brand New Day',
-      subhead: 'Peter Parker is back — in theaters July 31st.',
-      body: 'Peter Parker devotes his life to protecting New York City as a full-time Spider-Man. But as the demands on him intensify, the pressure sparks a surprising physical evolution that threatens his existence, even as a strange new pattern of crimes gives rise to one of the most powerful threats he\'s ever faced.',
-      link: 'https://variety.com',
+      subhead: 'Tom Holland\'s web-slinger is back — in theaters now.',
+      body: 'Peter Parker swings into a brand-new chapter, and critics are calling it a spectacular return. We\'re keeping it spoiler-free — go see it on the big screen.',
+      link: '',
       theme: 'blue'
     },
     {
       type: 'news',
       category: 'FILM',
-      badge: 'DREAMWORKS · UNIVERSAL',
-      headline: 'How to Train Your Dragon Sequel Greenlit',
-      subhead: 'Universal fast-tracks a fourth chapter after the live-action reboot\'s success.',
-      body: 'Riding the wave of the live-action How to Train Your Dragon\'s global box office run, DreamWorks and Universal have fast-tracked a sequel with the original creative team returning.',
-      link: 'https://deadline.com',
+      badge: 'CHRISTOPHER NOLAN',
+      headline: 'The Odyssey',
+      subhead: 'Nolan\'s IMAX take on Homer\'s epic is in theaters.',
+      body: 'Matt Damon leads as Odysseus alongside Anne Hathaway, Zendaya and Tom Holland, shot entirely for IMAX. Catch it on the biggest screen you can find.',
+      link: '',
+      theme: 'gold'
+    },
+    {
+      type: 'news',
+      category: 'FILM',
+      badge: 'LOONEY TUNES',
+      headline: 'Coyote vs. ACME',
+      subhead: 'The long-shelved Looney Tunes movie finally hits theaters Aug 28.',
+      body: 'After years on the shelf, Wile E. Coyote gets his day in court against ACME in a live-action / animation mashup fans nearly never got to see.',
+      link: '',
       theme: 'green'
     },
     {
       type: 'news',
       category: 'GAMING',
-      badge: 'NINTENDO',
-      headline: 'The Games Everyone\'s Playing',
-      subhead: 'This week\'s biggest releases and what\'s topping the charts.',
-      body: 'Swap this out for whatever the newsroom is covering — a new release, a record-breaking launch, or the title taking over the quad at lunch.',
+      badge: 'FROMSOFTWARE',
+      headline: 'Elden Ring: Tarnished Edition',
+      subhead: 'The definitive edition arrives Aug 28.',
+      body: 'The award-winning RPG returns with everything bundled together — a perfect on-ramp for new players and a reason for veterans to return to the Lands Between.',
       link: '',
       theme: 'purple'
     },
     {
       type: 'news',
-      category: 'MUSIC',
-      badge: 'CHARTS',
-      headline: 'Sound of the Season',
-      subhead: 'The songs and albums defining the semester.',
-      body: 'An easy weekly slot — highlight a new album, a tour announcement, or the track everyone has on repeat.',
+      category: 'FILM',
+      badge: 'HORROR',
+      headline: 'Insidious: Out of the Further',
+      subhead: 'The horror franchise returns Aug 21.',
+      body: 'The Further is open again. The next chapter of the series creeps into theaters just in time for some late-summer scares.',
       link: '',
       theme: 'red'
-    },
-    {
-      type: 'news',
-      category: 'TV',
-      badge: 'STREAMING',
-      headline: 'Streaming\'s Next Obsession',
-      subhead: 'The show the whole campus is bingeing.',
-      body: 'Drop in the series people can\'t stop talking about, with a return date or a quick take from the ENN desk.',
-      link: '',
-      theme: 'gold'
     }
   ]
 };

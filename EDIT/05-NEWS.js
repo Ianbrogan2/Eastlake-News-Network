@@ -22,25 +22,25 @@
 var ENN_NEWS = {
   featured: {
     tag: 'Featured',
-    title: 'Season Premiere: The Bulletin Returns Monday, August 3',
-    body: 'The halls are full again and the studio lights are back on. ENN opens the Fall 2026 season on Monday, August 3 at 10:31 AM — the first of 60 bulletins, with Periods 1, 4 and 6 each producing 20 shows before winter break.',
-    byline: 'REPORTED BY TEAM ENN · PUBLISHED JULY 22, 2026'
+    title: 'The Titans Athletics Hub Is Live',
+    body: 'ENN just launched a full sports hub for the Titans — every fall schedule in one place, the next game with a live countdown, home vs. away, and how to get in. Find it under the new Athletics tab at the top of the site.',
+    byline: 'REPORTED BY TEAM ENN · WEEK OF AUG 3, 2026'
   },
   sidebar: [
     {
       cat: 'Campus',
-      title: 'Day one is in the books — the 2026–2027 school year officially started Wednesday, July 22.',
-      date: 'Jul 22'
+      title: 'Open House is Thursday, Aug 13 — bring your parents to campus to meet your new teachers.',
+      date: 'Aug 13'
     },
     {
-      cat: 'ENN',
-      title: 'Crews are forming now in Periods 1, 4 and 6 — production groups get their air dates this week.',
-      date: 'Jul 22'
+      cat: 'Student Life',
+      title: 'Lu-Wow! The spirit assembly and the Lu-Wow dance are both this Friday.',
+      date: 'Aug 7'
     },
     {
       cat: 'Sports',
-      title: 'Fall sports underway: football, girls volleyball, flag football, cross country and water polo.',
-      date: 'Jul 22'
+      title: 'Titans varsity football opens the season with its first scrimmage Friday, Aug 14 at San Pasqual.',
+      date: 'Aug 14'
     }
   ]
 };
