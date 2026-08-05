@@ -1690,14 +1690,14 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <div class="snews-headline">${card.headline||''}</div>
           <div class="snews-subhead">${card.subhead||''}</div>
           ${cdHtml}
-          <span class="snews-link">${card.linkText || 'Learn more ↗'}</span>`;
+          ${card.link ? `<span class="snews-link">${card.linkText || 'Learn more ↗'}</span>` : ''}`;
 
       } else {
         bodyHtml = `
           <div class="snews-headline">${card.headline||''}</div>
           <div class="snews-subhead">${card.subhead||''}</div>
           ${card.body ? `<div class="snews-body">${card.body}</div>` : ''}
-          <span class="snews-link">Read more ↗</span>`;
+          ${card.link ? `<span class="snews-link">Read more ↗</span>` : ''}`;
       }
 
       const href = card.link ? ` href="${card.link}" target="_blank" rel="noopener"` : '';
@@ -1891,7 +1891,19 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         </div>
         <div id="cal-body"></div>
       </div>
-      <div id="cal-detail" class="cal-detail reveal"></div>`;
+      <div id="cal-modal" class="cal-modal" hidden aria-hidden="true">
+        <div class="cal-modal-bg" data-close></div>
+        <div class="cal-modal-card" role="dialog" aria-modal="true">
+          <button class="cal-modal-x" data-close aria-label="Close">×</button>
+          <div id="cal-modal-body"></div>
+        </div>
+      </div>`;
+
+    const modal = $('#cal-modal');
+    function openModal(){ if(modal){ modal.hidden=false; modal.setAttribute('aria-hidden','false'); document.body.classList.add('cal-modal-open'); } }
+    function closeModal(){ if(modal){ modal.hidden=true; modal.setAttribute('aria-hidden','true'); document.body.classList.remove('cal-modal-open'); } }
+    if(modal) modal.addEventListener('click', e => { if(e.target.hasAttribute('data-close')) closeModal(); });
+    document.addEventListener('keydown', e => { if(e.key==='Escape' && modal && !modal.hidden) closeModal(); });
 
     function cellHTML(d, dimIfOtherMonth){
       const ds = ymd(d);
@@ -1952,7 +1964,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
 
     function renderDetail(ds){
-      const host = $('#cal-detail'); if(!host) return;
+      const host = $('#cal-modal-body'); if(!host) return;
       const d = parseYMD(ds), code = codeFor(d), off = inNoSchool(ds), wknd = d.getDay()===0||d.getDay()===6;
       const evs = eventsOn(ds);
       let sched;
@@ -1970,15 +1982,15 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         </div>
         ${evHtml?`<div class="cal-detail-events">${evHtml}</div>`:''}
         ${sched}`;
+      openModal();
     }
 
     $('#cal-prev').addEventListener('click', () => { anchor = view==='week' ? addDays(anchor,-7) : new Date(anchor.getFullYear(), anchor.getMonth()-1, 1); renderBody(); });
     $('#cal-next').addEventListener('click', () => { anchor = view==='week' ? addDays(anchor, 7) : new Date(anchor.getFullYear(), anchor.getMonth()+1, 1); renderBody(); });
-    $('#cal-today').addEventListener('click', () => { anchor = new Date(nowPT.getFullYear(), nowPT.getMonth(), nowPT.getDate()); selected = todayKey; renderBody(); renderDetail(todayKey); });
+    $('#cal-today').addEventListener('click', () => { anchor = new Date(nowPT.getFullYear(), nowPT.getMonth(), nowPT.getDate()); selected = todayKey; renderBody(); });
     $$('.cal-vbtn').forEach(b => b.addEventListener('click', () => { view = b.dataset.view; renderBody(); }));
 
     renderBody();
-    renderDetail(selected);
   })();
 
   /* ── Ticker ──────────────────────────────────────────────────── */

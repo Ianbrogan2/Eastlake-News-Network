@@ -612,6 +612,17 @@ body:not(.is-home) .hero-skip{ display:none !important; }
 .cal-per span:first-child{ color:var(--text); }
 .cal-per-t{ font-family:'DM Mono',monospace; font-size:12.5px; color:var(--muted); }
 .cal-noschool{ font-size:14px; color:var(--muted-2); padding:6px 0; }
+/* Day popup */
+.cal-modal{ position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; }
+.cal-modal[hidden]{ display:none; }
+.cal-modal-bg{ position:absolute; inset:0; background:rgba(3,4,7,.72); backdrop-filter:blur(4px); animation:cal-fade .18s ease; }
+.cal-modal-card{ position:relative; z-index:1; width:min(460px,100%); max-height:86vh; overflow-y:auto; background:var(--bg-2); border:1px solid var(--border-hi); border-radius:18px; padding:22px 24px; box-shadow:0 30px 80px -20px rgba(0,0,0,.9); animation:cal-pop .2s var(--ease); }
+.cal-modal-card .cal-detail-head{ padding-right:34px; }
+.cal-modal-x{ position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--bg-1); color:var(--muted); font-size:20px; line-height:1; cursor:pointer; transition:.15s; }
+.cal-modal-x:hover{ color:#fff; border-color:var(--border-hi); }
+@keyframes cal-fade{ from{opacity:0} to{opacity:1} }
+@keyframes cal-pop{ from{opacity:0; transform:translateY(12px) scale(.98)} to{opacity:1; transform:none} }
+body.cal-modal-open{ overflow:hidden; }
 @media(max-width:640px){
   .cal-grid--month .cal-cell{ min-height:60px; padding:6px; }
   .cal-grid--month .cal-ev{ display:none; }
