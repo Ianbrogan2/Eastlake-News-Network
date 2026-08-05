@@ -24,7 +24,7 @@ var ENN_ATHLETICS = {
   // ── TICKETS ───────────────────────────────────────────────────────
   //  Put your real ticket link (GoFan / district box office) in url.
   tickets: {
-    url:         '',
+    url:         'https://gofan.co/app/school/CA22786',
     provider:    'GoFan',
     price:       'Students free with ASB · General admission at the gate',
     studentInfo: 'Bring your ASB card. Buy ahead on GoFan to skip the line.',
