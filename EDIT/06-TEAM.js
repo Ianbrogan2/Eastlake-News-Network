@@ -51,235 +51,198 @@
 // └──────────────────────────────────────────────────────────────────┘
 
 var ENN_TEAM = {
-
-  // ── PERIOD 1 ──────────────────────────────────────────────────────
   period1: {
-
-    // 3 Leaders for Period 1
     leaders: [
-
       {
-        n:     'TBD',
-        r:     'Lead Producer',
+        n: 'TBD',
+        r: 'Lead Producer',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Segment Producer',
+        n: 'TBD',
+        r: 'Segment Producer',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Broadcast Director',
+        n: 'TBD',
+        r: 'Broadcast Director',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
-      },
-
+        photo: ''
+      }
     ],
-
-    // 4 Anchors for Period 1
     anchors: [
-
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
-      },
-
-    ],
-
+        photo: ''
+      }
+    ]
   },
-
-  // ── PERIOD 4 ──────────────────────────────────────────────────────
   period4: {
-
-    // 3 Leaders for Period 4
     leaders: [
-
       {
-        n:     'TBD',
-        r:     'Lead Producer',
+        n: 'TBD',
+        r: 'Lead Producer',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Segment Producer',
+        n: 'TBD',
+        r: 'Segment Producer',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Broadcast Director',
+        n: 'TBD',
+        r: 'Broadcast Director',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
-      },
-
+        photo: ''
+      }
     ],
-
-    // 4 Anchors for Period 4
     anchors: [
-
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
-      },
-
-    ],
-
+        photo: ''
+      }
+    ]
   },
-
-  // ── PERIOD 6 ──────────────────────────────────────────────────────
   period6: {
-
-    // 3 Leaders for Period 6
     leaders: [
-
       {
-        n:     'TBD',
-        r:     'Lead Producer',
+        n: 'TBD',
+        r: 'Lead Producer',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Segment Producer',
+        n: 'TBD',
+        r: 'Segment Producer',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Broadcast Director',
+        n: 'TBD',
+        r: 'Broadcast Director',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
-      },
-
+        photo: ''
+      }
     ],
-
-    // 4 Anchors for Period 6
     anchors: [
-
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
+        photo: ''
       },
       {
-        n:     'TBD',
-        r:     'Anchor',
+        n: 'TBD',
+        r: 'Anchor',
         grade: '',
-        bio:   'Coming Soon',
+        bio: 'Coming Soon',
         email: '',
-        photo: '',
-      },
-
-    ],
-
+        photo: ''
+      }
+    ]
   },
-
-  // ── FACULTY ADVISOR ───────────────────────────────────────────────
-  // The advisor appears at the bottom of ALL period tabs automatically
   advisor: {
-    n:     'William Nimmo',
-    r:     'Film Television Digital Media Instructor',
+    n: 'William Nimmo',
+    r: 'Film Television Digital Media Instructor',
     grade: '',
-    bio:   'Mr. Nimmo is an industry leader, bringing the standards of contemporary filmmaking and television production to the state-of-the-art programs at Eastlake High.',
+    bio: 'Mr. Nimmo is an industry leader, bringing the standards of contemporary filmmaking and television production to the state-of-the-art programs at Eastlake High.',
     email: 'william.nimmo@sweetwaterschools.org',
-    photo: '',   // e.g. 'img/team/advisor/name.jpg'
-  },
-
+    photo: ''
+  }
 };
