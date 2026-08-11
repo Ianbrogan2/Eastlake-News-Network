@@ -25,7 +25,7 @@
 // automatically from the Athletics schedule (EDIT/25-ATHLETICS.js) — you
 // don't need to add games here by hand.
 var ENN_TICKER = [
-  { k: 'Spirit',    t: 'Lu-Wow! The spirit assembly and the Lu-Wow dance are this Friday, Aug 7' },
+  { k: 'Campus',    t: 'Peer tutoring starts today — Library, 7:15–8:20 AM, Mon–Thu. Request one at tinyurl.com/PeerTutorRequest26-27' },
   { k: 'Campus',    t: 'Open House is Thursday, Aug 13 — bring your parents to meet your teachers' },
   { k: 'Athletics', t: 'The full Titans sports schedule is live — see it on the new Athletics tab' },
   { k: 'ENN',       t: 'Fall 2026 season — 60 bulletins, 20 each from Periods 1, 4 and 6' },

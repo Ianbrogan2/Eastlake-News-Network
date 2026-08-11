@@ -1059,6 +1059,15 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       $('#p6-anchor-count').textContent = cnt(p6.anchors.length);
     }
 
+    /* Hide any section (e.g. Anchors) that has no one assigned yet */
+    [['#team-p1-anchors', p1.anchors], ['#team-p4-anchors', p4.anchors], ['#team-p6-anchors', p6 && p6.anchors],
+     ['#team-p1-leaders', p1.leaders], ['#team-p4-leaders', p4.leaders], ['#team-p6-leaders', p6 && p6.leaders]
+    ].forEach(([sel, list]) => {
+      const grid = $(sel); if(!grid) return;
+      const sec = grid.closest('.team-section');
+      if(sec) sec.style.display = (list && list.length) ? '' : 'none';
+    });
+
     /* Tab switching */
     $$('.team-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {

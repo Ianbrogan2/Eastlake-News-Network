@@ -21,10 +21,10 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_NEWS = {
   featured: {
-    tag: 'Featured',
-    title: 'The Titans Athletics Hub Is Live',
-    body: 'ENN just launched a full sports hub for the Titans — every fall schedule in one place, the next game with a live countdown, home vs. away, and how to get in. Find it under the new Athletics tab at the top of the site.',
-    byline: 'REPORTED BY TEAM ENN · WEEK OF AUG 3, 2026'
+    tag: 'Campus',
+    title: 'Free Peer Tutoring Starts Today',
+    body: 'Need a hand in a class? Zero-period peer tutoring opens today in the Library, 7:15–8:20 AM, Monday through Thursday. Trained student tutors are ready to help with any subject. Request one at tinyurl.com/PeerTutorRequest26-27.',
+    byline: 'REPORTED BY TEAM ENN · MONDAY, AUG 10, 2026'
   },
   sidebar: [
     {
@@ -33,14 +33,14 @@ var ENN_NEWS = {
       date: 'Aug 13'
     },
     {
-      cat: 'Student Life',
-      title: 'Lu-Wow! The spirit assembly and the Lu-Wow dance are both this Friday.',
-      date: 'Aug 7'
-    },
-    {
       cat: 'Sports',
       title: 'Titans varsity football opens the season with its first scrimmage Friday, Aug 14 at San Pasqual.',
       date: 'Aug 14'
+    },
+    {
+      cat: 'Athletics',
+      title: 'The full Titans sports schedule is live — every game, home vs. away, on the new Athletics tab.',
+      date: 'This week'
     }
   ]
 };

@@ -30,6 +30,8 @@ var ENN_EVENTS = [
   // ── Fall 2026 ──
   { date:'2026-08-07', days:1, time:'', title:'Lu-Wow Assembly & Dance', category:'Spirit',
     desc:'The finale of Lu-Wow Spirit Week — a spirit assembly during the day and the Lu-Wow dance in the evening. Wear your best luau fit.' },
+  { date:'2026-08-10', days:1, time:'7:15 AM', title:'Peer Tutoring Begins', category:'Academics',
+    desc:'Free zero-period peer tutoring starts today in the Library, 7:15–8:20 AM, Monday through Thursday. Trained student tutors are ready to help with any subject. Request one at tinyurl.com/PeerTutorRequest26-27.' },
   { date:'2026-08-13', days:1, time:'', title:'Open House', category:'Campus',
     desc:'Bring your parents to campus to meet your new teachers and walk through your class schedule.' },
   { date:'2026-08-14', days:1, time:'', title:'Minimum Day', category:'Schedule',

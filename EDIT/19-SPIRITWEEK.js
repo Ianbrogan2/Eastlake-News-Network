@@ -54,7 +54,7 @@
 var ENN_SPIRIT = {
 
   // 'T' = show on home page   ·   'F' = hidden
-  enabled: 'T',
+  enabled: 'F',
 
   // Small label above the section title
   eyebrow: 'Spirit Week · Aug 3–8',
