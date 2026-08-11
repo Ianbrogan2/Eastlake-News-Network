@@ -54,11 +54,11 @@ var ENN_TEAM = {
   period1: {
     leaders: [
       {
-        n: 'TBD',
-        r: 'Lead Producer',
-        grade: '',
+        n: 'Ian Brogan',
+        r: 'Studio Director',
+        grade: '12',
         bio: 'Coming Soon',
-        email: '',
+        email: '1595697@sweetwaterschools.net',
         photo: ''
       },
       {
