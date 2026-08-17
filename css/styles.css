@@ -641,7 +641,7 @@ body.cal-modal-open{ overflow:hidden; }
 /* per-sport accent colour */
 .at--football{--sc:#e57a30}.at--flagfootball{--sc:#e85fa0}.at--volleyball{--sc:#f0a83f}
 .at--waterpolo{--sc:#25a0da}.at--fieldhockey{--sc:#22b365}.at--crosscountry{--sc:#a06dff}
-.at--tennis{--sc:#c2dc3c}.at--generic{--sc:#7DD8FF}
+.at--tennis{--sc:#c2dc3c}.at--golf{--sc:#cf9f3a}.at--generic{--sc:#7DD8FF}
 
 /* ── NEXT UP ── */
 .at-nexthead{ display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap; }
