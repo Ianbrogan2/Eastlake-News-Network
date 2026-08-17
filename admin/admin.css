@@ -281,6 +281,8 @@ input[type=checkbox]{accent-color:var(--blue);width:16px;height:16px}
 .tag-unchanged{color:var(--muted)}
 .tag-error{color:#fca5a5;border-color:rgba(239,68,68,.3)}
 @media(max-width:560px){ .at-map{grid-template-columns:1fr} }
+.at-settings{display:flex;flex-direction:column;gap:14px;max-width:640px;margin-bottom:8px}
+#at-sportsettings{display:flex;flex-direction:column;gap:12px;max-width:640px}
 
 /* ── modal ── */
 .modal-back{position:fixed;inset:0;z-index:100;background:rgba(4,7,12,.72);backdrop-filter:blur(4px);display:grid;place-items:center;padding:24px;overflow:auto}

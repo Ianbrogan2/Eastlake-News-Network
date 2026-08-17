@@ -2065,8 +2065,12 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     const MON  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const ptms = () => new Date(new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles'})).getTime();
 
-    const sports = (cfg.sports||[]).filter(s => s && s.games && s.games.length);
+    const sports = (cfg.sports||[]).filter(s => s && s.games && s.games.length)
+      .map(s => Object.assign({}, s, { games: s.games.filter(g => !g.hidden) }))
+      .filter(s => s.games.length);
     const themeCls = t => 'at--' + (t||'generic');
+    const statusText = { postponed:'Postponed', canceled:'Canceled', final:'Final' };
+    const offStatus = g => g.status==='canceled' || g.status==='postponed';
 
     function parseDT(g){
       const p = (g.date||'').split('-').map(Number); if(p.length<3 || !p[0]) return null;
@@ -2122,6 +2126,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
           <div class="at-hero-game ${themeCls(next.s.theme)}">
             <div class="at-bigglyph" aria-hidden="true">${next.s.glyph||'🏆'}</div>
             <div class="at-hg-sport">${esc(next.s.name)}${next.g.level?' · '+esc(next.g.level):''}</div>
+            ${next.g.title?`<div class="at-hg-title">${esc(next.g.title)}</div>`:''}
             <div class="at-hg-opp"><span class="at-hv">${hv(next.g)}</span> ${esc(next.g.opponent)}</div>
             <div class="at-hg-count" id="at-count">—</div>
             <div class="at-hg-when">${esc(whenLong(next.g))} · ${next.g.ha==='home'?'Home':'Away'}${next.g.location?' · '+esc(next.g.location):''}</div>
@@ -2133,7 +2138,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
               <span class="at-nc-glyph">${x.s.glyph||'🏆'}</span>
               <div class="at-nc-main">
                 <div class="at-nc-sport">${esc(x.s.name)}${x.g.level?' · '+esc(x.g.level):''}</div>
-                <div class="at-nc-opp">${hv(x.g)} ${esc(x.g.opponent)}</div>
+                <div class="at-nc-opp">${x.g.title?`<span class="at-gtitle">${esc(x.g.title)}</span> `:''}${hv(x.g)} ${esc(x.g.opponent)}</div>
                 <div class="at-nc-when">${esc(whenLong(x.g))}</div>
               </div>
               <span class="at-tag at-tag--${x.g.ha}">${x.g.ha==='home'?'H':'A'}</span>
@@ -2159,11 +2164,13 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     function gameRow(g){
       const side = g.result
         ? `<span class="at-result">${esc(g.result)}</span>`
+        : offStatus(g)
+        ? `<span class="at-status at-status--${g.status}">${statusText[g.status]}</span>`
         : `<span class="at-tag at-tag--${g.ha}">${g.ha==='home'?'HOME':'AWAY'}</span>`;
-      return `<div class="at-game">
+      return `<div class="at-game${offStatus(g)?' at-game--off':''}">
         <div class="at-when">${chip(g)}</div>
         <div class="at-gmain">
-          <div class="at-vs"><span class="at-hv">${hv(g)}</span> ${esc(g.opponent)}</div>
+          <div class="at-vs">${g.title?`<span class="at-gtitle">${esc(g.title)}</span> `:''}<span class="at-hv">${hv(g)}</span> ${esc(g.opponent)}</div>
           <div class="at-gmeta">${esc(g.level||'')}${g.time&&g.time!=='TBD'?' · '+esc(g.time):''}${g.location?' · '+esc(g.location):''}</div>
         </div>
         <div class="at-gside">${g.note?`<span class="at-notechip sm">${esc(g.note)}</span>`:''}${side}</div>

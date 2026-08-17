@@ -56,6 +56,7 @@
       if(canEdit){
         var addBtn=el('button','btn-ghost sm','+ Add game'); addBtn.onclick=function(){ editGame(null); }; bar.appendChild(addBtn);
         var impBtn=el('button','btn-ghost sm','⤒ Import schedule'); impBtn.onclick=showImport; bar.appendChild(impBtn);
+        var setBtn=el('button','btn-ghost sm','⚙ Sports & tickets'); setBtn.onclick=showSettings; bar.appendChild(setBtn);
       }
       vhost.appendChild(bar);
       var meta=el('div','at-meta'); meta.innerHTML='<span id="at-count"></span>';
@@ -370,6 +371,55 @@
       var ns={ name:name, season:'fall', theme:'generic', glyph:'🏟️', levels:'', coach:'', record:'', home:'', games:[] };
       sports.push(ns); return {sport:ns,created:true};
     }
+
+    /* ══════════ SPORTS & TICKETS ══════════ */
+    var THEMES=['football','flagfootball','volleyball','waterpolo','fieldhockey','crosscountry','tennis','golf','generic'];
+    function showSettings(){
+      vhost.innerHTML='';
+      var back=el('button','btn-ghost sm','‹ Back to games'); back.onclick=showList; vhost.appendChild(back);
+      var h=el('div','page-head'); h.style.marginTop='12px'; h.innerHTML='<h1 style="font-size:34px">Sports &amp; tickets</h1><p class="lede">The Athletics page heading, the ticket link, and each sport’s name, icon, color, and details.</p>'; vhost.appendChild(h);
+      var d=S.data; d.tickets=d.tickets||{};
+
+      vhost.appendChild(el('div','sec-label','Athletics page'));
+      var pg=el('div','at-settings');
+      pg.appendChild(toggle('Show the Athletics page on the site', (d.enabled||'T')==='T', function(v){ d.enabled=v?'T':'F'; markDirty(); }));
+      pg.appendChild(fw('Eyebrow (small label)', textIn(d.eyebrow,'',function(v){d.eyebrow=v;markDirty();})));
+      pg.appendChild(fw('Title', textIn(d.title,'',function(v){d.title=v;markDirty();})));
+      pg.appendChild(fw('Subtitle', textArea(d.sub,'',function(v){d.sub=v;markDirty();})));
+      vhost.appendChild(pg);
+
+      vhost.appendChild(el('div','sec-label','Tickets'));
+      var tk=el('div','at-settings');
+      tk.appendChild(fw('Ticket link (URL)', textIn(d.tickets.url,'https://gofan.co/app/school/…',function(v){d.tickets.url=v;markDirty();})));
+      tk.appendChild(r2(fw('Provider', textIn(d.tickets.provider,'e.g. GoFan',function(v){d.tickets.provider=v;markDirty();})), fw('Price line', textIn(d.tickets.price,'',function(v){d.tickets.price=v;markDirty();}))));
+      tk.appendChild(fw('Student info', textArea(d.tickets.studentInfo,'',function(v){d.tickets.studentInfo=v;markDirty();})));
+      vhost.appendChild(tk);
+
+      vhost.appendChild(el('div','sec-label','Sports'));
+      var sl=el('div'); sl.id='at-sportsettings'; vhost.appendChild(sl); drawSports(sl);
+      var addS=el('button','btn-ghost sm','+ Add sport'); addS.style.marginTop='10px';
+      addS.onclick=function(){ d.sports.push({name:'New Sport',season:'fall',theme:'generic',glyph:'🏟️',levels:'',coach:'',record:'',home:'',games:[]}); markDirty(); drawSports(sl); }; vhost.appendChild(addS);
+
+      var barr=el('div','at-import-actions'); barr.appendChild(el('div','flex1'));
+      var sv=el('button','btn','◉ Save changes'); sv.onclick=saveAll; barr.appendChild(sv); vhost.appendChild(barr);
+    }
+    function drawSports(host){
+      host.innerHTML='';
+      S.data.sports.forEach(function(sp,i){
+        var card=el('div','group');
+        var head=el('div','group-head'); head.innerHTML='<b>'+esc(sp.name||'Sport')+'</b> <span class="pill tiny">'+(sp.games?sp.games.length:0)+' games</span>';
+        var rm=el('button','rm','Remove'); rm.onclick=function(){ ctx.confirmDialog('Remove '+(sp.name||'this sport')+'?', (sp.games&&sp.games.length?sp.games.length+' game(s) will be removed too. ':'')+'Nothing publishes until you Save.', function(){ S.data.sports.splice(i,1); markDirty(); drawSports(host); }); };
+        head.appendChild(rm); card.appendChild(head);
+        card.appendChild(fw('Name', textIn(sp.name,'',function(v){sp.name=v;markDirty();})));
+        card.appendChild(r2(fw('Icon (emoji)', textIn(sp.glyph,'🏈',function(v){sp.glyph=v;markDirty();})), fw('Color theme', selNode(THEMES.map(function(t){return[t,t];}),sp.theme||'generic',null,function(v){sp.theme=v;markDirty();}))));
+        card.appendChild(fw('Levels label (e.g. JV · Varsity)', textIn(sp.levels,'',function(v){sp.levels=v;markDirty();})));
+        card.appendChild(r2(fw('Coach', textIn(sp.coach,'',function(v){sp.coach=v;markDirty();})), fw('Record', textIn(sp.record,'',function(v){sp.record=v;markDirty();}))));
+        card.appendChild(fw('Home venue', textIn(sp.home,'',function(v){sp.home=v;markDirty();})));
+        host.appendChild(card);
+      });
+    }
+    function fw(label,node){ var w=el('div','field'); w.appendChild(el('label',null,esc(label))); w.appendChild(node); return w; }
+    function r2(a,b){ var r=el('div','field-row'); r.appendChild(a); r.appendChild(b); return r; }
 
     /* ── normalizers ── */
     function pad(n){ n=String(n); return n.length<2?'0'+n:n; }
