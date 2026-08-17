@@ -397,22 +397,31 @@
     }catch(err){ $('#audit-list').innerHTML='<div class="notice">'+esc(err.message)+'</div>'; }
   }
 
-  /* ── HELP ── */
+  /* ── HELP (permission-aware: shows the basics + guides for the areas you can access) ── */
   function renderHelp(){
     crumbs([{t:'Dashboard',go:'dashboard'},{t:'Help & Docs'}]);
     var v=view();
-    var head=el('div','page-head'); head.innerHTML='<div class="eyebrow">❓ Documentation</div><h1>How the Site Manager works</h1>'; v.appendChild(head);
-    var topics=[
-      ['Editing content','Open any section from the sidebar, change the words, colors, or photos, and press Save. Changes go live on the public site in about a minute. Every save is recorded in the Change Log and in the site’s version history, so nothing is ever truly lost.'],
-      ['Administrators &amp; permissions','A master administrator can create accounts under Administrators. For each account you choose exactly what they can manage — a whole area (like News), a single capability (edit but not delete), or one feature. “Master administrator” grants everything. Limited admins only see what they’re allowed to touch.'],
-      ['How permissions stay future-proof','Granting “Full access” to an area covers features added later automatically. That’s why you can create a Yearbook account today, before the Yearbook page exists — the moment it’s built, the account can manage it.'],
-      ['The Change Log','Under Change Log you can see who changed what and when, including sign-ins and account changes. For content edits, the exact before/after is kept in the site’s GitHub history and can be reverted there.'],
-      ['Athletics (coming in the next update)','A dedicated Athletics manager with a spreadsheet importer, per-game editing, and special game titles (e.g. “Boot Bonita”, Homecoming) is being added — you’ll upload a CSV/Excel and preview the changes before they go live.'],
-      ['Security','Passwords are salted and hashed on the server; the GitHub key lives only in the backend, never in the website. Sign out on shared computers. Permissions are enforced by the server, so they can’t be bypassed from the browser.'],
-    ];
+    var head=el('div','page-head'); head.innerHTML='<div class="eyebrow">❓ Documentation</div><h1>Help &amp; Docs</h1><p class="lede">Guides for everything you can manage. You’re seeing the basics plus detailed help for the areas you have access to.</p>'; v.appendChild(head);
+    var DOCS=window.ENN_DOCS||{general:[],areas:{}};
+    v.appendChild(el('div','sec-label','The basics'));
+    v.appendChild(accordion(DOCS.general));
+    var order=['homepage','news','athletics','events','team','about','contact','studio','calendar','extras','newsroom','sections','settings','navigation','footer','media','yearbook','users','audit'];
+    var shown=0;
+    order.forEach(function(key){
+      var g=DOCS.areas[key]; if(!g) return;
+      var a=P&&P.area(key);
+      var accessible = (ME&&ME.isMaster) || can(key,'view') || (a && a.caps.some(function(c){ return can(key,c); }));
+      if(!accessible) return;
+      shown++;
+      v.appendChild(el('div','sec-label',(g.icon||'')+' '+esc(g.title)));
+      v.appendChild(accordion(g.items));
+    });
+    if(!shown) v.appendChild(el('p','muted','You currently have access to the basics above. As you’re given access to more areas, their guides will appear here.'));
+  }
+  function accordion(items){
     var acc=el('div','help');
-    topics.forEach(function(t){ var d=el('details','help-item'); d.innerHTML='<summary>'+t[0]+'</summary><div class="help-body">'+t[1]+'</div>'; acc.appendChild(d); });
-    v.appendChild(acc);
+    (items||[]).forEach(function(t){ var d=el('details','help-item'); d.innerHTML='<summary>'+esc(t.h)+'</summary><div class="help-body">'+t.body+'</div>'; acc.appendChild(d); });
+    return acc;
   }
 
   /* ── small UI helpers ── */
