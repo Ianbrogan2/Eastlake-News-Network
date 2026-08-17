@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Eastlake Yearbook — Preview</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080b12;--bg-1:#0d1320;--panel:#121a29;--panel-2:#0c121d;--edge:#1e293b;--edge-2:#28374f;
+  --ink:#eaf0f9;--muted:#9aa7bd;--muted-2:#6b7688;
+  --blue:#2563ff;--blue-b:#4b82ff;--cyan:#38bdf8;--green:#22c55e;--gold:#f4c34d;--red:#ef4444;
+  --sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;--display:'Bebas Neue',sans-serif;
+  --r:16px;--r-s:11px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.mono{font-family:var(--mono)}
+h2.sec{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,56px);letter-spacing:.02em;line-height:1;margin:0 0 6px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
+.lede{color:var(--muted);max-width:60ch;margin:6px 0 0}
+section{padding:64px 0;border-top:1px solid var(--edge)}
+.grid{display:grid;gap:16px}
+.tbd{display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,rgba(255,255,255,.02),rgba(255,255,255,.02) 10px,transparent 10px,transparent 20px);border:1.5px dashed var(--edge-2);border-radius:var(--r-s);color:var(--muted-2);font-family:var(--mono);font-size:12px;letter-spacing:.14em;min-height:90px}
+.card{background:var(--panel);border:1px solid var(--edge);border-radius:var(--r);padding:22px}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:3px 10px;border-radius:100px;border:1px solid var(--edge-2);color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:0;border-radius:var(--r-s);padding:13px 22px;font-weight:700;font-size:15px;transition:.15s}
+.btn:hover{background:var(--blue-b);transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#1a1405}.btn-gold:hover{background:#ffd36a}
+.btn-ghost{background:transparent;border:1px solid var(--edge-2);color:var(--ink);border-radius:var(--r-s);padding:11px 18px;font-weight:600;font-size:14px}
+.btn-ghost:hover{border-color:var(--blue)}
+input,select,textarea{background:var(--panel-2);border:1px solid var(--edge-2);border-radius:9px;color:var(--ink);padding:11px 13px;font:inherit;font-size:14px;width:100%}
+input:focus,select,textarea:focus{outline:none;border-color:var(--blue)}
+label.fl{display:block;font-size:13px;font-weight:600;margin:0 0 6px}
+
+/* preview ribbon */
+.previewbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--gold),#ffdf87);color:#241a00;font-weight:700;font-size:13px;text-align:center;padding:8px 16px;font-family:var(--mono);letter-spacing:.04em}
+
+/* nav */
+.nav{position:sticky;top:33px;z-index:40;background:rgba(8,11,18,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--edge)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.nav img{height:22px}
+.nav .links{display:flex;gap:16px;margin-left:auto;overflow-x:auto}
+.nav .links a{font-size:13px;color:var(--muted);white-space:nowrap;font-weight:600}
+.nav .links a:hover{color:var(--ink)}
+@media(max-width:720px){.nav .links{display:none}}
+
+/* hero */
+.hero{position:relative;padding:78px 0 64px;border-top:0;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 420px at 78% -8%,rgba(37,99,255,.22),transparent 60%),radial-gradient(600px 360px at 8% 108%,rgba(244,195,77,.12),transparent 60%);pointer-events:none}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(52px,9vw,104px);line-height:.92;letter-spacing:.01em;margin:12px 0 10px}
+.hero h1 .g{background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:17px;max-width:44ch}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.cover-mock{aspect-ratio:8/10;border-radius:14px;border:1px solid var(--edge-2);background:linear-gradient(160deg,#16233b,#0c1320);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-shadow:0 30px 70px rgba(0,0,0,.5);position:relative}
+.cover-mock .yr{font-family:var(--display);font-size:64px;color:var(--gold);line-height:1}
+.cover-mock .ttl{font-family:var(--display);font-size:34px;letter-spacing:.04em}
+.cover-mock .tbd-tag{position:absolute;bottom:14px;font-family:var(--mono);font-size:11px;color:var(--muted-2);letter-spacing:.14em}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}.cover-mock{max-width:280px;margin:0 auto}}
+
+/* countdown */
+.cd{display:flex;gap:10px}
+.cd .u{background:var(--panel-2);border:1px solid var(--edge);border-radius:10px;padding:10px 0;min-width:62px;text-align:center}
+.cd .u b{font-family:var(--display);font-size:34px;line-height:1;color:#fff;display:block}
+.cd .u span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted-2);text-transform:uppercase}
+.cd.sm .u{min-width:48px;padding:7px 0}.cd.sm .u b{font-size:24px}
+
+/* price block */
+.pricewrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.pricewrap{grid-template-columns:1fr}}
+.price-now{font-family:var(--display);font-size:74px;line-height:.9;color:#fff}
+.price-was{color:var(--muted-2);text-decoration:line-through;font-size:20px;margin-left:8px}
+.stair{display:flex;align-items:flex-end;gap:10px;height:120px;margin-top:8px}
+.stair .b{flex:1;background:linear-gradient(180deg,var(--blue),#1a3fb0);border-radius:6px 6px 0 0;position:relative;display:flex;justify-content:center}
+.stair .b.cur{background:linear-gradient(180deg,var(--gold),#c9962b)}
+.stair .b span{position:absolute;top:-20px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.stair .b em{position:absolute;bottom:-22px;font-family:var(--mono);font-size:10px;color:var(--muted-2);font-style:normal}
+.thermo{height:16px;border-radius:100px;background:var(--panel-2);border:1px solid var(--edge);overflow:hidden}
+.thermo i{display:block;height:100%;width:69%;background:linear-gradient(90deg,var(--green),var(--cyan))}
+.urgency{display:flex;align-items:center;gap:10px;background:rgba(244,195,77,.12);border:1px solid rgba(244,195,77,.4);border-radius:var(--r-s);padding:12px 16px;color:var(--gold);font-weight:600;font-size:14px;margin-top:16px}
+
+/* ad tiers */
+.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:820px){.tiers{grid-template-columns:1fr 1fr}}
+.tier{border:1px solid var(--edge);border-radius:var(--r-s);padding:16px;text-align:center;background:var(--panel);cursor:pointer;transition:.15s}
+.tier:hover,.tier.on{border-color:var(--gold);background:rgba(244,195,77,.06)}
+.tier .sz{aspect-ratio:1;border:1.5px dashed var(--edge-2);border-radius:6px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;color:var(--muted-2);font-family:var(--mono);font-size:11px}
+.tier b{font-size:15px}.tier .pr{font-family:var(--display);font-size:30px;color:var(--gold)}
+
+/* generic 3-col */
+.cols3{grid-template-columns:repeat(3,1fr)}
+.cols2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:820px){.cols3,.cols2{grid-template-columns:1fr}}
+.mini-h{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+.mini-h .ic{font-size:20px}
+.mini-h b{font-size:16px}
+.card p.d{color:var(--muted);font-size:14px;margin:0}
+
+/* superlatives */
+.sup{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--edge)}
+.sup:last-child{border-bottom:0}
+.vote{background:transparent;border:1px solid var(--edge-2);border-radius:8px;color:var(--cyan);padding:5px 14px;font-size:13px;font-weight:600}
+.vote:hover{border-color:var(--cyan)}
+
+/* timeline */
+.decades{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px}
+.chip{background:var(--panel);border:1px solid var(--edge-2);border-radius:100px;padding:6px 15px;font-size:13px;color:var(--muted);cursor:pointer}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.covers{display:grid;grid-auto-flow:column;grid-auto-columns:150px;gap:14px;overflow-x:auto;padding-bottom:12px}
+.cov{scroll-snap-align:start}
+.cov .img{aspect-ratio:8/10;border-radius:10px;border:1.5px dashed var(--edge-2);display:flex;align-items:center;justify-content:center;color:var(--muted-2);font-family:var(--mono);font-size:11px;background:linear-gradient(160deg,#141d30,#0c1320)}
+.cov .yr{font-family:var(--display);font-size:24px;margin-top:8px}
+.cov .th{font-size:12px;color:var(--muted-2)}
+
+/* forms row */
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.formrow{grid-template-columns:1fr}}
+
+/* dates */
+.datecard{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.datecard .lbl{font-weight:700}
+
+footer{padding:40px 0 60px;border-top:1px solid var(--edge);color:var(--muted-2);font-size:13px;text-align:center}
+.section-note{font-family:var(--mono);font-size:11px;color:var(--muted-2);letter-spacing:.1em;margin-top:26px}
+</style>
+</head>
+<body>
+
+<div class="previewbar">🔒 PREVIEW / CONCEPT — for the yearbook planning meeting · photos are placeholders (TBD) · prices, dates &amp; links are examples</div>
+
+<nav class="nav"><div class="wrap">
+  <img src="/enn-mark.png?v=1" alt="ENN" onerror="this.style.display='none'">
+  <span class="pill">Eastlake Yearbook</span>
+  <div class="links">
+    <a href="#buy">Buy</a><a href="#ads">Ads</a><a href="#submit">Submit</a>
+    <a href="#history">History</a><a href="#hype">Sneak Peek</a><a href="#dates">Dates</a><a href="#events">Events</a>
+  </div>
+</div></nav>
+
+<!-- HERO -->
+<header class="hero"><div class="wrap hero-grid">
+  <div>
+    <div class="eyebrow">Eastlake High School · Home of the Titans</div>
+    <h1>THE <span class="g">2026–27</span><br>YEARBOOK</h1>
+    <p>One book. Every game, club, quote, and candid of the year — bound forever. Reserve yours before the price goes up.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#buy">Order on Jostens →</a>
+      <a class="btn-ghost" href="#submit">Submit a photo</a>
+    </div>
+    <div class="section-note">Live countdown to the next price increase:</div>
+    <div class="cd sm" id="cd-hero" style="margin-top:8px"></div>
+  </div>
+  <div class="cover-mock">
+    <div class="yr">2026–27</div>
+    <div class="ttl">TITANS</div>
+    <div class="tbd-tag">COVER ART — TBD</div>
+  </div>
+</div></header>
+
+<!-- BUY -->
+<section id="buy"><div class="wrap">
+  <div class="eyebrow">Get your book</div>
+  <h2 class="sec">Buy the Yearbook</h2>
+  <p class="lede">The price rises as we get closer to distribution — buying early saves you money.</p>
+
+  <div class="pricewrap" style="margin-top:24px">
+    <div class="card">
+      <div class="pill">Current price</div>
+      <div style="margin:8px 0 4px"><span class="price-now">$95</span><span class="price-was">$110 soon</span></div>
+      <div class="urgency">⏳ Price goes up to $110 in <span id="urg" style="font-variant-numeric:tabular-nums">&nbsp;</span></div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-gold" href="#" onclick="return false">Buy Now on Jostens →</a>
+        <a class="btn-ghost" href="#" onclick="return false">🎁 Gift a yearbook</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="pill">Price history</div>
+      <div class="stair">
+        <div class="b" style="height:55%"><span>$85</span><em>Aug</em></div>
+        <div class="b cur" style="height:72%"><span>$95</span><em>now</em></div>
+        <div class="b" style="height:88%;opacity:.5"><span>$110</span><em>Oct</em></div>
+        <div class="b" style="height:100%;opacity:.35"><span>$120</span><em>Spring</em></div>
+      </div>
+      <div class="section-note" style="margin-top:26px">Buy at $95 today — it won't be this low again.</div>
+    </div>
+  </div>
+
+  <div class="grid cols2" style="margin-top:16px">
+    <div class="card">
+      <div class="mini-h"><span class="ic">🌡️</span><b>Sales goal</b></div>
+      <div class="thermo"><i></i></div>
+      <p class="d" style="margin-top:8px"><b>412</b> of 600 sold — help us hit the goal!</p>
+    </div>
+    <div class="card">
+      <div class="mini-h"><span class="ic">🔔</span><b>Remind me before the price rises</b></div>
+      <div class="formrow" style="margin-top:2px">
+        <input placeholder="Your email"><button class="btn-ghost" onclick="return false">Notify me</button>
+      </div>
+      <p class="d" style="margin-top:8px">We'll ping you a few days before each increase.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ADS -->
+<section id="ads"><div class="wrap">
+  <div class="eyebrow">Be in the book</div>
+  <h2 class="sec">Personal Ads &amp; Shout-outs</h2>
+  <p class="lede">Celebrate a senior, promote a business, or shout out your crew — with a spot printed in the yearbook.</p>
+
+  <h3 style="margin:26px 0 4px">Senior tribute ads</h3>
+  <p class="d">A photo + a message from family, printed forever. Pick a size:</p>
+  <div class="tiers" id="tiers" style="margin-top:14px">
+    <div class="tier" data-price="45" data-sz="1/8 page"><div class="sz" style="width:40%">1/8</div><b>Eighth page</b><div class="pr">$45</div></div>
+    <div class="tier" data-price="80" data-sz="1/4 page"><div class="sz" style="width:55%">1/4</div><b>Quarter page</b><div class="pr">$80</div></div>
+    <div class="tier on" data-price="140" data-sz="1/2 page"><div class="sz" style="width:75%">1/2</div><b>Half page</b><div class="pr">$140</div></div>
+    <div class="tier" data-price="250" data-sz="Full page"><div class="sz" style="width:100%">Full</div><b>Full page</b><div class="pr">$250</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="formrow">
+      <div><label class="fl">You picked</label><input id="picked" value="Half page — $140" readonly></div>
+      <div><label class="fl">Deadline to submit</label><input value="Reserve by Feb 20 · see countdown below" readonly></div>
+    </div>
+    <div style="margin-top:14px"><label class="fl">Upload the photo &amp; message</label><div class="tbd">DROP PHOTO — TBD</div></div>
+    <div style="margin-top:14px"><a class="btn btn-gold" href="#" onclick="return false">Reserve this ad →</a></div>
+  </div>
+
+  <div class="grid cols2" style="margin-top:16px">
+    <div class="card"><div class="mini-h"><span class="ic">🏢</span><b>Business / sponsor ads</b></div><p class="d">Local businesses can advertise in tiers — plus a “Become a sponsor” package for boosters.</p><div style="margin-top:12px"><a class="btn-ghost" href="#" onclick="return false">Become a sponsor</a></div></div>
+    <div class="card"><div class="mini-h"><span class="ic">🎉</span><b>Friend-group shout-outs</b></div><p class="d">Split a page with your crew — a mini group photo and a message to remember senior year.</p><div style="margin-top:12px"><a class="btn-ghost" href="#" onclick="return false">Start a group ad</a></div></div>
+  </div>
+</div></section>
+
+<!-- SUBMIT -->
+<section id="submit"><div class="wrap">
+  <div class="eyebrow">Help build it</div>
+  <h2 class="sec">Get Involved</h2>
+  <p class="lede">The yearbook is made by everyone. Send us your photos, quotes, and votes.</p>
+
+  <div class="grid cols2" style="margin-top:24px">
+    <div class="card">
+      <div class="mini-h"><span class="ic">📸</span><b>Submit a photo</b></div>
+      <label class="fl">Category</label>
+      <select><option>Sports</option><option>Clubs</option><option>Spirit weeks</option><option>Candids</option><option>Events</option></select>
+      <div style="margin-top:12px"><div class="tbd">DROP PHOTOS — TBD</div></div>
+      <div style="margin-top:12px"><button class="btn" onclick="return false">Submit photo</button></div>
+    </div>
+    <div class="card">
+      <div class="mini-h"><span class="ic">💬</span><b>Senior quote</b></div>
+      <label class="fl">Your name</label><input placeholder="First & last">
+      <label class="fl" style="margin-top:10px">Your quote</label><textarea rows="3" placeholder="Keep it school-appropriate…"></textarea>
+      <div style="margin-top:12px"><button class="btn" onclick="return false">Submit quote</button></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="mini-h"><span class="ic">🏆</span><b>Superlatives — vote</b></div>
+    <div class="sup"><span>Most likely to be famous</span><button class="vote" onclick="bump(this)">Vote</button></div>
+    <div class="sup"><span>Best duo</span><button class="vote" onclick="bump(this)">Vote</button></div>
+    <div class="sup"><span>Most school spirit</span><button class="vote" onclick="bump(this)">Vote</button></div>
+    <div class="sup"><span>Best comeback story</span><button class="vote" onclick="bump(this)">Vote</button></div>
+    <p class="d" style="margin-top:10px">Nominees &amp; more categories — TBD with the yearbook staff.</p>
+  </div>
+
+  <div class="grid cols3" style="margin-top:16px">
+    <div class="card"><div class="mini-h"><span class="ic">🔖</span><b>Tag yourself</b></div><p class="d">Spot yourself in a candid? Help staff caption it right.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">👥</span><b>Club / team roster photo</b></div><p class="d">Captains upload the official team picture &amp; name list.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">💌</span><b>Dedication message</b></div><p class="d">A note to a friend, teacher, or the class of ’27.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">🎨</span><b>Cover-art contest</b></div><p class="d">Design a cover or a spread — winner gets printed.</p></div>
+  </div>
+</div></section>
+
+<!-- HISTORY -->
+<section id="history"><div class="wrap">
+  <div class="eyebrow">Titan legacy</div>
+  <h2 class="sec">Every Cover, Every Year</h2>
+  <p class="lede">Scroll through every Eastlake yearbook cover from the school's founding to today.</p>
+  <div class="decades" id="decades">
+    <div class="chip on">All</div><div class="chip">1990s</div><div class="chip">2000s</div><div class="chip">2010s</div><div class="chip">2020s</div>
+  </div>
+  <div class="covers">
+    <div class="cov"><div class="img">TBD</div><div class="yr">1992</div><div class="th">Founding year</div></div>
+    <div class="cov"><div class="img">TBD</div><div class="yr">1999</div><div class="th">Theme — TBD</div></div>
+    <div class="cov"><div class="img">TBD</div><div class="yr">2005</div><div class="th">Theme — TBD</div></div>
+    <div class="cov"><div class="img">TBD</div><div class="yr">2012</div><div class="th">Theme — TBD</div></div>
+    <div class="cov"><div class="img">TBD</div><div class="yr">2019</div><div class="th">Theme — TBD</div></div>
+    <div class="cov"><div class="img">TBD</div><div class="yr">2024</div><div class="th">Theme — TBD</div></div>
+    <div class="cov"><div class="img" style="border-color:var(--gold);color:var(--gold)">2026–27</div><div class="yr">2027</div><div class="th">This year!</div></div>
+  </div>
+  <div class="grid cols3" style="margin-top:22px">
+    <div class="card"><div class="mini-h"><span class="ic">🎯</span><b>Guess the year</b></div><p class="d">A fun mini-game: see a cover, guess its year. Hover a cover to reveal its theme &amp; editor.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">🗂️</span><b>Theme archive</b></div><p class="d">Every year's theme, in one place — TBD.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">🎓</span><b>Notable alumni</b></div><p class="d">Titans who went on to big things — TBD.</p></div>
+  </div>
+</div></section>
+
+<!-- HYPE -->
+<section id="hype"><div class="wrap">
+  <div class="eyebrow">Behind the book</div>
+  <h2 class="sec">Sneak Peek &amp; Hype</h2>
+  <div class="grid cols2" style="margin-top:24px">
+    <div class="card">
+      <div class="mini-h"><span class="ic">🎬</span><b>Cover reveal countdown</b></div>
+      <p class="d" style="margin-bottom:14px">This year's cover drops in:</p>
+      <div class="cd" id="cd-reveal"></div>
+    </div>
+    <div class="card">
+      <div class="mini-h"><span class="ic">📐</span><b>Production progress</b></div>
+      <p class="d" style="margin-bottom:10px"><b>38</b> of 220 spreads finished</p>
+      <div class="thermo"><i style="width:17%"></i></div>
+      <p class="d" style="margin-top:10px">Watch the book come together all year.</p>
+    </div>
+  </div>
+  <div class="grid cols3" style="margin-top:16px">
+    <div class="card"><div class="mini-h"><b>Spread sneak-peeks</b></div><div class="tbd" style="margin-top:8px">SAMPLE SPREAD — TBD</div></div>
+    <div class="card"><div class="mini-h"><b>Meet the staff</b></div><div class="tbd" style="margin-top:8px">STAFF PHOTOS — TBD</div></div>
+    <div class="card"><div class="mini-h"><b>Behind the scenes</b></div><div class="tbd" style="margin-top:8px">BTS PHOTOS — TBD</div></div>
+  </div>
+</div></section>
+
+<!-- DATES -->
+<section id="dates"><div class="wrap">
+  <div class="eyebrow">Don't miss it</div>
+  <h2 class="sec">Key Dates</h2>
+  <div class="grid cols3" id="datecards" style="margin-top:24px"></div>
+</div></section>
+
+<!-- RECOGNITION + EVENTS -->
+<section id="events"><div class="wrap">
+  <div class="eyebrow">Community</div>
+  <h2 class="sec">Recognition &amp; Events</h2>
+  <div class="grid cols3" style="margin-top:24px">
+    <div class="card"><div class="mini-h"><span class="ic">🧱</span><b>Contributors wall</b></div><p class="d">Everyone who submitted a photo or story — TBD.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">🤝</span><b>Sponsor showcase</b></div><p class="d">Thank-you to the businesses that back the book — TBD.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">⭐</span><b>Why buy a yearbook</b></div><p class="d">Student &amp; parent testimonials — TBD.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">📣</span><b>Join Yearbook</b></div><p class="d">Want to make it? Apply to the staff.</p><div style="margin-top:12px"><a class="btn-ghost" href="#" onclick="return false">Apply</a></div></div>
+    <div class="card"><div class="mini-h"><span class="ic">📦</span><b>Distribution day</b></div><p class="d">When &amp; where you pick up your book — TBD.</p></div>
+    <div class="card"><div class="mini-h"><span class="ic">✍️</span><b>Signing party — RSVP</b></div><p class="d">End-of-year signing event.</p><div style="margin-top:12px"><a class="btn-ghost" href="#" onclick="return false">RSVP</a></div></div>
+  </div>
+  <p class="section-note">Homeroom / advisory delivery details — TBD.</p>
+</div></section>
+
+<footer><div class="wrap">
+  <b style="color:var(--ink)">Eastlake Yearbook — concept preview</b><br>
+  Built by ENN for the yearbook planning meeting. Everything here is a draft to react to — photos are placeholders, and prices, dates &amp; links are examples.
+</div></footer>
+
+<script>
+function pad(n){return String(n).padStart(2,'0');}
+function daysFromNow(d){var t=new Date();t.setHours(10,0,0,0);t.setDate(t.getDate()+d);return t;}
+function renderCd(el,target,small){
+  function tick(){
+    var diff=target-new Date();
+    if(diff<0)diff=0;
+    var dd=Math.floor(diff/864e5),hh=Math.floor(diff%864e5/36e5),mm=Math.floor(diff%36e5/6e4),ss=Math.floor(diff%6e4/1e3);
+    el.innerHTML=[['Days',dd],['Hrs',hh],['Min',mm],['Sec',ss]].map(function(u){return '<div class="u"><b>'+pad(u[1])+'</b><span>'+u[0]+'</span></div>';}).join('');
+  }
+  tick();setInterval(tick,1000);
+}
+renderCd(document.getElementById('cd-hero'),daysFromNow(6));
+renderCd(document.getElementById('cd-reveal'),daysFromNow(21));
+// urgency inline
+(function(){var t=daysFromNow(6);function u(){var diff=t-new Date();if(diff<0)diff=0;var dd=Math.floor(diff/864e5),hh=Math.floor(diff%864e5/36e5),mm=Math.floor(diff%36e5/6e4);document.getElementById('urg').textContent=dd+'d '+pad(hh)+'h '+pad(mm)+'m';}u();setInterval(u,60000);})();
+// key dates
+var dates=[['Order deadline',30,'#'],['Photo submissions',12,'#'],['Senior quotes',18,'#'],['Ad reserve deadline',40,'#'],['Distribution day',150,'#'],['Signing party',158,'#']];
+document.getElementById('datecards').innerHTML=dates.map(function(d,i){return '<div class="card datecard"><div class="lbl">'+d[0]+'</div><div class="cd sm" id="dc'+i+'"></div></div>';}).join('');
+dates.forEach(function(d,i){renderCd(document.getElementById('dc'+i),daysFromNow(d[1]),true);});
+// ad tier picker
+document.querySelectorAll('#tiers .tier').forEach(function(t){t.onclick=function(){document.querySelectorAll('#tiers .tier').forEach(function(x){x.classList.remove('on');});t.classList.add('on');document.getElementById('picked').value=t.dataset.sz+' — $'+t.dataset.price;};});
+// decade chips
+document.querySelectorAll('#decades .chip').forEach(function(c){c.onclick=function(){document.querySelectorAll('#decades .chip').forEach(function(x){x.classList.remove('on');});c.classList.add('on');};});
+// superlative votes
+window.bump=function(b){var n=(+b.dataset.n||0)+1;b.dataset.n=n;b.textContent='Voted ('+n+')';b.style.color='var(--green)';b.style.borderColor='var(--green)';};
+</script>
+</body>
+</html>

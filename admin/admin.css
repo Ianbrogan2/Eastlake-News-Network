@@ -45,9 +45,9 @@ button{font-family:inherit;cursor:pointer}
 .login.wrong .login-card{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .login-card{width:100%;max-width:392px;background:linear-gradient(180deg,rgba(18,26,41,.94),rgba(11,17,27,.94));border:1px solid var(--edge-2);border-radius:22px;padding:40px 36px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.55);backdrop-filter:blur(6px)}
-.tally{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted-2);margin-bottom:20px}
-.tally i{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}
-.login-logo{height:44px;width:auto;max-width:75%;object-fit:contain;margin-bottom:16px}
+.tally{display:flex;justify-content:center;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted-2);margin:0 0 18px;padding-left:.18em}
+.tally i{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);flex:0 0 auto}
+.login-logo{display:block;margin:0 auto 16px;height:46px;width:auto;max-width:70%}
 .login-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
 .login h1{font-family:var(--display);font-size:46px;letter-spacing:.04em;margin:8px 0 4px;line-height:1}
 .login-hint{color:var(--muted);font-size:13px;margin:0 auto 24px;max-width:30ch}
