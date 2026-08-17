@@ -58,6 +58,7 @@ var ENN_TEAM = {
       { n: 'JuJu Bischoffer',    r: 'Studio Director',    grade: '', bio: 'Coming Soon', email: '[email protected]', photo: '' },
       { n: 'Alejandro Schejola', r: 'Newsroom Director',  grade: '', bio: 'Coming Soon', email: '[email protected]', photo: '' },
       { n: 'Rondell Minor',      r: 'Assistant Director', grade: '', bio: 'Coming Soon', email: '[email protected]', photo: '' },
+      { n: 'Shiann Rodriguez',   r: 'Assistant Director', grade: '', bio: 'Coming Soon', email: '[email protected]', photo: '' },
       { n: 'Gibran Espinoza',    r: 'Equipment Manager',  grade: '', bio: 'Coming Soon', email: '[email protected]', photo: '' },
     ],
     anchors: [],
