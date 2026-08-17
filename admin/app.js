@@ -118,8 +118,10 @@
     var nav=$('#sidenav'); nav.innerHTML='';
     nav.appendChild(navItem('dashboard','🏠','Dashboard'));
     var areas = navAreas();
-    if(areas.length){
+    var mods = (window.ENN_CMS_MODULES||[]).filter(function(m){ return can(m.area,'view'); });
+    if(areas.length || mods.length){
       nav.appendChild(navHead('Content'));
+      mods.forEach(function(m){ nav.appendChild(navItem(m.key, m.icon, m.label)); });
       areas.forEach(function(a){ nav.appendChild(navItem('area:'+a.key, a.icon, a.label)); });
     }
     var admin=[];
@@ -146,6 +148,8 @@
     if(key==='users'){ markNav('users'); return renderUsers(); }
     if(key==='audit'){ markNav('audit'); return renderAudit(); }
     if(key==='help'){ markNav('help'); return renderHelp(); }
+    var mod=(window.ENN_CMS_MODULES||[]).filter(function(m){return m.key===key;})[0];
+    if(mod){ if(!can(mod.area,'view')){ toast('You don’t have access to that.','err'); return go('dashboard'); } markNav(key); return mod.render(moduleCtx(mod)); }
     if(key.indexOf('area:')===0){
       var ak=key.slice(5); markNav(key);
       var secs=sectionsInArea(ak);
@@ -157,6 +161,19 @@
   function crumbs(list){ $('#crumbs').innerHTML = list.map(function(c,i){ return (i?'<span class="sep">/</span>':'')+(c.go?'<a href="#" data-go="'+esc(c.go)+'">'+esc(c.t)+'</a>':'<span>'+esc(c.t)+'</span>'); }).join(''); $('#crumbs').querySelectorAll('a[data-go]').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); go(a.dataset.go); }); }); }
   function view(){ var v=$('#view'); v.innerHTML=''; return v; }
   function setState(t, cls){ var s=$('#save-state'); s.textContent=t||''; s.className='save-state'+(cls?' '+cls:''); }
+
+  /* context handed to custom manager modules (athletics, future) so they
+     reuse the shell's api, permissions, helpers, and UI primitives */
+  function moduleCtx(mod){
+    return {
+      mount: view(), go: go, LIVE: LIVE, ME: ME, P: P, area: mod.area,
+      api: api, can: can, canSection: canSection,
+      crumbs: crumbs, setState: setState, toast: toast, modal: modal, confirmDialog: confirmDialog,
+      el: el, esc: esc, fmtWhen: fmtWhen,
+      fieldEl: fieldEl, listField: listField, textListField: textListField,
+      extractLiteral: extractLiteral, rebuildFile: rebuildFile, jsLit: jsLit
+    };
+  }
 
   /* ── DASHBOARD ── */
   async function renderDashboard(){
@@ -171,7 +188,7 @@
     var qa=el('div','quick'); var acts=[];
     if(sectionsInArea('news').length) acts.push(['📰','Edit News','area:news']);
     if(sectionsInArea('homepage').length) acts.push(['🖥️','Edit Homepage','area:homepage']);
-    if(SCHEMA.some(function(s){return s.id==='athletics'&&canSection('athletics');})) acts.push(['🏈','Manage Athletics','area:athletics']);
+    if(can('athletics','view')) acts.push(['🏈','Manage Athletics','athletics']);
     if(sectionsInArea('team').length) acts.push(['👥','Team & Roster','area:team']);
     if(ME.isMaster||can('users','view')) acts.push(['🔐','Administrators','users']);
     if(ME.isMaster||can('audit','view')) acts.push(['🧾','Change Log','audit']);
