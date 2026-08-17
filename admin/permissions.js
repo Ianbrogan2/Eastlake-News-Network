@@ -66,8 +66,8 @@
     { key:'navigation',label:'Navigation',       icon:'🧭', caps:['view','edit'], future:true,
       desc:'The top navigation menu.' },
     { key:'footer',    label:'Footer',           icon:'⚓', caps:['view','edit'], future:true },
-    { key:'media',     label:'Media Library',    icon:'🖼️', caps:['view','create','delete'], future:true,
-      desc:'Central image library.' },
+    { key:'media',     label:'Media Library',    icon:'🖼️', caps:['view','create','delete'],
+      desc:'Browse, upload, reuse, and delete the site’s images.' },
 
     /* ── RESERVED FUTURE AREA — Yearbook (page not built yet) ──
        Create a `yearbook` admin with a 'yearbook' grant today; it will
@@ -117,7 +117,10 @@
     // Section toggles
     secmain:'sections', secnews:'sections',
     // Athletics (added in Phase 2 — namespace live now)
-    athletics:'athletics', events:'events'
+    athletics:'athletics', events:'events',
+    // Bulletin season + bell schedule live under Settings (backend falls
+    // unknown sections back to 'settings', so this stays consistent).
+    bulletins:'settings', bellschedule:'settings'
   };
 
   function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }

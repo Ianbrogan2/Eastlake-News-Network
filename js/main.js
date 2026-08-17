@@ -847,26 +847,52 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   })();
 
   /* ── News stories ────────────────────────────────────────────── */
+  function nesc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  /* full-story reader overlay (opened by "Read more") */
+  function openArticle(title, meta, body){
+    const html = nesc(body).split(/\n\s*\n/).map(p => '<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');
+    const ov = document.createElement('div'); ov.className='article-overlay';
+    ov.innerHTML = `<div class="article-modal" role="dialog" aria-modal="true">
+      <button class="article-x" aria-label="Close">✕</button>
+      ${meta?`<div class="article-meta">${nesc(meta)}</div>`:''}
+      <h2>${nesc(title)}</h2>
+      <div class="article-body">${html}</div></div>`;
+    document.body.appendChild(ov); document.body.style.overflow='hidden';
+    const close = () => { ov.remove(); document.body.style.overflow=''; };
+    ov.addEventListener('click', e => { if(e.target===ov || e.target.classList.contains('article-x')) close(); });
+    document.addEventListener('keydown', function k(e){ if(e.key==='Escape'){ close(); document.removeEventListener('keydown',k); } });
+  }
   (function buildNews(){
     const featEl    = $('#news-featured');
     const sidebarEl = $('#news-sidebar');
-    if(featEl && news.featured){
+    if(featEl && news.featured && !news.featured.draft){
       const f = news.featured;
+      const more = f.link ? `<a class="news-more" href="${nesc(f.link)}" target="_blank" rel="noopener">Read more ↗</a>`
+                 : f.article ? `<button class="news-more" type="button" data-article>Read the full story →</button>` : '';
       featEl.innerHTML = `
         <article class="news-feat reveal left">
-          <div class="news-tag">${f.tag||'Featured'}</div>
-          <h3>${f.title}</h3>
-          <p>${f.body}</p>
-          <div class="byline">${f.byline}</div>
+          <div class="news-tag">${nesc(f.tag||'Featured')}</div>
+          <h3>${nesc(f.title)}</h3>
+          <p>${nesc(f.body)}</p>
+          <div class="byline">${nesc(f.byline)}</div>
+          ${more}
         </article>`;
+      const b = featEl.querySelector('[data-article]');
+      if(b) b.addEventListener('click', () => openArticle(f.title, f.byline, f.article));
     }
     if(sidebarEl && news.sidebar){
-      sidebarEl.innerHTML = news.sidebar.map((s,i) => `
-        <article class="news-item reveal right d${i+1}">
-          <div class="cat">${s.cat}</div>
-          <h4>${s.title}</h4>
-          <div class="m">${s.date}</div>
-        </article>`).join('');
+      const items = news.sidebar.filter(s => !s.draft);
+      sidebarEl.innerHTML = items.map((s,i) => {
+        const clickable = s.link || s.article;
+        const attr = s.link ? ` data-link="${nesc(s.link)}"` : s.article ? ` data-idx="${i}"` : '';
+        return `
+        <article class="news-item reveal right d${i+1}${clickable?' news-item--link':''}"${attr}>
+          <div class="cat">${nesc(s.cat)}</div>
+          <h4>${nesc(s.title)}</h4>
+          <div class="m">${nesc(s.date)}${clickable?' · <span class="news-read">Read more →</span>':''}</div>
+        </article>`; }).join('');
+      sidebarEl.querySelectorAll('[data-link]').forEach(a => a.addEventListener('click', () => window.open(a.dataset.link,'_blank','noopener')));
+      sidebarEl.querySelectorAll('[data-idx]').forEach(a => a.addEventListener('click', () => { const s=items[+a.dataset.idx]; openArticle(s.title, (s.cat||'')+(s.date?' · '+s.date:''), s.article); }));
 
       /* ── Fact of the Day card ───────────────────────────────────
          Picks one fact per day based on Pacific-time day-of-year.

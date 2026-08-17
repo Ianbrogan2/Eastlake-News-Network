@@ -43,6 +43,8 @@
         body:'“News” controls the <b>featured story</b> and the list of <b>sidebar stories</b> on the home page. The featured story has a tag, headline, summary, and byline. Sidebar stories have a category, headline, and date.' },
       { h:'Writing a good item',
         body:'Headlines should be short and specific. Summaries are 1–2 sentences. Use a real date on sidebar stories so readers know how fresh it is. Save, then hard-refresh the site to see it.' },
+      { h:'Full stories, links & drafts',
+        body:'Each story can go deeper:<br>• <b>Full story</b> — type the whole article (leave a blank line between paragraphs). A <b>Read more</b> button appears and opens it right on the page.<br>• <b>External link</b> — paste a URL to send readers elsewhere instead (opens in a new tab).<br>• <b>Draft</b> — turn this on to hide a story from the public site while you work on it; turn it off to publish.' },
     ]},
 
     athletics:{ icon:'🏈', title:'Athletics', items:[
@@ -116,19 +118,31 @@
         body:'Each color has a swatch and a hex code. Change carefully — colors affect the whole site. If something looks wrong, put the original hex code back and Save.' },
     ]},
 
-    navigation:{ icon:'🧭', title:'Navigation (coming soon)', items:[
-      { h:'Not editable yet',
-        body:'The top menu isn’t manageable here yet — it’s planned. Your permission for it is already reserved, so the moment the Navigation editor is added, your access will work automatically. Until then, menu changes need a developer.' },
+    navigation:{ icon:'🧭', title:'Navigation', items:[
+      { h:'Renaming menu items',
+        body:'Open <b>Homepage → Site Text &amp; Labels → Navigation menu labels</b> to rename Home, About, Athletics, Calendar, Contact, or Games.' },
+      { h:'Showing or hiding pages',
+        body:'Use <b>Page Visibility</b> to switch any page on or off in the menu. Off hides it from the menu and sends anyone who types the address to the home page.' },
+      { h:'Reordering or adding new items',
+        body:'Changing the menu order, or adding a brand-new page, still needs a developer — those touch the site’s structure.' },
     ]},
 
-    footer:{ icon:'⚓', title:'Footer (coming soon)', items:[
-      { h:'Partly editable',
-        body:'The footer’s text lines can be edited today under Homepage → Site Text. A full footer editor (links, social, layout) is planned; your permission is reserved for it.' },
+    footer:{ icon:'⚓', title:'Footer', items:[
+      { h:'Editing footer text',
+        body:'The three footer lines are editable under <b>Homepage → Site Text &amp; Labels</b> (Footer line 1, 2, and 3). Change them there and Save.' },
+      { h:'Links & social',
+        body:'The footer’s social/handles are set with your YouTube and Instagram under <b>Site Settings → Social &amp; Forms</b>. A fuller footer layout editor is a possible future addition.' },
     ]},
 
-    media:{ icon:'🖼️', title:'Media Library (coming soon)', items:[
-      { h:'Not built yet',
-        body:'A central image library (upload once, reuse anywhere, see where each photo is used) is planned. For now, upload photos directly in each section’s photo picker. Your Media permission is reserved for when the library ships.' },
+    media:{ icon:'🖼️', title:'Media Library', items:[
+      { h:'Browsing images',
+        body:'Open <b>Media Library</b> to browse the site’s image folders. Click a folder (📁) to open it; use the breadcrumb at the top to go back up a level.' },
+      { h:'Uploading',
+        body:'Click <b>⤒ Upload here</b> to add a photo to the folder you’re in. Square images look best for headshots. The new photo appears as soon as it finishes uploading.' },
+      { h:'Reusing a photo elsewhere',
+        body:'Click <b>Copy path</b> on any image, then paste that path into a section’s photo field (for example a team member’s Headshot) to reuse it — no need to upload the same picture twice.' },
+      { h:'Deleting',
+        body:'Click <b>Delete</b> to remove an unused image. It stays in the site’s history and can be restored, but anything still pointing at it will show a broken image — so check before deleting.' },
     ]},
 
     yearbook:{ icon:'📓', title:'Yearbook', items:[

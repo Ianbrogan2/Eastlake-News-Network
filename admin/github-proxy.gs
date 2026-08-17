@@ -70,6 +70,8 @@ function doPost(e){
       case 'saveUser':   return json(actSaveUser(user, body));
       case 'deleteUser': return json(actDeleteUser(user, body));
       case 'audit':      return json(actAudit(user, body));
+      case 'listMedia':  return json(actListMedia(user, body));
+      case 'deleteMedia':return json(actDeleteMedia(user, body));
       case 'dashboard':  return json(actDashboard(user));
       default:           return json({ ok:false, error:'Unknown action: '+action });
     }
@@ -357,6 +359,33 @@ function actAudit(user, body){
              before:r[5], after:r[6], commit:r[7] };
   }).reverse();
   return { ok:true, entries: entries };
+}
+
+/* ───────────────────────── media library ───────────────────────── */
+function actListMedia(user, body){
+  if(!user.isMaster && !can(user.permissions,'media','view')) throw new Error('You don’t have permission to view media.');
+  var path = String(body.path||'img').replace(/^\/+|\/+$/g,'');
+  var url = ghBase() + encodeURI(path) + '?ref=' + encodeURIComponent(branch());
+  var res = UrlFetchApp.fetch(url, { method:'get', headers:ghHeaders(), muteHttpExceptions:true });
+  if(res.getResponseCode() !== 200) return { ok:true, path:path, items:[] };
+  var arr = JSON.parse(res.getContentText()), items = [];
+  (arr||[]).forEach(function(f){
+    if(f.type === 'dir') items.push({ dir:true, name:f.name, path:f.path });
+    else if(/\.(png|jpe?g|gif|webp|svg|avif)$/i.test(f.name)) items.push({ name:f.name, path:f.path, size:f.size, sha:f.sha });
+  });
+  return { ok:true, path:path, items:items };
+}
+function actDeleteMedia(user, body){
+  if(!user.isMaster && !can(user.permissions,'media','delete')) throw new Error('You don’t have permission to delete media.');
+  var path = String(body.path||''); if(!path) throw new Error('Missing path.');
+  var probe = UrlFetchApp.fetch(ghBase()+encodeURI(path)+'?ref='+encodeURIComponent(branch()), { method:'get', headers:ghHeaders(), muteHttpExceptions:true });
+  if(probe.getResponseCode() !== 200) return { ok:false, error:'File not found.' };
+  var sha = JSON.parse(probe.getContentText()).sha;
+  var res = UrlFetchApp.fetch(ghBase()+encodeURI(path), {
+    method:'delete', headers:ghHeaders(), contentType:'application/json',
+    payload: JSON.stringify({ message:'Delete '+path+' — by '+user.username, sha:sha, branch:branch() }), muteHttpExceptions:true });
+  if(res.getResponseCode() === 200){ audit(user.username,'delete',path,'Deleted media '+path,'',''); return { ok:true }; }
+  return { ok:false, error:'Delete failed ('+res.getResponseCode()+')' };
 }
 
 /* ───────────────────────── dashboard summary ───────────────────────── */

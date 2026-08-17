@@ -29,6 +29,11 @@ the website first, the new login screen will talk to the old backend and won't w
 
 That’s it. Everything below is the original one-time setup, kept for reference.
 
+> **Media Library update:** the Media Library’s *browse* and *delete* need two new backend
+> actions. If you want those, re-do **Step A** with the latest `admin/github-proxy.gs`
+> (same paste-and-“New version” process). Uploading photos already works without this.
+> Athletics, News, Events, Bulletins, and Bell Schedule need **no** backend redeploy.
+
 ---
 
 # ENN Site Manager — one-time setup (~15 min)

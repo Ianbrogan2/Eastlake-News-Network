@@ -48,6 +48,8 @@
     if(action==='deleteUser')return { ok:true };
     if(action==='audit')     return { ok:true, entries:[] };
     if(action==='dashboard') return { ok:true, recent:[], userCount:1, activeUsers:1 };
+    if(action==='listMedia'){ var p=payload.path||'img'; return { ok:true, path:p, items: p==='img' ? [{dir:true,name:'team',path:'img/team'},{dir:true,name:'spirit',path:'img/spirit'},{name:'enn-logo.png',path:'enn-logo.png',size:33258}] : [{name:'enn-logo.png',path:'enn-logo.png',size:33258}] }; }
+    if(action==='deleteMedia') return { ok:true };
     return { ok:true };
   }
 
@@ -93,6 +95,7 @@
   function enterApp(){
     $('#login').hidden=true; $('#app').hidden=false;
     renderSidebar();
+    wireSearch();
     var uc=$('#user-chip');
     uc.innerHTML = '<div class="uc-avatar">'+esc((ME.displayName||ME.username||'?').slice(0,1).toUpperCase())+'</div>'+
       '<div class="uc-meta"><b>'+esc(ME.displayName||ME.username)+'</b><span>'+esc(ME.isMaster?'Master administrator':(ME.role||'Administrator'))+'</span></div>';
@@ -173,6 +176,47 @@
       fieldEl: fieldEl, listField: listField, textListField: textListField,
       extractLiteral: extractLiteral, rebuildFile: rebuildFile, jsLit: jsLit
     };
+  }
+
+  /* ── global search (topbar / Cmd-K) ── */
+  function searchTargets(){
+    var out=[];
+    SCHEMA.forEach(function(s){ if(!canSection(s.id,'view')) return; var a=P&&P.area(areaFor(s.id)); out.push({label:s.label, sub:a?a.label:'', kw:(s.label+' '+(s.desc||'')+' '+areaFor(s.id)).toLowerCase(), to:'editor:'+s.id, icon:s.icon||'✏️'}); });
+    (window.ENN_CMS_MODULES||[]).forEach(function(m){ if(!can(m.area,'view')) return; out.push({label:m.label, sub:'Manager', kw:(m.label+' '+m.area).toLowerCase(), to:m.key, icon:m.icon}); });
+    if(ME.isMaster||can('users','view')) out.push({label:'Administrators', sub:'Admin', kw:'administrators users permissions accounts staff people login', to:'users', icon:'🔐'});
+    if(ME.isMaster||can('audit','view')) out.push({label:'Change Log', sub:'Admin', kw:'change log audit history who changed edits', to:'audit', icon:'🧾'});
+    out.push({label:'Help & Docs', sub:'', kw:'help docs guide how to documentation', to:'help', icon:'❓'});
+    out.push({label:'Dashboard', sub:'', kw:'dashboard overview home start', to:'dashboard', icon:'🏠'});
+    return out;
+  }
+  function wireSearch(){
+    var inp=$('#global-search'), box=$('#search-results'); if(!inp||inp.dataset.wired) return; inp.dataset.wired='1';
+    var shown=[], active=-1;
+    function render(){
+      var q=inp.value.trim().toLowerCase();
+      if(!q){ box.hidden=true; box.innerHTML=''; return; }
+      var toks=q.split(/\s+/);
+      shown=searchTargets().filter(function(t){ return toks.every(function(k){ return t.kw.indexOf(k)>=0; }); }).slice(0,8);
+      active=-1;
+      box.innerHTML = shown.length
+        ? shown.map(function(t,i){ return '<button class="sr-item" data-i="'+i+'"><span class="sr-ic">'+t.icon+'</span><span class="sr-label">'+esc(t.label)+'</span>'+(t.sub?'<span class="sr-sub">'+esc(t.sub)+'</span>':'')+'</button>'; }).join('')
+        : '<div class="sr-empty">No matches</div>';
+      box.hidden=false;
+      box.querySelectorAll('.sr-item').forEach(function(b){ b.addEventListener('mousedown', function(e){ e.preventDefault(); pick(+b.dataset.i); }); });
+    }
+    function pick(i){ var t=shown[i]; if(!t) return; inp.value=''; box.hidden=true; go(t.to); }
+    function hl(){ box.querySelectorAll('.sr-item').forEach(function(b,i){ b.classList.toggle('active', i===active); }); }
+    inp.addEventListener('input', render);
+    inp.addEventListener('focus', function(){ if(inp.value) render(); });
+    inp.addEventListener('blur', function(){ setTimeout(function(){ box.hidden=true; }, 150); });
+    inp.addEventListener('keydown', function(e){
+      if(box.hidden) return;
+      if(e.key==='ArrowDown'){ e.preventDefault(); active=Math.min(active+1, shown.length-1); hl(); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); active=Math.max(active-1, 0); hl(); }
+      else if(e.key==='Enter'){ e.preventDefault(); pick(active<0?0:active); }
+      else if(e.key==='Escape'){ box.hidden=true; inp.blur(); }
+    });
+    document.addEventListener('keydown', function(e){ if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); inp.focus(); inp.select(); } });
   }
 
   /* ── DASHBOARD ── */

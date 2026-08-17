@@ -74,6 +74,15 @@ window.ENN_SCHEMA = [
       { key:'ogDescription', label:'Share description', type:'textarea' },
       { key:'brandName', label:'Logo name', type:'text' },
       { key:'brandSchool', label:'Logo subtitle', type:'text' },
+      { key:'nav', label:'Navigation menu labels', type:'object',
+        help:'Rename the top menu items. To show/hide a page use Page Visibility; reordering needs a developer.',
+        fields:[
+          { key:'home', label:'Home link', type:'text' },
+          { key:'about', label:'About link', type:'text' },
+          { key:'athletics', label:'Athletics link', type:'text' },
+          { key:'calendar', label:'Calendar link', type:'text' },
+          { key:'contact', label:'Contact link', type:'text' },
+          { key:'bullpen', label:'Games link', type:'text' } ]},
       { key:'onAirText', label:'"On Air" text', type:'text' },
       { key:'offAirText', label:'"Off Air" text', type:'text' },
       { key:'heroTagline', label:'Hero tagline', type:'text' },
@@ -110,18 +119,26 @@ window.ENN_SCHEMA = [
   },
 
   { id:'news', icon:'📰', label:'Home News Stories', group:'Home',
-    desc:'The featured story and the sidebar stories on the home page.',
+    desc:'The featured story and sidebar stories on the home page. Add a “Full story” and a Read-more opens it right on the page; add a link to send readers elsewhere; turn on Draft to hide a story while you work on it.',
     file:'EDIT/05-NEWS.js', kind:'jsobject', varName:'ENN_NEWS',
     fields:[
       { key:'featured', label:'Featured story', type:'object', fields:[
         { key:'tag', label:'Tag', type:'text' },
         { key:'title', label:'Headline', type:'text' },
-        { key:'body', label:'Summary', type:'textarea' },
-        { key:'byline', label:'Byline', type:'text' } ]},
+        { key:'body', label:'Summary (shown on the card)', type:'textarea' },
+        { key:'byline', label:'Byline', type:'text' },
+        { key:'article', label:'Full story (optional — “Read more” opens it)', type:'textarea',
+          help:'Leave a blank line between paragraphs.' },
+        { key:'link', label:'External link (optional — opens instead of the full story)', type:'text' },
+        { key:'draft', label:'Draft — hide this story from the site', type:'toggleBool' } ]},
       { key:'sidebar', label:'Sidebar stories', type:'list', itemLabel:'Story', fields:[
         { key:'cat', label:'Category', type:'text' },
         { key:'title', label:'Headline', type:'text' },
-        { key:'date', label:'Date', type:'text' } ]},
+        { key:'date', label:'Date', type:'text' },
+        { key:'article', label:'Full story (optional — “Read more” opens it)', type:'textarea',
+          help:'Leave a blank line between paragraphs.' },
+        { key:'link', label:'External link (optional)', type:'text' },
+        { key:'draft', label:'Draft — hide from the site', type:'toggleBool' } ]},
     ]
   },
 
@@ -300,6 +317,19 @@ window.ENN_SCHEMA = [
     fields:[ { key:'googleCalendarId', label:'Google Calendar ID', type:'text' } ]
   },
 
+  { id:'events', icon:'📆', label:'Calendar Events', group:'Pages',
+    desc:'Events on the Calendar page — assemblies, dances, holidays, deadlines. Sports live on the Athletics page, not here.',
+    file:'EDIT/27-EVENTS.js', kind:'jsarray', varName:'ENN_EVENTS', itemLabel:'Event',
+    fields:[
+      { key:'date', label:'Start date (YYYY-MM-DD)', type:'text' },
+      { key:'days', label:'How many days (1 = single day)', type:'number' },
+      { key:'time', label:'Time (optional, e.g. 7:00 PM)', type:'text' },
+      { key:'title', label:'Title', type:'text' },
+      { key:'category', label:'Category', type:'text', help:'Spirit · Campus · Academics · Arts · Holiday · Schedule · ENN' },
+      { key:'desc', label:'Details (shown when the event is clicked)', type:'textarea' },
+    ]
+  },
+
   /* ═══════════ GAMES & EXTRAS ═══════════ */
   { id:'bingo', icon:'🎲', label:'Broadcast Bingo', group:'Extras',
     desc:'The Bingo title and the pool of squares it draws from.',
@@ -385,6 +415,25 @@ window.ENN_SCHEMA = [
       { key:'returnDate', label:'Back on (date)', type:'text' },
       { key:'returnTime', label:'Back on (time)', type:'text' },
       { key:'message', label:'Message', type:'textarea' },
+    ]
+  },
+
+  { id:'bulletins', icon:'📅', label:'Bulletin Schedule', group:'Settings',
+    desc:'The bulletin season shown on the Calendar page — air time, the period rotation, and every bulletin date. The month range and no-school days stay as set.',
+    file:'EDIT/21-BULLETINS.js', kind:'jsobject', varName:'ENN_BULLETINS',
+    fields:[
+      { key:'season', label:'Season name', type:'text' },
+      { key:'airHour', label:'Air hour (0–23)', type:'number' },
+      { key:'airMinute', label:'Air minute', type:'number' },
+      { key:'airTimeLabel', label:'Air-time label', type:'text' },
+      { key:'rotation', label:'Period rotation', type:'textlist', itemLabel:'period' },
+      { key:'groupsPerWave', label:'Groups in first wave (0 = split evenly)', type:'number' },
+      { key:'dates', label:'Bulletin dates (YYYY-MM-DD, in order)', type:'textlist', itemLabel:'date' },
+      { key:'calendarNote', label:'Calendar note', type:'textarea' },
+      { key:'countdownLabel', label:'Countdown title', type:'text' },
+      { key:'countdownSublabel', label:'Countdown subtitle', type:'text', help:'{period} and {date} fill in automatically' },
+      { key:'seasonOverLabel', label:'Season-over title', type:'text' },
+      { key:'seasonOverSublabel', label:'Season-over subtitle', type:'text' },
     ]
   },
 
