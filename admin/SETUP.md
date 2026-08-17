@@ -1,3 +1,36 @@
+# ⬆️ UPGRADING TO v2 (multi-user, permissions, change log) — do this ONCE
+
+The Site Manager now supports **multiple administrators, granular permissions, sign-in
+sessions, and a change log**. All of that lives in the backend (never in the public
+website). To turn it on you re-deploy the Apps Script **one time**. You already did the
+original setup, so this is just paste-and-update — about 5 minutes.
+
+**⚠️ Order matters.** Re-deploy the Apps Script *first*, then push the website. If you push
+the website first, the new login screen will talk to the old backend and won't work.
+
+### Step A — update the backend (Apps Script)
+1. Open your existing **script.google.com** project (the one from the original setup).
+2. Select all the code and replace it with the new **`admin/github-proxy.gs`**.
+3. You do **not** need any new Script Properties — it reuses `ADMIN_USER`, `ADMIN_PASSWORD`,
+   `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH`. (Your existing `ADMIN_USER` / `ADMIN_PASSWORD`
+   automatically become the **master administrator** the first time you sign in.)
+4. **Deploy → Manage deployments → (pencil/Edit) → Version: “New version” → Deploy.**
+   Editing the *existing* deployment keeps the **same URL**, so `admin/config.js` needs no change.
+5. The first time it runs it will ask you to **authorize** a new permission (Google Sheets /
+   Drive) — approve it. That’s so it can create the private **“ENN Site Manager — Change Log”**
+   spreadsheet in your Drive automatically. Nothing is shared or public.
+
+### Step B — publish the website
+6. Push the updated `admin/` files (this is the normal GitHub Desktop commit + push).
+7. Go to **eastlakenewsnetwork.com/admin**, **hard-refresh** (Cmd/Ctrl-Shift-R), and sign in
+   with your existing username + password. You’re now the master admin.
+8. Open **Administrators** in the sidebar to create accounts (e.g. a `yearbook` login) and set
+   each person’s permissions.
+
+That’s it. Everything below is the original one-time setup, kept for reference.
+
+---
+
 # ENN Site Manager — one-time setup (~15 min)
 
 This connects your `/admin` login to your site. You do this **once**. After that, you

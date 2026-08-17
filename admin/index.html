@@ -9,19 +9,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- ?v= forces browsers to fetch fresh copies. Bump these when admin files change. -->
-<link rel="stylesheet" href="/admin/admin.css?v=6">
-<script src="/admin/config.js?v=6"></script>
-<script src="/admin/schema.js?v=6"></script>
+<!-- ?v= forces browsers to fetch fresh copies. Bump when admin files change. -->
+<link rel="stylesheet" href="/admin/admin.css?v=7">
+<script src="/admin/config.js?v=7"></script>
+<script src="/admin/schema.js?v=7"></script>
+<script src="/admin/permissions.js?v=7"></script>
 </head>
 <body>
 
-<!-- ambient -->
 <div class="bg-glow" aria-hidden="true"></div>
-<div class="bg-scan" aria-hidden="true"></div>
 
 <!-- ══ LOGIN ══ -->
-<section class="login" id="login">
+<section class="login" id="login" hidden>
   <div class="login-card">
     <span class="tally" id="login-tally"><i></i>ENN STUDIO</span>
     <img class="login-logo" src="/enn-logo.png" alt="ENN"/>
@@ -31,7 +30,7 @@
     <form id="login-form" autocomplete="on">
       <input id="user" type="text" placeholder="Username" aria-label="Username" autocomplete="username" autocapitalize="off" spellcheck="false"/>
       <input id="pw" type="password" placeholder="Password" aria-label="Password" autocomplete="current-password"/>
-      <div class="login-err" id="login-err">Wrong username or password — try again</div>
+      <div class="login-err" id="login-err" style="display:none">Wrong username or password — try again</div>
       <button type="submit" id="login-btn">◉ Enter the Studio</button>
     </form>
     <a class="login-back" href="/">← Back to eastlakenewsnetwork.com</a>
@@ -40,41 +39,29 @@
 
 <!-- ══ APP ══ -->
 <div class="app" id="app" hidden>
-  <header class="topbar">
-    <a class="brand" href="#" id="home-link"><img src="/enn-logo.png" alt=""><b>ENN</b><span>SITE MANAGER</span></a>
-    <div class="topbar-right">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="#" id="home-link"><img src="/enn-logo.png" alt=""><b>ENN</b><span>CMS</span></a>
+    <nav class="sidenav" id="sidenav"></nav>
+    <div class="side-foot">
+      <div class="user-chip" id="user-chip"></div>
+      <a class="side-link" href="/" target="_blank" rel="noopener">View live site ↗</a>
+      <button class="side-link" id="logout">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+      <div class="crumbs" id="crumbs"></div>
       <span class="save-state" id="save-state"></span>
-      <a class="btn-ghost" href="/" target="_blank" rel="noopener">View live site ↗</a>
-      <button class="btn-ghost" id="logout">Sign out</button>
     </div>
-  </header>
-
-  <!-- dashboard -->
-  <main class="wrap" id="dash">
-    <div class="dash-head">
-      <div class="eyebrow">What do you want to edit?</div>
-      <h2>THE SITE</h2>
-      <p class="lede">Pick a section. Change the words, colors, or photos, then hit Save — it goes live in a minute or two.</p>
-    </div>
-    <div class="cards" id="cards"></div>
-  </main>
-
-  <!-- editor -->
-  <main class="wrap" id="editor" hidden>
-    <a class="back" id="editor-back" href="#">← All sections</a>
-    <div class="dash-head">
-      <div class="eyebrow" id="editor-eyebrow">Editing</div>
-      <h2 id="editor-title">Section</h2>
-      <p class="lede" id="editor-desc"></p>
-    </div>
-    <div id="editor-body"></div>
-    <div class="editor-bar">
-      <button class="btn" id="save-btn">◉ Save changes</button>
-      <span class="editor-msg" id="editor-msg"></span>
-    </div>
+    <div class="view" id="view"></div>
   </main>
 </div>
 
-<script src="/admin/app.js?v=6"></script>
+<div class="toast" id="toast"></div>
+<div id="modal-root"></div>
+
+<script src="/admin/app.js?v=7"></script>
 </body>
 </html>
