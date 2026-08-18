@@ -125,6 +125,7 @@ function ensureSeeded(){
     hash: hashPassword(p, salt),
     active: true,
     isMaster: true,
+    owner: true,
     permissions: ['*'],
     createdAt: new Date().toISOString(),
     createdBy: 'system'
@@ -138,10 +139,13 @@ function getUser(username){
   for(var i=0;i<users.length;i++){ if(users[i].username === username) return users[i]; }
   return null;
 }
+/* the protected owner account — can never be deleted, demoted, or deactivated.
+   Marked with owner:true (new seeds) or createdBy:'system' (the original seed). */
+function isOwner(u){ return !!(u && (u.owner === true || u.createdBy === 'system')); }
 function publicUser(u){
   return { username:u.username, displayName:u.displayName, role:u.role||'',
            active:u.active!==false, isMaster:!!u.isMaster, permissions:u.permissions||[],
-           createdAt:u.createdAt||'', lastLogin:u.lastLogin||'' };
+           owner:isOwner(u), createdAt:u.createdAt||'', lastLogin:u.lastLogin||'' };
 }
 
 /* ───────────────────────── sessions ───────────────────────── */
@@ -279,6 +283,9 @@ function actSaveUser(user, body){
     for(var i=0;i<users.length;i++){ if(users[i].username===uname) idx=i; }
     var existing = idx>=0 ? users[idx] : null;
 
+    // the owner account is locked: force full master access, never reducible
+    if(isOwner(existing)){ body.isMaster = true; body.permissions = ['*']; body.active = true; }
+
     // don't let anyone but the target master demote the last master
     var perms = Array.isArray(body.permissions) ? body.permissions.slice() : (existing?existing.permissions:[]);
     var isMaster = body.isMaster != null ? !!body.isMaster : (existing?!!existing.isMaster:false);
@@ -316,6 +323,8 @@ function actDeleteUser(user, body){
   var uname = String(body.username||'').toLowerCase();
   if(uname === user.username) throw new Error('You can’t delete the account you’re signed in with.');
   var users = loadUsers() || [];
+  var target = null; for(var i=0;i<users.length;i++){ if(users[i].username===uname) target=users[i]; }
+  if(isOwner(target)) throw new Error('The owner account can’t be deleted.');
   var next = users.filter(function(x){ return x.username !== uname; });
   if(!next.some(function(x){ return x.isMaster && x.active!==false; }))
     throw new Error('There must be at least one active master administrator.');

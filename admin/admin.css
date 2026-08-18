@@ -180,6 +180,7 @@ button{font-family:inherit;cursor:pointer}
 .perm-subs{display:flex;flex-wrap:wrap;gap:6px 16px;width:100%}
 .perm-sub{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
 input[type=checkbox]{accent-color:var(--blue);width:16px;height:16px}
+.owner-note{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35);border-radius:10px;padding:12px 14px;color:#f5c358;font-size:13px;line-height:1.5}
 
 /* audit table */
 .log-table{width:100%;border-collapse:collapse;font-size:13px}

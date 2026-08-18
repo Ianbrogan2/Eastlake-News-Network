@@ -667,6 +667,12 @@ body.cal-modal-open{ overflow:hidden; }
 .article-body p:last-child{margin-bottom:0}
 @media(max-width:560px){ .article-modal{padding:28px 22px} .article-modal h2{font-size:32px} }
 
+/* period clock — projection controls */
+.pclock-actions{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.pclock-btn{background:transparent;border:1px solid var(--bg-3,#24324a);color:var(--muted-2,#8b97ad);border-radius:9px;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:.02em}
+.pclock-btn:hover{border-color:var(--blue,#2563ff);color:var(--text,#eaf0f9);transform:translateY(-1px)}
+.ennclk-overlay{position:fixed;inset:0;z-index:9999;background:#05070e}
+
 /* ── NEXT UP ── */
 .at-nexthead{ display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap; }
 .at-nexthead .eyebrow{ color:var(--cyan); }

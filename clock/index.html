@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>ENN Period Clock</title>
+<meta name="description" content="Live period countdown for Eastlake High School — project it in your classroom."/>
+<link rel="icon" type="image/png" href="/enn-logo.png">
+<meta name="theme-color" content="#05070e"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05070e;overflow:hidden}
+  #clock{position:fixed;inset:0}
+  /* first-load hint, fades out */
+  #hint{position:fixed;left:50%;bottom:6vmin;transform:translateX(-50%);z-index:20;font-family:'DM Mono',monospace;
+    font-size:clamp(11px,1.7vmin,15px);letter-spacing:.12em;color:#5a6d92;background:rgba(10,16,28,.6);
+    border:1px solid rgba(255,255,255,.08);border-radius:100px;padding:8px 16px;backdrop-filter:blur(6px);transition:opacity .6s}
+</style>
+</head>
+<body>
+<div id="clock"></div>
+<div id="hint">Tap ⛶ or press F for fullscreen · keep this tab open to project</div>
+
+<script src="/EDIT/26-BELLSCHEDULE.js?v=1"></script>
+<script src="/js/clock.js?v=1"></script>
+<script>
+  (function(){
+    var c = ENNClock.mount(document.getElementById('clock'), { fsTarget: document.documentElement });
+    // keyboard: F = fullscreen, Esc handled by browser
+    document.addEventListener('keydown', function(e){
+      if(e.key==='f'||e.key==='F'){ var el=document.documentElement; if(document.fullscreenElement){document.exitFullscreen&&document.exitFullscreen();} else {(el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el);} }
+    });
+    var h=document.getElementById('hint');
+    setTimeout(function(){ h.style.opacity='0'; }, 5000);
+    setTimeout(function(){ h.remove(); }, 6000);
+  })();
+</script>
+</body>
+</html>

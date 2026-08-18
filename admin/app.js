@@ -332,7 +332,8 @@
       list.innerHTML='';
       r.users.forEach(function(u){
         var row=el('div','user-row');
-        var badge = u.isMaster?'<span class="pill master">Master</span>':'<span class="pill">'+ (u.permissions&&u.permissions.length? u.permissions.length+' permissions':'no access') +'</span>';
+        var isOwn = u.owner || (u.isMaster && String(u.role||'').toLowerCase()==='owner');
+        var badge = isOwn?'<span class="pill master">Owner</span>':u.isMaster?'<span class="pill master">Master</span>':'<span class="pill">'+ (u.permissions&&u.permissions.length? u.permissions.length+' permissions':'no access') +'</span>';
         row.innerHTML='<div class="ur-avatar">'+esc((u.displayName||u.username||'?').slice(0,1).toUpperCase())+'</div>'+
           '<div class="ur-main"><b>'+esc(u.displayName||u.username)+'</b><span class="mono">'+esc(u.username)+'</span></div>'+
           '<div class="ur-badges">'+(u.active===false?'<span class="pill off">Inactive</span>':'')+badge+'</div>';
@@ -346,14 +347,17 @@
 
   function userEditor(u){
     var isNew = !u;
+    var owner = !isNew && (u.owner || (u.isMaster && String(u.role||'').toLowerCase()==='owner'));
     var draft = { username:u?u.username:'', displayName:u?u.displayName:'', role:u?u.role:'', active:u?u.active!==false:true, isMaster:u?!!u.isMaster:false, permissions:new Set((u&&u.permissions)||[]) };
     var m = modal(isNew?'Create administrator':'Edit '+(u.displayName||u.username));
     var b = m.body;
+    if(owner) b.appendChild(el('div','owner-note','🔒 Owner account — full access is locked, and it can’t be deactivated or deleted. You can still change its display name, role, or password.'));
     b.appendChild(fieldRow('Username', textInput(draft.username, function(val){ draft.username=val; }, isNew?'':'', isNew?'e.g. yearbook':'', !isNew)));
     b.appendChild(fieldRow('Display name', textInput(draft.displayName, function(val){ draft.displayName=val; }, '', 'e.g. Yearbook Team')));
     b.appendChild(fieldRow('Role / title', textInput(draft.role, function(val){ draft.role=val; }, '', 'e.g. Sports Editor')));
     b.appendChild(fieldRow(isNew?'Password':'Reset password (optional)', pwInput(function(val){ draft.password=val; }, isNew?'Choose a strong password':'Leave blank to keep current')));
-    b.appendChild(toggleRow('Account active', draft.active, function(val){ draft.active=val; }));
+    var activeRow = toggleRow('Account active', draft.active, function(val){ draft.active=val; });
+    b.appendChild(activeRow);
     var masterRow = toggleRow('Master administrator (full access to everything)', draft.isMaster, function(val){ draft.isMaster=val; permWrap.classList.toggle('dim', val); });
     b.appendChild(masterRow);
 
@@ -362,9 +366,10 @@
     permWrap.appendChild(el('p','muted small','Grant whole areas, individual capabilities, or single features. “Full access” keeps working when new features (like Yearbook) are added later.'));
     permWrap.appendChild(permissionTree(draft.permissions));
     b.appendChild(permWrap);
+    if(owner){ [activeRow, masterRow].forEach(function(row){ var cb=row.querySelector('input'); if(cb){ cb.checked=true; cb.disabled=true; } row.style.opacity='.6'; }); permWrap.classList.add('dim'); draft.active=true; draft.isMaster=true; }
 
     m.footer.appendChild(spacer());
-    if(!isNew && u.username!==ME.username){ var del=el('button','btn-danger','Delete'); del.addEventListener('click', function(){ confirmDialog('Delete '+(u.displayName||u.username)+'?','This account will no longer be able to sign in.', async function(){ try{ await api('deleteUser',{username:u.username}); m.close(); toast('Administrator deleted','ok'); renderUsers(); }catch(err){ toast(err.message,'err'); } }); }); m.footer.appendChild(del); }
+    if(!isNew && u.username!==ME.username && !owner){ var del=el('button','btn-danger','Delete'); del.addEventListener('click', function(){ confirmDialog('Delete '+(u.displayName||u.username)+'?','This account will no longer be able to sign in.', async function(){ try{ await api('deleteUser',{username:u.username}); m.close(); toast('Administrator deleted','ok'); renderUsers(); }catch(err){ toast(err.message,'err'); } }); }); m.footer.appendChild(del); }
     var save=el('button','btn','Save administrator');
     save.addEventListener('click', async function(){
       if(!draft.username.trim()) return toast('Username is required','err');

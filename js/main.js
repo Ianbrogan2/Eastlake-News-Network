@@ -2371,6 +2371,33 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     }
     tick();
     setInterval(tick, 1000);
+
+    /* ── Projection controls: pop-out window + fullscreen ──────────
+       These sit OUTSIDE the clock so the per-second re-render can't wipe
+       them. "Pop out" opens the standalone /clock page in a window a
+       teacher can drag to the projector; "Fullscreen" fills this screen
+       with the cinematic clock. Both use the shared ENNClock engine. */
+    (function(){
+      const bar = document.createElement('div');
+      bar.className = 'pclock-actions';
+      bar.innerHTML =
+        '<button class="pclock-btn" data-act="pop" title="Open the clock in its own window">⤢ Pop out</button>' +
+        '<button class="pclock-btn" data-act="full" title="Fill the screen with the clock">⛶ Fullscreen</button>';
+      mount.after(bar);
+      bar.querySelector('[data-act="pop"]').addEventListener('click', () =>
+        window.open('/clock', 'ennclock', 'width=1040,height=660,menubar=no,toolbar=no,location=no,status=no,resizable=yes'));
+      bar.querySelector('[data-act="full"]').addEventListener('click', openClockFS);
+    })();
+    function openClockFS(){
+      if(typeof window.ENNClock === 'undefined'){ window.open('/clock','ennclock'); return; }
+      const ov = document.createElement('div'); ov.className = 'ennclk-overlay';
+      document.body.appendChild(ov);
+      const ctl = window.ENNClock.mount(ov, { fsTarget: ov, onExit: close });
+      function close(){ try{ ctl.destroy(); }catch(e){} ov.remove(); document.removeEventListener('fullscreenchange', onFS); if(document.fullscreenElement) document.exitFullscreen && document.exitFullscreen(); }
+      function onFS(){ if(!document.fullscreenElement){ document.removeEventListener('fullscreenchange', onFS); close(); } }
+      document.addEventListener('fullscreenchange', onFS);
+      (ov.requestFullscreen || ov.webkitRequestFullscreen || function(){}).call(ov);
+    }
   })();
 
   /* ── Scroll reveals ──────────────────────────────────────────── */
