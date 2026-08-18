@@ -62,7 +62,7 @@
   @keyframes clk-ringpulse{0%,100%{filter:drop-shadow(0 0 1.4vmin var(--accent))}50%{filter:drop-shadow(0 0 3.4vmin var(--accent))}}
   .ennclk-center{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.4vmin}
   .ennclk-time{font-family:'Bebas Neue',sans-serif;font-weight:400;line-height:.86;letter-spacing:.01em;
-    font-size:clamp(66px,20vmin,300px);color:#fff;display:flex;justify-content:center;
+    font-size:clamp(58px,17vmin,265px);color:#fff;display:flex;justify-content:center;
     text-shadow:0 0 4vmin color-mix(in srgb,var(--accent) 50%,transparent)}
   .ennclk[data-state=final] .ennclk-time{color:#ffe3e4;text-shadow:0 0 5vmin #ff3b47;animation:clk-final 1s ease-in-out infinite}
   @keyframes clk-final{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
