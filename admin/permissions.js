@@ -73,8 +73,8 @@
        Create a `yearbook` admin with a 'yearbook' grant today; it will
        automatically cover these features the moment the Yearbook page
        and its sections are created. */
-    { key:'yearbook',  label:'Yearbook',         icon:'📓', caps:['view','create','edit','delete','publish'], future:true,
-      desc:'Reserved. Grant access now — it activates when the Yearbook page is created.',
+    { key:'yearbook',  label:'Yearbook',         icon:'📓', caps:['view','create','edit','delete','publish'],
+      desc:'The Yearbook hub — publish/unpublish, per-feature toggles, prices, tributes, history, and more.',
       features:[
         { key:'content',       label:'Page content (title, description, editor’s message)' },
         { key:'staff',         label:'Staff list' },
@@ -120,7 +120,9 @@
     athletics:'athletics', events:'events',
     // Bulletin season + bell schedule live under Settings (backend falls
     // unknown sections back to 'settings', so this stays consistent).
-    bulletins:'settings', bellschedule:'settings'
+    bulletins:'settings', bellschedule:'settings',
+    // Yearbook hub
+    yearbook:'yearbook'
   };
 
   function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }

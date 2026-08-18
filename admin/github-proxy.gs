@@ -208,7 +208,7 @@ var SECTION_AREA = {
   nrboards:'newsroom', nrtext:'newsroom', nrconfig:'newsroom', nrcolors:'newsroom', assign:'newsroom',
   roster1:'team', roster4:'team', roster6:'team', rosteradv:'team',
   secmain:'sections', secnews:'sections',
-  athletics:'athletics', events:'events'
+  athletics:'athletics', events:'events', yearbook:'yearbook'
 };
 function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }
 function can(perms, area, cap, feature){

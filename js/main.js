@@ -475,6 +475,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     studio:    $('#page-studio'),
     calendar:  $('#page-calendar'),
     bullpen:   $('#page-bullpen'),
+    yearbook:  $('#page-yearbook'),
   };
   Object.keys(pages).forEach(k => { if(!pages[k]) delete pages[k]; });
   function route(name){
@@ -2244,6 +2245,143 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   })();
 
   /* ── Period clock (home) — live "what period is it" from EDIT/26 ── */
+  /* ── Yearbook hub (EDIT/28-YEARBOOK.js) ────────────────────────── */
+  (function buildYearbook(){
+    const cfg = (typeof ENN_YEARBOOK !== 'undefined') ? ENN_YEARBOOK : null;
+    const root = document.getElementById('page-yearbook');
+    if(!root) return;
+    const on = v => v==='T' || v===true;
+    /* page is DOWN → remove the page + its menu links, fall back to Home */
+    if(!cfg || !on(cfg.enabled)){
+      root.remove(); delete pages.yearbook;
+      $$('.nav-link[data-route="yearbook"], .mobile-link[data-route="yearbook"]').forEach(a => a.remove());
+      return;
+    }
+    const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const has = s => s!=null && String(s).trim()!=='';
+    const money = v => has(v) ? ('$'+String(v).replace(/^\$/,'')) : '';
+    const cds = [];
+    function cd(dateStr){ if(!has(dateStr)) return ''; const id='ybcd'+cds.length; cds.push({id, target:new Date(dateStr+'T15:00:00')}); return '<div class="yb-cd" data-cd="'+id+'"></div>'; }
+    function sec(eyebrow, titleHTML, inner){ return '<section class="yb-sec"><div class="yb-wrap"><div class="yb-eyebrow">'+esc(eyebrow)+'</div><h2 class="yb-sec-h">'+titleHTML+'</h2>'+inner+'</div></section>'; }
+    function tiers(list){ return (list||[]).filter(t=>has(t.label)||has(t.price)).map(t=>'<div class="yb-tier"><div class="sz">'+esc(has(t.label)?t.label:'AD')+'</div><b>'+esc(t.label||'')+'</b><div class="pr">'+esc(money(t.price))+'</div></div>').join(''); }
+
+    let html='';
+    const an=cfg.announce||{}, h=cfg.hero||{}, buy=cfg.buy||{}, ads=cfg.ads||{}, sub=cfg.submit||{}, hist=cfg.history||{}, hype=cfg.hype||{}, dates=cfg.dates||{}, test=cfg.testimonials||{};
+    const yr = has(h.schoolYear) ? esc(h.schoolYear) : '2026–27';
+
+    if(on(an.on) && (has(an.title)||has(an.body)))
+      html += '<div class="yb-announce"><div class="yb-wrap">'+(has(an.title)?'<b>'+esc(an.title)+'</b>':'')+(has(an.body)?'<span>'+esc(an.body)+'</span>':'')+'</div></div>';
+
+    /* hero */
+    html += '<header class="yb-hero"><div class="yb-wrap"><div>'+
+      '<div class="yb-eyebrow">Eastlake High · Home of the Titans</div>'+
+      '<h1>The <span class="yr">'+yr+'</span> Yearbook</h1>'+
+      '<p>'+(has(h.tagline)?esc(h.tagline):'One book — every game, club, quote, and candid of the year, bound to keep.')+'</p>'+
+      '<div class="yb-hero-cta">'+
+        (on(buy.on)&&has(buy.jostensUrl)?'<a class="yb-btn" href="'+esc(buy.jostensUrl)+'" target="_blank" rel="noopener">Order on Jostens →</a>':'')+
+        (on(sub.on)&&has((sub.photos||{}).studentUrl)?'<a class="yb-btn-ghost" href="'+esc(sub.photos.studentUrl)+'" target="_blank" rel="noopener">Submit a photo</a>':'')+
+      '</div>'+
+      (on(buy.on)&&has(buy.price)?'<div class="yb-hero-price">Yearbooks are <b>'+esc(money(buy.price))+'</b>'+(has(buy.nextBumpDate)?' · reserve before the price rises':'')+'</div>':'')+
+      '</div><div class="yb-cover">'+(has(h.coverImg)?'<img src="/'+esc(h.coverImg)+'" alt="Cover">':
+        '<div class="cov-school">Eastlake Titans</div><div class="cov-yr">'+yr+'</div>'+(has(h.theme)?'<div class="cov-theme">'+esc(h.theme)+'</div>':'')+'<div class="cov-tbd">COVER — TBD</div>')+
+      '</div></div></header>';
+
+    /* buy */
+    if(on(buy.on)){
+      const hlist=(buy.history||[]).filter(x=>has(x.price));
+      let stair='';
+      if(hlist.length){ const max=Math.max.apply(null,hlist.map(x=>+String(x.price).replace(/[^0-9.]/g,'')||0))||1;
+        stair='<div class="yb-stair">'+hlist.map((x,i)=>{const v=+String(x.price).replace(/[^0-9.]/g,'')||0;const p=Math.max(26,Math.round(v/max*100));return '<div class="st'+(i===hlist.length-1?' now':'')+'" style="height:'+p+'%"><b>'+esc(money(x.price))+'</b><span>'+esc(x.when||'')+'</span></div>';}).join('')+'</div>'; }
+      let inner='<div class="yb-buycard"><div class="left"><div class="yb-eyebrow">Today’s price</div>'+
+        '<div class="yb-price">'+(has(buy.price)?'<span class="cur">$</span>'+esc(String(buy.price).replace(/^\$/,'')):'TBD')+'</div>'+
+        (has(buy.nextBumpDate)?'<div class="yb-bump">⏳ Goes up'+(has(buy.nextBumpPrice)?' to '+esc(money(buy.nextBumpPrice)):'')+' in'+cd(buy.nextBumpDate)+'</div>':'')+
+        '<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">'+
+          (has(buy.jostensUrl)?'<a class="yb-btn" href="'+esc(buy.jostensUrl)+'" target="_blank" rel="noopener">Buy on Jostens →</a>':'')+
+          (on((buy.gift||{}).on)&&has((buy.gift||{}).url)?'<a class="yb-btn-ghost" href="'+esc(buy.gift.url)+'" target="_blank" rel="noopener">🎁 Gift a copy'+(has(buy.gift.price)?' — '+esc(money(buy.gift.price)):'')+'</a>':'')+
+        '</div></div>'+
+        '<div class="right"><div class="yb-eyebrow">Price history</div>'+(stair||'<div class="yb-tbd" style="margin-top:12px">TBD</div>')+'</div></div>';
+      // remind + extras
+      const rExtras=[];
+      if(on((buy.remind||{}).on)&&has((buy.remind||{}).url)) rExtras.push('<div class="yb-card"><h4>Remind me</h4><p style="margin-bottom:12px">Get a heads-up before the price goes up.</p><a class="yb-btn-ghost" href="'+esc(buy.remind.url)+'" target="_blank" rel="noopener">🔔 Notify me</a></div>');
+      if(on((buy.extras||{}).on)){ const items=(buy.extras.items||[]).filter(x=>has(x.label)); if(items.length){ rExtras.push('<div class="yb-card"><h4>Add-ons</h4><div style="margin-top:12px">'+items.map(x=>'<div class="yb-linkrow"><span class="nm">'+esc(x.label)+'</span>'+(has(x.price)?'<span class="pr">'+esc(money(x.price))+'</span>':'')+(has(x.url)?'<a class="yb-btn-ghost" href="'+esc(x.url)+'" target="_blank" rel="noopener">Add</a>':'')+'</div>').join('')+'</div></div>'); } }
+      if(rExtras.length) inner+='<div class="yb-grid g2">'+rExtras.join('')+'</div>';
+      html += sec('Get your book','Buy the <em>yearbook</em>', inner);
+    }
+
+    /* ads */
+    if(on(ads.on)){
+      const cards=[];
+      const tr=ads.tributes||{}; if(on(tr.on)) cards.push('<div><h3 class="yb-sec-h" style="font-size:24px">Senior tributes</h3><p class="yb-lede">'+(has(tr.desc)?esc(tr.desc):'A baby photo, a message from family, and a senior quote — printed together.')+(has(tr.deadline)?' <b style="color:var(--yb-gold-2)">Deadline: '+esc(tr.deadline)+'</b>':'')+'</p><div class="yb-grid g4" style="margin-top:16px">'+(tiers(tr.tiers)||'<div class="yb-tbd">Tiers — TBD</div>')+'</div>'+(has(tr.formUrl)?'<div style="margin-top:16px"><a class="yb-btn" href="'+esc(tr.formUrl)+'" target="_blank" rel="noopener">Reserve a tribute →</a></div>':'')+'</div>');
+      const sp=ads.sponsors||{}; if(on(sp.on)) cards.push('<div style="margin-top:18px"><h3 class="yb-sec-h" style="font-size:24px">Business &amp; sponsors</h3><div class="yb-grid g4" style="margin-top:16px">'+(tiers(sp.tiers)||'<div class="yb-tbd">Tiers — TBD</div>')+'</div>'+(has(sp.becomeUrl)?'<div style="margin-top:16px"><a class="yb-btn-ghost" href="'+esc(sp.becomeUrl)+'" target="_blank" rel="noopener">Become a sponsor</a></div>':'')+'</div>');
+      const gr=ads.groups||{}; if(on(gr.on)) cards.push('<div style="margin-top:18px"><h3 class="yb-sec-h" style="font-size:24px">Friend &amp; group ads</h3><div class="yb-grid g4" style="margin-top:16px">'+(tiers(gr.tiers)||'<div class="yb-tbd">Tiers — TBD</div>')+'</div>'+(has(gr.formUrl)?'<div style="margin-top:16px"><a class="yb-btn-ghost" href="'+esc(gr.formUrl)+'" target="_blank" rel="noopener">Start a group ad</a></div>':'')+'</div>');
+      if(cards.length) html += sec('Be in the book','Ads &amp; <em>shout-outs</em>', cards.join(''));
+    }
+
+    /* submit */
+    if(on(sub.on)){
+      const cards=[];
+      const ph=sub.photos||{}; if(on(ph.on)) cards.push('<div class="yb-card"><h4>Submit photos</h4><p>'+((ph.categories||[]).filter(has).length?'Categories: '+esc((ph.categories||[]).filter(has).join(' · ')):'Sports, clubs, spirit weeks, candids.')+'</p><div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+(has(ph.studentUrl)?'<a class="yb-btn-ghost" href="'+esc(ph.studentUrl)+'" target="_blank" rel="noopener">Students →</a>':'')+(has(ph.parentUrl)?'<a class="yb-btn-ghost" href="'+esc(ph.parentUrl)+'" target="_blank" rel="noopener">Parents →</a>':'')+'</div></div>');
+      const su=sub.superlatives||{}; if(on(su.on)) cards.push('<div class="yb-card"><h4>Superlatives</h4><p>'+(has(su.note)?esc(su.note):'Vote for “Most likely to…”, “Best duo,” and more.')+'</p><div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+(has(su.voteUrl)?'<a class="yb-btn" href="'+esc(su.voteUrl)+'" target="_blank" rel="noopener">Vote now →</a>':'<span class="yb-tbd" style="min-height:0;padding:10px 14px">Voting opens later this year</span>')+(has(su.teacherUrl)?'<a class="yb-btn-ghost" href="'+esc(su.teacherUrl)+'" target="_blank" rel="noopener">Teacher form</a>':'')+'</div></div>');
+      const ro=sub.rosters||{}; if(on(ro.on)) cards.push('<div class="yb-card"><h4>Team &amp; club rosters</h4><p>Captains: upload your roster photo &amp; name list.</p>'+(has(ro.url)?'<div style="margin-top:14px"><a class="yb-btn-ghost" href="'+esc(ro.url)+'" target="_blank" rel="noopener">Upload roster →</a></div>':'')+'</div>');
+      if(cards.length) html += sec('Help build it','Get <em>involved</em>', '<div class="yb-grid g3">'+cards.join('')+'</div>');
+    }
+
+    /* history */
+    if(on(hist.on)){
+      const covers=(hist.covers||[]).filter(c=>has(c.year)||has(c.img)||has(c.theme));
+      let inner='';
+      if(covers.length){
+        inner+='<div class="yb-decades"><div class="yb-chip on">All</div><div class="yb-chip">1990s</div><div class="yb-chip">2000s</div><div class="yb-chip">2010s</div><div class="yb-chip">2020s</div></div>';
+        inner+='<div class="yb-strip">'+covers.map(c=>'<div class="yb-spine"><div class="img">'+(has(c.img)?'<img src="/'+esc(c.img)+'" alt="">':'TBD')+'</div><div class="yr">'+esc(c.year||'—')+'</div><div class="th">'+esc(c.theme||'')+'</div></div>').join('')+'</div>';
+        const themed=covers.filter(c=>has(c.theme));
+        if(themed.length) inner+='<div class="yb-themes">'+themed.map(c=>'<div class="row"><q>'+esc(c.theme)+'</q><span class="yr">’'+esc(String(c.year||'').slice(-2))+'</span></div>').join('')+'</div>';
+      } else inner+='<div class="yb-tbd">Cover archive — TBD</div>';
+      const al=hist.alumni||{};
+      if(on(al.on)){ const ppl=(al.people||[]).filter(p=>has(p.name)); if(ppl.length) inner+='<h3 class="yb-sec-h" style="font-size:24px;margin-top:34px">Notable alumni</h3><div class="yb-grid g3">'+ppl.map(p=>'<div class="yb-card"><div class="yb-tbd" style="aspect-ratio:1;margin-bottom:12px">'+(has(p.img)?'<img src="/'+esc(p.img)+'" style="width:100%;height:100%;object-fit:cover" alt="">':'PHOTO — TBD')+'</div><h4>'+esc(p.name)+'</h4><p>'+(has(p.classOf)?'Class of '+esc(p.classOf):'')+(has(p.note)?' — '+esc(p.note):'')+'</p></div>').join('')+'</div>'; }
+      html += sec('Titan legacy','Every cover, <em>every year</em>', inner);
+    }
+
+    /* hype */
+    if(on(hype.on)){
+      let inner='';
+      const rv=hype.reveal||{};
+      if(on(rv.on)&&has(rv.date)) inner+='<div class="yb-reveal"><div class="lab">Until the cover reveal</div>'+cd(rv.date)+'</div>';
+      const pr=hype.progress||{};
+      if(on(pr.on)&&(has(pr.done)||has(pr.avgPerDay))){ const pct=(has(pr.done)&&has(pr.total))?Math.max(2,Math.min(100,Math.round(+pr.done/+pr.total*100))):8;
+        inner+='<div class="yb-card" style="margin-top:16px"><h4>Making the book</h4><p>'+(has(pr.done)&&has(pr.total)?'<b style="color:var(--yb-gold-2)">'+esc(pr.done)+'</b> of '+esc(pr.total)+' spreads done':'')+(has(pr.avgPerDay)?' · about '+esc(pr.avgPerDay)+' a day':'')+'</p><div class="yb-thermo"><i style="width:'+pct+'%"></i></div></div>'; }
+      const st=hype.staff||{};
+      if(on(st.on)){ const ppl=(st.people||[]).filter(p=>has(p.name)); if(ppl.length) inner+='<h3 class="yb-sec-h" style="font-size:24px;margin-top:26px">Meet the editors</h3><div class="yb-grid g4">'+ppl.map(p=>'<div class="yb-card"><div class="yb-tbd" style="aspect-ratio:1;margin-bottom:10px">'+(has(p.img)?'<img src="/'+esc(p.img)+'" style="width:100%;height:100%;object-fit:cover" alt="">':'TBD')+'</div><h4 style="font-size:17px">'+esc(p.name)+'</h4><p>'+esc(p.role||'')+'</p></div>').join('')+'</div>'; }
+      if(has(inner)) html += sec('Behind the book','The <em>hype</em>', inner);
+    }
+
+    /* dates */
+    if(on(dates.on)){
+      const items=(dates.items||[]).filter(d=>has(d.label)&&has(d.date));
+      let inner='';
+      if(items.length) inner+='<div class="yb-grid g3">'+items.map(d=>'<div class="yb-date"><div class="lbl">'+esc(d.label)+'</div>'+cd(d.date)+'</div>').join('')+'</div>';
+      const dist=dates.distribution||{};
+      if(on(dist.on)&&(has(dist.date)||has(dist.where))) inner+='<div class="yb-card" style="margin-top:16px"><h4>📦 Distribution day</h4><p>'+esc([dist.date,dist.where].filter(has).join(' · '))+'</p></div>';
+      if(has(inner)) html += sec('Mark your calendar','Key <em>dates</em>', inner);
+    }
+
+    /* testimonials */
+    if(on(test.on)){ const items=(test.items||[]).filter(t=>has(t.quote)); if(items.length) html += sec('Why buy','Worth <em>keeping</em>', '<div class="yb-grid g2">'+items.map(t=>'<div class="yb-quote"><q>'+esc(t.quote)+'</q>'+(has(t.who)?'<div class="who">— '+esc(t.who)+'</div>':'')+'</div>').join('')+'</div>'); }
+
+    html += '<div class="yb-foot">Eastlake Yearbook · produced with ENN · Home of the Titans</div>';
+    root.innerHTML = html;
+
+    /* live countdowns */
+    if(cds.length){
+      const pad=n=>String(n).padStart(2,'0');
+      const upd=()=>cds.forEach(c=>{ const el=root.querySelector('[data-cd="'+c.id+'"]'); if(!el) return; let d=c.target-new Date(); if(d<0)d=0;
+        const dd=Math.floor(d/864e5),hh=Math.floor(d%864e5/36e5),mm=Math.floor(d%36e5/6e4),ss=Math.floor(d%6e4/1e3);
+        el.innerHTML=[['Days',dd],['Hrs',hh],['Min',mm],['Sec',ss]].map(u=>'<div class="u"><b>'+pad(u[1])+'</b><span>'+u[0]+'</span></div>').join(''); });
+      upd(); setInterval(upd,1000);
+    }
+    /* decade filter chips (visual) */
+    root.querySelectorAll('.yb-decades .yb-chip').forEach(c=>c.addEventListener('click',()=>{ root.querySelectorAll('.yb-decades .yb-chip').forEach(x=>x.classList.remove('on')); c.classList.add('on'); }));
+  })();
+
   (function buildPeriodClock(){
     const cfg = (typeof ENN_BELL !== 'undefined') ? ENN_BELL : null;
     const mount = $('#period-clock');
@@ -2384,6 +2522,10 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         '<button class="pclock-btn" data-act="pop" title="Open the clock in its own window">⤢ Pop out</button>' +
         '<button class="pclock-btn" data-act="full" title="Fill the screen with the clock">⛶ Fullscreen</button>';
       mount.after(bar);
+      const hint = document.createElement('div');
+      hint.className = 'pclock-projhint';
+      hint.innerHTML = 'Teachers — <a href="/clock" target="_blank" rel="noopener">project this on your screen →</a>';
+      bar.after(hint);
       bar.querySelector('[data-act="pop"]').addEventListener('click', () =>
         window.open('/clock', 'ennclock', 'width=1040,height=660,menubar=no,toolbar=no,location=no,status=no,resizable=yes'));
       bar.querySelector('[data-act="full"]').addEventListener('click', openClockFS);

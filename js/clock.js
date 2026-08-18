@@ -14,9 +14,9 @@
   /* ── styles (injected once) ─────────────────────────────────────── */
   var CSS = `
   .ennclk-host{position:absolute;inset:0}
-  .ennclk{--accent:#3aa0ff;--accent-2:#38bdf8;position:absolute;inset:0;overflow:hidden;background:#05070e;color:#eef4ff;
-    font-family:'DM Sans',system-ui,sans-serif;display:grid;place-items:center;isolation:isolate;
-    --a:var(--accent)}
+  .ennclk{--accent:#3aa0ff;--accent-2:#38bdf8;position:absolute;inset:0;overflow:hidden;color:#eef4ff;
+    background:radial-gradient(135% 100% at 50% 4%, #12213c 0%, #0b1526 32%, #070c17 68%, #04060d 100%);
+    font-family:'DM Sans',system-ui,sans-serif;display:grid;place-items:center;isolation:isolate}
   .ennclk[data-state=break]{--accent:#26d07c;--accent-2:#22c55e}
   .ennclk[data-state=warn]{--accent:#f7b13a;--accent-2:#f59e0b}
   .ennclk[data-state=final]{--accent:#ff3b47;--accent-2:#ff5a63}
@@ -27,14 +27,15 @@
                radial-gradient(80% 60% at 50% 120%, color-mix(in srgb,var(--accent) 12%, transparent), transparent 70%);
     animation:clk-breathe 7s ease-in-out infinite}
   @keyframes clk-breathe{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-  .ennclk-scan{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
-    background:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 4px)}
-  .ennclk-grid{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.35;
-    background:linear-gradient(color-mix(in srgb,var(--accent) 9%,transparent) 1px,transparent 1px) 0 0/100% 6vmin,
-              linear-gradient(90deg,color-mix(in srgb,var(--accent) 9%,transparent) 1px,transparent 1px) 0 0/6vmin 100%;
-    -webkit-mask:radial-gradient(70% 70% at 50% 50%,#000,transparent 78%);mask:radial-gradient(70% 70% at 50% 50%,#000,transparent 78%)}
+  .ennclk-scan{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.35;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 5px)}
+  .ennclk-sheen{position:absolute;inset:-20%;z-index:0;pointer-events:none;opacity:.6;
+    background:conic-gradient(from 200deg at 50% 42%, transparent 0deg, color-mix(in srgb,var(--accent) 12%,transparent) 60deg, transparent 150deg, color-mix(in srgb,var(--accent) 8%,transparent) 250deg, transparent 340deg);
+    -webkit-mask:radial-gradient(60% 60% at 50% 44%,#000,transparent 80%);mask:radial-gradient(60% 60% at 50% 44%,#000,transparent 80%);
+    animation:clk-drift 26s linear infinite}
+  @keyframes clk-drift{to{transform:rotate(360deg)}}
   .ennclk-vig{position:absolute;inset:0;z-index:2;pointer-events:none;
-    box-shadow:inset 0 0 26vmin 6vmin rgba(0,0,0,.72)}
+    box-shadow:inset 0 0 30vmin 8vmin rgba(0,0,0,.66)}
   .ennclk-flash{position:absolute;inset:0;z-index:9;pointer-events:none;opacity:0;
     background:radial-gradient(circle at 50% 46%,#fff,color-mix(in srgb,var(--accent) 60%,transparent) 40%,transparent 72%)}
   .ennclk-flash.go{animation:clk-flash 1.1s ease-out}
@@ -138,7 +139,7 @@
     container.classList.add('ennclk-host');
     container.innerHTML =
       '<div class="ennclk" data-state="calm">'+
-        '<div class="ennclk-bg"></div><div class="ennclk-grid"></div><div class="ennclk-scan"></div><div class="ennclk-vig"></div>'+
+        '<div class="ennclk-bg"></div><div class="ennclk-sheen"></div><div class="ennclk-scan"></div><div class="ennclk-vig"></div>'+
         '<div class="ennclk-flash" data-flash></div>'+
         '<div class="ennclk-top"><div class="ennclk-tally"><i></i>ON AIR</div>'+
           '<div class="ennclk-wall"><span data-wall>--:--</span><em data-wdate></em></div></div>'+
@@ -160,7 +161,18 @@
 
     if(!eng.ok){ centerEl.innerHTML='<div class="ennclk-wordbig">No schedule</div>'; }
 
+    /* end-of-period chime (muted by default; a click unlocks browser audio) */
+    var AC=null, soundOn=false;
+    try{ soundOn = localStorage.getItem('enn_clock_sound')==='1'; }catch(e){}
+    function ensureAC(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(AC&&AC.state==='suspended') AC.resume(); }
+    function chime(){ if(!soundOn) return; ensureAC(); if(!AC) return; var t=AC.currentTime;
+      [880,1174.66,1567.98].forEach(function(f,i){ var o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=f; o.connect(g); g.connect(AC.destination);
+        var st=t+i*0.14; g.gain.setValueAtTime(0,st); g.gain.linearRampToValueAtTime(0.22,st+0.02); g.gain.exponentialRampToValueAtTime(0.0008,st+1.1); o.start(st); o.stop(st+1.15); }); }
+
     /* controls */
+    var sndBtn=document.createElement('button'); sndBtn.textContent=soundOn?'🔔':'🔕'; sndBtn.title='End-of-period chime — '+(soundOn?'on':'off');
+    sndBtn.onclick=function(){ soundOn=!soundOn; try{ localStorage.setItem('enn_clock_sound',soundOn?'1':'0'); }catch(e){} sndBtn.textContent=soundOn?'🔔':'🔕'; sndBtn.title='End-of-period chime — '+(soundOn?'on':'off'); if(soundOn){ ensureAC(); chime(); } };
+    ctrls.appendChild(sndBtn);
     var fullBtn=document.createElement('button'); fullBtn.textContent='⛶'; fullBtn.title='Toggle fullscreen';
     fullBtn.onclick=function(){ toggleFS(); };
     ctrls.appendChild(fullBtn);
@@ -205,8 +217,8 @@
       var st=eng.compute();
       var w=eng.wall(); wallEl.textContent=w.t; wdateEl.textContent=w.date;
       if(st.key!==lastKey){
-        // period just ended → celebratory burst
-        if(lastKey && /^in:/.test(lastKey)) flash();
+        // period just ended → celebratory burst + optional chime
+        if(lastKey && /^in:/.test(lastKey)){ flash(); chime(); }
         shell(st); lastKey=st.key; lastRemain=null;
       }
       var timeEl=$('[data-time]');

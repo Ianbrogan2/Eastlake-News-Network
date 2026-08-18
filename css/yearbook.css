@@ -1,0 +1,154 @@
+/* ══════════════════════════════════════════════════════════════════
+   EASTLAKE YEARBOOK — page styles
+   Identity: a printed-keepsake editorial voice over ENN's broadcast dark.
+   Gold foil + a high-contrast serif (Fraunces) + magazine department
+   rules. Scoped under #page-yearbook so nothing here touches the site.
+══════════════════════════════════════════════════════════════════ */
+#page-yearbook{
+  --yb-ink:#f4f1e8; --yb-dim:#b9b3a2; --yb-faint:#7d7869;
+  --yb-bg:#080a11; --yb-bg2:#0c101b; --yb-panel:#11151f; --yb-edge:#232a38;
+  --yb-gold:#e6ba57; --yb-gold-2:#f2d183; --yb-gold-dim:#6b592c;
+  --yb-blue:#3b7bff; --yb-cyan:#4cc2f5; --yb-paper:#efe6d2;
+  --yb-serif:'Fraunces',Georgia,serif; --yb-sans:'DM Sans',system-ui,sans-serif; --yb-mono:'DM Mono',monospace;
+  background:var(--yb-bg); color:var(--yb-ink); font-family:var(--yb-sans);
+}
+#page-yearbook .yb-wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+#page-yearbook .yb-serif{font-family:var(--yb-serif)}
+
+/* eyebrow / department label */
+#page-yearbook .yb-eyebrow{font-family:var(--yb-mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--yb-gold);
+  display:flex;align-items:center;gap:12px}
+#page-yearbook .yb-eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--yb-gold-dim),transparent)}
+
+/* section shell */
+#page-yearbook .yb-sec{padding:70px 0;border-top:1px solid var(--yb-edge)}
+#page-yearbook .yb-sec-h{font-family:var(--yb-serif);font-weight:400;font-size:clamp(30px,4.2vw,52px);line-height:1.02;letter-spacing:-.01em;margin:14px 0 6px}
+#page-yearbook .yb-sec-h em{font-style:italic;color:var(--yb-gold-2)}
+#page-yearbook .yb-lede{color:var(--yb-dim);max-width:60ch;font-size:16px;margin:0}
+
+/* buttons */
+#page-yearbook .yb-btn{display:inline-flex;align-items:center;gap:9px;background:var(--yb-gold);color:#241a05;border:0;border-radius:2px;
+  padding:14px 24px;font-family:var(--yb-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:.16s}
+#page-yearbook .yb-btn:hover{background:var(--yb-gold-2);transform:translateY(-1px)}
+#page-yearbook .yb-btn-ghost{display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--yb-edge);color:var(--yb-ink);
+  border-radius:2px;padding:13px 22px;font-family:var(--yb-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.16s}
+#page-yearbook .yb-btn-ghost:hover{border-color:var(--yb-gold)}
+#page-yearbook .yb-tbd{display:grid;place-items:center;background:var(--yb-bg2);border:1px dashed var(--yb-edge);color:var(--yb-faint);
+  font-family:var(--yb-mono);font-size:11px;letter-spacing:.16em;min-height:80px}
+
+/* announcement bar */
+#page-yearbook .yb-announce{background:linear-gradient(90deg,rgba(230,186,87,.14),rgba(230,186,87,.04));border-bottom:1px solid var(--yb-gold-dim)}
+#page-yearbook .yb-announce .yb-wrap{display:flex;gap:16px;align-items:baseline;padding:14px 24px;flex-wrap:wrap}
+#page-yearbook .yb-announce b{font-family:var(--yb-serif);font-size:18px;color:var(--yb-gold-2)}
+#page-yearbook .yb-announce span{color:var(--yb-dim);font-size:15px}
+
+/* HERO */
+#page-yearbook .yb-hero{position:relative;overflow:hidden}
+#page-yearbook .yb-hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 80% at 82% 8%,rgba(230,186,87,.14),transparent 60%),radial-gradient(50% 60% at 0% 100%,rgba(59,123,255,.10),transparent 60%)}
+#page-yearbook .yb-hero .yb-wrap{position:relative;display:grid;grid-template-columns:1fr .82fr;gap:52px;align-items:center;padding:74px 24px 64px}
+#page-yearbook .yb-hero h1{font-family:var(--yb-serif);font-weight:400;font-size:clamp(46px,7.2vw,92px);line-height:.96;letter-spacing:-.02em;margin:16px 0 14px}
+#page-yearbook .yb-hero h1 .yr{font-style:italic;color:var(--yb-gold)}
+#page-yearbook .yb-hero p{color:var(--yb-dim);font-size:18px;max-width:42ch;margin:0 0 26px}
+#page-yearbook .yb-hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+#page-yearbook .yb-hero-price{font-family:var(--yb-mono);font-size:13px;color:var(--yb-faint);letter-spacing:.06em;margin-top:20px}
+#page-yearbook .yb-hero-price b{color:var(--yb-ink);font-size:15px}
+/* the foil-stamped cover */
+#page-yearbook .yb-cover{position:relative;aspect-ratio:8/10.4;border-radius:3px;
+  background:linear-gradient(155deg,#18202f,#0b0f18);border:1px solid var(--yb-gold-dim);
+  box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.02);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:26px}
+#page-yearbook .yb-cover::before{content:"";position:absolute;inset:12px;border:1px solid var(--yb-gold-dim);border-radius:1px;pointer-events:none}
+#page-yearbook .yb-cover .cov-yr{font-family:var(--yb-serif);font-style:italic;font-size:clamp(40px,7vw,74px);line-height:.9;
+  color:var(--yb-gold);text-shadow:0 1px 0 rgba(0,0,0,.4)}
+#page-yearbook .yb-cover .cov-school{font-family:var(--yb-mono);font-size:12px;letter-spacing:.3em;color:var(--yb-dim);text-transform:uppercase}
+#page-yearbook .yb-cover .cov-theme{font-family:var(--yb-serif);font-size:20px;color:var(--yb-ink);text-align:center}
+#page-yearbook .yb-cover .cov-tbd{position:absolute;bottom:20px;font-family:var(--yb-mono);font-size:10px;letter-spacing:.18em;color:var(--yb-faint)}
+#page-yearbook .yb-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:3px}
+@media(max-width:820px){#page-yearbook .yb-hero .yb-wrap{grid-template-columns:1fr;gap:34px}#page-yearbook .yb-cover{max-width:300px;margin:0 auto}}
+
+/* buy card */
+#page-yearbook .yb-buycard{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--yb-edge);border-radius:4px;overflow:hidden;margin-top:26px}
+#page-yearbook .yb-buycard>div{padding:28px 30px}
+#page-yearbook .yb-buycard .left{background:var(--yb-panel);border-right:1px solid var(--yb-edge)}
+#page-yearbook .yb-price{font-family:var(--yb-serif);font-size:clamp(52px,8vw,84px);line-height:.9;color:var(--yb-ink)}
+#page-yearbook .yb-price .cur{color:var(--yb-faint);font-size:.35em;vertical-align:super;font-family:var(--yb-mono)}
+#page-yearbook .yb-bump{display:flex;align-items:center;gap:10px;background:rgba(230,186,87,.1);border:1px solid var(--yb-gold-dim);border-radius:2px;
+  padding:11px 14px;color:var(--yb-gold-2);font-family:var(--yb-mono);font-size:13px;margin-top:16px}
+#page-yearbook .yb-stair{display:flex;align-items:flex-end;gap:12px;height:130px;margin-top:6px}
+#page-yearbook .yb-stair .st{flex:1;background:linear-gradient(180deg,var(--yb-gold-dim),transparent);border-top:2px solid var(--yb-gold);position:relative;display:flex;justify-content:center;border-radius:1px}
+#page-yearbook .yb-stair .st.now{background:linear-gradient(180deg,rgba(230,186,87,.4),transparent)}
+#page-yearbook .yb-stair .st b{position:absolute;top:-22px;font-family:var(--yb-mono);font-size:12px;color:var(--yb-ink)}
+#page-yearbook .yb-stair .st span{position:absolute;bottom:-22px;font-family:var(--yb-mono);font-size:10px;color:var(--yb-faint)}
+@media(max-width:820px){#page-yearbook .yb-buycard{grid-template-columns:1fr}#page-yearbook .yb-buycard .left{border-right:0;border-bottom:1px solid var(--yb-edge)}}
+
+/* countdown */
+#page-yearbook .yb-cd{display:flex;gap:8px}
+#page-yearbook .yb-cd .u{background:var(--yb-bg2);border:1px solid var(--yb-edge);border-radius:2px;padding:9px 0;min-width:58px;text-align:center}
+#page-yearbook .yb-cd .u b{font-family:var(--yb-serif);font-size:30px;color:var(--yb-ink);display:block;line-height:1;font-variant-numeric:tabular-nums}
+#page-yearbook .yb-cd .u span{font-family:var(--yb-mono);font-size:9px;letter-spacing:.14em;color:var(--yb-faint);text-transform:uppercase}
+
+/* generic grids */
+#page-yearbook .yb-grid{display:grid;gap:16px;margin-top:26px}
+#page-yearbook .g2{grid-template-columns:1fr 1fr}
+#page-yearbook .g3{grid-template-columns:repeat(3,1fr)}
+#page-yearbook .g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:820px){#page-yearbook .g2,#page-yearbook .g3,#page-yearbook .g4{grid-template-columns:1fr}}
+#page-yearbook .yb-card{background:var(--yb-panel);border:1px solid var(--yb-edge);border-radius:4px;padding:22px}
+#page-yearbook .yb-card h4{font-family:var(--yb-serif);font-size:20px;font-weight:400;margin:0 0 6px}
+#page-yearbook .yb-card p{color:var(--yb-dim);font-size:14px;margin:0}
+
+/* tier (ads) — cream paper */
+#page-yearbook .yb-tier{background:var(--yb-paper);color:#231b0c;border-radius:3px;padding:20px;text-align:center;transition:.16s;cursor:default}
+#page-yearbook .yb-tier:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+#page-yearbook .yb-tier .sz{aspect-ratio:1;border:1.5px dashed #b7a884;border-radius:2px;margin:0 auto 12px;display:grid;place-items:center;color:#8a7c5c;font-family:var(--yb-mono);font-size:11px}
+#page-yearbook .yb-tier b{display:block;font-family:var(--yb-serif);font-size:18px}
+#page-yearbook .yb-tier .pr{font-family:var(--yb-serif);font-size:30px;font-style:italic;margin-top:4px}
+
+/* history film-strip */
+#page-yearbook .yb-decades{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 16px}
+#page-yearbook .yb-chip{background:transparent;border:1px solid var(--yb-edge);border-radius:100px;padding:6px 15px;font-family:var(--yb-mono);font-size:12px;color:var(--yb-dim);cursor:pointer}
+#page-yearbook .yb-chip.on{background:var(--yb-gold);border-color:var(--yb-gold);color:#241a05}
+#page-yearbook .yb-strip{display:grid;grid-auto-flow:column;grid-auto-columns:150px;gap:16px;overflow-x:auto;padding:6px 2px 16px}
+#page-yearbook .yb-spine .img{aspect-ratio:8/10.4;border-radius:2px;border:1px solid var(--yb-gold-dim);background:linear-gradient(155deg,#161d2b,#0b0f18);
+  display:grid;place-items:center;color:var(--yb-faint);font-family:var(--yb-mono);font-size:11px;transition:.16s}
+#page-yearbook .yb-spine:hover .img{border-color:var(--yb-gold);transform:translateY(-4px)}
+#page-yearbook .yb-spine .yr{font-family:var(--yb-serif);font-style:italic;font-size:22px;margin-top:8px}
+#page-yearbook .yb-spine .th{font-size:12px;color:var(--yb-faint)}
+#page-yearbook .yb-spine img{width:100%;height:100%;object-fit:cover;border-radius:2px}
+
+/* themes archive list */
+#page-yearbook .yb-themes{display:flex;flex-direction:column;margin-top:18px}
+#page-yearbook .yb-themes .row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--yb-edge)}
+#page-yearbook .yb-themes .row q{font-family:var(--yb-serif);font-style:italic;font-size:19px;quotes:'“' '”'}
+#page-yearbook .yb-themes .row .yr{font-family:var(--yb-mono);color:var(--yb-gold);font-size:14px}
+
+/* reveal moment */
+#page-yearbook .yb-reveal{text-align:center;padding:52px 24px;background:radial-gradient(60% 100% at 50% 0%,rgba(230,186,87,.12),transparent 70%);border:1px solid var(--yb-gold-dim);border-radius:6px;margin-top:26px}
+#page-yearbook .yb-reveal .lab{font-family:var(--yb-mono);font-size:12px;letter-spacing:.24em;color:var(--yb-gold);text-transform:uppercase}
+#page-yearbook .yb-reveal .yb-cd{justify-content:center;margin-top:16px}
+#page-yearbook .yb-reveal .yb-cd .u{min-width:74px}#page-yearbook .yb-reveal .yb-cd .u b{font-size:44px}
+
+/* progress */
+#page-yearbook .yb-thermo{height:14px;border-radius:100px;background:var(--yb-bg2);border:1px solid var(--yb-edge);overflow:hidden;margin-top:10px}
+#page-yearbook .yb-thermo i{display:block;height:100%;background:linear-gradient(90deg,var(--yb-gold),var(--yb-gold-2))}
+
+/* dates */
+#page-yearbook .yb-date{background:var(--yb-panel);border:1px solid var(--yb-edge);border-radius:4px;padding:20px}
+#page-yearbook .yb-date .lbl{font-family:var(--yb-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--yb-dim);margin-bottom:12px}
+
+/* testimonials */
+#page-yearbook .yb-quote{border-left:2px solid var(--yb-gold);padding:6px 0 6px 22px}
+#page-yearbook .yb-quote q{font-family:var(--yb-serif);font-style:italic;font-size:clamp(20px,2.6vw,30px);line-height:1.3;quotes:'“' '”'}
+#page-yearbook .yb-quote .who{font-family:var(--yb-mono);font-size:12px;letter-spacing:.1em;color:var(--yb-faint);margin-top:12px;text-transform:uppercase}
+
+/* footer */
+#page-yearbook .yb-foot{padding:48px 24px 70px;border-top:1px solid var(--yb-edge);text-align:center;color:var(--yb-faint);font-family:var(--yb-mono);font-size:12px;letter-spacing:.1em}
+
+/* list of link/extra rows */
+#page-yearbook .yb-linkrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 16px;background:var(--yb-panel);border:1px solid var(--yb-edge);border-radius:3px;margin-bottom:8px}
+#page-yearbook .yb-linkrow .nm{font-family:var(--yb-serif);font-size:17px}
+#page-yearbook .yb-linkrow .pr{font-family:var(--yb-mono);color:var(--yb-gold);font-size:14px;margin-left:auto;margin-right:14px}
+
+/* down / coming-soon state */
+#page-yearbook.yb-down .yb-wrap{text-align:center;padding:120px 24px}

@@ -330,6 +330,102 @@ window.ENN_SCHEMA = [
     ]
   },
 
+  /* ═══════════ YEARBOOK ═══════════ */
+  { id:'yearbook', icon:'📓', label:'Yearbook Hub', group:'Yearbook',
+    desc:'The whole Yearbook page. Publish it live or take it down at the top, switch any feature on or off, and fill in the blanks when you’re ready.',
+    file:'EDIT/28-YEARBOOK.js', kind:'jsobject', varName:'ENN_YEARBOOK',
+    fields:[
+      { key:'enabled', label:'PUBLISH — put the Yearbook page live', type:'toggle',
+        help:'On = the page is live and in the menu. Off = the page is down / hidden.' },
+
+      { key:'announce', label:'Announcements bar (top of the page)', type:'object', fields:[
+        { key:'on', label:'Show the announcement', type:'toggle' },
+        { key:'title', label:'Title', type:'text' },
+        { key:'body', label:'Message', type:'textarea' } ]},
+
+      { key:'hero', label:'Cover & hero', type:'object', fields:[
+        { key:'schoolYear', label:'School year (e.g. 2026–27)', type:'text' },
+        { key:'theme', label:'Theme', type:'text' },
+        { key:'tagline', label:'Tagline', type:'textarea' },
+        { key:'coverImg', label:'Cover image', type:'image', folder:'img/yearbook' } ]},
+
+      { key:'buy', label:'Buy the yearbook', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'price', label:'Current price (number only, e.g. 95)', type:'text' },
+        { key:'jostensUrl', label:'Jostens order link', type:'text' },
+        { key:'nextBumpDate', label:'Next price-increase date (YYYY-MM-DD)', type:'text' },
+        { key:'nextBumpPrice', label:'Next price (number)', type:'text' },
+        { key:'history', label:'Price history (oldest → newest)', type:'list', itemLabel:'Step', fields:[
+          { key:'price', label:'Price', type:'text' }, { key:'when', label:'When (e.g. Aug)', type:'text' } ]},
+        { key:'remind', label:'“Remind me” sign-up', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'url', label:'Sign-up form link', type:'text' } ]},
+        { key:'gift', label:'Gift a copy', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'price', label:'Price', type:'text' }, { key:'url', label:'Gift link', type:'text' } ]},
+        { key:'extras', label:'Add-ons (each is one button that links out)', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' },
+          { key:'items', label:'Add-ons', type:'list', itemLabel:'Add-on', fields:[
+            { key:'label', label:'Name', type:'text' }, { key:'price', label:'Price', type:'text' }, { key:'url', label:'Buy link', type:'text' } ]} ]} ]},
+
+      { key:'ads', label:'Ads & tributes', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'tributes', label:'Senior tributes (baby photo + quote + message)', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'desc', label:'Description', type:'textarea' },
+          { key:'deadline', label:'Deadline', type:'text' }, { key:'formUrl', label:'Reserve link', type:'text' },
+          { key:'tiers', label:'Tiers', type:'list', itemLabel:'Tier', fields:[ { key:'label', label:'Size', type:'text' }, { key:'price', label:'Price', type:'text' } ] } ]},
+        { key:'sponsors', label:'Business / sponsor ads', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'becomeUrl', label:'“Become a sponsor” link', type:'text' },
+          { key:'tiers', label:'Tiers', type:'list', itemLabel:'Tier', fields:[ { key:'label', label:'Name', type:'text' }, { key:'price', label:'Price', type:'text' } ] } ]},
+        { key:'groups', label:'Friend / group ads', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'formUrl', label:'Start-an-ad link', type:'text' },
+          { key:'tiers', label:'Tiers', type:'list', itemLabel:'Tier', fields:[ { key:'label', label:'Size', type:'text' }, { key:'price', label:'Price', type:'text' } ] } ]} ]},
+
+      { key:'submit', label:'Get involved / submit', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'photos', label:'Photo submissions', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' },
+          { key:'categories', label:'Categories', type:'textlist', itemLabel:'category' },
+          { key:'studentUrl', label:'Student form link', type:'text' }, { key:'parentUrl', label:'Parent form link', type:'text' } ]},
+        { key:'superlatives', label:'Superlatives voting', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'note', label:'Note', type:'textarea' },
+          { key:'voteUrl', label:'Voting link (add when voting opens)', type:'text' }, { key:'teacherUrl', label:'Teacher link', type:'text' } ]},
+        { key:'rosters', label:'Team / club rosters', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'url', label:'Upload link', type:'text' } ]} ]},
+
+      { key:'history', label:'History & legacy', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'covers', label:'Covers (oldest → newest)', type:'list', itemLabel:'Cover', fields:[
+          { key:'year', label:'Year', type:'text' }, { key:'theme', label:'Theme', type:'text' }, { key:'img', label:'Cover image', type:'image', folder:'img/yearbook/covers' } ]},
+        { key:'alumni', label:'Notable alumni', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' },
+          { key:'people', label:'Alumni', type:'list', itemLabel:'Person', fields:[
+            { key:'name', label:'Name', type:'text' }, { key:'classOf', label:'Class of', type:'text' }, { key:'note', label:'Note', type:'text' }, { key:'img', label:'Photo', type:'image', folder:'img/yearbook/alumni' } ]} ]} ]},
+
+      { key:'hype', label:'Hype', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'reveal', label:'Cover-reveal countdown', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'date', label:'Reveal date (YYYY-MM-DD)', type:'text' } ]},
+        { key:'staff', label:'Meet the editors', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' },
+          { key:'people', label:'Editors', type:'list', itemLabel:'Editor', fields:[
+            { key:'name', label:'Name', type:'text' }, { key:'role', label:'Role', type:'text' }, { key:'img', label:'Photo', type:'image', folder:'img/yearbook/staff' } ]} ]},
+        { key:'progress', label:'Production progress', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'avgPerDay', label:'Average per day (e.g. 3 spreads)', type:'text' },
+          { key:'done', label:'Spreads done', type:'number' }, { key:'total', label:'Total spreads', type:'number' } ]} ]},
+
+      { key:'dates', label:'Key dates & delivery', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'items', label:'Key dates (each gets its own countdown)', type:'list', itemLabel:'Date', fields:[
+          { key:'label', label:'Label', type:'text' }, { key:'date', label:'Date (YYYY-MM-DD)', type:'text' } ]},
+        { key:'distribution', label:'Distribution day', type:'object', fields:[
+          { key:'on', label:'Show', type:'toggle' }, { key:'date', label:'Date', type:'text' }, { key:'where', label:'Where', type:'text' } ]} ]},
+
+      { key:'testimonials', label:'“Why buy” testimonials', type:'object', fields:[
+        { key:'on', label:'Show this section', type:'toggle' },
+        { key:'items', label:'Quotes', type:'list', itemLabel:'Quote', fields:[
+          { key:'quote', label:'Quote', type:'textarea' }, { key:'who', label:'Who said it', type:'text' } ]} ]},
+    ]
+  },
+
   /* ═══════════ GAMES & EXTRAS ═══════════ */
   { id:'bingo', icon:'🎲', label:'Broadcast Bingo', group:'Extras',
     desc:'The Bingo title and the pool of squares it draws from.',
