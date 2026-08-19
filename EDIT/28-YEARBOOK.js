@@ -11,9 +11,9 @@
 // ║  Everything is left blank on purpose — fill it in when ready.    ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_YEARBOOK = {
-  enabled: 'T',
+  enabled: 'F',
   announce: {
-    on: 'T',
+    on: 'F',
     title: '',
     body: ''
   },
