@@ -19,22 +19,17 @@ var ENN_YEARBOOK = {
   },
   hero: {
     schoolYear: '2026-27',
-    theme: '',
+    theme: 'Coming Soon',
     tagline: '',
     coverImg: ''
   },
   buy: {
-    on: 'F',
+    on: 'T',
     price: '85',
-    jostensUrl: '',
-    nextBumpDate: '',
-    nextBumpPrice: '',
-    history: [
-      {
-        price: '',
-        when: ''
-      }
-    ],
+    jostensUrl: 'https://www.jostens.com/apps/store/productDetail/1015698/Eastlake-High-School/Yearbook/20260702121505630151/CATALOG_SHOP/Yearbook/20260702121505650151',
+    nextBumpDate: '2026-08-24',
+    nextBumpPrice: '90',
+    history: [],
     remind: {
       on: 'F',
       url: ''
