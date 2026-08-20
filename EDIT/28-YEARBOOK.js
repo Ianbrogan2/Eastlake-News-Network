@@ -18,14 +18,14 @@ var ENN_YEARBOOK = {
     body: ''
   },
   hero: {
-    schoolYear: '',
+    schoolYear: '2026-27',
     theme: '',
     tagline: '',
     coverImg: ''
   },
   buy: {
     on: 'F',
-    price: '',
+    price: '85',
     jostensUrl: '',
     nextBumpDate: '',
     nextBumpPrice: '',
