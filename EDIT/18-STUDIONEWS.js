@@ -28,51 +28,51 @@ var ENN_STUDIO_NEWS = {
       type: 'news',
       category: 'BOX OFFICE',
       badge: 'MARVEL · SONY',
-      headline: 'Spider-Man Owns the Box Office',
-      subhead: 'Brand New Day is the summer\'s runaway #1.',
-      body: 'Tom Holland\'s web-slinger keeps swinging past milestone after milestone — Spider-Man: Brand New Day has crossed $600M worldwide and is still holding the top spot at the box office. If you haven\'t caught it on the big screen yet, now\'s the time.',
+      headline: 'Spider-Man Smashes $2 Billion',
+      subhead: 'Brand New Day is the biggest movie of the year.',
+      body: 'Tom Holland\'s web-slinger is rewriting the record books — Spider-Man: Brand New Day blew past $2 billion worldwide in just three weeks and set a new domestic record on the way. If you haven\'t caught it on the big screen yet, now\'s the time.',
       link: '',
       theme: 'blue'
-    },
-    {
-      type: 'news',
-      category: 'FILM',
-      badge: '20TH CENTURY',
-      headline: 'Avatar: Fire and Ash',
-      subhead: 'Return to Pandora this December.',
-      body: 'The third Avatar lands Dec 19. The first-look trailer has fans buzzing over a fierce new Na\'vi clan and James Cameron\'s next big visual leap. Expect this one to take over winter break.',
-      link: '',
-      theme: 'gold'
-    },
-    {
-      type: 'news',
-      category: 'FILM',
-      badge: 'DISNEY',
-      headline: 'Zootopia 2',
-      subhead: 'Judy and Nick are back on the case Nov 26.',
-      body: 'Disney\'s biggest animated sequel of the year sends the duo undercover in a brand-new corner of the city. The first trailer just dropped and it\'s already everywhere.',
-      link: '',
-      theme: 'green'
     },
     {
       type: 'news',
       category: 'GAMING',
       badge: 'ROCKSTAR',
       headline: 'GTA VI',
-      subhead: 'The most-anticipated game ever inches closer.',
-      body: 'Rockstar\'s latest trailer shattered view records overnight. There\'s still no firm release date, but the hype for the return to Vice City is unlike anything gaming has ever seen.',
+      subhead: 'It finally has a date: November 19, 2026.',
+      body: 'Rockstar\'s return to Vice City is locked in for Nov 19. Play as Jason and Lucia across a Florida-inspired map in what\'s shaping up to be the biggest launch gaming has ever seen. The hype is officially unreal.',
       link: '',
       theme: 'gta'
+    },
+    {
+      type: 'news',
+      category: 'FILM',
+      badge: 'MARVEL',
+      headline: 'Avengers: Doomsday',
+      subhead: 'The Avengers assemble this winter — Dec 18.',
+      body: 'Marvel\'s massive Phase Six event storms into theaters December 18. Doctor Doom takes center stage in the most stacked Avengers lineup yet. Winter break just got a lot bigger.',
+      link: '',
+      theme: 'purple'
     },
     {
       type: 'news',
       category: 'STREAMING',
       badge: 'DISNEY+ · STAR WARS',
       headline: 'The Mandalorian & Grogu',
-      subhead: 'This is the way — now streaming.',
-      body: 'The first theatrical Star Wars movie in years just hit Disney+. Din Djarin and Grogu\'s big-screen adventure is finally available to stream at home.',
+      subhead: 'Streaming on Disney+ starting Sept 2.',
+      body: 'Missed it in theaters? Din Djarin and Grogu\'s big-screen adventure lands on Disney+ September 2 — the first Star Wars movie in years, finally available to stream at home.',
       link: '',
       theme: 'red'
+    },
+    {
+      type: 'news',
+      category: 'FILM',
+      badge: 'LIONSGATE',
+      headline: 'The Hunger Games: Sunrise on the Reaping',
+      subhead: 'Return to Panem this November.',
+      body: 'The next Hunger Games hits theaters this November, telling the story of a young Haymitch Abernathy and his brutal trip to the arena. Expect this prequel to dominate the fall.',
+      link: '',
+      theme: 'gold'
     }
   ]
 };
