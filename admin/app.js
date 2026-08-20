@@ -478,7 +478,7 @@
   function textInput(val, on, cls, ph, ro){ var i=el('input'); i.type='text'; i.value=val||''; if(ph)i.placeholder=ph; if(cls)i.className=cls; if(ro)i.readOnly=true; i.oninput=function(){ on(i.value); }; return i; }
   function pwInput(on, ph){ var i=el('input'); i.type='password'; i.autocomplete='new-password'; if(ph)i.placeholder=ph; i.oninput=function(){ on(i.value); }; return i; }
   function checkbox(checked, on){ var c=el('input'); c.type='checkbox'; c.checked=!!checked; c.onchange=function(){ on(c.checked); }; return c; }
-  function toggleRow(label, val, on){ var w=el('label','toggle-row'); var c=checkbox(val,on); w.appendChild(c); w.appendChild(el('span',null,esc(label))); return w; }
+  function toggleRow(label, val, on){ var w=el('div','toggle-row'); var s=switchEl(val, on); w.appendChild(s.el); w.appendChild(el('span','tr-lab',esc(label))); return w; }
   function spacer(){ return el('div','flex1'); }
 
   function modal(title){
@@ -503,17 +503,38 @@
   function fmtWhen(ts){ if(!ts) return ''; var d=new Date(ts); if(isNaN(d)) return String(ts); return d.toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }
 
   /* ══════════ v1 EDITOR ENGINE (unchanged) ══════════ */
+  /* red/green on-off switch */
+  function switchEl(checked, onChange){
+    var lab=el('label','switch'); var cb=el('input'); cb.type='checkbox'; cb.checked=!!checked;
+    var track=el('span','sw-track'); track.appendChild(el('span','sw-knob'));
+    var txt=el('span','sw-lab', checked?'On':'Off');
+    cb.onchange=function(){ txt.textContent=cb.checked?'On':'Off'; onChange(cb.checked); };
+    lab.appendChild(cb); lab.appendChild(track); lab.appendChild(txt);
+    return { el:lab, input:cb };
+  }
   function fieldEl(f, obj){
-    var wrap=el('div','field');
-    if(f.type==='object'){ var g=el('div','group'); g.innerHTML='<div class="group-head"><b>'+esc(f.label)+'</b></div>'; obj[f.key]=obj[f.key]||{}; f.fields.forEach(function(sf){ g.appendChild(fieldEl(sf,obj[f.key])); }); wrap.appendChild(g); return wrap; }
+    var wrap=el('div','field'); if(f.primary) wrap.classList.add('field-primary');
+    if(f.type==='object'){
+      obj[f.key]=obj[f.key]||{}; var data=obj[f.key];
+      var onField=null; f.fields.forEach(function(sf){ if(sf.key==='on'&&(sf.type==='toggle'||sf.type==='toggleBool')) onField=sf; });
+      var card=el('div','ob-card'); var head=el('div','ob-head');
+      var ttl=el('button','ob-title'); ttl.type='button'; ttl.innerHTML='<span class="ob-caret">&#9656;</span><span class="ob-name">'+esc(f.label)+'</span>';
+      head.appendChild(ttl);
+      var body=el('div','ob-body'); body.hidden=true;
+      if(onField){ var isT=onField.type==='toggle'; var cur=isT?String(data.on).toUpperCase()==='T':data.on===true;
+        var sw=switchEl(cur,function(o){ data.on=isT?(o?'T':'F'):o; card.classList.toggle('ob-off',!o); }); sw.el.classList.add('ob-switch'); head.appendChild(sw.el); if(!cur) card.classList.add('ob-off'); }
+      f.fields.forEach(function(sf){ if(sf===onField) return; body.appendChild(fieldEl(sf,data)); });
+      ttl.onclick=function(){ body.hidden=!body.hidden; card.classList.toggle('open',!body.hidden); };
+      card.appendChild(head); card.appendChild(body); wrap.appendChild(card); return wrap;
+    }
     if(f.type==='list'){ obj[f.key]=Array.isArray(obj[f.key])?obj[f.key]:[]; wrap.appendChild(labelEl(f)); wrap.appendChild(listField(f,obj[f.key])); return wrap; }
     if(f.type==='textlist'){ obj[f.key]=Array.isArray(obj[f.key])?obj[f.key]:[]; wrap.appendChild(labelEl(f)); wrap.appendChild(textListField(obj[f.key],f.itemLabel)); return wrap; }
     wrap.appendChild(labelEl(f));
     var input;
     if(f.type==='textarea'){ input=el('textarea'); input.value=obj[f.key]||''; input.oninput=function(){ obj[f.key]=input.value; }; }
     else if(f.type==='number'){ input=el('input'); input.type='number'; input.value=(obj[f.key]==null?'':obj[f.key]); input.oninput=function(){ obj[f.key]=input.value===''?'':Number(input.value); }; }
-    else if(f.type==='toggle'){ var lab=el('label','toggle'); var cb=el('input'); cb.type='checkbox'; cb.checked=String(obj[f.key]).toUpperCase()==='T'; lab.appendChild(cb); lab.insertAdjacentText('beforeend', cb.checked?' On':' Off'); cb.onchange=function(){ obj[f.key]=cb.checked?'T':'F'; lab.lastChild.textContent=cb.checked?' On':' Off'; }; wrap.appendChild(lab); return wrap; }
-    else if(f.type==='toggleBool'){ var lab2=el('label','toggle'); var cb2=el('input'); cb2.type='checkbox'; cb2.checked=obj[f.key]===true; lab2.appendChild(cb2); lab2.insertAdjacentText('beforeend', cb2.checked?' On':' Off'); cb2.onchange=function(){ obj[f.key]=cb2.checked; lab2.lastChild.textContent=cb2.checked?' On':' Off'; }; wrap.appendChild(lab2); return wrap; }
+    else if(f.type==='toggle'){ var st=switchEl(String(obj[f.key]).toUpperCase()==='T', function(o){ obj[f.key]=o?'T':'F'; }); if(f.big) st.el.classList.add('switch-big'); wrap.appendChild(st.el); return wrap; }
+    else if(f.type==='toggleBool'){ var st2=switchEl(obj[f.key]===true, function(o){ obj[f.key]=o; }); if(f.big) st2.el.classList.add('switch-big'); wrap.appendChild(st2.el); return wrap; }
     else if(f.type==='image'){ wrap.appendChild(imageField(f,obj)); return wrap; }
     else { input=el('input'); input.type=(f.type==='url'?'url':'text'); input.value=obj[f.key]||''; input.oninput=function(){ obj[f.key]=input.value; }; }
     wrap.appendChild(input); return wrap;

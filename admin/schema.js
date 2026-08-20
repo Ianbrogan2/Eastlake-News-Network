@@ -335,7 +335,7 @@ window.ENN_SCHEMA = [
     desc:'The whole Yearbook page. Publish it live or take it down at the top, switch any feature on or off, and fill in the blanks when you’re ready.',
     file:'EDIT/28-YEARBOOK.js', kind:'jsobject', varName:'ENN_YEARBOOK',
     fields:[
-      { key:'enabled', label:'PUBLISH — put the Yearbook page live', type:'toggle',
+      { key:'enabled', label:'PUBLISH — put the Yearbook page live', type:'toggle', big:true, primary:true,
         help:'On = the page is live and in the menu. Off = the page is down / hidden.' },
 
       { key:'announce', label:'Announcements bar (top of the page)', type:'object', fields:[

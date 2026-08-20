@@ -2268,6 +2268,8 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     let html='';
     const an=cfg.announce||{}, h=cfg.hero||{}, buy=cfg.buy||{}, ads=cfg.ads||{}, sub=cfg.submit||{}, hist=cfg.history||{}, hype=cfg.hype||{}, dates=cfg.dates||{}, test=cfg.testimonials||{};
     const yr = has(h.schoolYear) ? esc(h.schoolYear) : '2026–27';
+    let revealYear = '2027';
+    { const p = String(has(h.schoolYear)?h.schoolYear:'').split(/[–—-]/); if(p.length>1){ let t=p[1].trim(); if(/^\d{2}$/.test(t)) t='20'+t; if(/^\d{4}$/.test(t)) revealYear=t; } }
 
     if(on(an.on) && (has(an.title)||has(an.body)))
       html += '<div class="yb-announce"><div class="yb-wrap">'+(has(an.title)?'<b>'+esc(an.title)+'</b>':'')+(has(an.body)?'<span>'+esc(an.body)+'</span>':'')+'</div></div>';
@@ -2282,8 +2284,8 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         (on(sub.on)&&has((sub.photos||{}).studentUrl)?'<a class="yb-btn-ghost" href="'+esc(sub.photos.studentUrl)+'" target="_blank" rel="noopener">Submit a photo</a>':'')+
       '</div>'+
       (on(buy.on)&&has(buy.price)?'<div class="yb-hero-price">Yearbooks are <b>'+esc(money(buy.price))+'</b>'+(has(buy.nextBumpDate)?' · reserve before the price rises':'')+'</div>':'')+
-      '</div><div class="yb-cover">'+(has(h.coverImg)?'<img src="/'+esc(h.coverImg)+'" alt="Cover">':
-        '<div class="cov-school">Eastlake Titans</div><div class="cov-yr">'+yr+'</div>'+(has(h.theme)?'<div class="cov-theme">'+esc(h.theme)+'</div>':'')+'<div class="cov-tbd">COVER — TBD</div>')+
+      '</div><div class="yb-cover'+(has(h.coverImg)?'':' sealed')+'">'+(has(h.coverImg)?'<img src="/'+esc(h.coverImg)+'" alt="Cover">':
+        '<div class="cov-school">Eastlake Titans</div><div class="cov-seal" aria-hidden="true">★</div><div class="cov-reveal-lab">Cover reveal</div><div class="cov-yr">'+revealYear+'</div><div class="cov-reveal-sub">The '+yr+' cover is under wraps — revealed in '+revealYear+'.</div>')+
       '</div></div></header>';
 
     /* buy */
