@@ -520,7 +520,10 @@
       var card=el('div','ob-card'); var head=el('div','ob-head');
       var ttl=el('button','ob-title'); ttl.type='button'; ttl.innerHTML='<span class="ob-caret">&#9656;</span><span class="ob-name">'+esc(f.label)+'</span>';
       head.appendChild(ttl);
-      var body=el('div','ob-body'); body.hidden=true;
+      // Feature cards (with an on/off switch) start collapsed to reduce clutter;
+      // structural containers (no switch) start open so their fields are visible at a glance.
+      var body=el('div','ob-body'); body.hidden=!!onField;
+      if(!onField) card.classList.add('open');
       if(onField){ var isT=onField.type==='toggle'; var cur=isT?String(data.on).toUpperCase()==='T':data.on===true;
         var sw=switchEl(cur,function(o){ data.on=isT?(o?'T':'F'):o; card.classList.toggle('ob-off',!o); }); sw.el.classList.add('ob-switch'); head.appendChild(sw.el); if(!cur) card.classList.add('ob-off'); }
       f.fields.forEach(function(sf){ if(sf===onField) return; body.appendChild(fieldEl(sf,data)); });
