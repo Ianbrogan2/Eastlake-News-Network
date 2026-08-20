@@ -21,26 +21,26 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_NEWS = {
   featured: {
-    tag: 'Campus',
-    title: 'Free Peer Tutoring Starts Today',
-    body: 'Need a hand in a class? Zero-period peer tutoring opens today in the Library, 7:15–8:20 AM, Monday through Thursday. Trained student tutors are ready to help with any subject. Request one at tinyurl.com/PeerTutorRequest26-27.',
-    byline: 'REPORTED BY TEAM ENN · MONDAY, AUG 10, 2026'
+    tag: 'Big Game',
+    title: 'Boot Bonita: Titans Saddle Up for Friday Night',
+    body: 'It\'s the one everyone\'s been waiting for. The Titans host rival Bonita Vista this Friday, Aug 21 at 6:30 PM — and it\'s going full Western. Break out the boots, hats and denim, pack the student section, and help us boot Bonita. This is a big one, Titans — everyone show up.',
+    byline: 'REPORTED BY TEAM ENN · WEDNESDAY, AUG 19, 2026'
   },
   sidebar: [
     {
-      cat: 'Campus',
-      title: 'Open House is Thursday, Aug 13 — bring your parents to campus to meet your new teachers.',
-      date: 'Aug 13'
+      cat: 'ENN',
+      title: 'New series alert: ENN Hot Ones premieres Monday — hot wings, hotter questions, your favorite students in the hot seat.',
+      date: 'Mondays'
     },
     {
-      cat: 'Sports',
-      title: 'Titans varsity football opens the season with its first scrimmage Friday, Aug 14 at San Pasqual.',
-      date: 'Aug 14'
-    },
-    {
-      cat: 'Athletics',
-      title: 'The full Titans sports schedule is live — every game, home vs. away, on the new Athletics tab.',
+      cat: 'Student Life',
+      title: 'Homecoming Court nominations are almost due — get your nominations in before the deadline closes.',
       date: 'This week'
+    },
+    {
+      cat: 'Campus',
+      title: 'Free peer tutoring runs during Zero period, Monday through Thursday mornings in the Library — any subject, just drop in.',
+      date: 'Mon–Thu'
     }
   ]
 };

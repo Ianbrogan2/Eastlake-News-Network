@@ -26,51 +26,51 @@ var ENN_STUDIO_NEWS = {
   cards: [
     {
       type: 'news',
-      category: 'FILM',
+      category: 'BOX OFFICE',
       badge: 'MARVEL · SONY',
-      headline: 'Spider-Man: Brand New Day',
-      subhead: 'Tom Holland\'s web-slinger is back — in theaters now.',
-      body: 'Peter Parker swings into a brand-new chapter, and critics are calling it a spectacular return. We\'re keeping it spoiler-free — go see it on the big screen.',
+      headline: 'Spider-Man Owns the Box Office',
+      subhead: 'Brand New Day is the summer\'s runaway #1.',
+      body: 'Tom Holland\'s web-slinger keeps swinging past milestone after milestone — Spider-Man: Brand New Day has crossed $600M worldwide and is still holding the top spot at the box office. If you haven\'t caught it on the big screen yet, now\'s the time.',
       link: '',
       theme: 'blue'
     },
     {
       type: 'news',
       category: 'FILM',
-      badge: 'CHRISTOPHER NOLAN',
-      headline: 'The Odyssey',
-      subhead: 'Nolan\'s IMAX take on Homer\'s epic is in theaters.',
-      body: 'Matt Damon leads as Odysseus alongside Anne Hathaway, Zendaya and Tom Holland, shot entirely for IMAX. Catch it on the biggest screen you can find.',
+      badge: '20TH CENTURY',
+      headline: 'Avatar: Fire and Ash',
+      subhead: 'Return to Pandora this December.',
+      body: 'The third Avatar lands Dec 19. The first-look trailer has fans buzzing over a fierce new Na\'vi clan and James Cameron\'s next big visual leap. Expect this one to take over winter break.',
       link: '',
       theme: 'gold'
     },
     {
       type: 'news',
       category: 'FILM',
-      badge: 'LOONEY TUNES',
-      headline: 'Coyote vs. ACME',
-      subhead: 'The long-shelved Looney Tunes movie finally hits theaters Aug 28.',
-      body: 'After years on the shelf, Wile E. Coyote gets his day in court against ACME in a live-action / animation mashup fans nearly never got to see.',
+      badge: 'DISNEY',
+      headline: 'Zootopia 2',
+      subhead: 'Judy and Nick are back on the case Nov 26.',
+      body: 'Disney\'s biggest animated sequel of the year sends the duo undercover in a brand-new corner of the city. The first trailer just dropped and it\'s already everywhere.',
       link: '',
       theme: 'green'
     },
     {
       type: 'news',
       category: 'GAMING',
-      badge: 'FROMSOFTWARE',
-      headline: 'Elden Ring: Tarnished Edition',
-      subhead: 'The definitive edition arrives Aug 28.',
-      body: 'The award-winning RPG returns with everything bundled together — a perfect on-ramp for new players and a reason for veterans to return to the Lands Between.',
+      badge: 'ROCKSTAR',
+      headline: 'GTA VI',
+      subhead: 'The most-anticipated game ever inches closer.',
+      body: 'Rockstar\'s latest trailer shattered view records overnight. There\'s still no firm release date, but the hype for the return to Vice City is unlike anything gaming has ever seen.',
       link: '',
-      theme: 'purple'
+      theme: 'gta'
     },
     {
       type: 'news',
-      category: 'FILM',
-      badge: 'HORROR',
-      headline: 'Insidious: Out of the Further',
-      subhead: 'The horror franchise returns Aug 21.',
-      body: 'The Further is open again. The next chapter of the series creeps into theaters just in time for some late-summer scares.',
+      category: 'STREAMING',
+      badge: 'DISNEY+ · STAR WARS',
+      headline: 'The Mandalorian & Grogu',
+      subhead: 'This is the way — now streaming.',
+      body: 'The first theatrical Star Wars movie in years just hit Disney+. Din Djarin and Grogu\'s big-screen adventure is finally available to stream at home.',
       link: '',
       theme: 'red'
     }

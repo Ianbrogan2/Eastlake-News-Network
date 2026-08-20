@@ -25,10 +25,11 @@
 // automatically from the Athletics schedule (EDIT/25-ATHLETICS.js) — you
 // don't need to add games here by hand.
 var ENN_TICKER = [
-  { k: 'Campus',    t: 'Peer tutoring starts today — Library, 7:15–8:20 AM, Mon–Thu. Request one at tinyurl.com/PeerTutorRequest26-27' },
-  { k: 'Campus',    t: 'Open House is Thursday, Aug 13 — bring your parents to meet your teachers' },
-  { k: 'Athletics', t: 'The full Titans sports schedule is live — see it on the new Athletics tab' },
-  { k: 'ENN',       t: 'Fall 2026 season — 60 bulletins, 20 each from Periods 1, 4 and 6' },
-  { k: 'ENN',       t: 'Coverage requests open — submit at least one week before your event!' },
-  { k: 'Join',      t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN' },
+  { k: 'Big Game',    t: '🤠 BOOT BONITA — Titans host Bonita Vista this Friday at 6:30 PM. Western theme, pack the stands and saddle up — everyone show up!' },
+  { k: 'ENN',         t: 'NEW SERIES: ENN Hot Ones premieres Monday — hot wings, hotter questions. Stay tuned.' },
+  { k: 'Homecoming',  t: 'Homecoming Court nominations are almost due — get your picks in before the deadline closes!' },
+  { k: 'Campus',      t: 'Free peer tutoring — Library during Zero period, Monday through Thursday mornings. Any subject, just drop in.' },
+  { k: 'Coming Soon', t: 'A brand-new chapter is coming to eastlakenewsnetwork.com… keep your eyes on the site.' },
+  { k: 'Athletics',   t: 'The full Titans sports schedule is live — every game, home and away, on the Athletics tab' },
+  { k: 'Join',        t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN' },
 ];
