@@ -94,8 +94,16 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       const yt = (typeof ENN_SOCIAL !== 'undefined' && ENN_SOCIAL.youtube) ? ENN_SOCIAL.youtube : 'ennbulletin';
       const l2 = String(S.footerLine2 || '').replace(/@ENNBULLETIN/i,
         `<a href="https://www.youtube.com/@${yt}/" target="_blank" rel="noopener">@ENNBULLETIN</a>`);
+      /* Hidden Easter egg: the "ENN" in the first footer line is the secret
+         click target for the broadcast-standby overlay. No visual affordance —
+         not styled, not in the tab order, not announced. tabindex="-1" only so
+         focus can be restored to it on close. Wired via delegation below. */
+      const fl1 = NR_esc(S.footerLine1||'');
+      const eggTag = '<span id="enn-egg" class="enn-egg" tabindex="-1">$&</span>';
+      const fl1w = /ENN/.test(fl1) ? fl1.replace(/ENN/, eggTag)
+                                   : `<span id="enn-egg" class="enn-egg" tabindex="-1">${fl1}</span>`;
       fm.innerHTML =
-        `<div>${NR_esc(S.footerLine1||'')}</div>` +
+        `<div>${fl1w}</div>` +
         `<div>${l2}</div>` +
         `<div>© <span id="footer-year">${new Date().getFullYear()}</span> ENN · ${NR_esc(S.footerLine3||'')} · ` +
         `<a class="crew-door" href="/enn-callsign-gate.html" aria-label="Crew access" title="Crew">◉</a></div>`;
@@ -2568,7 +2576,10 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       const btn = $('#submit-btn');
       btn.disabled = true; btn.textContent = 'Submitting…';
       try {
-        const fd = new FormData(form);
+        // URLSearchParams → application/x-www-form-urlencoded, which Google
+        // Apps Script parses into e.parameter. FormData (multipart) is NOT
+        // parsed by Apps Script and lands as blank cells.
+        const fd = new URLSearchParams(new FormData(form));
         const meta = await getSubmitterInfo();
         Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
         const r = await fetch(form.action, {method:'POST', body:fd});
@@ -2590,7 +2601,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       const btn = $('#sched-submit-btn');
       btn.disabled = true; btn.textContent = 'Sending…';
       try {
-        const fd = new FormData(schedForm);
+        const fd = new URLSearchParams(new FormData(schedForm));
         /* Mirror access + reason into the sheet's Message column so the
            whole request reads in one cell alongside event name/date */
         fd.append('message', `[${fd.get('access')}] ${fd.get('reason')}`);
@@ -2616,7 +2627,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       const btn = $('#' + fid + '-btn');
       btn.disabled = true; btn.textContent = 'Sending…';
       try {
-        const fd = new FormData(mf);
+        const fd = new URLSearchParams(new FormData(mf));
         const meta = await getSubmitterInfo();
         Object.entries(meta).forEach(([k,v]) => fd.append(k, v));
         const r = await fetch(mf.action, {method:'POST', body:fd});
@@ -2695,7 +2706,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
 
       btn.textContent = 'Submitting…';
       try {
-        const fd2 = new FormData(songForm);
+        const fd2 = new URLSearchParams(new FormData(songForm));
         const meta2 = await getSubmitterInfo();
         Object.entries(meta2).forEach(([k,v]) => fd2.append(k, v));
         const r = await fetch(songForm.action, {method:'POST', body:fd2});
@@ -2755,7 +2766,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       const btn = $('#love-submit-btn');
       btn.disabled = true; btn.textContent = 'Sending…';
       try {
-        const fd3 = new FormData(loveForm);
+        const fd3 = new URLSearchParams(new FormData(loveForm));
         const meta3 = await getSubmitterInfo();
         Object.entries(meta3).forEach(([k,v]) => fd3.append(k, v));
         const r = await fetch(loveForm.action, {method:'POST', body:fd3});
@@ -3304,4 +3315,96 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
   route((location.hash||'#home').slice(1));
 
 
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   HIDDEN EASTER EGG — ENN broadcast "standby" placeholder overlay
+   Secret trigger: the "ENN" text in the footer (no visible affordance).
+   Fullscreen idle station screen — a slowly breathing logo, drifting
+   glow, light rays, grain, CRT scanlines, a STANDBY bug and a live
+   clock. All motion is CSS @keyframes (infinite, seamless). Opening
+   fades in; the loops start once the fade completes; closing fades out
+   and fully unmounts so nothing keeps running in the background.
+══════════════════════════════════════════════════════════════════ */
+(function ennStandbyEgg(){
+  var overlay = null, lastFocus = null, keyHandler = null, clockTimer = null;
+  var FADE = 520;
+
+  function two(n){ return (n<10?'0':'') + n; }
+  function setClock(el){
+    var d = new Date();
+    el.textContent = two(d.getHours()) + ':' + two(d.getMinutes()) + ':' + two(d.getSeconds());
+  }
+
+  function open(trigger){
+    if(overlay) return;
+    lastFocus = trigger || document.activeElement;
+
+    overlay = document.createElement('div');
+    overlay.className = 'enn-egg-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'ENN broadcast standby');
+    overlay.innerHTML =
+      '<div class="enn-egg-rays" aria-hidden="true"></div>' +
+      '<div class="enn-egg-glow" aria-hidden="true"></div>' +
+      '<div class="enn-egg-grain" aria-hidden="true"></div>' +
+      '<img class="enn-egg-logo" src="/enn-mark.png" alt="ENN — Eastlake News Network"/>' +
+      '<div class="enn-egg-scan" aria-hidden="true"></div>' +
+      '<div class="enn-egg-vignette" aria-hidden="true"></div>' +
+      '<div class="enn-egg-bug" aria-hidden="true"><span class="enn-egg-dot"></span>STANDBY</div>' +
+      '<div class="enn-egg-clock" aria-hidden="true">00:00:00</div>' +
+      '<button type="button" class="enn-egg-close" aria-label="Close standby screen">×</button>' +
+      '<div class="enn-egg-hint" aria-hidden="true">click anywhere &middot; or press Esc</div>';
+
+    document.body.appendChild(overlay);
+
+    document.documentElement.classList.add('enn-egg-lock');
+    document.body.classList.add('enn-egg-lock');
+
+    // any click on the overlay dismisses it
+    overlay.addEventListener('click', function(){ close(); });
+
+    // live broadcast clock (content, not the animation loop)
+    var clockEl = overlay.querySelector('.enn-egg-clock');
+    setClock(clockEl);
+    clockTimer = setInterval(function(){ if(clockEl) setClock(clockEl); }, 1000);
+
+    // fade in, THEN start the infinite CSS loops (so the loop never starts mid-fade)
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ if(overlay) overlay.classList.add('open'); });
+    });
+    overlay._startTimer = setTimeout(function(){ if(overlay) overlay.classList.add('animate'); }, FADE);
+
+    // focus trap — single focusable control (the close button)
+    var closeBtn = overlay.querySelector('.enn-egg-close');
+    setTimeout(function(){ try{ closeBtn.focus(); }catch(e){} }, 40);
+    keyHandler = function(e){
+      if(e.key === 'Escape'){ e.preventDefault(); close(); }
+      else if(e.key === 'Tab'){ e.preventDefault(); try{ closeBtn.focus(); }catch(e2){} }
+    };
+    document.addEventListener('keydown', keyHandler, true);
+  }
+
+  function close(){
+    if(!overlay) return;
+    var ov = overlay; overlay = null;
+    if(ov._startTimer){ clearTimeout(ov._startTimer); }
+    if(clockTimer){ clearInterval(clockTimer); clockTimer = null; }
+    if(keyHandler){ document.removeEventListener('keydown', keyHandler, true); keyHandler = null; }
+    ov.classList.remove('open');                 // fade back out (loops keep running under the fade)
+    setTimeout(function(){
+      if(ov && ov.parentNode) ov.parentNode.removeChild(ov);   // unmount → all CSS animations stop, no leak
+      document.documentElement.classList.remove('enn-egg-lock');
+      document.body.classList.remove('enn-egg-lock');
+      if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
+      lastFocus = null;
+    }, FADE);
+  }
+
+  // Delegated so it survives the footer being rebuilt from site text.
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest && e.target.closest('#enn-egg');
+    if(t){ e.preventDefault(); open(t); }
+  });
 })();
