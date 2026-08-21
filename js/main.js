@@ -3348,14 +3348,13 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     overlay.innerHTML =
       '<div class="enn-egg-rays" aria-hidden="true"></div>' +
       '<div class="enn-egg-glow" aria-hidden="true"></div>' +
-      '<div class="enn-egg-grain" aria-hidden="true"></div>' +
-      '<img class="enn-egg-logo" src="/enn-mark.png" alt="ENN — Eastlake News Network"/>' +
-      '<div class="enn-egg-scan" aria-hidden="true"></div>' +
+      '<div class="enn-egg-logowrap">' +
+        '<img class="enn-egg-logo" src="/enn-mark.png" alt="ENN — Eastlake News Network"/>' +
+        '<span class="enn-egg-shine" aria-hidden="true"></span>' +
+      '</div>' +
       '<div class="enn-egg-vignette" aria-hidden="true"></div>' +
       '<div class="enn-egg-bug" aria-hidden="true"><span class="enn-egg-dot"></span>STANDBY</div>' +
-      '<div class="enn-egg-clock" aria-hidden="true">00:00:00</div>' +
-      '<button type="button" class="enn-egg-close" aria-label="Close standby screen">×</button>' +
-      '<div class="enn-egg-hint" aria-hidden="true">click anywhere &middot; or press Esc</div>';
+      '<div class="enn-egg-clock" aria-hidden="true">00:00:00</div>';
 
     document.body.appendChild(overlay);
 
@@ -3376,12 +3375,12 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     });
     overlay._startTimer = setTimeout(function(){ if(overlay) overlay.classList.add('animate'); }, FADE);
 
-    // focus trap — single focusable control (the close button)
-    var closeBtn = overlay.querySelector('.enn-egg-close');
-    setTimeout(function(){ try{ closeBtn.focus(); }catch(e){} }, 40);
+    // focus trap — no visible control, so hold focus on the overlay itself
+    overlay.tabIndex = -1;
+    setTimeout(function(){ try{ overlay.focus(); }catch(e){} }, 40);
     keyHandler = function(e){
       if(e.key === 'Escape'){ e.preventDefault(); close(); }
-      else if(e.key === 'Tab'){ e.preventDefault(); try{ closeBtn.focus(); }catch(e2){} }
+      else if(e.key === 'Tab'){ e.preventDefault(); try{ overlay.focus(); }catch(e2){} }
     };
     document.addEventListener('keydown', keyHandler, true);
   }

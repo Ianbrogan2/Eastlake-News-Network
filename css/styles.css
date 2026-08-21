@@ -2479,149 +2479,114 @@ a.tcard-val:hover{text-decoration:underline}
 }
 .aud-rerecord-btn:hover{color:var(--text);border-color:var(--border-hi)}
 
+
 /* ══════════════════════════════════════════════════════════════════
-   HIDDEN EASTER EGG — ENN broadcast "standby" placeholder overlay
-   Trigger = the "ENN" in the footer. Intentionally has NO visual
-   affordance (no pointer cursor, no hover, no focus ring) so it stays
-   a secret. The overlay is a fullscreen idle station screen.
+   HIDDEN EASTER EGG — ENN cinematic "standby" placeholder overlay
+   Trigger = the "ENN" in the footer (no visual affordance). Fullscreen
+   idle station screen: a large breathing logo with a slow light sweep,
+   a drifting glow and god-rays, a soft vignette, a STANDBY bug and a
+   live clock (top-right). All motion is CSS @keyframes (infinite,
+   seamless). Close with Escape or a click anywhere.
 ══════════════════════════════════════════════════════════════════ */
-.enn-egg{ outline:none; cursor:inherit; }            /* look identical to the footer text */
+.enn-egg{ outline:none; cursor:inherit; }
 .enn-egg::-moz-focus-inner{ border:0; }
 
 html.enn-egg-lock, body.enn-egg-lock{ overflow:hidden !important; }
 
 .enn-egg-overlay{
-  position:fixed; inset:0; z-index:99999;
+  position:fixed; inset:0; z-index:99999; outline:none;
   display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(120% 92% at 50% 42%, #0d1c34 0%, #081327 34%, #04070f 70%, #01030a 100%);
+  background:radial-gradient(125% 95% at 50% 44%, #12233f 0%, #0a1730 32%, #050a18 68%, #01030a 100%);
   opacity:0; transform:scale(1.03);
-  transition:opacity .52s cubic-bezier(.4,0,.2,1), transform .52s cubic-bezier(.4,0,.2,1);
+  transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);
   overflow:hidden; will-change:opacity, transform;
 }
 .enn-egg-overlay.open{ opacity:1; transform:scale(1); }
 
-/* rotating light rays (0→360 loops seamlessly) */
+/* slow rotating god-rays (0->360 seamless) */
 .enn-egg-rays{
-  position:absolute; left:50%; top:50%; width:200vmax; height:200vmax; z-index:0;
+  position:absolute; left:50%; top:50%; width:220vmax; height:220vmax; z-index:0;
   transform:translate(-50%,-50%);
   background:conic-gradient(from 0deg,
-     rgba(90,170,255,0) 0deg, rgba(90,170,255,.05) 11deg, rgba(90,170,255,0) 22deg,
-     rgba(90,170,255,0) 84deg, rgba(120,220,255,.06) 95deg, rgba(120,220,255,0) 106deg,
-     rgba(90,170,255,0) 180deg, rgba(90,170,255,.05) 191deg, rgba(90,170,255,0) 202deg,
-     rgba(90,170,255,0) 300deg, rgba(120,220,255,.06) 311deg, rgba(120,220,255,0) 322deg,
+     rgba(90,170,255,0) 0deg, rgba(110,190,255,.055) 14deg, rgba(90,170,255,0) 30deg,
+     rgba(90,170,255,0) 160deg, rgba(120,210,255,.06) 176deg, rgba(120,210,255,0) 192deg,
+     rgba(90,170,255,0) 320deg, rgba(120,210,255,.05) 336deg, rgba(120,210,255,0) 352deg,
      rgba(90,170,255,0) 360deg);
-  opacity:0; transition:opacity .9s ease .15s; will-change:transform;
+  opacity:0; transition:opacity 1s ease .2s; will-change:transform;
 }
-.enn-egg-overlay.open .enn-egg-rays{ opacity:.7; }
-.enn-egg-overlay.animate .enn-egg-rays{ animation:ennEggRays 46s linear infinite; }
+.enn-egg-overlay.open .enn-egg-rays{ opacity:.6; }
+.enn-egg-overlay.animate .enn-egg-rays{ animation:ennEggRays 60s linear infinite; }
 
-/* pulsing radial glow behind the logo (0%==100% → seamless) */
+/* pulsing radial glow (0%==100% seamless) */
 .enn-egg-glow{
-  position:absolute; left:50%; top:50%; width:78vmin; height:78vmin; z-index:1;
+  position:absolute; left:50%; top:50%; width:96vmin; height:96vmin; z-index:1;
   transform:translate(-50%,-50%);
-  background:radial-gradient(circle, rgba(45,140,255,.42) 0%, rgba(30,110,220,.16) 42%, rgba(0,0,0,0) 70%);
-  filter:blur(6px); opacity:0; transition:opacity .9s ease .1s; will-change:transform, opacity;
+  background:radial-gradient(circle, rgba(48,145,255,.40) 0%, rgba(30,110,220,.14) 44%, rgba(0,0,0,0) 70%);
+  filter:blur(10px); opacity:0; transition:opacity 1s ease .1s; will-change:transform, opacity;
 }
 .enn-egg-overlay.open .enn-egg-glow{ opacity:1; }
-.enn-egg-overlay.animate .enn-egg-glow{ animation:ennEggGlow 8.5s ease-in-out infinite; }
+.enn-egg-overlay.animate .enn-egg-glow{ animation:ennEggGlow 9s ease-in-out infinite; }
 
-/* faint drifting grain — tiles every 3px, drift is a whole multiple → no snap */
-.enn-egg-grain{
-  position:absolute; inset:-40%; z-index:1;
-  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
-  background-size:3px 3px; opacity:0; transition:opacity 1s ease; will-change:transform;
-}
-.enn-egg-overlay.open .enn-egg-grain{ opacity:.5; }
-.enn-egg-overlay.animate .enn-egg-grain{ animation:ennEggDrift 12s linear infinite; }
-
-/* the breathing logo */
-.enn-egg-logo{
+/* big breathing logo + cinematic light sweep */
+.enn-egg-logowrap{
   position:relative; z-index:2;
-  width:min(60vw, 540px); max-width:86vw; height:auto;
-  filter:drop-shadow(0 0 34px rgba(60,150,255,.45)) drop-shadow(0 6px 40px rgba(0,0,0,.6));
-  transform:scale(.9); will-change:transform;
+  width:min(80vw, 860px); max-width:92vw;
+  transform:scale(.94); will-change:transform;
+}
+.enn-egg-overlay.animate .enn-egg-logowrap{ animation:ennEggZoom 8s ease-in-out infinite; }
+.enn-egg-logo{
+  display:block; width:100%; height:auto;
+  filter:drop-shadow(0 0 42px rgba(70,160,255,.5)) drop-shadow(0 10px 54px rgba(0,0,0,.6));
   user-select:none; -webkit-user-drag:none; pointer-events:none;
 }
-.enn-egg-overlay.animate .enn-egg-logo{ animation:ennEggZoom 7s ease-in-out infinite; }
-
-/* CRT scanlines + a slow roll band (TV placeholder feel) */
-.enn-egg-scan{
-  position:absolute; inset:0; z-index:3; pointer-events:none; opacity:0;
-  transition:opacity .9s ease .2s;
-  background:repeating-linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.16) 3px);
+.enn-egg-shine{
+  position:absolute; inset:0; pointer-events:none; opacity:.9;
+  -webkit-mask:url(/enn-mark.png) center/contain no-repeat;
+          mask:url(/enn-mark.png) center/contain no-repeat;
+  background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%);
+  background-size:260% 100%; background-position:180% 0;
 }
-.enn-egg-overlay.open .enn-egg-scan{ opacity:1; }
-.enn-egg-scan::after{
-  content:''; position:absolute; left:0; right:0; height:22%;
-  background:linear-gradient(180deg, rgba(120,190,255,0) 0%, rgba(140,200,255,.05) 50%, rgba(120,190,255,0) 100%);
-}
-.enn-egg-overlay.animate .enn-egg-scan::after{ animation:ennEggRoll 7s linear infinite; }
+.enn-egg-overlay.animate .enn-egg-shine{ animation:ennEggShine 6.5s ease-in-out infinite; }
 
-/* soft vignette to hold focus centre */
+/* soft cinematic vignette */
 .enn-egg-vignette{
   position:absolute; inset:0; z-index:3; pointer-events:none;
-  background:radial-gradient(122% 100% at 50% 50%, rgba(0,0,0,0) 44%, rgba(0,0,0,.58) 100%);
+  background:radial-gradient(125% 100% at 50% 50%, rgba(0,0,0,0) 46%, rgba(0,0,0,.6) 100%);
 }
 
 /* STANDBY broadcast bug (top-left) */
 .enn-egg-bug{
-  position:absolute; top:max(20px, env(safe-area-inset-top)); left:24px; z-index:5;
+  position:absolute; top:max(22px, env(safe-area-inset-top)); left:26px; z-index:5;
   display:flex; align-items:center; gap:9px;
-  font-family:'DM Mono', monospace; font-size:12px; letter-spacing:.28em;
-  color:rgba(220,232,255,.72); text-transform:uppercase; pointer-events:none;
+  font-family:'DM Mono', monospace; font-size:12px; letter-spacing:.3em;
+  color:rgba(220,232,255,.7); text-transform:uppercase; pointer-events:none;
 }
-.enn-egg-dot{ width:9px; height:9px; border-radius:50%; background:#ff3b47; box-shadow:0 0 10px rgba(255,59,71,.8); }
-.enn-egg-overlay.animate .enn-egg-dot{ animation:ennEggBlink 1.8s ease-in-out infinite; }
+.enn-egg-dot{ width:9px; height:9px; border-radius:50%; background:#ff3b47; box-shadow:0 0 12px rgba(255,59,71,.85); }
+.enn-egg-overlay.animate .enn-egg-dot{ animation:ennEggBlink 2s ease-in-out infinite; }
 
-/* live clock (bottom-left) */
+/* live clock (top-right — replaces the close button) */
 .enn-egg-clock{
-  position:absolute; bottom:22px; left:24px; z-index:5; pointer-events:none;
-  font-family:'DM Mono', monospace; font-size:13px; letter-spacing:.18em;
-  color:rgba(200,220,255,.6);
+  position:absolute; top:max(20px, env(safe-area-inset-top)); right:26px; z-index:5; pointer-events:none;
+  font-family:'DM Mono', monospace; font-size:14px; letter-spacing:.2em;
+  color:rgba(210,226,255,.72); font-variant-numeric:tabular-nums;
 }
 
-/* close control (top-right) */
-.enn-egg-close{
-  position:absolute; top:max(16px, env(safe-area-inset-top)); right:20px; z-index:6;
-  width:44px; height:44px; border-radius:50%;
-  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18);
-  color:#cfe3ff; font-size:24px; line-height:1; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  transition:background .2s, transform .2s, border-color .2s;
-}
-.enn-egg-close:hover, .enn-egg-close:focus-visible{
-  background:rgba(255,255,255,.14); border-color:rgba(120,200,255,.6); transform:scale(1.06); outline:none;
-}
-
-/* auto-fading close hint (bottom-centre) — one-shot, leaves the screen clean */
-.enn-egg-hint{
-  position:absolute; bottom:24px; left:0; right:0; text-align:center; z-index:5; pointer-events:none;
-  font-family:'DM Mono', monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
-  color:rgba(200,220,255,.5); opacity:0;
-}
-.enn-egg-overlay.animate .enn-egg-hint{ animation:ennEggHint 6s ease forwards; }
-
-@keyframes ennEggZoom{ 0%{transform:scale(.9)} 50%{transform:scale(1.15)} 100%{transform:scale(.9)} }
-@keyframes ennEggGlow{ 0%,100%{opacity:.55; transform:translate(-50%,-50%) scale(1)} 50%{opacity:.95; transform:translate(-50%,-50%) scale(1.14)} }
+@keyframes ennEggZoom{ 0%{transform:scale(.94)} 50%{transform:scale(1.08)} 100%{transform:scale(.94)} }
+@keyframes ennEggGlow{ 0%,100%{opacity:.5; transform:translate(-50%,-50%) scale(1)} 50%{opacity:.92; transform:translate(-50%,-50%) scale(1.12)} }
 @keyframes ennEggRays{ from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
-@keyframes ennEggDrift{ from{transform:translate(0,0)} to{transform:translate(0,-30px)} }
-@keyframes ennEggRoll{ 0%{top:-25%} 100%{top:105%} }
-@keyframes ennEggBlink{ 0%,100%{opacity:1} 50%{opacity:.2} }
-@keyframes ennEggHint{ 0%{opacity:0} 14%{opacity:.55} 68%{opacity:.55} 100%{opacity:0} }
+@keyframes ennEggShine{ 0%{background-position:180% 0} 55%,100%{background-position:-60% 0} }
+@keyframes ennEggBlink{ 0%,100%{opacity:1} 50%{opacity:.25} }
 
 @media (max-width:640px){
-  .enn-egg-logo{ width:min(82vw, 430px); }
-  .enn-egg-glow{ width:98vmin; height:98vmin; }
-  .enn-egg-bug{ left:16px; font-size:11px; letter-spacing:.2em; }
-  .enn-egg-clock{ left:16px; font-size:12px; }
-  .enn-egg-hint{ font-size:10px; }
+  .enn-egg-logowrap{ width:min(90vw, 600px); }
+  .enn-egg-glow{ width:120vmin; height:120vmin; }
+  .enn-egg-bug{ left:16px; font-size:11px; letter-spacing:.22em; }
+  .enn-egg-clock{ right:16px; font-size:13px; }
 }
 
-/* Accessibility: respect reduced-motion — show the standby screen, hold it still */
 @media (prefers-reduced-motion:reduce){
   .enn-egg-overlay{ transition:opacity .3s ease !important; transform:none !important; }
-  .enn-egg-logo, .enn-egg-glow, .enn-egg-rays, .enn-egg-grain,
-  .enn-egg-scan::after, .enn-egg-dot, .enn-egg-hint{ animation:none !important; }
-  .enn-egg-logo{ transform:scale(1) !important; }
-  .enn-egg-hint{ opacity:.5 !important; }
+  .enn-egg-logowrap, .enn-egg-glow, .enn-egg-rays, .enn-egg-shine, .enn-egg-dot{ animation:none !important; }
+  .enn-egg-logowrap{ transform:scale(1) !important; }
+  .enn-egg-shine{ opacity:0 !important; }
 }
