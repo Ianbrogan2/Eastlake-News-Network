@@ -22,9 +22,9 @@
 var ENN_NEWS = {
   featured: {
     tag: 'Big Game',
-    title: 'Boot Bonita: Titans Saddle Up for Friday Night',
-    body: 'It\'s the one everyone\'s been waiting for. The Titans host rival Bonita Vista this Friday, Aug 21 at 6:30 PM — and it\'s going full Western. Break out the boots, hats and denim, pack the student section, and help us boot Bonita. This is a big one, Titans — everyone show up.',
-    byline: 'REPORTED BY TEAM ENN · WEDNESDAY, AUG 19, 2026'
+    title: 'Boot Bonita: Titans Took Home the Win!',
+    body: 'On Friday August 21st, Eastlake took home the win against our rivals at the Boot Bonita game, winning 28-0!',
+    byline: 'REPORTED BY TEAM ENN · MONDAY, AUG 14, 2026'
   },
   sidebar: [
     {
