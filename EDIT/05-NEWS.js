@@ -24,12 +24,12 @@ var ENN_NEWS = {
     tag: 'Big Game',
     title: 'Boot Bonita: Titans Took Home the Win!',
     body: 'On Friday August 21st, Eastlake took home the win against our rivals at the Boot Bonita game, winning 28-0!',
-    byline: 'REPORTED BY TEAM ENN · MONDAY, AUG 14, 2026'
+    byline: 'REPORTED BY TEAM ENN · MONDAY, AUG 24, 2026'
   },
   sidebar: [
     {
       cat: 'ENN',
-      title: 'New series alert: ENN Hot Ones premieres Monday — hot wings, hotter questions, your favorite students in the hot seat.',
+      title: 'New series alert: ENN Hot Ones premieres Monday — hot wings, hotter questions, your favorite teachers in the hot seat. Follow @ENNHotOnes on IG to submit questions and teacher requests.',
       date: 'Mondays'
     },
     {
