@@ -2166,6 +2166,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
             <div class="at-hg-count" id="at-count">—</div>
             <div class="at-hg-when">${esc(whenLong(next.g))} · ${next.g.ha==='home'?'Home':'Away'}${next.g.location?' · '+esc(next.g.location):''}</div>
             ${next.g.note?`<span class="at-notechip">${esc(next.g.note)}</span>`:''}
+            ${next.g.theme?`<div class="at-dress"><span class="at-dress-lab">👕 Student Section</span><span class="at-dress-name">${esc(next.g.theme)}</span>${next.g.wear?`<span class="at-dress-wear">Wear ${esc(next.g.wear)}</span>`:''}</div>`:''}
             ${tix}
           </div>
           <div class="at-nextlist">
@@ -2207,6 +2208,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
         <div class="at-gmain">
           <div class="at-vs">${g.title?`<span class="at-gtitle">${esc(g.title)}</span> `:''}<span class="at-hv">${hv(g)}</span> ${esc(g.opponent)}</div>
           <div class="at-gmeta">${esc(g.level||'')}${g.time&&g.time!=='TBD'?' · '+esc(g.time):''}${g.location?' · '+esc(g.location):''}</div>
+          ${g.theme?`<div class="at-dress sm"><span class="at-dress-name">${esc(g.theme)}</span>${g.wear?`<span class="at-dress-wear">wear ${esc(g.wear)}</span>`:''}</div>`:''}
         </div>
         <div class="at-gside">${g.note?`<span class="at-notechip sm">${esc(g.note)}</span>`:''}${side}</div>
       </div>`;
@@ -3346,13 +3348,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('aria-label', 'ENN broadcast standby');
     overlay.innerHTML =
-      '<div class="enn-egg-rays" aria-hidden="true"></div>' +
-      '<div class="enn-egg-glow" aria-hidden="true"></div>' +
-      '<div class="enn-egg-logowrap">' +
-        '<img class="enn-egg-logo" src="/enn-mark.png" alt="ENN — Eastlake News Network"/>' +
-        '<span class="enn-egg-shine" aria-hidden="true"></span>' +
-      '</div>' +
-      '<div class="enn-egg-vignette" aria-hidden="true"></div>' +
+      '<img class="enn-egg-logo" src="/enn-logo.png" alt="ENN — Eastlake News Network"/>' +
       '<div class="enn-egg-bug" aria-hidden="true"><span class="enn-egg-dot"></span>STANDBY</div>' +
       '<div class="enn-egg-clock" aria-hidden="true">00:00:00</div>';
 
