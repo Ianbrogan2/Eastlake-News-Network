@@ -25,11 +25,11 @@
 // automatically from the Athletics schedule (EDIT/25-ATHLETICS.js) — you
 // don't need to add games here by hand.
 var ENN_TICKER = [
-  { k: 'Big Game',    t: '🤠 BOOT BONITA — Titans host Bonita Vista this Friday at 6:30 PM. Western theme, pack the stands and saddle up — everyone show up!' },
-  { k: 'ENN',         t: 'NEW SERIES: ENN Hot Ones premieres Monday — hot wings, hotter questions. Stay tuned.' },
-  { k: 'Homecoming',  t: 'Homecoming Court nominations are almost due — get your picks in before the deadline closes!' },
-  { k: 'Campus',      t: 'Free peer tutoring — Library during Zero period, Monday through Thursday mornings. Any subject, just drop in.' },
+  { k: 'Big Game',    t: '✨ NEON OUT — Titans host Morse High this Friday. Wear the brightest neon you own and light up the stands!' },
+  { k: 'Homecoming',  t: 'Homecoming voting starts TOMORROW — vote for your Top Ten court on Jupiter!' },
+  { k: 'ENN',         t: 'Love Lines Episode 2 drops tomorrow — the new episode goes live Thursday. Don\'t miss it.' },
+  { k: 'Campus',      t: 'Free zero-period peer tutoring is live — Library, Monday through Thursday mornings. Any subject, just drop in.' },
+  { k: 'Campus',      t: 'Parking permits are now officially required — get all the info you need at the front office.' },
   { k: 'Coming Soon', t: 'A brand-new chapter is coming to eastlakenewsnetwork.com… keep your eyes on the site.' },
-  { k: 'Athletics',   t: 'The full Titans sports schedule is live — every game, home and away, on the Athletics tab' },
   { k: 'Join',        t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN' },
 ];

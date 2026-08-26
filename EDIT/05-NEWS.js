@@ -21,26 +21,31 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_NEWS = {
   featured: {
-    tag: 'Big Game',
-    title: 'Boot Bonita: Titans Took Home the Win!',
-    body: 'On Friday August 21st, Eastlake took home the win against our rivals at the Boot Bonita game, winning 28-0!',
-    byline: 'REPORTED BY TEAM ENN · MONDAY, AUG 24, 2026'
+    tag: 'Friday Night Lights',
+    title: 'Neon Out: Titans Host Morse This Friday',
+    body: 'Coming off a 28–0 Boot Bonita shutout, the Titans are back home this Friday, Aug 28 to take on Morse High — and the student section is going NEON OUT. Wear the brightest neon you own, pack the stands, and get loud. Kickoff is 7:00 PM at Eastlake.',
+    byline: 'REPORTED BY TEAM ENN · WEDNESDAY, AUG 26, 2026'
   },
   sidebar: [
     {
-      cat: 'ENN',
-      title: 'New series alert: ENN Hot Ones premieres Monday — hot wings, hotter questions, your favorite teachers in the hot seat. Follow @ENNHotOnes on IG to submit questions and teacher requests.',
-      date: 'Mondays'
+      cat: 'Homecoming',
+      title: 'Homecoming voting starts tomorrow — vote for your Top Ten court on Jupiter starting Thursday.',
+      date: 'Starts Thu'
     },
     {
-      cat: 'Student Life',
-      title: 'Homecoming Court nominations are almost due — get your nominations in before the deadline closes.',
-      date: 'This week'
+      cat: 'ENN',
+      title: 'Love Lines Episode 2 is live tomorrow — the new episode drops Thursday. Don\'t miss it.',
+      date: 'Thu'
     },
     {
       cat: 'Campus',
-      title: 'Free peer tutoring runs during Zero period, Monday through Thursday mornings in the Library — any subject, just drop in.',
+      title: 'Free zero-period peer tutoring is still live — Library, Monday through Thursday mornings, any subject, just drop in.',
       date: 'Mon–Thu'
+    },
+    {
+      cat: 'Campus',
+      title: 'Parking permits are now officially required — stop by the front office for all the details and to get yours.',
+      date: 'Now'
     }
   ]
 };
