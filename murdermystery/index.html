@@ -1,4 +1,4 @@
-<title>THE EDGE</title>
+<title>The Eastlake Assassins</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Special+Elite&family=Caveat:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
@@ -45,8 +45,8 @@ body::after{
 .brand{display:flex;flex-direction:column;gap:2px}
 .brand .kick{font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.42em;font-size:11px;
   color:var(--red);text-transform:uppercase;padding-left:4px}
-.brand h1{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.06em;
-  font-size:clamp(44px,10vw,86px);line-height:.86;margin:0;color:#f3efe6;
+.brand h1{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.03em;
+  font-size:clamp(30px,6.4vw,60px);line-height:.9;margin:0;color:#f3efe6;max-width:12ch;text-wrap:balance;
   text-shadow:0 2px 0 #000, 0 0 34px rgba(0,0,0,.6)}
 .brand .sub{font-family:"Caveat",cursive;font-size:20px;color:var(--brass);margin-top:2px;transform:rotate(-1.4deg)}
 .casechip{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;color:var(--report-mute);
@@ -258,7 +258,7 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
     <a href="https://eastlakenewsnetwork.com/#contact">Contact</a>
     <a href="https://eastlakenewsnetwork.com/#bullpen">Games</a>
     <a href="https://eastlakenewsnetwork.com/#yearbook">Yearbook</a>
-    <a class="enn-cur" href="#" aria-current="page">Murder Mystery</a>
+    <a class="enn-cur" href="#" aria-current="page">The Edge</a>
   </div>
   <div class="enn-navr">
     <span class="enn-clock"><i>PST</i><b id="ennClock">--:--:--</b></span>
@@ -269,9 +269,9 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
 <div class="wrap">
   <header class="mast">
     <div class="brand">
-      <span class="kick">Eastlake Murder Mystery</span>
-      <h1>THE EDGE</h1>
-      <span class="sub">the paper's unsolved desk</span>
+      <span class="kick">The Eastlake Edge</span>
+      <h1>THE EASTLAKE ASSASSINS</h1>
+      <span class="sub">Whodunit &middot; The $3,000 Final</span>
     </div>
     <div class="casechip">
       CASE FILE
@@ -362,56 +362,75 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
   <div class="score">SCORE <span id="hudScore">1000</span><span class="dn"> &#9660;</span></div>
 </div>
 
-<div class="testflag" title="Placeholder copy &amp; codes &mdash; swap in the CONFIG block">Test Build &middot; Placeholder</div>
+<div class="testflag" title="Test build &mdash; confirm the QR target, real names, and event date before printing">Test Build</div>
 
 <script>
 /* ══════════════════════════════════════════════════════════════════
    CONFIG &mdash; EDIT EVERYTHING HERE
-   Swap the placeholder copy + codes for the real Eastlake Murder Mystery
-   values from the script file. Nothing below this block needs editing.
-   Answer matching is case-insensitive and trims spaces.
-   - answer:        exact code the player must type
-   - startsWith:    (optional) accept ANY value beginning with this,
-                    e.g. startsWith:'159' for the school-ID question.
+   Edit the case copy + the five codes here. Nothing below this block
+   needs editing. Answer matching ignores case, spaces, $ and colons.
+   - answers: [..]  list every acceptable form of the code (recommended)
+   - answer:        a single exact code (alternative to answers)
+   - startsWith:    (optional) accept ANY value beginning with this
 ════════════════════════════════════════════════════════════════════ */
 const CONFIG = {
-  caseNumber: "EHS-2026-014",
+  caseNumber: "EHS-0342",
   adminPass:  "edge-admin",                 // needed to delete/clear board entries
 
   intro: [
-    "<span class='eyebrow'>Confidential &mdash; Room 214</span>",
-    "<div class='filehead'>Someone killed the front page.</div>",
-    "<p>The Eastlake Murder Mystery desk has an unsolved on the books, and the trail runs cold in exactly <b>five moves</b>. The evidence is real. The codes are hidden in this week's printed edition &mdash; cross-reference the page, crack each exhibit, and log the suspect's school ID before anyone else does.</p>",
-    "<p class='note'>Everything on this screen is placeholder text until the real script is dropped in.</p>"
+    "<span class='eyebrow'>Case #EHS-0342 &mdash; Eastlake Assassins</span>",
+    "<div class='filehead'>Someone rigged the $3,000 final.</div>",
+    "<p>Someone rigged the <b>Eastlake Assassins</b> bracket and skimmed the tournament pot. Four names are on the board &mdash; one of them did it. Work the evidence, crack all <b>five codes</b>, and name the culprit before anyone else does.</p>",
+    "<p class='note'>Everything you need is pinned to the board. Enter the five codes below.</p>"
   ].join(""),
 
+  // Each answer accepts several forms; matching strips spaces, $, colons and case.
   questions: [
-    { tag:"EXHIBIT A", prompt:"Exhibit A &mdash; The victim's last byline ran under a pen name. Decode the masthead of this week's front page to recover it, then enter the codeword.",
-      hint:"Take the first letter of each standing headline, top to bottom.", answer:"ROSEWOOD" },
+    { tag:"CODE 1 &middot; THE CLOCK",
+      prompt:"When was the bracket edit committed? Read the exact timestamp off the admin log.",
+      hint:"Evidence E2 &mdash; the &ldquo;Edit committed&rdquo; line on the bracket screenshot.",
+      answers:["02:14 AM","2:14 AM","02:14","2:14","214"] },
 
-    { tag:"EXHIBIT B", prompt:"Exhibit B &mdash; A locker was found open on the second floor. The combo is spelled out somewhere in the Sports section. Enter the codeword.",
-      hint:"Read the bolded captions under the game photos.", answer:"INKWELL" },
+    { tag:"CODE 2 &middot; THE GAP",
+      prompt:"How long between when Marcus says he was tagged and when the log marks him out? Enter it as hours:minutes.",
+      hint:"Marcus: Thursday 5:30 PM. The log commits Friday 2:14 AM. Do the math.",
+      answers:["8:44","844","8 hours 44 minutes","8hr44","8h44"] },
 
-    { tag:"EXHIBIT C", prompt:"Exhibit C &mdash; The last place the victim was seen has a name printed in the Opinion column. Enter that location as one word.",
-      hint:"It's where the paper is physically printed.", answer:"PRESSROOM" },
+    { tag:"CODE 3 &middot; THE SHORTFALL",
+      prompt:"How much money is missing from the pot?",
+      hint:"Cole claims $3,000. The CashApp balance reads $2,150.",
+      answers:["$850","850"] },
 
-    { tag:"EXHIBIT D", prompt:"Exhibit D &mdash; A single word was circled in red on the calendar page. It's also the thing every reporter fears most. Enter it.",
-      hint:"Tick, tick, tick. You're feeling it right now.", answer:"DEADLINE" },
+    { tag:"CODE 4 &middot; THE HANDLE",
+      prompt:"Enter the gamertag the skimmed money landed on.",
+      hint:"The handle cut off in the CashApp screenshot = #1 on the leaderboard = the sticky note under the laptop.",
+      answers:["shadowm23","$shadowm23"] },
 
-    { tag:"EXHIBIT E", prompt:"Exhibit E &mdash; Every suspect carries an Eastlake student ID. The one recovered at the scene begins with 159. Enter it in full to name your suspect.",
-      hint:"Seven digits. For this test build the ID is 1509698.", answer:"1509698" /* , startsWith:"159" */ }
+    { tag:"CODE 5 &middot; THE ID",
+      prompt:"Name the culprit's locker number to close the case.",
+      hint:"It's on the suspect card for the one who kept shouting &ldquo;it was ASB.&rdquo;",
+      answers:["58"] }
   ],
 
   win: {
-    verdict: "Case closed.",
-    blurb: "You matched the ID and named the suspect before the clock buried you. Sign the file and take your place on the Board."
+    verdict: "Case closed &mdash; it was Priya Anand.",
+    blurb: "She rigged the bracket at 2:14 AM, skimmed $850 to $shadowm23, then screamed &ldquo;it was ASB&rdquo; to point everyone away from the money. Locker 58. Sign the file and take your spot on the Board."
   }
 };
 /* ════════════════ end of editable config ════════════════ */
 
 const LB_KEY = "edge_leaderboard_v1";   // ← leaderboard lives here (browser localStorage)
 const $ = s => document.querySelector(s);
-const norm = v => (v||"").trim().toUpperCase().replace(/\s+/g,"");
+// Lenient match: drop everything but letters/digits, lowercase &mdash; so "$850",
+// "850", "2:14 AM", "214", "$shadowm23" etc. all resolve to their answer.
+const norm = v => (v||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+function isCorrect(q, raw){
+  const v = norm(raw);
+  if(!v) return false;
+  if(q.answers) return q.answers.some(a => norm(a) === v);
+  if(q.startsWith) return v.startsWith(norm(q.startsWith));
+  return v === norm(q.answer);
+}
 const mmss = s => String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
 const scoreOf = s => Math.max(0, 1000 - s);
 
@@ -495,9 +514,8 @@ function renderQuestion(){
 function check(){
   const q = CONFIG.questions[idx];
   const input = $("#ans"), err = $("#ansErr");
-  const val = norm(input.value);
-  if(!val){ input.classList.add("bad"); err.textContent="Type a code first."; setTimeout(()=>input.classList.remove("bad"),400); return; }
-  const ok = q.startsWith ? val.startsWith(norm(q.startsWith)) : (val === norm(q.answer));
+  if(!input.value.trim()){ input.classList.add("bad"); err.textContent="Type a code first."; setTimeout(()=>input.classList.remove("bad"),400); return; }
+  const ok = isCorrect(q, input.value);
   if(!ok){
     input.classList.add("bad"); err.textContent = "That code doesn't check out. Look again.";
     setTimeout(()=>input.classList.remove("bad"),400);
@@ -519,8 +537,8 @@ function finish(){
   $("#screen-invest").classList.add("hidden");
   $("#screen-result").classList.remove("hidden");
   $("#hud").classList.add("hot");
-  $("#verdictLine").textContent = CONFIG.win.verdict;
-  $("#resultBlurb").textContent = CONFIG.win.blurb;
+  $("#verdictLine").innerHTML = CONFIG.win.verdict;
+  $("#resultBlurb").innerHTML = CONFIG.win.blurb;
   $("#rTime").textContent = mmss(elapsed);
   $("#rScore").textContent = scoreOf(elapsed);
   $("#nameIn").focus();
