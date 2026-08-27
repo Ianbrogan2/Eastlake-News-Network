@@ -1,0 +1,514 @@
+<title>THE EDGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Special+Elite&family=Caveat:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --board:#0d0f12; --board-2:#121519; --panel:#191d23; --line:#2c313a;
+  --paper:#e9e2d0; --paper-edge:#d8c9a4; --paper-shadow:#b7a878;
+  --ink:#1c1a17; --ink-soft:#4a4437;
+  --report:#d8d3c6; --report-mute:#8b8577;
+  --red:#d7263d; --red-deep:#a81124; --red-glow:rgba(215,38,61,.5);
+  --brass:#c8a24a; --brass-soft:#8a7434;
+  --ok:#3ea06a;
+  --hud:#0a0c0f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;
+  background:var(--board);
+  color:var(--report);
+  font-family:"Special Elite","Courier New",monospace;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  position:relative;
+}
+/* ── board texture: grain + vignette + faint grid of pins ── */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(60,66,78,.18), transparent 42%),
+    radial-gradient(circle at 82% 82%, rgba(60,66,78,.14), transparent 46%),
+    radial-gradient(120% 120% at 50% 0%, transparent 55%, rgba(0,0,0,.65) 100%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:26px 20px 90px}
+
+/* ── masthead ── */
+.mast{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  border-bottom:2px solid var(--line);padding-bottom:16px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand .kick{font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.42em;font-size:11px;
+  color:var(--red);text-transform:uppercase;padding-left:4px}
+.brand h1{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.06em;
+  font-size:clamp(44px,10vw,86px);line-height:.86;margin:0;color:#f3efe6;
+  text-shadow:0 2px 0 #000, 0 0 34px rgba(0,0,0,.6)}
+.brand .sub{font-family:"Caveat",cursive;font-size:20px;color:var(--brass);margin-top:2px;transform:rotate(-1.4deg)}
+.casechip{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;color:var(--report-mute);
+  border:1px solid var(--line);border-radius:4px;padding:8px 12px;background:var(--board-2);text-align:right;white-space:nowrap}
+.casechip b{color:var(--report);display:block;font-size:14px;letter-spacing:.16em}
+.casechip .stamp{display:inline-block;margin-top:6px;color:var(--red);border:2px solid var(--red);border-radius:3px;
+  padding:1px 7px;font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.22em;font-size:10px;
+  transform:rotate(-3deg);opacity:.92}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:6px;margin:22px 0 6px}
+.tab{appearance:none;cursor:pointer;font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;font-size:13px;color:var(--report-mute);background:var(--board-2);
+  border:1px solid var(--line);border-bottom:none;border-radius:7px 7px 0 0;padding:11px 20px;position:relative;top:1px}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--paper);border-color:var(--paper-edge)}
+.tab:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+/* ── generic panel that sits on the board ── */
+.view{border-top:1px solid var(--line);padding-top:26px;min-height:340px}
+.hidden{display:none !important}
+
+/* ── manila case file ── */
+.file{position:relative;max-width:720px;margin:8px auto 0;
+  background:linear-gradient(180deg,var(--paper) 0%, var(--paper) 88%, var(--paper-edge) 100%);
+  color:var(--ink);border-radius:3px 14px 3px 3px;
+  padding:34px 34px 30px;
+  box-shadow:0 26px 60px rgba(0,0,0,.55), 0 2px 0 var(--paper-shadow), inset 0 1px 0 rgba(255,255,255,.5);
+  border:1px solid var(--paper-shadow);
+}
+.file::before{ /* folder tab */
+  content:"CASE FILE";position:absolute;top:-19px;left:26px;
+  font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.2em;font-size:11px;color:var(--ink-soft);
+  background:var(--paper-edge);border:1px solid var(--paper-shadow);border-bottom:none;
+  padding:5px 16px 6px;border-radius:6px 6px 0 0}
+.pin{position:absolute;top:-11px;left:50%;transform:translateX(-50%);width:19px;height:19px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #ff6b76, var(--red-deep));
+  box-shadow:0 3px 6px rgba(0,0,0,.5), inset 0 -2px 3px rgba(0,0,0,.35);z-index:3}
+.thread{position:absolute;top:0;left:50%;width:2px;height:0;background:var(--red);z-index:2;opacity:.55}
+
+.report{font-family:"Special Elite",monospace;color:var(--ink);line-height:1.62;font-size:15.5px}
+.report p{margin:0 0 14px}
+.eyebrow{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.26em;text-transform:uppercase;
+  font-size:11px;color:var(--red-deep)}
+.filehead{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.02em;font-size:30px;margin:6px 0 14px;
+  color:var(--ink);text-wrap:balance;line-height:1.02}
+.redact{background:var(--ink);color:var(--ink);border-radius:2px;padding:0 4px;user-select:none}
+.note{font-family:"Caveat",cursive;font-size:21px;color:var(--red-deep);transform:rotate(-.8deg);line-height:1.3}
+
+/* ── buttons ── */
+.btn{appearance:none;cursor:pointer;font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;font-size:14px;border-radius:6px;padding:14px 26px;border:1px solid transparent;transition:transform .12s ease, box-shadow .2s ease, background .2s}
+.btn-primary{background:var(--red);color:#fff;box-shadow:0 6px 0 var(--red-deep), 0 12px 26px var(--red-glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 0 var(--red-deep),0 16px 30px var(--red-glow)}
+.btn-primary:active{transform:translateY(3px);box-shadow:0 2px 0 var(--red-deep)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--paper-shadow)}
+.btn-ghost:hover{background:rgba(0,0,0,.05)}
+.btn:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+/* ── exhibit / question ── */
+.exhibit .meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.exhibit .tag{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.18em;font-size:12px;color:#fff;
+  background:var(--ink);padding:4px 12px;border-radius:3px}
+.progress{display:flex;gap:6px}
+.progress i{width:26px;height:6px;border-radius:3px;background:var(--paper-shadow);opacity:.55}
+.progress i.done{background:var(--red)}
+.progress i.here{background:var(--ink)}
+.answer-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.code-in{flex:1;min-width:200px;font-family:"Space Mono",monospace;font-size:19px;letter-spacing:.14em;
+  color:var(--ink);background:#fbf8ef;border:2px dashed var(--paper-shadow);border-radius:5px;padding:14px 16px;text-transform:uppercase}
+.code-in::placeholder{color:#a99f86;letter-spacing:.14em}
+.code-in:focus{outline:none;border-color:var(--red);border-style:solid;background:#fff}
+.code-in.bad{border-color:var(--red);animation:shake .4s}
+@keyframes shake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(5px)}50%{transform:translateX(-7px)}}
+.err{font-family:"Special Elite",monospace;color:var(--red-deep);font-size:13.5px;margin-top:10px;min-height:18px;display:flex;align-items:center;gap:7px}
+.err::before{content:"\2715";font-weight:700}
+.hintbtn{background:none;border:none;cursor:pointer;font-family:"Caveat",cursive;font-size:19px;color:var(--red-deep);
+  text-decoration:underline;text-decoration-style:wavy;padding:0;margin-top:16px}
+.hintbtn:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.hint{overflow:hidden;max-height:0;transition:max-height .38s ease;margin-top:0}
+.hint.open{max-height:200px;margin-top:12px}
+.hint .inner{border-left:3px solid var(--brass);background:rgba(200,162,74,.13);padding:11px 14px;border-radius:0 6px 6px 0}
+.hint .inner .lab{font-family:"Oswald",sans-serif;font-weight:600;font-size:10px;letter-spacing:.24em;color:var(--brass-soft);text-transform:uppercase}
+.hint .inner .txt{font-family:"Caveat",cursive;font-size:20px;color:var(--ink-soft);line-height:1.35}
+
+.swap-enter{animation:swapIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes swapIn{from{opacity:0;transform:translateY(14px) rotate(.6deg)}to{opacity:1;transform:none}}
+
+/* ── timer HUD ── */
+.hud{position:fixed;top:16px;right:16px;z-index:40;background:var(--hud);border:1px solid var(--line);
+  border-radius:10px;padding:12px 16px;text-align:center;box-shadow:0 14px 34px rgba(0,0,0,.5);min-width:150px}
+.hud.hot{border-color:var(--red);box-shadow:0 0 0 1px var(--red-glow),0 14px 34px rgba(0,0,0,.6)}
+.hud .lab{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.28em;font-size:9px;color:var(--report-mute);text-transform:uppercase}
+.hud .clock{font-family:"Space Mono",monospace;font-weight:700;font-size:34px;line-height:1;color:var(--red);
+  font-variant-numeric:tabular-nums;text-shadow:0 0 18px var(--red-glow)}
+.hud .clock.tick{animation:tick 1s ease}
+@keyframes tick{0%{transform:scale(1.05)}30%{transform:scale(1)}}
+.hud .score{font-family:"Space Mono",monospace;font-size:12px;color:var(--brass);margin-top:4px;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.hud .score .dn{color:var(--red)}
+
+/* ── result ── */
+.result{max-width:560px;margin:0 auto;text-align:center}
+.verdict{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.06em;font-size:clamp(30px,6vw,46px);color:var(--ink);margin:2px 0 4px}
+.stats{display:flex;gap:14px;justify-content:center;margin:22px 0 6px;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:#fbf8ef;border:1px solid var(--paper-shadow);border-radius:8px;padding:16px}
+.stat .k{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.22em;font-size:10px;color:var(--ink-soft);text-transform:uppercase}
+.stat .v{font-family:"Space Mono",monospace;font-weight:700;font-size:34px;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat.big .v{color:var(--red-deep)}
+.namewrap{margin-top:22px;text-align:left}
+.namewrap label{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.2em;font-size:11px;color:var(--ink-soft);text-transform:uppercase;display:block;margin-bottom:8px}
+
+/* ── leaderboard ── */
+.board-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.board-head h2{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.05em;font-size:32px;margin:0;color:#f3efe6}
+.board-head .h-note{font-family:"Caveat",cursive;font-size:19px;color:var(--brass)}
+.lb{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.lb li{display:grid;grid-template-columns:52px 1fr auto auto;align-items:center;gap:14px;
+  background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:14px 18px}
+.lb li.you{border-color:var(--red);box-shadow:0 0 0 1px var(--red-glow)}
+.lb .rank{font-family:"Oswald",sans-serif;font-weight:700;font-size:24px;color:var(--report-mute);text-align:center;font-variant-numeric:tabular-nums}
+.lb li:nth-child(1) .rank{color:var(--brass)}
+.lb li:nth-child(2) .rank{color:#cfd2d8}.lb li:nth-child(3) .rank{color:#c98b57}
+.lb .who{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.08em;font-size:19px;color:var(--report);text-transform:uppercase}
+.lb .who small{display:block;font-family:"Space Mono",monospace;font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--report-mute)}
+.lb .time{font-family:"Space Mono",monospace;font-size:18px;color:var(--report);font-variant-numeric:tabular-nums}
+.lb .pts{font-family:"Space Mono",monospace;font-weight:700;font-size:20px;color:var(--red);font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+.lb .del{background:none;border:1px solid var(--line);color:var(--report-mute);border-radius:5px;cursor:pointer;
+  font-family:"Oswald",sans-serif;font-size:11px;letter-spacing:.1em;padding:6px 9px}
+.lb .del:hover{border-color:var(--red);color:var(--red)}
+.empty{font-family:"Special Elite",monospace;color:var(--report-mute);text-align:center;padding:46px 10px;border:1px dashed var(--line);border-radius:10px}
+.admin-bar{display:flex;gap:10px;align-items:center;margin-top:20px;flex-wrap:wrap}
+.mini{background:var(--board-2);border:1px solid var(--line);color:var(--report-mute);border-radius:6px;
+  font-family:"Oswald",sans-serif;letter-spacing:.12em;font-size:11px;text-transform:uppercase;padding:9px 14px;cursor:pointer}
+.mini:hover{color:var(--report);border-color:var(--report-mute)}
+.mini.danger:hover{color:var(--red);border-color:var(--red)}
+.admin-note{font-family:"Special Elite",monospace;font-size:12px;color:var(--report-mute);margin-top:12px;line-height:1.6}
+.admin-note code{color:var(--brass);background:var(--board-2);padding:1px 6px;border-radius:3px}
+
+/* ── test build stamp ── */
+.testflag{position:fixed;left:14px;bottom:12px;z-index:40;font-family:"Oswald",sans-serif;font-weight:600;
+  letter-spacing:.2em;font-size:10px;color:var(--brass);border:1.5px solid var(--brass-soft);border-radius:4px;
+  padding:4px 10px;transform:rotate(-2deg);opacity:.7;text-transform:uppercase;background:rgba(0,0,0,.35)}
+
+@media (max-width:560px){
+  .file{padding:28px 20px 24px}
+  .lb li{grid-template-columns:40px 1fr auto;grid-row-gap:6px}
+  .lb .pts{grid-column:2/4;text-align:left;min-width:0}
+  .hud{top:10px;right:10px;min-width:128px;padding:9px 12px}
+  .hud .clock{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+  .thread{height:0 !important}
+}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="brand">
+      <span class="kick">Eastlake Whodunit</span>
+      <h1>THE EDGE</h1>
+      <span class="sub">the paper's unsolved desk</span>
+    </div>
+    <div class="casechip">
+      CASE FILE
+      <b id="caseNo">EHS-2026-014</b>
+      <span class="stamp">OPEN &middot; UNSOLVED</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" id="tab-case" role="tab" aria-selected="true" aria-controls="view-case">The Case</button>
+    <button class="tab" id="tab-board" role="tab" aria-selected="false" aria-controls="view-board">The Board</button>
+  </nav>
+
+  <!-- ══════════ THE CASE ══════════ -->
+  <section class="view" id="view-case" role="tabpanel" aria-labelledby="tab-case">
+
+    <!-- intro -->
+    <div class="screen intro" id="screen-intro">
+      <div class="file">
+        <span class="pin"></span>
+        <div class="report" id="introBody"><!-- filled from CONFIG --></div>
+        <div style="margin-top:24px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" id="startBtn">Start Investigation</button>
+          <span class="note">clock starts the moment you open the file.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- investigation -->
+    <div class="screen investigation hidden" id="screen-invest">
+      <div class="file" id="exhibitFile"><span class="pin"></span><div id="exhibitSlot"></div></div>
+    </div>
+
+    <!-- result -->
+    <div class="screen result-screen hidden" id="screen-result">
+      <div class="file result">
+        <span class="pin"></span>
+        <div class="eyebrow" style="text-align:center">Case Closed</div>
+        <div class="verdict" id="verdictLine">You cracked it.</div>
+        <p class="report" id="resultBlurb" style="text-align:center;margin:0 auto;max-width:44ch"></p>
+        <div class="stats">
+          <div class="stat"><div class="k">Time</div><div class="v" id="rTime">00:00</div></div>
+          <div class="stat big"><div class="k">Score</div><div class="v" id="rScore">0</div></div>
+        </div>
+        <div class="namewrap">
+          <label for="nameIn">Sign the file &mdash; name or initials</label>
+          <div class="answer-row">
+            <input class="code-in" id="nameIn" maxlength="18" placeholder="e.g. J.R. / RILEY M." autocomplete="off">
+            <button class="btn btn-primary" id="submitScoreBtn">Post to the Board</button>
+          </div>
+          <div class="err" id="nameErr" style="min-height:0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ THE BOARD ══════════ -->
+  <section class="view hidden" id="view-board" role="tabpanel" aria-labelledby="tab-board">
+    <div class="board-head">
+      <h2>THE BOARD</h2>
+      <span class="h-note">fastest to close the case sits up top</span>
+    </div>
+    <ul class="lb" id="lbList"></ul>
+    <div class="admin-bar">
+      <button class="mini" id="adminToggle">Manage board</button>
+      <button class="mini" id="exportBtn" style="display:none">Export JSON</button>
+      <button class="mini danger" id="clearBtn" style="display:none">Clear all</button>
+    </div>
+    <div class="admin-note hidden" id="adminNote"></div>
+  </section>
+</div>
+
+<!-- timer HUD -->
+<div class="hud hidden" id="hud" aria-live="off">
+  <div class="lab">Elapsed</div>
+  <div class="clock" id="hudClock">00:00</div>
+  <div class="score">SCORE <span id="hudScore">1000</span><span class="dn"> &#9660;</span></div>
+</div>
+
+<div class="testflag" title="Placeholder copy &amp; codes &mdash; swap in the CONFIG block">Test Build &middot; Placeholder</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   CONFIG &mdash; EDIT EVERYTHING HERE
+   Swap the placeholder copy + codes for the real Eastlake Whodunit
+   values from the script file. Nothing below this block needs editing.
+   Answer matching is case-insensitive and trims spaces.
+   - answer:        exact code the player must type
+   - startsWith:    (optional) accept ANY value beginning with this,
+                    e.g. startsWith:'159' for the school-ID question.
+════════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  caseNumber: "EHS-2026-014",
+  adminPass:  "edge-admin",                 // needed to delete/clear board entries
+
+  intro: [
+    "<span class='eyebrow'>Confidential &mdash; Room 214</span>",
+    "<div class='filehead'>Someone killed the front page.</div>",
+    "<p>The Eastlake Whodunit desk has an unsolved on the books, and the trail runs cold in exactly <b>five moves</b>. The evidence is real. The codes are hidden in this week's printed edition &mdash; cross-reference the page, crack each exhibit, and log the suspect's school ID before anyone else does.</p>",
+    "<p class='note'>Everything on this screen is placeholder text until the real script is dropped in.</p>"
+  ].join(""),
+
+  questions: [
+    { tag:"EXHIBIT A", prompt:"Exhibit A &mdash; The victim's last byline ran under a pen name. Decode the masthead of this week's front page to recover it, then enter the codeword.",
+      hint:"Take the first letter of each standing headline, top to bottom.", answer:"ROSEWOOD" },
+
+    { tag:"EXHIBIT B", prompt:"Exhibit B &mdash; A locker was found open on the second floor. The combo is spelled out somewhere in the Sports section. Enter the codeword.",
+      hint:"Read the bolded captions under the game photos.", answer:"INKWELL" },
+
+    { tag:"EXHIBIT C", prompt:"Exhibit C &mdash; The last place the victim was seen has a name printed in the Opinion column. Enter that location as one word.",
+      hint:"It's where the paper is physically printed.", answer:"PRESSROOM" },
+
+    { tag:"EXHIBIT D", prompt:"Exhibit D &mdash; A single word was circled in red on the calendar page. It's also the thing every reporter fears most. Enter it.",
+      hint:"Tick, tick, tick. You're feeling it right now.", answer:"DEADLINE" },
+
+    { tag:"EXHIBIT E", prompt:"Exhibit E &mdash; Every suspect carries an Eastlake student ID. The one recovered at the scene begins with 159. Enter it in full to name your suspect.",
+      hint:"Seven digits. For this test build the ID is 1509698.", answer:"1509698" /* , startsWith:"159" */ }
+  ],
+
+  win: {
+    verdict: "Case closed.",
+    blurb: "You matched the ID and named the suspect before the clock buried you. Sign the file and take your place on the Board."
+  }
+};
+/* ════════════════ end of editable config ════════════════ */
+
+const LB_KEY = "edge_leaderboard_v1";   // ← leaderboard lives here (browser localStorage)
+const $ = s => document.querySelector(s);
+const norm = v => (v||"").trim().toUpperCase().replace(/\s+/g,"");
+const mmss = s => String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+const scoreOf = s => Math.max(0, 1000 - s);
+
+let idx = 0, startAt = null, timer = null, elapsed = 0, done = false, adminOn = false, lastEntryId = null;
+
+/* ---------- storage ---------- */
+function loadBoard(){ try{ return JSON.parse(localStorage.getItem(LB_KEY)) || []; }catch(e){ return []; } }
+function saveBoard(a){ try{ localStorage.setItem(LB_KEY, JSON.stringify(a)); }catch(e){} }
+
+/* ---------- intro ---------- */
+$("#caseNo").textContent = CONFIG.caseNumber;
+$("#introBody").innerHTML = CONFIG.intro;
+
+/* ---------- tabs ---------- */
+function showTab(which){
+  const isCase = which==="case";
+  $("#tab-case").setAttribute("aria-selected", isCase);
+  $("#tab-board").setAttribute("aria-selected", !isCase);
+  $("#view-case").classList.toggle("hidden", !isCase);
+  $("#view-board").classList.toggle("hidden", isCase);
+  if(!isCase) renderBoard();
+}
+$("#tab-case").onclick = ()=>showTab("case");
+$("#tab-board").onclick = ()=>showTab("board");
+
+/* ---------- timer ---------- */
+function startTimer(){
+  startAt = Date.now();
+  $("#hud").classList.remove("hidden");
+  timer = setInterval(()=>{
+    elapsed = Math.floor((Date.now()-startAt)/1000);
+    const c = $("#hudClock"); c.textContent = mmss(elapsed);
+    c.classList.remove("tick"); void c.offsetWidth; c.classList.add("tick");
+    $("#hudScore").textContent = scoreOf(elapsed);
+    $("#hud").classList.toggle("hot", elapsed>=180);
+  },1000);
+}
+function stopTimer(){ clearInterval(timer); elapsed = Math.floor((Date.now()-startAt)/1000); }
+
+/* ---------- questions ---------- */
+function progressBar(){
+  let h="";
+  for(let i=0;i<CONFIG.questions.length;i++){
+    h += `<i class="${i<idx?'done':(i===idx?'here':'')}"></i>`;
+  }
+  return `<div class="progress" aria-hidden="true">${h}</div>`;
+}
+function renderQuestion(){
+  const q = CONFIG.questions[idx];
+  const slot = $("#exhibitSlot");
+  slot.innerHTML = `
+    <div class="exhibit">
+      <div class="meta">
+        <span class="tag">${q.tag}</span>
+        ${progressBar()}
+      </div>
+      <div class="eyebrow">Exhibit ${idx+1} of ${CONFIG.questions.length}</div>
+      <p class="report" style="margin-top:8px">${q.prompt}</p>
+      <div class="answer-row">
+        <input class="code-in" id="ans" autocomplete="off" spellcheck="false"
+               placeholder="ENTER CODE" aria-label="Answer for ${q.tag}">
+        <button class="btn btn-primary" id="ansBtn">Submit</button>
+      </div>
+      <div class="err" id="ansErr"></div>
+      <button class="hintbtn" id="hintBtn" aria-expanded="false">Need a lead? Reveal the hint \u2193</button>
+      <div class="hint" id="hint"><div class="inner">
+        <div class="lab">Detective's note</div>
+        <div class="txt">${q.hint}</div>
+      </div></div>
+    </div>`;
+  $("#exhibitFile").classList.remove("swap-enter"); void $("#exhibitFile").offsetWidth;
+  $("#exhibitFile").classList.add("swap-enter");
+  const input = $("#ans"); input.focus();
+  $("#ansBtn").onclick = check;
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter") check(); });
+  $("#hintBtn").onclick = ()=>{
+    const h=$("#hint"), b=$("#hintBtn"), open=h.classList.toggle("open");
+    b.setAttribute("aria-expanded",open); b.textContent = open ? "Hide the hint \u2191" : "Need a lead? Reveal the hint \u2193";
+  };
+}
+function check(){
+  const q = CONFIG.questions[idx];
+  const input = $("#ans"), err = $("#ansErr");
+  const val = norm(input.value);
+  if(!val){ input.classList.add("bad"); err.textContent="Type a code first."; setTimeout(()=>input.classList.remove("bad"),400); return; }
+  const ok = q.startsWith ? val.startsWith(norm(q.startsWith)) : (val === norm(q.answer));
+  if(!ok){
+    input.classList.add("bad"); err.textContent = "That code doesn't check out. Look again.";
+    setTimeout(()=>input.classList.remove("bad"),400);
+    input.select(); return;
+  }
+  err.textContent="";
+  if(idx < CONFIG.questions.length-1){ idx++; renderQuestion(); }
+  else finish();
+}
+
+/* ---------- start / finish ---------- */
+$("#startBtn").onclick = ()=>{
+  $("#screen-intro").classList.add("hidden");
+  $("#screen-invest").classList.remove("hidden");
+  idx=0; done=false; startTimer(); renderQuestion();
+};
+function finish(){
+  done=true; stopTimer();
+  $("#screen-invest").classList.add("hidden");
+  $("#screen-result").classList.remove("hidden");
+  $("#hud").classList.add("hot");
+  $("#verdictLine").textContent = CONFIG.win.verdict;
+  $("#resultBlurb").textContent = CONFIG.win.blurb;
+  $("#rTime").textContent = mmss(elapsed);
+  $("#rScore").textContent = scoreOf(elapsed);
+  $("#nameIn").focus();
+}
+
+/* ---------- submit score ---------- */
+$("#submitScoreBtn").onclick = ()=>{
+  const name = $("#nameIn").value.trim();
+  if(!name){ $("#nameErr").textContent="Sign the file before posting."; $("#nameIn").focus(); return; }
+  const entry = { id: "e"+Date.now()+Math.floor(Math.random()*1000), name, seconds: elapsed, score: scoreOf(elapsed), ts: Date.now() };
+  const board = loadBoard(); board.push(entry); saveBoard(board);
+  lastEntryId = entry.id;
+  showTab("board");
+  document.querySelector('.tab[aria-selected="true"]').blur();
+};
+
+/* ---------- leaderboard ---------- */
+function renderBoard(){
+  const board = loadBoard().slice().sort((a,b)=> a.seconds-b.seconds || a.ts-b.ts);
+  const list = $("#lbList");
+  if(!board.length){ list.innerHTML = `<div class="empty">No one has closed the case yet. Be the first name on the Board.</div>`; return; }
+  list.innerHTML = board.map((e,i)=>{
+    const d = new Date(e.ts);
+    const when = d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" &middot; "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+    return `<li class="${e.id===lastEntryId?'you':''}">
+      <span class="rank">${i+1}</span>
+      <span class="who">${escapeHtml(e.name)}<small>${when}</small></span>
+      <span class="time">${mmss(e.seconds)}</span>
+      <span class="pts">${e.score}</span>
+      ${adminOn?`<button class="del" data-id="${e.id}" aria-label="Delete ${escapeHtml(e.name)}">Delete</button>`:""}
+    </li>`;
+  }).join("");
+  if(adminOn){
+    list.querySelectorAll(".del").forEach(b=> b.onclick = ()=>{
+      const next = loadBoard().filter(x=>x.id!==b.dataset.id); saveBoard(next); renderBoard();
+    });
+  }
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ---------- admin ---------- */
+$("#adminToggle").onclick = ()=>{
+  if(!adminOn){
+    const p = prompt("Admin passphrase to manage the Board:");
+    if(p===null) return;
+    if(norm(p)!==norm(CONFIG.adminPass)){ alert("Wrong passphrase."); return; }
+    adminOn = true;
+    $("#adminToggle").textContent = "Done managing";
+    $("#clearBtn").style.display=""; $("#exportBtn").style.display="";
+    $("#adminNote").classList.remove("hidden");
+    $("#adminNote").innerHTML = "You can delete any row, <b>Clear all</b>, or <b>Export JSON</b>. "+
+      "Entries are stored in this browser under localStorage key <code>"+LB_KEY+"</code> &mdash; you can also hand-edit them in DevTools &rarr; Application &rarr; Local Storage.";
+  } else {
+    adminOn = false; $("#adminToggle").textContent="Manage board";
+    $("#clearBtn").style.display="none"; $("#exportBtn").style.display="none";
+    $("#adminNote").classList.add("hidden");
+  }
+  renderBoard();
+};
+$("#clearBtn").onclick = ()=>{ if(confirm("Delete EVERY entry on the Board? This cannot be undone.")){ saveBoard([]); renderBoard(); } };
+$("#exportBtn").onclick = ()=>{
+  const data = JSON.stringify(loadBoard(),null,2);
+  navigator.clipboard && navigator.clipboard.writeText(data);
+  alert("Leaderboard JSON copied to clipboard.\n\n"+data);
+};
+</script>
