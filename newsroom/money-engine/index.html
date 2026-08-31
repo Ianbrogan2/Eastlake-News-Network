@@ -97,6 +97,22 @@ button{font-family:inherit}
 .nodelabel[data-kind="hub"] .n{background:linear-gradient(92deg,#7DD8FF,#5B8DF7); -webkit-background-clip:text; background-clip:text; color:transparent}
 .nodelabel[data-kind="inkind"] .amt{color:var(--good)}
 
+/* guided-tour bar */
+.tourbar{position:absolute; bottom:232px; left:50%; transform:translateX(-50%); z-index:30;
+  display:flex; align-items:center; gap:9px; background:rgba(9,13,20,.94); border:1px solid var(--edge);
+  border-radius:12px; padding:7px 8px; box-shadow:0 12px 34px rgba(0,0,0,.55)}
+.tourbar[hidden]{display:none}
+.tnav{width:36px; height:36px; border-radius:9px; background:var(--panel-2); border:1px solid var(--edge);
+  color:var(--ink); font-size:22px; line-height:1; cursor:pointer; transition:.15s}
+.tnav:hover:not(:disabled){border-color:var(--enn-bright); color:#fff; background:rgba(26,86,219,.18)}
+.tnav:disabled{opacity:.32; cursor:default}
+.tmeta{display:flex; flex-direction:column; align-items:center; min-width:158px; line-height:1.1}
+.tmeta .tstep{font-family:var(--mono); font-size:9px; letter-spacing:.2em; color:var(--cyan); text-transform:uppercase}
+.tmeta .ttitle{font-family:var(--display); font-size:19px; letter-spacing:.03em; margin-top:2px}
+.texit{background:none; border:1px solid var(--edge); color:var(--steel); border-radius:8px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:9px 11px; cursor:pointer; margin-left:2px}
+.texit:hover{color:var(--live); border-color:var(--live)}
+
 /* hint pill */
 .hint{position:absolute; left:50%; bottom:calc(var(--calc-h,0px) + 16px); transform:translateX(-50%); z-index:12;
   font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--steel);
@@ -229,6 +245,17 @@ input[type=range]::-moz-range-thumb{width:15px; height:15px; border-radius:50%; 
   </div>
 
   <div class="hint" id="hint">Drag to orbit · click a node to open its breakdown</div>
+
+  <!-- guided-tour controls (user-paced) -->
+  <div class="tourbar" id="tourbar" hidden>
+    <button class="tnav" id="tourPrev" aria-label="Previous stop">‹</button>
+    <div class="tmeta">
+      <span class="tstep" id="tourStep">1 / 8</span>
+      <span class="ttitle" id="tourTitle">—</span>
+    </div>
+    <button class="tnav" id="tourNext" aria-label="Next stop">›</button>
+    <button class="texit" id="tourExit">Exit</button>
+  </div>
 
   <!-- CALCULATOR DOCK -->
   <div class="calc" id="calc">
@@ -636,18 +663,25 @@ function buildFlows(){
 }
 
 let tween=null; // camera move
-function focusNode(id){
-  const n = NODE_BY_ID[id]; if(!n||!n.mesh) { openPanel(id); return; }
+/* Gentle framing — the node is centred a little left so the panel (right) stays
+   clear, at a comfortable distance (never a claustrophobic close-up). */
+function frameNode(id){
+  const n = NODE_BY_ID[id]; if(!n||!n.mesh){ openPanel(id); return; }
   const p = n.mesh.position;
-  const dir = p.clone().normalize(); if(dir.length()<0.01) dir.set(0,0,1);
-  const dist = n.kind==='hub'? 10 : 7.5;
-  const to = p.clone().add(dir.multiplyScalar(dist)).add(new THREE.Vector3(-1.5,1.4,0));
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  const dist = n.kind==='hub' ? 17 : 14;
+  const target = p.clone().add(right.multiplyScalar(2.9));      // shift look-at right -> node sits left
+  const dir = new THREE.Vector3(0.15, 0.05, 1).normalize();
+  const camPos = target.clone().add(dir.multiplyScalar(dist));
   controls.autoRotate = false;
-  tween = { fromP:camera.position.clone(), toP:to, fromT:controls.target.clone(), toT:p.clone(), t:0 };
-  if(REDUCED){ camera.position.copy(to); controls.target.copy(p); tween=null; }
+  tween = { fromP:camera.position.clone(), toP:camPos, fromT:controls.target.clone(), toT:target, t:0 };
+  if(REDUCED){ camera.position.copy(camPos); controls.target.copy(target); tween=null; controls.update(); }
   openPanel(id);
-  // pulse the node
-  if(n.mesh.material) n.mesh.material.emissiveIntensity = 0.8;
+  if(n.mesh.material) n.mesh.material.emissiveIntensity = 0.85;
+}
+function focusNode(id){                     // a direct node click exits any running tour
+  if(tourOn){ tourOn=false; document.getElementById('tourbar').hidden=true; }
+  frameNode(id);
 }
 
 function onPick(ev){
@@ -690,6 +724,7 @@ function onResize(){
   camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight);
   fitCamera();
+  const tb=document.getElementById('tourbar'); if(tb && !tb.hidden) tb.style.bottom=(dockH()+16)+'px';
 }
 
 const _v = ()=> new THREE.Vector3();
@@ -725,7 +760,7 @@ function animate(){
 
   // camera tween
   if(tween){
-    tween.t = Math.min(1, tween.t + dt*1.6);
+    tween.t = Math.min(1, tween.t + dt*1.25);
     const e = 1-Math.pow(1-tween.t,3);
     camera.position.lerpVectors(tween.fromP, tween.toP, e);
     controls.target.lerpVectors(tween.fromT, tween.toT, e);
@@ -780,7 +815,8 @@ function updateNodeAmounts(r){
 
 /* ── 4 · panels, presets, inputs, fallback, teardown ─────────────────── */
 function openPanel(id){
-  const p = PANELS[id]; if(!p) return;
+  const node = NODE_BY_ID[id];
+  const p = PANELS[node ? node.panel : id]; if(!p) return;
   $('#drawerEyebrow').textContent = p.eyebrow;
   $('#drawerTitle').textContent = p.title;
   $('#drawerBody').innerHTML = (typeof p.body==='function'? p.body() : p.body) +
@@ -792,7 +828,14 @@ function openPanel(id){
 }
 function closePanel(){ const d=$('#drawer'); d.classList.remove('open'); setTimeout(()=>{ d.hidden=true; }, 420); }
 $('#drawerClose').addEventListener('click', closePanel);
-addEventListener('keydown', e=>{ if(e.key==='Escape') closePanel(); });
+addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ tourOn ? tourExit() : closePanel(); }
+  else if(tourOn && e.key==='ArrowRight'){ e.preventDefault(); tourGo(tourI+1); }
+  else if(tourOn && e.key==='ArrowLeft'){ e.preventDefault(); tourGo(tourI-1); }
+});
+document.getElementById('tourPrev').addEventListener('click', ()=>tourGo(tourI-1));
+document.getElementById('tourNext').addEventListener('click', ()=>tourGo(tourI+1));
+document.getElementById('tourExit').addEventListener('click', tourExit);
 
 // preset buttons
 document.querySelectorAll('.preset').forEach(btn=>{
@@ -812,19 +855,28 @@ for(const k of ['occ','reach','jobs','spots','season','don']){
   });
 }
 // toolbar
-$('#tourBtn').addEventListener('click', runTour);
-$('#resetView').addEventListener('click', ()=>{
-  if(!controls) return; tween={ fromP:camera.position.clone(), toP:new THREE.Vector3(0,2.5,18),
-    fromT:controls.target.clone(), toT:new THREE.Vector3(0,0,0), t:0 }; controls.autoRotate=!REDUCED; closePanel();
-});
+$('#tourBtn').addEventListener('click', tourStart);
+$('#resetView').addEventListener('click', resetView);
 
-// guided tour — steps through the story
-const TOUR = ['hub','sponsors','digital','donors','partners','clients','gear','growth'];
-function runTour(){
-  let i=0;
-  const step = ()=>{ if(i>=TOUR.length) return; focusNode(TOUR[i]); i++; setTimeout(step, REDUCED?0:2600); };
-  step();
+/* Guided tour — a progression that follows the money: the five sources in,
+   into the clean-money hub, out to what it buys, then the growth loop.
+   Paced entirely by the user with the arrows (or the left/right keys). */
+const TOUR = ['sponsors','digital','donors','partners','clients','hub','gear','growth'];
+let tourOn = false, tourI = 0;
+function tourStart(){ tourOn = true; tourI = 0; const tb=document.getElementById('tourbar'); tb.hidden=false; tb.style.bottom=(dockH()+16)+'px'; tourGo(0); }
+function tourExit(){ tourOn = false; document.getElementById('tourbar').hidden = true; closePanel(); resetView(); }
+function tourGo(i){
+  if(!tourOn) return;
+  tourI = Math.max(0, Math.min(TOUR.length-1, i));
+  const id = TOUR[tourI];
+  frameNode(id);
+  document.getElementById('tourStep').textContent  = (tourI+1) + ' / ' + TOUR.length;
+  const _nd = NODE_BY_ID[id], _pl = PANELS[_nd ? _nd.panel : id];
+  document.getElementById('tourTitle').textContent = _pl ? _pl.title : id;
+  document.getElementById('tourPrev').disabled = tourI === 0;
+  document.getElementById('tourNext').disabled = tourI === TOUR.length-1;
 }
+function resetView(){ if(!controls) return; tween = null; controls.autoRotate = false; closePanel(); fitCamera(); }
 
 // 2D fallback rendering
 function build2D(){
