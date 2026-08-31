@@ -82,7 +82,7 @@
     <a class="nr-tile" href="/newsroom/newsroom/"><div class="k">05 · The desk</div><h3>Newsroom</h3><p>Pitch board, announcements, standards, release forms, tip line.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/crew/"><div class="k">06 · Who's who</div><h3>The Crew</h3><p>Every production group and leadership role, across all three periods.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/make/#brand"><div class="k">07 · Look right</div><h3>Brand Kit</h3><p>Logos, lower thirds, stingers, fonts, colors, safe-title guidance.</p><span class="go">→</span></a>
-    <a class="nr-tile" id="tile-money" style="display:none" href="/newsroom/money-engine/"><div class="k">08 · Backend · Restricted 🔒</div><h3>Money Engine</h3><p>The full ENN revenue model as an interactive 3D pitch tool. Access code required.</p><span class="go">→</span></a>
+    <a class="nr-tile" id="tile-money" href="/newsroom/money-engine/"><div class="k">08 · Backend · Restricted 🔒</div><h3>Money Engine</h3><p>The full ENN revenue model as an interactive 3D pitch tool. Access code required.</p><span class="go">→</span></a>
   </div>
 
 </main>
@@ -160,38 +160,5 @@ NR.board('pitches').then(function(res){
 });
 </script>
 
-<!-- Money Engine tile: hidden to everyone. It is revealed ONLY by typing one of
-     the two authorised access codes anywhere on this page. Codes are compared as
-     SHA-256 hashes (never stored in plaintext); once matched, the tile stays shown
-     for the rest of this browser session. The page itself is still code-gated too. -->
-<script>
-(function(){
-  var tile = document.getElementById('tile-money'); if(!tile) return;
-  var FLAG = 'enn_backend_ok';
-  var HASHES = [
-    'd278f655927b49281365b1c4cf62ac8c77c69343878d2cad501bb1f1740d431c',
-    '2221341ff794e2b94d22806c4f662f90a238de10af672590adcae01513b5ad80'
-  ];
-  function reveal(){ tile.style.display = ''; }
-  try{ if(sessionStorage.getItem(FLAG) === '1') reveal(); }catch(e){}   // persists within the session
-
-  async function sha(s){
-    var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('');
-  }
-  var buf = '';
-  document.addEventListener('keydown', async function(e){
-    var tag = (e.target && e.target.tagName) || '';
-    if(tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey) return;   // don't grab real typing
-    if(!e.key || e.key.length !== 1) return;
-    buf = (buf + e.key.toLowerCase()).slice(-12);                                 // rolling buffer
-    for(var len of [4, 7]){                                                       // a113 (4) / 1595697 (7)
-      if(buf.length < len) continue;
-      var h = await sha(buf.slice(-len));
-      if(HASHES.indexOf(h) >= 0){ reveal(); try{ sessionStorage.setItem(FLAG,'1'); }catch(_){}}
-    }
-  });
-})();
-</script>
 </body>
 </html>
