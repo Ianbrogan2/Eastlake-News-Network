@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>ENN Money Engine</title>
+
+<!--
+════════════════════════════════════════════════════════════════════════
+  ENN MONEY ENGINE  ·  newsroom backend pitch tool  ·  /newsroom/money-engine
+  ────────────────────────────────────────────────────────────────────────
+  ACCESS: client-side code gate. Only two access codes unlock the page;
+  they are stored as SHA-256 hashes (NOT plaintext) and checked in-page.
+  This is access-by-obscurity, consistent with the rest of the newsroom —
+  fine for an internal pitch tool, but not a cryptographic guarantee. For
+  true per-user enforcement, front it with Cloudflare Access later.
+  This page is intentionally NOT linked from any nav or sitemap.
+
+  Libraries (MIT):  three.js r160 via jsDelivr.
+  Environment map (CC0):  Poly Haven "studio_small_09" HDRI.
+  No secrets, no localStorage/sessionStorage — all state is in memory.
+  Fully isolated: own directory, own CSS/JS, touches nothing else.
+════════════════════════════════════════════════════════════════════════
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* ENN newsroom tokens (from newsroom/colors.css) */
+  --studio:#0A0E14; --panel:#121824; --panel-2:#0E141F; --edge:#223049;
+  --enn:#1A56DB; --enn-bright:#2E6BF0; --cyan:#7DD8FF; --live:#FF3B30;
+  --ink:#F2F4F8; --steel:#6B7688; --steel-dim:#4A5464; --good:#33D69F;
+  --display:'Bebas Neue',sans-serif; --body:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--studio); color:var(--ink); font-family:var(--body);
+  overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--cyan); outline-offset:2px}
+
+/* ── access code gate ── */
+.gate{position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(120% 100% at 50% 26%, #101a2e, #0A0E14 68%); padding:24px}
+.gate.hide{opacity:0; pointer-events:none; transition:opacity .5s}
+.gate-card{width:min(400px,94vw); background:linear-gradient(180deg,var(--panel),var(--panel-2)); border:1px solid var(--edge);
+  border-radius:16px; padding:34px 30px 28px; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.gate-card.bad{animation:gshake .4s}
+@keyframes gshake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.gate-mark{font-family:var(--display); font-size:32px; letter-spacing:.08em;
+  background:linear-gradient(92deg,#5B8DF7,#7DD8FF); -webkit-background-clip:text; background-clip:text; color:transparent}
+.gate-eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.24em; color:var(--live); text-transform:uppercase; margin-top:8px}
+.gate-title{font-family:var(--display); font-size:38px; letter-spacing:.04em; margin:4px 0 6px}
+.gate-sub{color:var(--steel); font-size:13.5px; margin:0 0 20px}
+#gateForm{display:flex; gap:8px}
+#gateInput{flex:1; min-width:0; background:var(--panel-2); border:1px solid var(--edge); border-radius:9px; color:var(--ink);
+  font-family:var(--mono); font-size:15px; letter-spacing:.12em; padding:13px 15px; text-align:center}
+#gateInput:focus{outline:none; border-color:var(--enn-bright); box-shadow:0 0 0 3px rgba(46,107,240,.25)}
+#gateBtn{background:var(--enn); border:1px solid var(--enn-bright); color:#fff; border-radius:9px; cursor:pointer;
+  font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; padding:0 20px}
+#gateBtn:hover{background:var(--enn-bright)}
+.gate-err{color:var(--live); font-family:var(--mono); font-size:12px; min-height:16px; margin-top:12px}
+.gate-note{margin-top:16px; font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:var(--steel-dim); text-transform:uppercase}
+
+/* ── app shell ── */
+#app{position:fixed; inset:0}
+#scene{position:absolute; inset:0; display:block; touch-action:none}
+#labels{position:absolute; inset:0; pointer-events:none; z-index:10}
+
+/* header */
+.brandbar{
+  position:absolute; top:18px; left:20px; z-index:12; display:flex; align-items:center; gap:12px; pointer-events:none;
+}
+.brandbar .mark{font-family:var(--display); font-size:30px; letter-spacing:.06em; line-height:1;
+  background:linear-gradient(92deg,#5B8DF7,#7DD8FF); -webkit-background-clip:text; background-clip:text; color:transparent}
+.brandbar .tag{font-family:var(--mono); font-size:10px; letter-spacing:.24em; color:var(--steel); text-transform:uppercase}
+.brandbar .tag b{color:var(--cyan); display:block; font-size:11px}
+
+/* node hotspot labels (double as accessible buttons) */
+.nodelabel{
+  position:absolute; transform:translate(-50%,-50%); pointer-events:auto;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  background:rgba(14,20,31,.72); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  border:1px solid var(--edge); border-radius:9px; padding:7px 12px; cursor:pointer;
+  color:var(--ink); transition:border-color .18s, transform .18s, background .18s; white-space:nowrap;
+}
+.nodelabel:hover,.nodelabel:focus-visible{border-color:var(--enn-bright); background:rgba(20,30,50,.9); transform:translate(-50%,-50%) scale(1.05)}
+.nodelabel .n{font-family:var(--display); font-size:15px; letter-spacing:.05em; line-height:1}
+.nodelabel .amt{font-family:var(--mono); font-size:10px; color:var(--cyan); letter-spacing:.04em; font-variant-numeric:tabular-nums}
+.nodelabel[data-kind="hub"]{border-color:#2a5cc9}
+.nodelabel[data-kind="hub"] .n{background:linear-gradient(92deg,#7DD8FF,#5B8DF7); -webkit-background-clip:text; background-clip:text; color:transparent}
+.nodelabel[data-kind="inkind"] .amt{color:var(--good)}
+
+/* hint pill */
+.hint{position:absolute; left:50%; bottom:calc(var(--calc-h,0px) + 16px); transform:translateX(-50%); z-index:12;
+  font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--steel);
+  background:rgba(14,20,31,.7); border:1px solid var(--edge); border-radius:20px; padding:7px 15px; pointer-events:none;
+  transition:opacity .5s}
+
+/* ── calculator dock (bottom) ── */
+.calc{
+  position:absolute; left:0; right:0; bottom:0; z-index:14;
+  background:linear-gradient(180deg,rgba(10,14,20,.4),rgba(10,14,20,.92) 40%,var(--studio));
+  border-top:1px solid var(--edge); padding:14px 20px 16px;
+  display:grid; grid-template-columns:1fr auto; gap:18px; align-items:end;
+}
+.calc-inputs{display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:12px 20px; max-width:820px}
+.field{display:flex; flex-direction:column; gap:5px}
+.field label{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; color:var(--steel); text-transform:uppercase; display:flex; justify-content:space-between; gap:8px}
+.field label b{color:var(--cyan); font-weight:500}
+input[type=range]{-webkit-appearance:none; appearance:none; height:4px; border-radius:3px; background:var(--edge); outline-offset:4px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--enn-bright); border:2px solid #cfe3ff; cursor:pointer; box-shadow:0 0 10px rgba(46,107,240,.6)}
+input[type=range]::-moz-range-thumb{width:15px; height:15px; border-radius:50%; background:var(--enn-bright); border:2px solid #cfe3ff; cursor:pointer}
+.presets{display:flex; gap:7px; margin-top:2px}
+.preset{flex:1; background:var(--panel-2); border:1px solid var(--edge); color:var(--steel); border-radius:7px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; padding:8px 6px; cursor:pointer; transition:.15s}
+.preset:hover{color:var(--ink); border-color:var(--enn)}
+.preset.on{background:var(--enn); border-color:var(--enn-bright); color:#fff}
+
+/* totals readout */
+.readout{background:var(--panel); border:1px solid var(--edge); border-radius:12px; padding:14px 18px; min-width:246px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.readout .row{display:flex; justify-content:space-between; align-items:baseline; gap:14px}
+.readout .k{font-family:var(--mono); font-size:9.5px; letter-spacing:.18em; color:var(--steel); text-transform:uppercase}
+.readout .mo{font-family:var(--display); font-size:40px; line-height:.9; color:var(--ink); font-variant-numeric:tabular-nums}
+.readout .yr{font-family:var(--display); font-size:26px; line-height:1; color:var(--cyan); font-variant-numeric:tabular-nums}
+.readout .mult{margin-top:9px; padding-top:9px; border-top:1px dashed var(--edge); display:flex; justify-content:space-between; align-items:center}
+.readout .mult .m{font-family:var(--mono); font-size:13px; color:var(--good); font-variant-numeric:tabular-nums}
+.readout .bd{margin-top:9px; display:flex; flex-direction:column; gap:3px}
+.readout .bd div{display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--steel)}
+.readout .bd div span:last-child{color:var(--ink); font-variant-numeric:tabular-nums}
+
+/* ── slide-in panel drawer ── */
+.drawer{
+  position:absolute; top:0; right:0; bottom:0; width:min(440px,92vw); z-index:20;
+  background:linear-gradient(180deg,var(--panel),var(--panel-2)); border-left:1px solid var(--edge);
+  box-shadow:-24px 0 60px rgba(0,0,0,.55); transform:translateX(100%); transition:transform .42s cubic-bezier(.22,.9,.24,1);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.drawer.open{transform:none}
+.drawer-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:22px 22px 14px; border-bottom:1px solid var(--edge)}
+.drawer-eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.22em; color:var(--enn-bright); text-transform:uppercase}
+.drawer-title{font-family:var(--display); font-size:34px; line-height:.95; letter-spacing:.03em; margin:6px 0 0}
+.drawer-close{background:var(--panel-2); border:1px solid var(--edge); color:var(--steel); border-radius:8px; width:36px; height:36px; font-size:18px; cursor:pointer; flex-shrink:0}
+.drawer-close:hover{color:var(--ink); border-color:var(--enn)}
+.drawer-body{padding:18px 22px 30px; overflow-y:auto; font-size:14.5px; line-height:1.62; color:#d7dbe4}
+.drawer-body h4{font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan); margin:22px 0 8px}
+.drawer-body h4:first-child{margin-top:0}
+.drawer-body p{margin:0 0 12px}
+.drawer-body ul{margin:0 0 12px; padding-left:18px} .drawer-body li{margin:0 0 6px}
+.drawer-body strong{color:var(--ink)}
+.ratecard{display:flex; flex-direction:column; gap:6px; margin:4px 0 14px}
+.ratecard .r{display:flex; justify-content:space-between; align-items:baseline; background:var(--panel-2); border:1px solid var(--edge); border-radius:8px; padding:9px 13px}
+.ratecard .r .lab{font-size:13px} .ratecard .r .lab small{display:block; color:var(--steel); font-size:11px}
+.ratecard .r .price{font-family:var(--mono); color:var(--cyan); font-variant-numeric:tabular-nums; white-space:nowrap}
+.callout{border-left:3px solid var(--enn); background:rgba(26,86,219,.1); padding:11px 14px; border-radius:0 8px 8px 0; margin:4px 0 14px; font-size:13.5px}
+.callout.good{border-color:var(--good); background:rgba(51,214,159,.1)}
+.credit{margin-top:22px; padding-top:12px; border-top:1px solid var(--edge); font-family:var(--mono); font-size:10px; color:var(--steel-dim); line-height:1.7}
+.credit a{color:var(--steel)}
+
+/* ── loading + fallback ── */
+.loader{position:absolute; inset:0; z-index:30; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:var(--studio); transition:opacity .6s}
+.loader.hide{opacity:0; pointer-events:none}
+.loader .ring{width:44px; height:44px; border-radius:50%; border:3px solid var(--edge); border-top-color:var(--enn-bright); animation:spin 1s linear infinite}
+.loader .t{font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:var(--steel); text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#fallback{position:absolute; inset:0; z-index:5; overflow-y:auto; padding:26px 20px 40px; display:none}
+#fallback.on{display:block}
+.fb-flow{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; align-items:center; max-width:760px; margin:0 auto 8px}
+.fb-node{background:var(--panel); border:1px solid var(--edge); border-radius:10px; padding:12px 16px; text-align:center; cursor:pointer; min-width:130px}
+.fb-node .n{font-family:var(--display); font-size:18px; letter-spacing:.04em}
+.fb-node .amt{font-family:var(--mono); font-size:11px; color:var(--cyan)}
+.fb-arrow{color:var(--steel); font-size:20px}
+
+/* toasts / small controls */
+.toolbar{position:absolute; top:18px; right:20px; z-index:12; display:flex; gap:8px}
+.toolbar button{background:rgba(14,20,31,.72); border:1px solid var(--edge); color:var(--steel); border-radius:8px; font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:8px 12px; cursor:pointer}
+.toolbar button:hover{color:var(--ink); border-color:var(--enn)}
+
+@media (max-width:760px){
+  .brandbar{top:14px; left:14px} .brandbar .mark{font-size:24px}
+  .toolbar{top:14px; right:12px}
+  .calc{grid-template-columns:1fr} .readout{min-width:0}
+  .calc-inputs{max-width:none}
+  .drawer{top:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .drawer{transition:none} .loader{transition:none} .nodelabel{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ACCESS GATE — only the two authorised codes unlock the page (stored as SHA-256, not plaintext) -->
+<div class="gate" id="gate">
+  <div class="gate-card" id="gateCard">
+    <div class="gate-mark">ENN</div>
+    <div class="gate-eyebrow">Newsroom · Restricted</div>
+    <h1 class="gate-title">Money Engine</h1>
+    <p class="gate-sub">Enter your access code to continue.</p>
+    <form id="gateForm">
+      <input id="gateInput" type="password" inputmode="text" autocomplete="off" placeholder="Access code" aria-label="Access code">
+      <button type="submit" id="gateBtn">Enter</button>
+    </form>
+    <div class="gate-err" id="gateErr" role="alert"></div>
+    <div class="gate-note">Restricted to authorised ENN staff</div>
+  </div>
+</div>
+
+<div id="app">
+  <canvas id="scene" aria-label="Interactive 3D revenue-flow diagram. Use the labelled buttons to open each section."></canvas>
+  <div id="labels"></div>
+
+  <div class="brandbar">
+    <span class="mark">ENN</span>
+    <span class="tag">Money Engine<b>Revenue Model · Pitch</b></span>
+  </div>
+
+  <div class="toolbar">
+    <button id="tourBtn" title="Guided walkthrough">▶ Tour</button>
+    <button id="resetView" title="Reset camera">⟲ View</button>
+  </div>
+
+  <div class="hint" id="hint">Drag to orbit · click a node to open its breakdown</div>
+
+  <!-- CALCULATOR DOCK -->
+  <div class="calc" id="calc">
+    <div>
+      <div class="presets" role="group" aria-label="Scenario presets">
+        <button class="preset" data-preset="conservative">Conservative</button>
+        <button class="preset on" data-preset="normal">Normal</button>
+        <button class="preset" data-preset="maximum">Maximum</button>
+      </div>
+      <div class="calc-inputs" style="margin-top:12px">
+        <div class="field">
+          <label>Ad occupancy <b id="occV">65%</b></label>
+          <input type="range" id="occ" min="0" max="100" step="5" value="65" aria-label="Ad inventory occupancy percent">
+        </div>
+        <div class="field">
+          <label>Audience reach <b id="reachV">5,000</b></label>
+          <input type="range" id="reach" min="2000" max="15000" step="500" value="5000" aria-label="Audience reach">
+        </div>
+        <div class="field">
+          <label>Production jobs / mo <b id="jobsV">5</b></label>
+          <input type="range" id="jobs" min="0" max="16" step="1" value="5" aria-label="Production jobs per month">
+        </div>
+        <div class="field">
+          <label>…aired as 60-sec spots <b id="spotsV">2</b></label>
+          <input type="range" id="spots" min="0" max="16" step="1" value="2" aria-label="Production jobs aired as spots">
+        </div>
+        <div class="field">
+          <label>Season sponsors <b id="seasonV">1</b></label>
+          <input type="range" id="season" min="0" max="5" step="1" value="1" aria-label="Season sponsors">
+        </div>
+        <div class="field">
+          <label>Donation pushes / yr <b id="donV">2</b></label>
+          <input type="range" id="don" min="0" max="6" step="1" value="2" aria-label="Donation campaigns per year">
+        </div>
+      </div>
+    </div>
+
+    <div class="readout" aria-live="polite">
+      <div class="row"><span class="k">Projected / month</span></div>
+      <div class="mo" id="moTotal">$0</div>
+      <div class="row" style="margin-top:6px"><span class="k">Per year</span><span class="yr" id="yrTotal">$0</span></div>
+      <div class="mult"><span class="k">Reach multiplier</span><span class="m" id="multV">×1.00</span></div>
+      <div class="bd" id="breakdown"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE-IN PANEL -->
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="false" aria-labelledby="drawerTitle" hidden>
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-eyebrow" id="drawerEyebrow">Section</div>
+        <h2 class="drawer-title" id="drawerTitle">—</h2>
+      </div>
+      <button class="drawer-close" id="drawerClose" aria-label="Close panel">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <!-- LOADING -->
+  <div class="loader" id="loader">
+    <div class="ring"></div>
+    <div class="t" id="loaderT">Warming up the money engine…</div>
+  </div>
+
+  <!-- 2D FALLBACK (no WebGL) -->
+  <div id="fallback">
+    <div style="text-align:center; margin-bottom:18px">
+      <div style="font-family:var(--mono); font-size:11px; letter-spacing:.2em; color:var(--steel); text-transform:uppercase">2D mode</div>
+      <div style="font-family:var(--display); font-size:26px; letter-spacing:.04em">The Money Flow</div>
+    </div>
+    <div class="fb-flow" id="fbFlow"></div>
+    <p style="text-align:center; color:var(--steel); font-size:13px; max-width:520px; margin:8px auto 0">
+      3D view unavailable on this device — the full model and calculator still work. Tap a node to open its breakdown.
+    </p>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+/* ════════════════════════════════════════════════════════════════════
+   ENN MONEY ENGINE — self-contained. No external state, no storage.
+   Sections: (1) revenue model + calculator  (2) three.js scene
+             (3) interaction + panels  (4) reduced-motion & fallback
+   ════════════════════════════════════════════════════════════════════ */
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s);
+const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+
+/* ── 1 · THE REVENUE MODEL ─────────────────────────────────────────── */
+const RATES = {
+  broadcast: [ {k:'Presenting (exclusive)', v:750}, {k:'Segment sponsor', v:500}, {k:'Spotlight end-card', v:350} ],
+  digital:   [ {k:'Website banner', v:250, max:5}, {k:'Bingo sponsor', v:150, max:1}, {k:'Athletics page', v:125, max:2} ],
+  seasonYear: 4000,        // founding/season sponsor, per year, paid upfront
+  jobValue:   600,         // avg production job ($200–1,500)
+  spotAddon:  225,         // avg 60-sec spot add-on ($150–300)
+  donAmount:  2000,        // avg donation push ($1,000–3,000)
+};
+// Reach is a RATE MULTIPLIER: bigger audience → charge more. 2,000 → ×1, 15,000 → ×3.
+const reachMult = reach => 1 + 2 * (Math.max(2000, Math.min(15000, reach)) - 2000) / 13000;
+
+function compute(s){
+  const M = reachMult(s.reach);
+  const occ = s.occ / 100;
+  // broadcast: sell slots in priority order by occupancy
+  const bSold = Math.round(RATES.broadcast.length * occ);
+  let broadcast = 0; for(let i=0;i<bSold;i++) broadcast += RATES.broadcast[i].v * M;
+  // digital assets
+  let digital = 0;
+  for(const d of RATES.digital){ const sold = Math.round(d.max * occ); digital += sold * d.v * M; }
+  const season   = s.season * (RATES.seasonYear/12);           // amortized monthly
+  const donations= s.don * RATES.donAmount / 12;               // annual pushes → monthly avg
+  const spots    = Math.min(s.spots, s.jobs);
+  const production= s.jobs * RATES.jobValue + spots * RATES.spotAddon;
+  const monthly  = broadcast + digital + season + donations + production;
+  return { M, monthly, annual: monthly*12,
+    parts:[ ['Broadcast (on-air)', broadcast], ['Digital & named', digital],
+            ['Season sponsors', season], ['Production house', production], ['Donations (avg)', donations] ] };
+}
+
+/* current in-memory state */
+const state = { occ:65, reach:5000, jobs:5, spots:2, season:1, don:2 };
+const PRESETS = {
+  conservative:{ occ:40, reach:2000, jobs:2, spots:0, season:0, don:0 },
+  normal:      { occ:65, reach:5000, jobs:5, spots:2, season:1, don:2 },
+  maximum:     { occ:100,reach:15000,jobs:10,spots:6, season:3, don:4 },
+};
+
+/* ── count-up animation for the totals ── */
+function animateCount(el, to, money=true){
+  const from = el._v || 0; el._v = to;
+  const setFinal = ()=>{ el.textContent = money?fmt(to):Math.round(to); };
+  if(REDUCED){ setFinal(); return; }
+  const t0 = performance.now(), dur = 650;
+  function step(t){
+    const k = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-k,3), val = from + (to-from)*e;
+    el.textContent = money?fmt(val):Math.round(val); if(k<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  clearTimeout(el._safe); el._safe = setTimeout(setFinal, 750);  // guarantee final value even if rAF is throttled
+}
+
+let engineIntensity = 0; // 0..1 — drives the 3D flow; updated by render()
+function renderCalc(){
+  const r = compute(state);
+  $('#occV').textContent = state.occ + '%';
+  $('#reachV').textContent = state.reach.toLocaleString('en-US');
+  $('#jobsV').textContent = state.jobs;
+  $('#spotsV').textContent = Math.min(state.spots, state.jobs);
+  $('#seasonV').textContent = state.season;
+  $('#donV').textContent = state.don;
+  $('#multV').textContent = '×' + r.M.toFixed(2);
+  animateCount($('#moTotal'), r.monthly);
+  animateCount($('#yrTotal'), r.annual);
+  $('#breakdown').innerHTML = r.parts.filter(p=>p[1]>0.5)
+    .map(p=>`<div><span>${p[0]}</span><span>${fmt(p[1])}/mo</span></div>`).join('');
+  // normalize to intensity (Maximum preset ≈ 1.0)
+  engineIntensity = Math.max(0, Math.min(1, r.monthly / 13000));
+  updateNodeAmounts(r);
+  return r;
+}
+
+/* ── 2D content for each hotspot ─────────────────────────────────────── */
+const scaled = base => fmt(base) + ' → ' + fmt(base * reachMult(state.reach)) + '/mo';
+const PANELS = {
+  broadcast:{ eyebrow:'Source · On-air', title:'The Broadcast',
+    body:()=>`<p>The bulletin runs <strong>only three on-air sponsor slots</strong> — on purpose. ENN stays journalism-first, not an ad reel, so the show keeps the credibility that makes a sponsorship worth having.</p>
+    <h4>The three slots</h4>
+    <div class="ratecard">${RATES.broadcast.map(b=>`<div class="r"><div class="lab">${b.k}</div><div class="price">${scaled(b.v)}</div></div>`).join('')}</div>
+    <div class="callout">Scarcity is the pitch: three slots, sold as the <em>only</em> on-air presence, are worth more than a dozen cheap ones — and they rise as reach grows.</div>` },
+  digital:{ eyebrow:'Source · Off-air', title:'Digital & Named Assets',
+    body:()=>`<p>Everything off the broadcast lives here, so it never eats into the three on-air slots. Named, low-friction placements that a local business understands instantly.</p>
+    <div class="ratecard">${RATES.digital.map(d=>`<div class="r"><div class="lab">${d.k}<small>up to ${d.max}</small></div><div class="price">${scaled(d.v)}</div></div>`).join('')}</div>
+    <p>Website banners, the Bingo game sponsor, and the athletics page — inventory that scales with the site's traffic.</p>` },
+  donors:{ eyebrow:'Source · Community', title:'Donations',
+    body:()=>`<p>Periodic surges, always tied to a <strong>concrete goal</strong> — not open-ended asks.</p>
+    <ul><li><strong>Family "fund-the-gear"</strong> campaigns — $1,000–3,000 a push.</li>
+    <li><strong>Crowdfunding</strong> around a specific purchase — $1,000–3,000.</li>
+    <li><strong>Alumni appeal</strong> — small now, compounding every year as classes graduate.</li></ul>
+    <div class="callout good">Every campaign names the thing it buys ("a second camera," "a wireless mic kit"). Donors fund outcomes, not overhead.</div>` },
+  partners:{ eyebrow:'Source · In-kind', title:'Station Partnerships',
+    body:()=>`<p>This lane <strong>reduces spend instead of adding cash</strong> — the gear you don't have to buy.</p>
+    <p>Local stations retire broadcast-grade equipment on a cycle; a student program is exactly who they like to hand it to:</p>
+    <ul><li>KGTV / Scripps · KFMB / TEGNA · KSWB + KUSI / Nexstar</li><li>KNSD / NBCUniversal · KPBS / SDSU</li></ul>
+    <div class="callout good">A donated camera is worth the same as the cash you'd have spent — it just never shows up as revenue. It shows up as capability.</div>` },
+  clients:{ eyebrow:'Source · Production House', title:'Production House',
+    body:()=>`<p>The expansion — and the <strong>least-restricted money</strong>, because it's framed as a <strong>student practicum</strong>: educational first, revenue second.</p>
+    <h4>Pay us to make your video</h4>
+    <div class="ratecard"><div class="r"><div class="lab">Production job</div><div class="price">$200–1,500</div></div>
+    <div class="r"><div class="lab">+ air it as a 60-sec spot<small>add-on upsell</small></div><div class="price">+$150–300</div></div></div>
+    <p>Also: event livestreaming, real-estate walkthroughs, athlete highlight reels. Students build a reel and a résumé; ENN builds a budget.</p>` },
+  hub:{ eyebrow:'Central · Compliance', title:'Clean Money',
+    body:()=>`<p>This is the part that wins an adult over. Every dollar takes one clean path.</p>
+    <h4>Where the money sits</h4>
+    <p>All funds flow into <strong>Eastlake High School ASB → the ENN Studios trust account</strong>, earmarked for the program. Nothing is off-books; nothing is personal.</p>
+    <h4>Why it's tax-friendly</h4>
+    <p>Sponsors ride the district's tax-exempt status: they get a <strong>W-9 and an invoice</strong> and deduct it as an ordinary advertising expense.</p>
+    <h4>Why it stays a "qualified sponsorship payment"</h4>
+    <p>Acknowledgments are neutral — "supported by," a name and logo, no pricing or calls to action — which keeps it a sponsorship, not taxable advertising.</p>
+    <h4>Minors on camera</h4>
+    <p>Releases and consent are collected as reach grows, so scale never outpaces permission.</p>
+    <div class="callout">Legitimate · handled cleanly · student-run · earmarked for the program. The boring answers are the ones that get a yes.</div>` },
+  gear:{ eyebrow:'Output · The flywheel', title:'The Reinvestment Loop',
+    body:()=>`<p>Money doesn't leave the building — it circles back as capability.</p>
+    <p style="font-family:var(--mono); font-size:12.5px; color:var(--cyan); line-height:1.9">gear → better quality → bigger audience → higher rates → more revenue → more gear</p>
+    <p>Each turn of the loop raises the ceiling on the last. Better cameras make a better show; a better show earns a bigger audience; a bigger audience lets ENN charge more (the reach multiplier); more revenue buys more gear. It compounds.</p>
+    <div class="callout">The first donated camera or first season sponsor isn't a one-time win — it's the first push on a flywheel.</div>` },
+  growth:{ eyebrow:'Loop · Reach = ×', title:'The Growth Engine',
+    body:()=>`<p><strong>Reach is the multiplier on everything.</strong> Grow the audience and every rate on every card goes up at once.</p>
+    <h4>How reach actually grows</h4>
+    <ul><li><strong>Featured-person flywheel</strong> — everyone covered shares their own segment.</li>
+    <li><strong>Vertical clips</strong> — Shorts / Reels / TikTok off every story.</li>
+    <li><strong>Sports as the Trojan horse</strong> — pulls in parents, alumni, and rival schools.</li>
+    <li><strong>Hyperlocal</strong> — eastern Chula Vista coverage nobody else does.</li>
+    <li><strong>Feeder-school pipeline</strong> + an <strong>owned email list</strong> you're not renting from an algorithm.</li></ul>
+    <div class="callout good">The vision: ENN as a mini-network for the area's schools. Move the reach slider and watch the whole model re-price in real time.</div>` },
+};
+
+/* ════════════════════════════════════════════════════════════════════
+   3 · THREE.JS SCENE  (guarded — falls back to 2D on any failure)
+   ════════════════════════════════════════════════════════════════════ */
+let THREE, renderer, scene, camera, controls, composer, raf=0, disposed=false;
+let nodes=[], flows=[], particlePoints=null, hubMesh=null;
+const labelLayer = $('#labels');
+
+// node graph definition (positions are the "flow" layout)
+const NODES = [
+  { id:'sponsors', name:'SPONSORS',  panel:'broadcast', kind:'source', pos:[-7, 4.2, 0] },
+  { id:'digital',  name:'DIGITAL',   panel:'digital',   kind:'source', pos:[-8, 0.6, 1.5] },
+  { id:'donors',   name:'DONORS',    panel:'donors',    kind:'source', pos:[-6.5,-3.4,-0.5] },
+  { id:'partners', name:'PARTNERS',  panel:'partners',  kind:'inkind', pos:[-3, 5.4, -2] },
+  { id:'clients',  name:'CLIENTS',   panel:'clients',   kind:'source', pos:[-3.4,-5, 1] },
+  { id:'hub',      name:'ENN · ASB', panel:'hub',       kind:'hub',    pos:[0, 0, 0] },
+  { id:'gear',     name:'GEAR & PROGRAM', panel:'gear', kind:'output', pos:[5.4,-2.4, 0] },
+  { id:'growth',   name:'REACH ↑',   panel:'growth',    kind:'loop',   pos:[5, 4, -1] },
+];
+// connections: [from, to, colorKey].  'in' = money in (blue), 'kind' = in-kind (green), 'out'/'loop' = cyan
+const LINKS = [
+  ['sponsors','hub','in'], ['digital','hub','in'], ['donors','hub','in'],
+  ['clients','hub','in'],  ['partners','hub','kind'],
+  ['hub','gear','out'],    ['gear','growth','loop'],
+  ['growth','sponsors','loop'], ['growth','digital','loop'],
+];
+const NODE_BY_ID = Object.fromEntries(NODES.map(n=>[n.id,n]));
+
+async function initThree(){
+  // WebGL capability check
+  const test = document.createElement('canvas');
+  const gl = test.getContext('webgl2') || test.getContext('webgl');
+  if(!gl) throw new Error('no-webgl');
+
+  THREE = await import('three');
+  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+  const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
+  const { RenderPass }     = await import('three/addons/postprocessing/RenderPass.js');
+  const { UnrealBloomPass }= await import('three/addons/postprocessing/UnrealBloomPass.js');
+  const { OutputPass }     = await import('three/addons/postprocessing/OutputPass.js');
+
+  const canvas = $('#scene');
+  renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));   // cap DPR for perf
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0A0E14);
+  scene.fog = new THREE.FogExp2(0x0A0E14, 0.028);
+
+  camera = new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.1, 200);
+  camera.position.set(0, 2.5, 18);
+
+  controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.minDistance = 8; controls.maxDistance = 34;
+  controls.autoRotate = !REDUCED; controls.autoRotateSpeed = 0.35;
+  controls.target.set(0,0,0);
+
+  // lights (soft) — the HDRI does most of the work
+  const hemi = new THREE.HemisphereLight(0x9db6ff, 0x0a0e14, 0.5); scene.add(hemi);
+  const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(6,10,8);
+  key.castShadow = true; key.shadow.mapSize.set(1024,1024); key.shadow.radius = 6;
+  key.shadow.camera.near = 1; key.shadow.camera.far = 40; scene.add(key);
+
+  // environment: real reflections from a CC0 HDRI, RoomEnvironment fallback
+  const pmrem = new THREE.PMREMGenerator(renderer); pmrem.compileEquirectangularShader();
+  await loadEnvironment(pmrem);
+
+  buildNodes();
+  buildFlows();
+
+  // post: subtle bloom, thresholded so only the bright money-flow / hub glow blooms
+  composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight), 0.85, 0.6, 0.85);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+  scene._bloom = bloom;
+
+  addEventListener('resize', onResize);
+  canvas.addEventListener('pointerdown', onPick);
+  animate();
+}
+
+async function loadEnvironment(pmrem){
+  const { RGBELoader } = await import('three/addons/loaders/RGBELoader.js');
+  const url = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr';
+  try{
+    const hdr = await new Promise((res,rej)=> new RGBELoader().load(url, res, undefined, rej));
+    hdr.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = pmrem.fromEquirectangular(hdr).texture;
+    hdr.dispose();
+  }catch(e){
+    // graceful fallback — generated neutral studio env, no external asset
+    const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  }
+}
+
+function buildNodes(){
+  const floorGeo = new THREE.CircleGeometry(26, 64);
+  const floorMat = new THREE.MeshStandardMaterial({ color:0x0b1019, roughness:0.75, metalness:0.4 });
+  const floor = new THREE.Mesh(floorGeo, floorMat); floor.rotation.x = -Math.PI/2; floor.position.y = -7.2;
+  floor.receiveShadow = true; scene.add(floor);
+
+  for(const n of NODES){
+    const isHub = n.kind==='hub';
+    const r = isHub ? 1.7 : (n.kind==='output'?1.25:1.0);
+    const geo = isHub ? new THREE.IcosahedronGeometry(r,2) : new THREE.IcosahedronGeometry(r,1);
+    const col = n.kind==='inkind'?0x33D69F : n.kind==='loop'?0x7DD8FF : n.kind==='output'?0x9db6ff : 0x2E6BF0;
+    const mat = new THREE.MeshStandardMaterial({
+      color:col, metalness:0.9, roughness:0.22,
+      emissive:new THREE.Color(col), emissiveIntensity: isHub?0.5:0.15,
+    });
+    const mesh = new THREE.Mesh(geo, mat); mesh.position.set(...n.pos);
+    mesh.castShadow = true; mesh.userData = n; scene.add(mesh);
+    n.mesh = mesh; nodes.push(mesh);
+    if(isHub) hubMesh = mesh;
+
+    // subtle wire shell for the hub — "the core"
+    if(isHub){
+      const shell = new THREE.Mesh(new THREE.IcosahedronGeometry(2.4,1),
+        new THREE.MeshBasicMaterial({ color:0x2E6BF0, wireframe:true, transparent:true, opacity:0.16 }));
+      mesh.add(shell); mesh._shell = shell;
+    }
+    // HTML label / accessible hotspot button
+    const el = document.createElement('button');
+    el.className = 'nodelabel'; el.dataset.kind = n.kind; el.dataset.id = n.id;
+    el.setAttribute('aria-label', n.name + ' — open section');
+    el.innerHTML = `<span class="n">${n.name}</span><span class="amt" data-amt="${n.id}"></span>`;
+    el.addEventListener('click', ()=> focusNode(n.id));
+    labelLayer.appendChild(el); n.label = el;
+  }
+}
+
+// curved connections + one shared particle buffer for the "money flow"
+const PER_LINK = 26;
+function buildFlows(){
+  const positions = [], colors = [];
+  for(const [fromId,toId,type] of LINKS){
+    const a = new THREE.Vector3(...NODE_BY_ID[fromId].pos);
+    const b = new THREE.Vector3(...NODE_BY_ID[toId].pos);
+    const mid = a.clone().add(b).multiplyScalar(0.5);
+    mid.y += (type==='loop'? 3.2 : 1.1);           // arc loops higher
+    mid.z += (type==='loop'? -2.0 : 0.4);
+    const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
+    // faint static tube so the path reads even when particles are sparse
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.03, 6, false),
+      new THREE.MeshBasicMaterial({ color: type==='kind'?0x1e6b4a:0x1b2f52, transparent:true, opacity:0.5 }));
+    scene.add(tube); flows._tubes = (flows._tubes||[]); flows._tubes.push(tube);
+    const col = type==='kind'? new THREE.Color(0x33D69F) : type==='in'? new THREE.Color(0x2E6BF0) : new THREE.Color(0x7DD8FF);
+    const parts = [];
+    for(let i=0;i<PER_LINK;i++){ parts.push(Math.random()); positions.push(0,0,0); colors.push(col.r,col.g,col.b); }
+    flows.push({ curve, parts, color:col, type });
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+  const mat = new THREE.PointsMaterial({ size:0.17, vertexColors:true, transparent:true, opacity:0.95,
+    blending:THREE.AdditiveBlending, depthWrite:false, sizeAttenuation:true });
+  particlePoints = new THREE.Points(geo, mat); scene.add(particlePoints);
+}
+
+let tween=null; // camera move
+function focusNode(id){
+  const n = NODE_BY_ID[id]; if(!n||!n.mesh) { openPanel(id); return; }
+  const p = n.mesh.position;
+  const dir = p.clone().normalize(); if(dir.length()<0.01) dir.set(0,0,1);
+  const dist = n.kind==='hub'? 10 : 7.5;
+  const to = p.clone().add(dir.multiplyScalar(dist)).add(new THREE.Vector3(-1.5,1.4,0));
+  controls.autoRotate = false;
+  tween = { fromP:camera.position.clone(), toP:to, fromT:controls.target.clone(), toT:p.clone(), t:0 };
+  if(REDUCED){ camera.position.copy(to); controls.target.copy(p); tween=null; }
+  openPanel(id);
+  // pulse the node
+  if(n.mesh.material) n.mesh.material.emissiveIntensity = 0.8;
+}
+
+function onPick(ev){
+  if(!renderer) return;
+  const rect = renderer.domElement.getBoundingClientRect();
+  const m = new THREE.Vector2(((ev.clientX-rect.left)/rect.width)*2-1, -((ev.clientY-rect.top)/rect.height)*2+1);
+  const ray = new THREE.Raycaster(); ray.setFromCamera(m, camera);
+  const hit = ray.intersectObjects(nodes, false)[0];
+  if(hit && hit.object.userData) focusNode(hit.object.userData.id);
+}
+
+function onResize(){
+  if(!renderer) return;
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight);
+}
+
+const _v = ()=> new THREE.Vector3();
+function projectLabels(){
+  const w = innerWidth, h = innerHeight;
+  for(const n of NODES){
+    if(!n.mesh) continue;
+    const v = n.mesh.position.clone().project(camera);
+    const x = (v.x*0.5+0.5)*w, y = (-v.y*0.5+0.5)*h;
+    const vis = v.z < 1;
+    n.label.style.display = vis ? 'flex' : 'none';
+    n.label.style.left = x+'px'; n.label.style.top = y+'px';
+    n.label.style.opacity = vis ? Math.max(0.25, 1 - Math.max(0, (v.z-0.9))*8) : 0;
+  }
+}
+
+let clock=0;
+function animate(){
+  if(disposed) return;
+  raf = requestAnimationFrame(animate);
+  const dt = 0.016; clock += dt;
+  controls.update();
+
+  // camera tween
+  if(tween){
+    tween.t = Math.min(1, tween.t + dt*1.6);
+    const e = 1-Math.pow(1-tween.t,3);
+    camera.position.lerpVectors(tween.fromP, tween.toP, e);
+    controls.target.lerpVectors(tween.fromT, tween.toT, e);
+    if(tween.t>=1) tween=null;
+  }
+
+  // money flow — speed & brightness scale with projected revenue
+  const speed = (REDUCED?0.06:0.18) * (0.35 + engineIntensity*1.5);
+  const posAttr = particlePoints && particlePoints.geometry.attributes.position;
+  if(posAttr){
+    let idx=0;
+    for(const f of flows){
+      const boost = f.type==='loop'? 0.7 : 1;
+      for(let i=0;i<f.parts.length;i++){
+        f.parts[i] += speed*dt*boost*(0.6+((i%5)/6));
+        if(f.parts[i]>1) f.parts[i] -= 1;
+        const pt = f.curve.getPoint(f.parts[i]);
+        posAttr.array[idx++]=pt.x; posAttr.array[idx++]=pt.y; posAttr.array[idx++]=pt.z;
+      }
+    }
+    posAttr.needsUpdate = true;
+    particlePoints.material.size = 0.14 + engineIntensity*0.14;
+    particlePoints.material.opacity = 0.7 + engineIntensity*0.3;
+  }
+
+  // hub "charges up"
+  if(hubMesh){
+    hubMesh.material.emissiveIntensity = 0.4 + engineIntensity*1.4 + (REDUCED?0:Math.sin(clock*2)*0.08);
+    hubMesh.rotation.y += dt*0.25; if(hubMesh._shell) hubMesh._shell.rotation.y -= dt*0.4;
+  }
+  for(const n of nodes){ if(n!==hubMesh && n.material.emissiveIntensity>0.15) n.material.emissiveIntensity += (0.15-n.material.emissiveIntensity)*0.05; }
+  if(scene._bloom) scene._bloom.strength = 0.55 + engineIntensity*0.7;
+
+  projectLabels();
+  composer.render();
+}
+
+/* update the little $ amounts under each node label from the live model */
+function updateNodeAmounts(r){
+  const map = {
+    sponsors: r.parts[0][1], digital: r.parts[1][1], donors: r.parts[4][1],
+    clients: r.parts[3][1], hub: r.monthly, gear: r.monthly*0.0, growth: r.M,
+  };
+  document.querySelectorAll('[data-amt]').forEach(el=>{
+    const id = el.dataset.amt;
+    if(id==='growth'){ el.textContent = '×'+r.M.toFixed(2); }
+    else if(id==='partners'){ el.textContent='in-kind'; }
+    else if(id==='gear'){ el.textContent='reinvest'; }
+    else if(id in map){ el.textContent = fmt(map[id])+'/mo'; }
+  });
+}
+
+/* ── 4 · panels, presets, inputs, fallback, teardown ─────────────────── */
+function openPanel(id){
+  const p = PANELS[id]; if(!p) return;
+  $('#drawerEyebrow').textContent = p.eyebrow;
+  $('#drawerTitle').textContent = p.title;
+  $('#drawerBody').innerHTML = (typeof p.body==='function'? p.body() : p.body) +
+    `<div class="credit">Environment: “Studio Small 09” HDRI by Sergej Majboroda / Poly Haven (CC0).
+     Rendering: three.js (MIT). No third-party logos or copyrighted media used.</div>`;
+  const d = $('#drawer'); d.hidden = false; setTimeout(()=> d.classList.add('open'), 20);  // trigger slide-in (robust vs. rAF throttling)
+  $('#hint').style.opacity = '0';
+  $('#drawerClose').focus();
+}
+function closePanel(){ const d=$('#drawer'); d.classList.remove('open'); setTimeout(()=>{ d.hidden=true; }, 420); }
+$('#drawerClose').addEventListener('click', closePanel);
+addEventListener('keydown', e=>{ if(e.key==='Escape') closePanel(); });
+
+// preset buttons
+document.querySelectorAll('.preset').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.preset').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
+    Object.assign(state, PRESETS[btn.dataset.preset]);
+    for(const k of ['occ','reach','jobs','spots','season','don']) $('#'+k).value = state[k];
+    renderCalc();
+  });
+});
+// sliders
+for(const k of ['occ','reach','jobs','spots','season','don']){
+  $('#'+k).addEventListener('input', e=>{
+    state[k] = +e.target.value;
+    document.querySelectorAll('.preset').forEach(b=>b.classList.remove('on'));
+    renderCalc();
+  });
+}
+// toolbar
+$('#tourBtn').addEventListener('click', runTour);
+$('#resetView').addEventListener('click', ()=>{
+  if(!controls) return; tween={ fromP:camera.position.clone(), toP:new THREE.Vector3(0,2.5,18),
+    fromT:controls.target.clone(), toT:new THREE.Vector3(0,0,0), t:0 }; controls.autoRotate=!REDUCED; closePanel();
+});
+
+// guided tour — steps through the story
+const TOUR = ['hub','sponsors','digital','donors','partners','clients','gear','growth'];
+function runTour(){
+  let i=0;
+  const step = ()=>{ if(i>=TOUR.length) return; focusNode(TOUR[i]); i++; setTimeout(step, REDUCED?0:2600); };
+  step();
+}
+
+// 2D fallback rendering
+function build2D(){
+  $('#fallback').classList.add('on');
+  $('#loader').classList.add('hide');
+  const order = ['sponsors','digital','donors','partners','clients','hub','gear','growth'];
+  const host = $('#fbFlow');
+  order.forEach((id,i)=>{
+    const n = NODE_BY_ID[id];
+    const node = document.createElement('button'); node.className='fb-node';
+    node.innerHTML = `<div class="n">${n.name}</div><div class="amt" data-amt="${id}"></div>`;
+    node.addEventListener('click', ()=> openPanel(id));
+    host.appendChild(node);
+    if(i<order.length-1){ const ar=document.createElement('span'); ar.className='fb-arrow'; ar.textContent = (id==='hub'?'↓':'→'); host.appendChild(ar); }
+  });
+}
+
+// teardown — dispose GPU resources
+function dispose(){
+  disposed=true; cancelAnimationFrame(raf);
+  removeEventListener('resize', onResize);
+  if(!renderer) return;
+  scene.traverse(o=>{ if(o.geometry) o.geometry.dispose(); if(o.material){ const m=o.material; (Array.isArray(m)?m:[m]).forEach(x=>{ for(const k in x){ if(x[k]&&x[k].isTexture) x[k].dispose(); } x.dispose&&x.dispose(); }); } });
+  if(scene.environment) scene.environment.dispose();
+  composer && composer.dispose && composer.dispose();
+  renderer.dispose();
+}
+addEventListener('pagehide', dispose, {once:true});
+
+/* ── access gate → boot (codes are SHA-256 hashes; raw codes are NOT in this file) ── */
+const ALLOW = new Set([
+  'd278f655927b49281365b1c4cf62ac8c77c69343878d2cad501bb1f1740d431c',
+  '2221341ff794e2b94d22806c4f662f90a238de10af672590adcae01513b5ad80'
+]);
+async function sha256hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+let booted=false;
+function boot(){ if(booted) return; booted=true;
+  renderCalc();                        // model + fallback amounts work regardless of 3D
+  initThree()
+    .then(()=>{ $('#loader').classList.add('hide'); renderCalc();
+      if(!REDUCED) setTimeout(()=>{ $('#hint').style.opacity='0'; }, 6000); })
+    .catch(err=>{ console.warn('3D unavailable, using 2D fallback:', err && err.message); build2D(); renderCalc(); });
+}
+$('#gateForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const code = $('#gateInput').value.trim().toLowerCase();
+  let h=''; try{ h = code ? await sha256hex(code) : ''; }catch(_){}
+  if(ALLOW.has(h)){
+    const g=$('#gate'); g.classList.add('hide'); setTimeout(()=>{ g.style.display='none'; }, 520);
+    boot();
+  } else {
+    const c=$('#gateCard'); c.classList.add('bad'); $('#gateErr').textContent='Code not recognised. Try again.';
+    setTimeout(()=>c.classList.remove('bad'),420); $('#gateInput').select();
+  }
+});
+$('#gateInput').focus();
+</script>
+</body>
+</html>
