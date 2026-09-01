@@ -29,7 +29,10 @@ var ENN_YEARBOOK = {
     jostensUrl: 'https://www.jostens.com/apps/store/productDetail/1015698/Eastlake-High-School/Yearbook/20260702121505630151/CATALOG_SHOP/Yearbook/20260702121505650151',
     nextBumpDate: '2026-10-12',
     nextBumpPrice: '95',
-    history: [],
+    history: [
+      { price: '85', when: 'Through Aug' },
+      { price: '90', when: 'Now' }
+    ],
     remind: {
       on: 'F',
       url: ''
