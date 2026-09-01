@@ -11,7 +11,7 @@
 // ║  Everything is left blank on purpose — fill it in when ready.    ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_YEARBOOK = {
-  enabled: 'F',
+  enabled: 'T',
   announce: {
     on: 'F',
     title: '',
@@ -25,10 +25,10 @@ var ENN_YEARBOOK = {
   },
   buy: {
     on: 'T',
-    price: '85',
+    price: '90',
     jostensUrl: 'https://www.jostens.com/apps/store/productDetail/1015698/Eastlake-High-School/Yearbook/20260702121505630151/CATALOG_SHOP/Yearbook/20260702121505650151',
-    nextBumpDate: '2026-08-24',
-    nextBumpPrice: '90',
+    nextBumpDate: '2026-10-12',
+    nextBumpPrice: '95',
     history: [],
     remind: {
       on: 'F',

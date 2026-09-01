@@ -32,7 +32,7 @@ var ENN_SECTIONS = {
     pageStudio: true,
     pageCalendar: true,
     pageContact: true,
-    pageGames: true,
+    pageGames: false,
     heroAnimation: true,
     latestBulletin: true,
     weeklySchedule: true,

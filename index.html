@@ -57,10 +57,11 @@
     <a class="nav-link active" data-route="home" href="#home">Home</a>
     <a class="nav-link" data-route="about" href="#about">About</a>
     <a class="nav-link" data-route="athletics" href="#athletics">Athletics</a>
+    <a class="nav-link" data-route="yearbook" href="#yearbook">Yearbook</a>
+    <a class="nav-link nav-edge" id="nav-theedge" href="/theedge/" hidden>The Edge</a>
     <a class="nav-link" data-route="calendar" href="#calendar">Calendar</a>
     <a class="nav-link" data-route="contact" href="#contact">Contact</a>
     <a class="nav-link" data-route="bullpen" href="#bullpen">Games</a>
-    <a class="nav-link" data-route="yearbook" href="#yearbook">Yearbook</a>
   </div>
   <div class="nav-right">
     <div class="clock" id="clock"><span class="lbl">PST</span><span id="clock-v">--:--:--</span></div>
@@ -76,10 +77,11 @@
   <a class="mobile-link active" data-route="home" href="#home">Home</a>
   <a class="mobile-link" data-route="about" href="#about">About</a>
   <a class="mobile-link" data-route="athletics" href="#athletics">Athletics</a>
+  <a class="mobile-link" data-route="yearbook" href="#yearbook">Yearbook</a>
+  <a class="mobile-link nav-edge" id="mnav-theedge" href="/theedge/" hidden>The Edge</a>
   <a class="mobile-link" data-route="calendar" href="#calendar">Calendar</a>
   <a class="mobile-link" data-route="contact" href="#contact">Contact</a>
   <a class="mobile-link" data-route="bullpen" href="#bullpen">Games</a>
-  <a class="mobile-link" data-route="yearbook" href="#yearbook">Yearbook</a>
   <div class="mobile-meta">ENN · Eastlake News Network · @ennbulletin</div>
 </div>
 
@@ -352,12 +354,25 @@
 <script src="EDIT/19-SPIRITWEEK.js?v=7"></script>
 <script src="EDIT/20-SITE-TEXT.js?v=1"></script>
 <script src="EDIT/21-BULLETINS.js?v=1"></script>
-<script src="EDIT/23-SECTIONS.js?v=1"></script>
+<script src="EDIT/23-SECTIONS.js?v=2"></script>
 <script src="EDIT/26-BELLSCHEDULE.js?v=1"></script>
 <script src="EDIT/25-ATHLETICS.js?v=3"></script>
 <script src="EDIT/27-EVENTS.js?v=3"></script>
-<script src="EDIT/28-YEARBOOK.js?v=1"></script>
+<script src="EDIT/28-YEARBOOK.js?v=2"></script>
 <script src="js/clock.js?v=3"></script>
 <script src="js/main.js?v=23"></script>
+
+<!-- "The Edge" nav button auto-appears once that page is live at THE_EDGE_URL. -->
+<script>
+(function(){
+  var THE_EDGE_URL = '/theedge/';   // ← set this to the real Edge page path once it's live
+  fetch(THE_EDGE_URL, {method:'HEAD'}).then(function(r){
+    if(!r.ok) return;
+    ['nav-theedge','mnav-theedge'].forEach(function(id){
+      var a = document.getElementById(id); if(a){ a.href = THE_EDGE_URL; a.hidden = false; }
+    });
+  }).catch(function(){});
+})();
+</script>
 </body>
 </html>
