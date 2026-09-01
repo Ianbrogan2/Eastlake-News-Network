@@ -79,7 +79,7 @@
 #page-yearbook .yb-price .cur{color:var(--yb-faint);font-size:.35em;vertical-align:super;font-family:var(--yb-mono)}
 #page-yearbook .yb-bump{display:flex;align-items:center;gap:10px;background:rgba(51,188,203,.1);border:1px solid var(--yb-gold-dim);border-radius:2px;
   padding:11px 14px;color:var(--yb-gold-2);font-family:var(--yb-mono);font-size:13px;margin-top:16px}
-#page-yearbook .yb-stair{display:flex;align-items:flex-end;gap:12px;height:130px;margin-top:6px}
+#page-yearbook .yb-stair{display:flex;align-items:flex-end;gap:14px;height:104px;margin:34px 0 28px}
 #page-yearbook .yb-stair .st{flex:1;background:linear-gradient(180deg,var(--yb-gold-dim),transparent);border-top:2px solid var(--yb-gold);position:relative;display:flex;justify-content:center;border-radius:1px}
 #page-yearbook .yb-stair .st.now{background:linear-gradient(180deg,rgba(51,188,203,.4),transparent)}
 #page-yearbook .yb-stair .st b{position:absolute;top:-22px;font-family:var(--yb-mono);font-size:12px;color:var(--yb-ink)}
