@@ -7,7 +7,7 @@
 #page-yearbook{
   --yb-ink:#f4f1e8; --yb-dim:#b9b3a2; --yb-faint:#7d7869;
   --yb-bg:#080a11; --yb-bg2:#0c101b; --yb-panel:#11151f; --yb-edge:#232a38;
-  --yb-gold:#e6ba57; --yb-gold-2:#f2d183; --yb-gold-dim:#6b592c;
+  --yb-gold:#33bccb; --yb-gold-2:#6fded0; --yb-gold-dim:#214e57;
   --yb-blue:#3b7bff; --yb-cyan:#4cc2f5; --yb-paper:#efe6d2;
   --yb-serif:'Fraunces',Georgia,serif; --yb-sans:'DM Sans',system-ui,sans-serif; --yb-mono:'DM Mono',monospace;
   background:var(--yb-bg); color:var(--yb-ink); font-family:var(--yb-sans);
@@ -27,7 +27,7 @@
 #page-yearbook .yb-lede{color:var(--yb-dim);max-width:60ch;font-size:16px;margin:0}
 
 /* buttons */
-#page-yearbook .yb-btn{display:inline-flex;align-items:center;gap:9px;background:var(--yb-gold);color:#241a05;border:0;border-radius:2px;
+#page-yearbook .yb-btn{display:inline-flex;align-items:center;gap:9px;background:var(--yb-gold);color:#04191d;border:0;border-radius:2px;
   padding:14px 24px;font-family:var(--yb-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:.16s}
 #page-yearbook .yb-btn:hover{background:var(--yb-gold-2);transform:translateY(-1px)}
 #page-yearbook .yb-btn-ghost{display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--yb-edge);color:var(--yb-ink);
@@ -37,7 +37,7 @@
   font-family:var(--yb-mono);font-size:11px;letter-spacing:.16em;min-height:80px}
 
 /* announcement bar */
-#page-yearbook .yb-announce{background:linear-gradient(90deg,rgba(230,186,87,.14),rgba(230,186,87,.04));border-bottom:1px solid var(--yb-gold-dim)}
+#page-yearbook .yb-announce{background:linear-gradient(90deg,rgba(51,188,203,.14),rgba(51,188,203,.04));border-bottom:1px solid var(--yb-gold-dim)}
 #page-yearbook .yb-announce .yb-wrap{display:flex;gap:16px;align-items:baseline;padding:14px 24px;flex-wrap:wrap}
 #page-yearbook .yb-announce b{font-family:var(--yb-serif);font-size:18px;color:var(--yb-gold-2)}
 #page-yearbook .yb-announce span{color:var(--yb-dim);font-size:15px}
@@ -45,7 +45,7 @@
 /* HERO */
 #page-yearbook .yb-hero{position:relative;overflow:hidden}
 #page-yearbook .yb-hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(60% 80% at 82% 8%,rgba(230,186,87,.14),transparent 60%),radial-gradient(50% 60% at 0% 100%,rgba(59,123,255,.10),transparent 60%)}
+  background:radial-gradient(60% 80% at 82% 8%,rgba(51,188,203,.14),transparent 60%),radial-gradient(50% 60% at 0% 100%,rgba(59,123,255,.10),transparent 60%)}
 #page-yearbook .yb-hero .yb-wrap{position:relative;display:grid;grid-template-columns:1fr .82fr;gap:52px;align-items:center;padding:74px 24px 64px}
 #page-yearbook .yb-hero h1{font-family:var(--yb-serif);font-weight:400;font-size:clamp(46px,7.2vw,92px);line-height:.96;letter-spacing:-.02em;margin:16px 0 14px}
 #page-yearbook .yb-hero h1 .yr{font-style:italic;color:var(--yb-gold)}
@@ -65,7 +65,7 @@
 #page-yearbook .yb-cover .cov-theme{font-family:var(--yb-serif);font-size:20px;color:var(--yb-ink);text-align:center}
 #page-yearbook .yb-cover .cov-tbd{position:absolute;bottom:20px;font-family:var(--yb-mono);font-size:10px;letter-spacing:.18em;color:var(--yb-faint)}
 #page-yearbook .yb-cover.sealed{background:linear-gradient(155deg,#151d2c,#0a0e17)}
-#page-yearbook .cov-seal{font-size:34px;color:var(--yb-gold);filter:drop-shadow(0 0 14px rgba(230,186,87,.45));line-height:1}
+#page-yearbook .cov-seal{font-size:34px;color:var(--yb-gold);filter:drop-shadow(0 0 14px rgba(51,188,203,.45));line-height:1}
 #page-yearbook .cov-reveal-lab{font-family:var(--yb-mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--yb-dim);margin-top:6px}
 #page-yearbook .cov-reveal-sub{font-family:var(--yb-mono);font-size:11px;letter-spacing:.06em;color:var(--yb-faint);margin-top:8px;text-align:center;max-width:82%;line-height:1.5}
 #page-yearbook .yb-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:3px}
@@ -77,11 +77,11 @@
 #page-yearbook .yb-buycard .left{background:var(--yb-panel);border-right:1px solid var(--yb-edge)}
 #page-yearbook .yb-price{font-family:var(--yb-serif);font-size:clamp(52px,8vw,84px);line-height:.9;color:var(--yb-ink)}
 #page-yearbook .yb-price .cur{color:var(--yb-faint);font-size:.35em;vertical-align:super;font-family:var(--yb-mono)}
-#page-yearbook .yb-bump{display:flex;align-items:center;gap:10px;background:rgba(230,186,87,.1);border:1px solid var(--yb-gold-dim);border-radius:2px;
+#page-yearbook .yb-bump{display:flex;align-items:center;gap:10px;background:rgba(51,188,203,.1);border:1px solid var(--yb-gold-dim);border-radius:2px;
   padding:11px 14px;color:var(--yb-gold-2);font-family:var(--yb-mono);font-size:13px;margin-top:16px}
 #page-yearbook .yb-stair{display:flex;align-items:flex-end;gap:12px;height:130px;margin-top:6px}
 #page-yearbook .yb-stair .st{flex:1;background:linear-gradient(180deg,var(--yb-gold-dim),transparent);border-top:2px solid var(--yb-gold);position:relative;display:flex;justify-content:center;border-radius:1px}
-#page-yearbook .yb-stair .st.now{background:linear-gradient(180deg,rgba(230,186,87,.4),transparent)}
+#page-yearbook .yb-stair .st.now{background:linear-gradient(180deg,rgba(51,188,203,.4),transparent)}
 #page-yearbook .yb-stair .st b{position:absolute;top:-22px;font-family:var(--yb-mono);font-size:12px;color:var(--yb-ink)}
 #page-yearbook .yb-stair .st span{position:absolute;bottom:-22px;font-family:var(--yb-mono);font-size:10px;color:var(--yb-faint)}
 @media(max-width:820px){#page-yearbook .yb-buycard{grid-template-columns:1fr}#page-yearbook .yb-buycard .left{border-right:0;border-bottom:1px solid var(--yb-edge)}}
@@ -112,7 +112,7 @@
 /* history film-strip */
 #page-yearbook .yb-decades{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 16px}
 #page-yearbook .yb-chip{background:transparent;border:1px solid var(--yb-edge);border-radius:100px;padding:6px 15px;font-family:var(--yb-mono);font-size:12px;color:var(--yb-dim);cursor:pointer}
-#page-yearbook .yb-chip.on{background:var(--yb-gold);border-color:var(--yb-gold);color:#241a05}
+#page-yearbook .yb-chip.on{background:var(--yb-gold);border-color:var(--yb-gold);color:#04191d}
 #page-yearbook .yb-strip{display:grid;grid-auto-flow:column;grid-auto-columns:150px;gap:16px;overflow-x:auto;padding:6px 2px 16px}
 #page-yearbook .yb-spine .img{aspect-ratio:8/10.4;border-radius:2px;border:1px solid var(--yb-gold-dim);background:linear-gradient(155deg,#161d2b,#0b0f18);
   display:grid;place-items:center;color:var(--yb-faint);font-family:var(--yb-mono);font-size:11px;transition:.16s}
@@ -128,7 +128,7 @@
 #page-yearbook .yb-themes .row .yr{font-family:var(--yb-mono);color:var(--yb-gold);font-size:14px}
 
 /* reveal moment */
-#page-yearbook .yb-reveal{text-align:center;padding:52px 24px;background:radial-gradient(60% 100% at 50% 0%,rgba(230,186,87,.12),transparent 70%);border:1px solid var(--yb-gold-dim);border-radius:6px;margin-top:26px}
+#page-yearbook .yb-reveal{text-align:center;padding:52px 24px;background:radial-gradient(60% 100% at 50% 0%,rgba(51,188,203,.12),transparent 70%);border:1px solid var(--yb-gold-dim);border-radius:6px;margin-top:26px}
 #page-yearbook .yb-reveal .lab{font-family:var(--yb-mono);font-size:12px;letter-spacing:.24em;color:var(--yb-gold);text-transform:uppercase}
 #page-yearbook .yb-reveal .yb-cd{justify-content:center;margin-top:16px}
 #page-yearbook .yb-reveal .yb-cd .u{min-width:74px}#page-yearbook .yb-reveal .yb-cd .u b{font-size:44px}
