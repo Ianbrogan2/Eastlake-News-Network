@@ -2291,7 +2291,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       '<p>'+(has(h.tagline)?esc(h.tagline):'One book — every game, club, quote, and candid of the year, bound to keep.')+'</p>'+
       '<div class="yb-hero-cta">'+
         (on(buy.on)&&has(buy.jostensUrl)?'<a class="yb-btn" href="'+esc(buy.jostensUrl)+'" target="_blank" rel="noopener">Order on Jostens →</a>':'')+
-        (on(sub.on)&&has((sub.photos||{}).studentUrl)?'<a class="yb-btn-ghost" href="'+esc(sub.photos.studentUrl)+'" target="_blank" rel="noopener">Submit a photo</a>':'')+
+        (on(sub.on)&&has((sub.photos||{}).studentUrl)?'<a class="yb-btn-ghost" href="'+esc(sub.photos.studentUrl)+'" target="_blank" rel="noopener">Add your photos</a>':'')+
       '</div>'+
       (on(buy.on)&&has(buy.price)?'<div class="yb-hero-price">Yearbooks are <b>'+esc(money(buy.price))+'</b>'+(has(buy.nextBumpDate)?' · reserve before the price rises':'')+'</div>':'')+
       '</div><div class="yb-cover'+(has(h.coverImg)?'':' sealed')+'">'+(has(h.coverImg)?'<img src="/'+esc(h.coverImg)+'" alt="Cover">':
@@ -2332,7 +2332,7 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     /* submit */
     if(on(sub.on)){
       const cards=[];
-      const ph=sub.photos||{}; if(on(ph.on)) cards.push('<div class="yb-card"><h4>Submit photos</h4><p>'+((ph.categories||[]).filter(has).length?'Categories: '+esc((ph.categories||[]).filter(has).join(' · ')):'Sports, clubs, spirit weeks, candids.')+'</p><div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+(has(ph.studentUrl)?'<a class="yb-btn-ghost" href="'+esc(ph.studentUrl)+'" target="_blank" rel="noopener">Students →</a>':'')+(has(ph.parentUrl)?'<a class="yb-btn-ghost" href="'+esc(ph.parentUrl)+'" target="_blank" rel="noopener">Parents →</a>':'')+'</div></div>');
+      const ph=sub.photos||{}; if(on(ph.on)) cards.push('<div class="yb-card"><h4>Add your photos</h4><p>Upload straight into the Yearbook Drive. '+((ph.categories||[]).filter(has).length?'What we want: '+esc((ph.categories||[]).filter(has).join(' · '))+'.':'Sports, clubs, spirit weeks, candids.')+'</p><div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+(has(ph.studentUrl)?'<a class="yb-btn" href="'+esc(ph.studentUrl)+'" target="_blank" rel="noopener">Upload to the Drive →</a>':'')+(has(ph.parentUrl)?'<a class="yb-btn-ghost" href="'+esc(ph.parentUrl)+'" target="_blank" rel="noopener">Parents →</a>':'')+'</div></div>');
       const su=sub.superlatives||{}; if(on(su.on)) cards.push('<div class="yb-card"><h4>Superlatives</h4><p>'+(has(su.note)?esc(su.note):'Vote for “Most likely to…”, “Best duo,” and more.')+'</p><div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+(has(su.voteUrl)?'<a class="yb-btn" href="'+esc(su.voteUrl)+'" target="_blank" rel="noopener">Vote now →</a>':'<span class="yb-tbd" style="min-height:0;padding:10px 14px">Voting opens later this year</span>')+(has(su.teacherUrl)?'<a class="yb-btn-ghost" href="'+esc(su.teacherUrl)+'" target="_blank" rel="noopener">Teacher form</a>':'')+'</div></div>');
       const ro=sub.rosters||{}; if(on(ro.on)) cards.push('<div class="yb-card"><h4>Team &amp; club rosters</h4><p>Captains: upload your roster photo &amp; name list.</p>'+(has(ro.url)?'<div style="margin-top:14px"><a class="yb-btn-ghost" href="'+esc(ro.url)+'" target="_blank" rel="noopener">Upload roster →</a></div>':'')+'</div>');
       if(cards.length) html += sec('Help build it','Get <em>involved</em>', '<div class="yb-grid g3">'+cards.join('')+'</div>');

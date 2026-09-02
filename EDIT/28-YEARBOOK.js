@@ -89,13 +89,13 @@ var ENN_YEARBOOK = {
     }
   },
   submit: {
-    on: 'F',
+    on: 'T',
     photos: {
-      on: 'F',
+      on: 'T',
       categories: [
-        ''
+        'Sports', 'Clubs & Activities', 'Spirit Weeks', 'Dances & Events', 'Candids & Everyday'
       ],
-      studentUrl: '',
+      studentUrl: 'https://drive.google.com/drive/folders/1nsVIGHKPmPVdgQoFc0vskQVMQoliArXg?usp=sharing',
       parentUrl: ''
     },
     superlatives: {
