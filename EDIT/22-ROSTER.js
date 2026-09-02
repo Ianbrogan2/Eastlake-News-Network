@@ -247,9 +247,9 @@ var ENN_ROSTER = {
             last: 'Del Rosario'
           },
           {
-            id: '',
-            first: '',
-            last: ''
+            id: '1596214',
+            first: 'Aleksander',
+            last: 'Saluta'
           }
         ]
       },
