@@ -469,6 +469,77 @@
     G.ready().then(() => { draw(); G.startSync(6000); });
   };
 
+  /* ── Announcements — live; leaders post right on the hub. Stored in the
+     shared board collection with kind:'announcement' (reuses deployed ops).
+     Everyone reads; leaders/advisor post + remove. [data-announce] */
+  NR.announcements = function(host){
+    if(!host || !window.ENN_GRADES) return;
+    const G = window.ENN_GRADES;
+    const me = NR.me();
+    const canPost = !!(window.ENN_ID && window.ENN_ID.isLeader(me));
+    const idOf = m => m ? (m.id || m.kind || '') : '';
+    const rel = ts => {
+      const t = Date.parse(ts||''); if(isNaN(t)) return '';
+      const s = Math.floor((Date.now() - t)/1000);
+      if(s < 60) return 'just now';
+      if(s < 3600) return Math.floor(s/60) + 'm ago';
+      if(s < 86400) return Math.floor(s/3600) + 'h ago';
+      return new Date(t).toLocaleDateString(undefined,{month:'short', day:'numeric'});
+    };
+
+    function draw(){
+      const items = (G.board() || []).filter(p => p.kind === 'announcement')
+        .slice().sort((a,b) => String(b.ts||'').localeCompare(String(a.ts||'')));
+
+      const form = canPost ? `
+        <form class="nr-panel nr-ann-post" id="nr-ann-form" style="margin-bottom:16px;padding:16px 18px">
+          <div class="nr-field" style="margin-bottom:12px"><label for="na-msg">Post an announcement</label>
+            <textarea id="na-msg" maxlength="240" placeholder="Deadline reminder, anchor rotation, extra credit…" style="min-height:64px"></textarea></div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <select id="na-cat" class="nr-ann-cat"><option value="General">General</option><option value="Deadline">Deadline</option><option value="Extra Credit">Extra Credit</option><option value="Anchors">Anchors</option></select>
+            <button type="submit" class="nr-btn">Post announcement →</button>
+            <span id="na-out" class="nr-sub" style="margin:0" role="status"></span>
+          </div>
+        </form>` : '';
+
+      let list;
+      if(!items.length){
+        list = NR.emptyState('📣','No announcements right now',
+          canPost ? 'Post the first one above — deadlines, anchor rotations, extra credit.'
+                  : 'Deadlines, reminders, and anchor rotations from the leadership team show up here.');
+      } else {
+        list = '<div class="nr-ann-list">' + items.map(a => {
+          const admin = (canPost && (idOf(me) === a.by || window.ENN_ID.isAdvisor(me)))
+            ? `<button type="button" class="nr-mini danger" data-annremove data-id="${NR.esc(a.id)}">Remove</button>` : '';
+          return `<div class="nr-ann-item">
+            <div class="nr-ann-body">${a.category ? NR.statusChip(a.category) : ''}<p>${NR.esc(a.title || '')}</p></div>
+            <div class="nr-ann-meta">${a.byName ? NR.esc(a.byName) + ' · ' : ''}${rel(a.ts)}${admin ? ' · ' : ''}${admin}</div>
+          </div>`;
+        }).join('') + '</div>';
+      }
+      host.innerHTML = form + list;
+
+      const f = host.querySelector('#nr-ann-form');
+      if(f) f.addEventListener('submit', e => {
+        e.preventDefault();
+        const ta = host.querySelector('#na-msg'), out = host.querySelector('#na-out');
+        const msg = (ta.value || '').trim();
+        if(!msg){ if(out){ out.textContent = 'Type a message first.'; out.style.color = '#ff8a84'; } return; }
+        G.boardPost({ kind:'announcement', title:msg,
+          category:(host.querySelector('#na-cat')||{}).value || 'General',
+          byName: window.ENN_ID.displayName(me) || 'Leadership' }, idOf(me));
+        ta.value = ''; if(out){ out.textContent = 'Posted ✓'; out.style.color = '#4ade80'; }
+      });
+      host.querySelectorAll('[data-annremove]').forEach(b => b.addEventListener('click', e => {
+        e.preventDefault();
+        if(confirm('Remove this announcement?')) G.boardRemove(b.getAttribute('data-id'), idOf(me));
+      }));
+      NR.observe(host);
+    }
+    G.onChange(draw);
+    G.ready().then(() => { draw(); G.startSync(6000); });
+  };
+
   /* ── Due alert — flashes red on your desk until your group posts its
      next piece to The Board, then flips to a calm "you're set" note.
      Group members only; reactive to the shared store. [data-duealert] */
@@ -485,6 +556,7 @@
     const airLabel = ENN_SEASON.longDate(nx.date);
 
     const posted = () => (G.board() || []).some(p =>
+      p.kind !== 'announcement' &&
       String(p.period) === String(me.period) &&
       String(p.group)  === String(me.group)  &&
       p.status !== 'Finished');
@@ -560,7 +632,8 @@
     };
 
     function draw(){
-      const posts = (G.board() || []).slice().map(p => ({ p, d: fmtDue(p.due) }))
+      const posts = (G.board() || []).slice().filter(p => p.kind !== 'announcement')
+        .map(p => ({ p, d: fmtDue(p.due) }))
         .sort((a,b) => a.d.order - b.d.order);
 
       const form = canPost ? `
@@ -729,6 +802,7 @@
     if(NR.sectionOn('myDashboard')) NR.myDesk(document.querySelector('[data-mydesk]'));
     NR.dueAlert(document.querySelector('[data-duealert]'));
     NR.liveBoard(document.querySelector('[data-liveboard]'));
+    NR.announcements(document.querySelector('[data-announce]'));
     NR.myGrades(document.querySelector('[data-mygrades]'));
     NR.observe(document);
     NR.startClock();

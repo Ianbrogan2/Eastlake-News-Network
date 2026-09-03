@@ -9,15 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=17">
-<link rel="stylesheet" href="/newsroom/colors.css?v=17">
-<script src="/newsroom/config.js?v=17"></script>
-<script src="/EDIT/21-BULLETINS.js?v=17"></script>
-<script src="/EDIT/23-SECTIONS.js?v=17"></script>
-<script src="/EDIT/22-ROSTER.js?v=17"></script>
-<script src="/EDIT/24-ASSIGNMENTS.js?v=17"></script>
-<script src="/newsroom/assets/identity.js?v=17"></script>
-<script src="/newsroom/assets/grades.js?v=17"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=20">
+<link rel="stylesheet" href="/newsroom/colors.css?v=20">
+<script src="/newsroom/config.js?v=20"></script>
+<script src="/EDIT/21-BULLETINS.js?v=20"></script>
+<script src="/EDIT/23-SECTIONS.js?v=20"></script>
+<script src="/EDIT/22-ROSTER.js?v=20"></script>
+<script src="/EDIT/24-ASSIGNMENTS.js?v=20"></script>
+<script src="/newsroom/assets/identity.js?v=20"></script>
+<script src="/newsroom/assets/grades.js?v=20"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -65,13 +65,9 @@
   <!-- A student's own grades (their group's pieces + feedback) -->
   <div data-mygrades></div>
 
-  <!-- Skill challenge -->
-  <h2 class="nr-h2 nr-reveal" data-sec-challenge>Skill Challenge of the Week</h2>
-  <div id="board-challenge" class="nr-reveal" data-sec-challenge></div>
-
-  <!-- Announcements strip -->
+  <!-- Announcements — live; leaders can post right here -->
   <h2 class="nr-h2 nr-reveal" data-sec-ann>Announcements</h2>
-  <div id="board-ann" class="nr-reveal" data-sec-ann></div>
+  <div data-announce data-sec-ann class="nr-reveal"></div>
 
   <!-- The six sections -->
   <h2 class="nr-h2 nr-reveal">Explore the Newsroom</h2>
@@ -87,9 +83,9 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=17"></script>
-<script src="/newsroom/text.js?v=17"></script>
-<script src="/newsroom/assets/hub.js?v=17"></script>
+<script src="/newsroom/boards.js?v=20"></script>
+<script src="/newsroom/text.js?v=20"></script>
+<script src="/newsroom/assets/hub.js?v=20"></script>
 <script>
 /* Countdown to the next real bulletin.
    Reads EDIT/21-BULLETINS.js, so it counts to a day the show actually
@@ -133,21 +129,8 @@
   tick(); setInterval(tick, 1000);
 })();
 
-/* Boards read from newsroom/boards.js (leaders edit that file) */
-NR.board('challenge').then(function(res){
-  NR.renderBoard('#board-challenge', res, {
-    columns:['Week','Challenge','Details'],
-    emptyIcon:'🎯', emptyTitle:'No challenge posted yet', emptyBody:'This week’s skill challenge shows up here once a leader posts it in boards.js.',
-    row:function(r){ return [NR.esc(r.Week||'—'), '<strong>'+NR.esc(r.Challenge||'—')+'</strong>', NR.esc(r.Details||'')]; }
-  });
-});
-NR.board('announcements').then(function(res){
-  NR.renderBoard('#board-ann', res, {
-    columns:['Message','Category','Posted'],
-    emptyIcon:'📣', emptyTitle:'No announcements right now', emptyBody:'Deadlines, extra-credit reminders, and anchor rotations post here.',
-    row:function(r){ return ['<strong>'+NR.esc(r.Message||'—')+'</strong>', NR.statusChip(r.Category||''), NR.esc(r.Posted||'')]; }
-  });
-});
+/* Announcements are live now (NR.announcements → [data-announce]); leaders
+   post them right on the page. No static boards to render here anymore. */
 </script>
 
 </body>

@@ -16,12 +16,9 @@ window.ENN_BOARDS = {
 
   /* ── ANNOUNCEMENTS ──────────────────────────────────────────────
      Category options: Deadline · Extra Credit · Anchors · General   */
-  announcements: [
-    { "Message": "Season premiere — the first bulletin of the year airs Monday, August 3. Period 1 is up first.", "Category": "General", "Posted": "Jul 22", "Expires": "" },
-    { "Message": "Sign in with your student ID instead of the class code — you'll see your own group, air dates and deadlines.", "Category": "General", "Posted": "Jul 22", "Expires": "" },
-    { "Message": "Pieces are due before class starts on your air day. Late = automatic 0.", "Category": "Deadline", "Posted": "Jul 22", "Expires": "" },
-    // Add a row above this line. Category: Deadline · Extra Credit · Anchors · General
-  ],
+  /* Announcements are now LIVE — leaders post them right on the newsroom hub
+     (stored in the shared board). This static list is no longer used. */
+  announcements: [],
 
   /* ── PITCH BOARD ────────────────────────────────────────────────
      Status options: Open · Claimed · Producing · Approved · Aired
@@ -61,9 +58,7 @@ window.ENN_BOARDS = {
 
   /* ── SKILL CHALLENGE OF THE WEEK ────────────────────────────────
      Leaderboard is free text (e.g. "1. Ana  2. Leo  3. Mia").      */
-  challenge: [
-    { "Week": "Aug 3", "Challenge": "Best 15-second establishing shot", "Details": "Anywhere on campus. No dialogue — the shot has to say where we are on its own.", "Leaderboard": "" },
-    // Add next week's challenge above. Leaderboard is free text, e.g. "1. Ana  2. Leo  3. Mia"
-  ],
+  /* Skill Challenge was removed from the newsroom. */
+  challenge: [],
 
 };

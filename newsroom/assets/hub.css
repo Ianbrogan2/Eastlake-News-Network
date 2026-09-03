@@ -4,16 +4,20 @@
 ══════════════════════════════════════════════════════════════════ */
 
 :root{
-  /* ── palette (spec §3) ── */
-  --studio:#0A0E14;   /* control-room dark background */
-  --panel:#121824;    /* card / equipment face        */
+  /* ── palette — control-room, disciplined: blue = brand/nav, cyan = data/time,
+        tally red = live/urgent only. Everything else is graded studio dark. ── */
+  --studio:#090C12;   /* control-room dark background  */
+  --studio-2:#0C1119; /* raised background band        */
+  --panel:#151d2b;    /* card / equipment face (lifted for contrast) */
   --panel-2:#0E141F;  /* recessed panel               */
-  --edge:#223049;     /* seams / borders              */
+  --edge:#2a3750;     /* seams / borders (crisper)     */
+  --edge-soft:#1b2432;/* quiet inner seams            */
   --enn:#1A56DB;      /* ENN brand blue               */
-  --enn-bright:#2E6BF0;
+  --enn-bright:#3B7BF5;
+  --cyan:#7DD8FF;     /* data · timecodes · countdowns */
   --live:#FF3B30;     /* on-air tally red             */
   --ink:#F2F4F8;      /* primary text                 */
-  --steel:#6B7688;    /* labels / secondary text      */
+  --steel:#818ea3;    /* labels / secondary text (more legible) */
   --steel-dim:#4A5464;
 
   /* ── motion tokens (spec §3A) ── */
@@ -82,7 +86,8 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   color:var(--steel);padding:8px 12px;border-radius:8px;
   transition:color var(--t-micro) var(--ease-soft), background var(--t-micro) var(--ease-soft);
 }
-.nr-rail nav a:hover,.nr-rail nav a[aria-current="page"]{color:var(--ink);background:rgba(255,255,255,0.05)}
+.nr-rail nav a:hover{color:var(--ink);background:rgba(255,255,255,0.05)}
+.nr-rail nav a[aria-current="page"]{color:#fff;background:rgba(59,123,245,0.15);box-shadow:inset 0 -2px 0 var(--enn-bright)}
 /* the persistent breathing tally that ties the hub together as "a live studio" */
 .nr-tally{
   display:inline-flex;align-items:center;gap:8px;
@@ -108,7 +113,11 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 
 /* ══════════════ LAYOUT ══════════════ */
 .nr-wrap{max-width:var(--maxw);margin:0 auto;padding:clamp(18px,3.5vw,40px) clamp(16px,4vw,40px) 120px}
-.nr-hero{padding:clamp(10px,2.5vw,22px) 0 clamp(14px,3vw,28px)}
+.nr-hero{position:relative;padding:clamp(12px,2.5vw,24px) 0 clamp(18px,3vw,30px);
+  border-bottom:1px solid var(--edge-soft);margin-bottom:26px}
+/* broadcast keyline — a short blue rule keyed to the baseline, like a lower-third bug */
+.nr-hero::after{content:'';position:absolute;left:0;bottom:-1px;width:96px;height:2px;
+  background:linear-gradient(90deg,var(--enn-bright),transparent)}
 
 /* lower-third eyebrow motif — how broadcast names a speaker */
 .nr-eyebrow{
@@ -116,11 +125,13 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
   margin-bottom:18px;
 }
-.nr-eyebrow b{background:var(--enn);color:#fff;padding:6px 11px;font-weight:600;border-radius:3px 0 0 3px}
+.nr-eyebrow b{background:var(--enn);color:#fff;padding:6px 11px;font-weight:600;border-radius:3px 0 0 3px;
+  box-shadow:0 0 20px -6px var(--enn-bright)}
 .nr-eyebrow span{background:var(--panel);color:var(--steel);padding:6px 13px;border:1px solid var(--edge);border-left:0;border-radius:0 3px 3px 0;letter-spacing:.16em}
 
-h1.nr-title{font-family:var(--display);font-size:clamp(44px,8vw,92px);line-height:.92;letter-spacing:.01em;font-weight:400}
-.nr-lede{color:var(--steel);font-size:clamp(15px,2vw,18px);max-width:60ch;margin-top:16px;line-height:1.6}
+h1.nr-title{font-family:var(--display);font-size:clamp(46px,8.4vw,96px);line-height:.9;letter-spacing:.005em;font-weight:400;
+  text-shadow:0 2px 34px rgba(0,0,0,0.55)}
+.nr-lede{color:#aab4c4;font-size:clamp(15px,2vw,18px);max-width:60ch;margin-top:16px;line-height:1.6}
 
 h2.nr-h2{font-family:var(--display);font-size:clamp(26px,4vw,40px);letter-spacing:.02em;margin:46px 0 6px;font-weight:400;position:relative;padding-left:18px}
 h2.nr-h2::before{content:'';position:absolute;left:0;top:.14em;height:.74em;width:4px;border-radius:2px;background:linear-gradient(180deg,var(--enn-bright),var(--enn))}
@@ -201,6 +212,17 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 .nr-stat-anchors .nr-draft{font-size:10px;vertical-align:middle}
 @media (max-width:640px){ .nr-statusbar{grid-template-columns:1fr} }
 
+/* ══════════════ ANNOUNCEMENTS (live, leader-posted) ══════════════ */
+.nr-ann-cat{background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:9px;
+  padding:0 12px;min-height:46px;font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+.nr-ann-list{display:flex;flex-direction:column;gap:10px}
+.nr-ann-item{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--edge);
+  border-radius:var(--radius);padding:14px 16px;box-shadow:0 18px 40px -30px rgba(0,0,0,0.9)}
+.nr-ann-body{display:flex;gap:10px;align-items:flex-start}
+.nr-ann-body p{margin:0;color:var(--ink);font-size:14.5px;line-height:1.5}
+.nr-ann-meta{margin-top:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--steel);
+  display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
 /* ══════════════ DUE ALERT (desk) ══════════════ */
 .nr-due{display:flex;align-items:flex-start;gap:14px;padding:15px 18px;border-radius:var(--radius);
   margin-bottom:24px;border:1px solid var(--edge);background:var(--panel)}
@@ -227,12 +249,16 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 .nr-board{width:100%;border-collapse:collapse;font-size:13.5px}
 .nr-board thead th{
   font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);
-  text-align:left;padding:10px 14px;border-bottom:1px solid var(--edge);font-weight:500;
+  text-align:left;padding:11px 14px;border-bottom:1px solid var(--edge);font-weight:500;
+  background:rgba(255,255,255,0.025);
 }
 .nr-board tbody td{padding:13px 14px;border-bottom:1px solid rgba(34,48,73,0.5);vertical-align:middle}
 .nr-board tbody tr{transition:background var(--t-micro)}
 .nr-board tbody tr:hover{background:rgba(255,255,255,0.02)}
-.nr-board-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nr-board-wrap{overflow:hidden;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--edge);border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 18px 40px -30px rgba(0,0,0,0.9)}
 
 /* empty / not-connected states for live boards */
 .nr-empty{
