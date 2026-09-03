@@ -245,6 +245,21 @@ var ENN_SEASON = (function(){
     return list.length ? list[0] : null;
   }
 
+  /* The bulletin immediately BEFORE a given one (by iso or Date), across
+     all periods. Pieces are due the day of the previous bulletin, so this
+     turns a group's air date into its due date. Returns null for the very
+     first bulletin of the season. */
+  function previousBulletin(isoOrDate){
+    var list = all(), idx = -1;
+    if(typeof isoOrDate === 'string'){
+      idx = list.map(function(b){ return b.iso; }).indexOf(isoOrDate);
+    } else if(isoOrDate){
+      var t = isoOrDate.getTime ? isoOrDate.getTime() : +isoOrDate;
+      idx = list.map(function(b){ return b.date ? b.date.getTime() : NaN; }).indexOf(t);
+    }
+    return idx > 0 ? list[idx - 1] : null;
+  }
+
   /* All remaining bulletins for a period — used for "your air dates". */
   function upcomingFor(period){
     var now = Date.now();
@@ -289,6 +304,7 @@ var ENN_SEASON = (function(){
     waveOf:        waveOf,
     waveDates:     waveDates,
     datesForGroup: datesForGroup,
-    nextForGroup:  nextForGroup
+    nextForGroup:  nextForGroup,
+    previousBulletin: previousBulletin
   };
 })();

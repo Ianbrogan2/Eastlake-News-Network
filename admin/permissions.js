@@ -122,7 +122,9 @@
     // unknown sections back to 'settings', so this stays consistent).
     bulletins:'settings', bellschedule:'settings',
     // Yearbook hub
-    yearbook:'yearbook'
+    yearbook:'yearbook',
+    // The Edge (falls under Settings — master-only — matching the backend default)
+    theedge:'settings'
   };
 
   function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }

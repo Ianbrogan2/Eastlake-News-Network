@@ -192,6 +192,15 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .enn-tk-move .it::before{content:"";position:absolute;left:2px;top:50%;width:5px;height:5px;border-radius:50%;background:var(--blue);transform:translateY(-50%)}
 @keyframes ennMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
+/* announcement bar (top of page) */
+.edge-announce{position:relative;z-index:1;background:linear-gradient(92deg,rgba(215,38,61,.16),rgba(200,162,74,.12));
+  border-bottom:1px solid var(--line)}
+.edge-announce .inner{max-width:1140px;margin:0 auto;padding:12px 20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.edge-announce .tag{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.2em;font-size:10px;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(215,38,61,.5);border-radius:20px;padding:3px 10px;flex:none}
+.edge-announce b{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.01em;font-size:15px;color:#f3efe6}
+.edge-announce span{font-family:"Special Elite",monospace;font-size:13px;color:var(--report)}
+
 /* staging ribbon (only while EDGE is off) */
 .staging{position:fixed;top:64px;left:-52px;z-index:80;transform:rotate(-38deg);
   background:var(--brass);color:#04191d;font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.16em;
@@ -205,6 +214,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
+<script src="/EDIT/29-THEEDGE.js?v=1"></script>
 </head>
 <body>
 
@@ -234,6 +244,8 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
     <span class="enn-onair" id="ennOnair"><span class="dot"></span><b>On Air</b></span>
   </div>
 </nav>
+
+<div class="edge-announce" id="edgeAnnounce" hidden></div>
 
 <div class="staging" id="stagingRibbon" hidden>Preview &middot; not public</div>
 
@@ -500,6 +512,26 @@ renderFilters(); renderGrid();
   try{
     var ribbon=document.getElementById("stagingRibbon");
     if(ribbon && !/[?&]live=1/.test(location.search)) ribbon.hidden=false;
+  }catch(e){}
+
+  // announcement bar — manual on/off, or scheduled via startAt/endAt (EDIT/29-THEEDGE.js)
+  try{
+    var an=(window.ENN_THEEDGE&&window.ENN_THEEDGE.announce)||{}, box=document.getElementById("edgeAnnounce");
+    function anLive(a){
+      if(!a || String(a.on).toUpperCase()!=="T") return false;
+      if(!a.title && !a.body) return false;
+      var now=Date.now();
+      if(a.startAt){ var s=Date.parse(a.startAt); if(!isNaN(s) && now<s) return false; }
+      if(a.endAt){ var e=Date.parse(a.endAt); if(!isNaN(e) && now>e) return false; }
+      return true;
+    }
+    if(box && anLive(an)){
+      var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+      box.innerHTML='<div class="inner"><span class="tag">The Edge</span>'+
+        (an.title?'<b>'+esc(an.title)+'</b>':'')+
+        (an.body?'<span>'+esc(an.body)+'</span>':'')+'</div>';
+      box.hidden=false;
+    }
   }catch(e){}
 })();
 </script>

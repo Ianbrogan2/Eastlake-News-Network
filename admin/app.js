@@ -539,6 +539,7 @@
     else if(f.type==='toggle'){ var st=switchEl(String(obj[f.key]).toUpperCase()==='T', function(o){ obj[f.key]=o?'T':'F'; }); if(f.big) st.el.classList.add('switch-big'); wrap.appendChild(st.el); return wrap; }
     else if(f.type==='toggleBool'){ var st2=switchEl(obj[f.key]===true, function(o){ obj[f.key]=o; }); if(f.big) st2.el.classList.add('switch-big'); wrap.appendChild(st2.el); return wrap; }
     else if(f.type==='image'){ wrap.appendChild(imageField(f,obj)); return wrap; }
+    else if(f.type==='datetime'){ input=el('input'); input.type='datetime-local'; input.value=obj[f.key]||''; input.oninput=function(){ obj[f.key]=input.value; }; }
     else { input=el('input'); input.type=(f.type==='url'?'url':'text'); input.value=obj[f.key]||''; input.oninput=function(){ obj[f.key]=input.value; }; }
     wrap.appendChild(input); return wrap;
   }

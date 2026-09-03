@@ -2281,7 +2281,16 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     let revealYear = '2027';
     { const p = String(has(h.schoolYear)?h.schoolYear:'').split(/[–—-]/); if(p.length>1){ let t=p[1].trim(); if(/^\d{2}$/.test(t)) t='20'+t; if(/^\d{4}$/.test(t)) revealYear=t; } }
 
-    if(on(an.on) && (has(an.title)||has(an.body)))
+    /* Announcement: on/off, and optionally auto-scheduled with startAt/endAt.
+       Blank dates = manual (show while on). Dates = auto show/hide window. */
+    const anLive = (a)=>{
+      if(!on(a.on) || !(has(a.title)||has(a.body))) return false;
+      const now = Date.now();
+      if(has(a.startAt)){ const s=Date.parse(a.startAt); if(!isNaN(s) && now < s) return false; }
+      if(has(a.endAt)){ const e=Date.parse(a.endAt); if(!isNaN(e) && now > e) return false; }
+      return true;
+    };
+    if(anLive(an))
       html += '<div class="yb-announce"><div class="yb-wrap">'+(has(an.title)?'<b>'+esc(an.title)+'</b>':'')+(has(an.body)?'<span>'+esc(an.body)+'</span>':'')+'</div></div>';
 
     /* hero */

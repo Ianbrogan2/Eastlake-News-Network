@@ -339,10 +339,15 @@
 
     const days = d => Math.max(0, Math.ceil((d - Date.now()) / 86400000));
 
-    /* The published rule is "due before class starts on your air day" —
-       the same day it airs, not the night before. */
+    /* Pieces are due the day of the PREVIOUS bulletin — one broadcast day
+       before the group airs, not the day it airs. */
     let dueLine = '—';
-    if(next) dueLine = 'Before class on <strong>' + ENN_SEASON.longDate(next.date) + '</strong>';
+    if(next){
+      const due = (typeof ENN_SEASON !== 'undefined' && next.iso) ? ENN_SEASON.previousBulletin(next.iso) : null;
+      dueLine = due
+        ? 'Before class on <strong>' + ENN_SEASON.longDate(due.date) + '</strong> (the bulletin before yours)'
+        : 'Before class on <strong>' + ENN_SEASON.longDate(next.date) + '</strong>';
+    }
 
     const rows = [];
     if(me.period) rows.push(['Your period', 'Period ' + me.period]);
@@ -485,11 +490,16 @@
     const isAdvisor = !!(window.ENN_ID && window.ENN_ID.isAdvisor(me));
     const submitHref = '/newsroom/submit/';
 
-    /* prefill the due date with the poster's own next air date, if known */
+    /* prefill the DUE date = the bulletin before the group's next air date
+       (pieces are due the day of the previous bulletin, not the air day). */
     let prefillDue = '', myGroupLine = '';
     if(canPost && window.ENN_ID.inGroup(me) && typeof ENN_SEASON !== 'undefined'){
       const nx = window.ENN_ID.myNextAirDate(me);
-      if(nx && nx.date){ prefillDue = nx.date.toISOString().slice(0,10); }
+      if(nx && nx.iso){
+        const due = ENN_SEASON.previousBulletin(nx.iso);
+        const d = (due && due.date) ? due.date : nx.date;
+        if(d) prefillDue = d.toISOString().slice(0,10);
+      }
       myGroupLine = NR.esc(me.groupName) + ' · Period ' + NR.esc(me.period);
     }
 
@@ -523,7 +533,7 @@
           </div>`}
           <div class="nr-field"><label for="nb-title">Piece title</label><input id="nb-title" maxlength="90" placeholder="What's the piece called?"></div>
           <div class="nr-field"><label for="nb-about">What's it about?</label><textarea id="nb-about" maxlength="280" placeholder="One or two lines — the angle, who's in it, what happens." style="min-height:80px"></textarea></div>
-          <div class="nr-field"><label for="nb-due">Due / air date</label><input id="nb-due" type="date" value="${NR.esc(prefillDue)}"></div>
+          <div class="nr-field"><label for="nb-due">Due date <span style="color:var(--steel);text-transform:none;letter-spacing:0">(the bulletin before you air)</span></label><input id="nb-due" type="date" value="${NR.esc(prefillDue)}"></div>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
             <button type="submit" class="nr-btn">Post to the board →</button>
             <span id="nb-msg" class="nr-sub" style="margin:0" role="status"></span>

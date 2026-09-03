@@ -15,7 +15,9 @@ var ENN_YEARBOOK = {
   announce: {
     on: 'F',
     title: '',
-    body: ''
+    body: '',
+    startAt: '',
+    endAt: ''
   },
   hero: {
     schoolYear: '2026-27',

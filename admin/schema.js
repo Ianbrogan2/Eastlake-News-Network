@@ -341,7 +341,9 @@ window.ENN_SCHEMA = [
       { key:'announce', label:'Announcements bar (top of the page)', type:'object', fields:[
         { key:'on', label:'Show the announcement', type:'toggle' },
         { key:'title', label:'Title', type:'text' },
-        { key:'body', label:'Message', type:'textarea' } ]},
+        { key:'body', label:'Message', type:'textarea' },
+        { key:'startAt', label:'Auto-show at (optional)', type:'datetime', help:'Leave blank to show as soon as it’s on. Set a date/time to schedule when it appears.' },
+        { key:'endAt', label:'Auto-hide after (optional)', type:'datetime', help:'Leave blank to keep it up until you switch it off. Set a date/time to auto-remove it.' } ]},
 
       { key:'hero', label:'Cover & hero', type:'object', fields:[
         { key:'schoolYear', label:'School year (e.g. 2026–27)', type:'text' },
@@ -423,6 +425,20 @@ window.ENN_SCHEMA = [
         { key:'on', label:'Show this section', type:'toggle' },
         { key:'items', label:'Quotes', type:'list', itemLabel:'Quote', fields:[
           { key:'quote', label:'Quote', type:'textarea' }, { key:'who', label:'Who said it', type:'text' } ]} ]},
+    ]
+  },
+
+  /* ═══════════ THE EDGE ═══════════ */
+  { id:'theedge', icon:'📰', label:'The Edge', group:'The Edge',
+    desc:'The Edge newspaper hub. Schedule or run the announcement bar that appears at the top of the page.',
+    file:'EDIT/29-THEEDGE.js', kind:'jsobject', varName:'ENN_THEEDGE',
+    fields:[
+      { key:'announce', label:'Announcement bar (top of the page)', type:'object', fields:[
+        { key:'on', label:'Show the announcement', type:'toggle' },
+        { key:'title', label:'Title', type:'text' },
+        { key:'body', label:'Subtitle (optional)', type:'textarea', help:'Leave blank for a title-only banner.' },
+        { key:'startAt', label:'Auto-show at (optional)', type:'datetime', help:'Leave blank to show as soon as it’s on. Set a date/time to schedule when it appears.' },
+        { key:'endAt', label:'Auto-hide after (optional)', type:'datetime', help:'Leave blank to keep it up until you switch it off. Set a date/time to auto-remove it.' } ]},
     ]
   },
 
