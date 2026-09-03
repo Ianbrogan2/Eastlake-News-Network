@@ -21,18 +21,18 @@ const j = (obj, status = 200, origin) =>
     },
   });
 
-/* Read-only board name → Airtable table.
-   NOTE: `submissions` returns student names (PII). The Catalog page that
-   reads it is protected by Cloudflare Access; if you also want the data
-   feed itself gated, put this Worker behind an Access-protected route
-   (see SETUP-NEXT-STEPS.md §6). */
+/* Read-only board name → Airtable table. These are all non-PII newsroom
+   boards, safe to serve publicly.
+   NOTE: the "submissions" table (student names + emails — PII) is
+   deliberately NOT exposed here. Nothing on the site reads it through the
+   Worker, so publishing it would only leak student data. Manage/read
+   submissions in Airtable directly (or behind Cloudflare Access). */
 const BOARD_TABLES = {
   pitches: "Pitches",
   announcements: "Announcements",
   anchors: "Anchor Rotation",
   equipment: "Equipment",
   challenge: "SkillChallenge",
-  submissions: "Submissions",
 };
 
 const MAX_MB = 600; // sanity cap for a single video upload

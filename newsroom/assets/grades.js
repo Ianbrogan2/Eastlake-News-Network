@@ -323,8 +323,9 @@
   }
 
   function op(o){
-    /* optimistic: apply to local cache immediately, then persist */
-    applyOp(cache, o); emit();
+    /* optimistic for normal edits; but a destructive reset waits for the
+       server, so a rejected reset (wrong passphrase) never blanks the view. */
+    if(o.op !== 'reset'){ applyOp(cache, o); emit(); }
     return store.apply(o).then(function(db){
       if(db){ cache = db; emit(); }
       return cache;
@@ -581,7 +582,7 @@
       return d;
     },
     auditLog: function(){ return cache.audit || []; },
-    reset: function(what, by){ return op({op:'reset', what:what||'all', by:by}); },
+    reset: function(what, by, key){ return op({op:'reset', what:what||'all', by:by, key:key||''}); },
 
     /* change notifications (poll or local edit) */
     onChange: function(cb){ listeners.push(cb); return cache; },

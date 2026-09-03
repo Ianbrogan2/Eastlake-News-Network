@@ -184,11 +184,32 @@ function doLogout(token){
 function doLogin(body){
   var users = ensureSeeded();
   var username = String(body.user||'').toLowerCase();
+
+  /* ── brute-force throttle: lock a username for LOCK_MIN minutes after
+     MAX_FAILS bad tries. Kept in a Script Property, pruned as it goes. ── */
+  var MAX_FAILS = 6, LOCK_MIN = 15;
+  var fails = {};
+  try{ fails = JSON.parse(prop('ENN_LOGIN_FAILS') || '{}'); }catch(e){}
+  var nowMs = now(), rec = fails[username] || { n:0, until:0 };
+  if(rec.until && nowMs < rec.until){
+    return { ok:false, error:'Too many attempts. Wait a few minutes and try again.', code:'RATE' };
+  }
+
   var u = null;
   for(var i=0;i<users.length;i++){ if(users[i].username===username) u=users[i]; }
   if(!u || u.active===false || !verifyPassword(String(body.password||''), u.salt, u.hash)){
+    rec.n = (rec.n||0) + 1;
+    if(rec.n >= MAX_FAILS){ rec.until = nowMs + LOCK_MIN*60*1000; rec.n = 0; }
+    fails[username] = rec;
+    Object.keys(fails).forEach(function(k){                 // drop stale entries
+      if(!fails[k].until && !fails[k].n) delete fails[k];
+      if(fails[k].until && fails[k].until < nowMs && !fails[k].n) delete fails[k];
+    });
+    setProp('ENN_LOGIN_FAILS', JSON.stringify(fails));
     return { ok:false, error:'Wrong username or password.', code:'AUTH' };
   }
+
+  if(fails[username]){ delete fails[username]; setProp('ENN_LOGIN_FAILS', JSON.stringify(fails)); }
   u.lastLogin = new Date().toISOString();
   saveUsers(users);
   var token = newSession(u.username);

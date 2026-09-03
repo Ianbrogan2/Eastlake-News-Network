@@ -55,6 +55,20 @@ function doPost(e){
   lock.waitLock(20000);
   try{
     var op = JSON.parse(e.postData.contents);
+
+    /* ── Guard the destructive RESET op with an advisor passphrase ──
+       Set a Script Property  RESET_KEY  to your chosen passphrase
+       (Project Settings → Script Properties). Resets are refused unless
+       the request carries the matching key — so no one with the URL can
+       wipe the class's grades. If RESET_KEY isn't set, reset is disabled
+       entirely (fail-safe). Nothing else changes. */
+    if(op && op.op === 'reset'){
+      var RESET_KEY = PropertiesService.getScriptProperties().getProperty('RESET_KEY');
+      if(!RESET_KEY || String(op.key || '') !== RESET_KEY){
+        return json_({ ok:false, error:'Reset refused — the advisor passphrase is required.' });
+      }
+    }
+
     var db = loadDB_();
     applyOp_(db, op);
     saveDB_(db);

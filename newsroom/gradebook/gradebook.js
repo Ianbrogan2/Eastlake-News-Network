@@ -319,6 +319,9 @@
   function embed(url){
     var u=(url||'').trim();
     if(!u) return '<div class="gb-embed-none"><div style="font-size:26px">🎬</div><div>No submission link attached yet.</div><div style="font-size:12px">Paste the group\'s Drive or YouTube link below — it plays right here.</div></div>';
+    /* only ever embed/link real web URLs — blocks javascript:/data: injection
+       through a crafted submission link (the store is class-writable). */
+    if(!/^https?:\/\//i.test(u)) return '<div class="gb-embed-none"><div style="font-size:26px">⚠️</div><div>That submission link isn\'t a valid web address.</div><div style="font-size:12px">Use a Drive, YouTube, or https:// link.</div></div>';
     var yt=u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/);
     if(yt) return frame('https://www.youtube.com/embed/'+yt[1]);
     var vim=u.match(/vimeo\.com\/(\d+)/); if(vim) return frame('https://player.vimeo.com/video/'+vim[1]);
@@ -692,8 +695,20 @@
       var out=rows.map(function(r){ return { id:r.dataset.id, name:r.querySelector('.s-cn').value.trim(), weight:+r.querySelector('.s-cw').value||0 }; }).filter(function(c){return c.name;});
       G.setCategories(out, meName); alert('Categories saved.');
     });
-    document.getElementById('s-reset-grades').addEventListener('click', function(){ if(confirm('Delete ALL grades everywhere? (assignments kept)')){ G.reset('grades', meName); alert('Grades cleared.'); location.hash='#overview'; } });
-    document.getElementById('s-reset-all').addEventListener('click', function(){ if(confirm('Delete ALL grades AND assignments everywhere?')){ G.reset('all', meName); alert('Cleared.'); location.hash='#overview'; } });
+    function doReset(what, warn){
+      if(!confirm(warn)) return;
+      var key = prompt('This clears data for EVERYONE. Enter the advisor reset passphrase to confirm:');
+      if(key === null || !key.trim()) return;
+      var size = function(){ return G.all().length + G.assignments().length + (G.overallAverage() != null ? 1 : 0); };
+      var before = size();
+      G.reset(what, meName, key.trim()).then(function(){
+        // reset waits for the server; if the passphrase was wrong the data is untouched
+        alert(size() < before ? 'Cleared.' : 'Nothing was cleared — the passphrase didn’t match (or there was nothing to clear).');
+        location.hash = '#overview';
+      });
+    }
+    document.getElementById('s-reset-grades').addEventListener('click', function(){ doReset('grades', 'Delete ALL grades everywhere? (assignments kept)'); });
+    document.getElementById('s-reset-all').addEventListener('click', function(){ doReset('all', 'Delete ALL grades AND assignments everywhere?'); });
     NR.observe(view());
   }
   function catRow(c){
