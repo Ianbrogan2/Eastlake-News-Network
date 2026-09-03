@@ -9,14 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=12">
-<link rel="stylesheet" href="/newsroom/colors.css?v=12">
-<script src="/newsroom/config.js?v=12"></script>
-<script src="/EDIT/21-BULLETINS.js?v=12"></script>
-<script src="/EDIT/23-SECTIONS.js?v=12"></script>
-<script src="/EDIT/22-ROSTER.js?v=12"></script>
-<script src="/newsroom/assets/identity.js?v=12"></script>
-<script src="/newsroom/assets/grades.js?v=12"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=15">
+<link rel="stylesheet" href="/newsroom/colors.css?v=15">
+<script src="/newsroom/config.js?v=15"></script>
+<script src="/EDIT/21-BULLETINS.js?v=15"></script>
+<script src="/EDIT/23-SECTIONS.js?v=15"></script>
+<script src="/EDIT/22-ROSTER.js?v=15"></script>
+<script src="/newsroom/assets/identity.js?v=15"></script>
+<script src="/newsroom/assets/grades.js?v=15"></script>
 </head>
 <body class="nr" data-section="Leadership">
 <div data-rail></div>
@@ -32,7 +32,7 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/assets/hub.js?v=12"></script>
+<script src="/newsroom/assets/hub.js?v=15"></script>
 <script>
 (function(){
   var body = document.getElementById('gb-body');
@@ -78,7 +78,6 @@
     html += '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">' +
       '<button class="nr-btn" id="gb-csv" type="button">↓ Download CSV</button>' +
       (NR.cfg('GRADEBOOK_SHEET_URL') ? '<a class="nr-btn ghost" href="'+NR.esc(NR.cfg('GRADEBOOK_SHEET_URL'))+'" target="_blank" rel="noopener">Open shared gradebook ↗</a>' : '') +
-      '<a class="nr-btn ghost" href="/newsroom/leaderboard/">Leaderboard →</a>' +
       '</div>';
 
     html += '<div class="nr-panel nr-reveal"><div class="nr-board-wrap"><table class="nr-board"><thead><tr>' +

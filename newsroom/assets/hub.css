@@ -107,8 +107,8 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 }
 
 /* ══════════════ LAYOUT ══════════════ */
-.nr-wrap{max-width:var(--maxw);margin:0 auto;padding:clamp(24px,5vw,56px) clamp(16px,4vw,40px) 120px}
-.nr-hero{padding:clamp(20px,5vw,44px) 0 clamp(24px,4vw,40px)}
+.nr-wrap{max-width:var(--maxw);margin:0 auto;padding:clamp(18px,3.5vw,40px) clamp(16px,4vw,40px) 120px}
+.nr-hero{padding:clamp(10px,2.5vw,22px) 0 clamp(14px,3vw,28px)}
 
 /* lower-third eyebrow motif — how broadcast names a speaker */
 .nr-eyebrow{
@@ -122,9 +122,10 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 h1.nr-title{font-family:var(--display);font-size:clamp(44px,8vw,92px);line-height:.92;letter-spacing:.01em;font-weight:400}
 .nr-lede{color:var(--steel);font-size:clamp(15px,2vw,18px);max-width:60ch;margin-top:16px;line-height:1.6}
 
-h2.nr-h2{font-family:var(--display);font-size:clamp(26px,4vw,40px);letter-spacing:.02em;margin:56px 0 6px;font-weight:400}
+h2.nr-h2{font-family:var(--display);font-size:clamp(26px,4vw,40px);letter-spacing:.02em;margin:46px 0 6px;font-weight:400;position:relative;padding-left:18px}
+h2.nr-h2::before{content:'';position:absolute;left:0;top:.14em;height:.74em;width:4px;border-radius:2px;background:linear-gradient(180deg,var(--enn-bright),var(--enn))}
 h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
-.nr-sub{color:var(--steel);font-size:14px;margin-bottom:22px}
+.nr-sub{color:var(--steel);font-size:14px;margin-bottom:22px;max-width:70ch}
 
 /* ══════════════ PANELS (physical equipment faces) ══════════════ */
 .nr-panel{
@@ -140,14 +141,17 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 .nr-tile{
   display:block;background:linear-gradient(180deg, var(--panel), var(--panel-2));
   border:1px solid var(--edge);border-radius:var(--radius);
-  padding:22px;min-height:150px;
+  padding:20px 20px 44px;min-height:132px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 18px 40px -28px rgba(0,0,0,0.9);
   transition:transform var(--t-ui) var(--ease-soft), border-color var(--t-ui) var(--ease-soft), box-shadow var(--t-ui) var(--ease-soft);
   position:relative;overflow:hidden;
 }
-.nr-tile:hover{transform:translateY(-2px);border-color:var(--enn);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 26px 50px -26px rgba(26,86,219,0.4)}
+/* a thin brand rail slides in on hover — quiet, broadcast-y */
+.nr-tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--enn-bright),var(--enn));transform:scaleY(0);transform-origin:top;transition:transform var(--t-ui) var(--ease-soft)}
+.nr-tile:hover{transform:translateY(-3px);border-color:var(--enn);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 26px 50px -26px rgba(26,86,219,0.4)}
+.nr-tile:hover::before{transform:scaleY(1)}
 .nr-tile .k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase}
-.nr-tile h3{font-family:var(--display);font-size:27px;letter-spacing:.02em;margin:10px 0 6px;font-weight:400}
+.nr-tile h3{font-family:var(--display);font-size:25px;letter-spacing:.02em;margin:9px 0 6px;font-weight:400}
 .nr-tile p{color:var(--steel);font-size:13px;line-height:1.5}
 .nr-tile .go{position:absolute;right:20px;bottom:18px;color:var(--steel);transition:color var(--t-micro),transform var(--t-micro) var(--ease-soft)}
 .nr-tile:hover .go{color:var(--enn-bright);transform:translateX(3px)}
@@ -183,8 +187,10 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 .nr-btn.ghost:hover{border-color:var(--enn);background:rgba(26,86,219,0.08)}
 .nr-btn.success-pulse{animation:nr-tally-pulse 600ms var(--ease-out)}
 @keyframes nr-tally-pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,0.6)}100%{box-shadow:0 0 0 22px rgba(255,59,48,0)}}
-/* small inline action links (board row author controls) */
-.nr-mini{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);text-decoration:none;border-bottom:1px dotted var(--edge);padding-bottom:1px;cursor:pointer}
+/* small inline action controls (board row author controls) — work as <a> or <button> */
+.nr-mini{display:inline-block;background:none;border:0;border-bottom:1px dotted var(--edge);border-radius:0;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);
+  text-decoration:none;padding:0 0 1px;cursor:pointer}
 .nr-mini:hover{color:var(--ink)}
 .nr-mini.danger:hover{color:#ff8a84;border-color:#ff8a84}
 

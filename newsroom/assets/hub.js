@@ -22,11 +22,8 @@
     ['Calendar','/newsroom/calendar/'],
     ['Submit','/newsroom/submit/'],
     ['Make','/newsroom/make/'],
-    ['Learn','/newsroom/learn/'],
     ['Studio','/newsroom/studio/'],
-    ['Newsroom','/newsroom/newsroom/'],
-    ['Crew','/newsroom/crew/'],
-    ['Leaderboard','/newsroom/leaderboard/']
+    ['Crew','/newsroom/crew/']
   ];
   /* Who's signed in (null if the identity layer isn't loaded) */
   NR.me = function(){ return window.ENN_ID ? window.ENN_ID.me() : null; };
@@ -77,22 +74,18 @@
     'Calendar':   'pageCalendar',
     'Submit':     'pageSubmit',
     'Make':       'pageMake',
-    'Learn':      'pageLearn',
     'Studio':     'pageStudio',
-    'Newsroom':    'pageDesk',
     'Crew':        'pageCrew',
-    'Leaderboard': 'pageLeaderboard',
     'Leadership':  'pageLeadership',
   };
   NR.sectionOn = function(key){
     return (typeof ENN_TOGGLE === 'undefined') ? true : ENN_TOGGLE.newsroom(key);
   };
 
-  /* Submit and Learn are only for people who produce a piece. Someone
-     who can't submit (a leader with no group, or a guest) has nothing to
-     turn in and doesn't need the lessons, so these two tabs disappear
-     for them entirely — no tab, and the address falls back to the hub. */
-  const PRODUCER_TABS = { 'Submit':true, 'Learn':true };
+  /* Submit is only shown to people who are signed in (a guest on the plain
+     class code has no identity to file against), so it disappears for them —
+     no tab, and the address falls back to the hub. */
+  const PRODUCER_TABS = { 'Submit':true };
   NR.tabOn = function(label){
     const k = TAB_SWITCH[label];
     if(k && !NR.sectionOn(k)) return false;                 // switched off in /admin
@@ -554,9 +547,9 @@
           const grp = NR.esc(p.groupName || ('Group ' + (p.group||'?'))) + (p.period ? ' · P' + NR.esc(p.period) : '');
           const status = p.status ? NR.statusChip(p.status) : NR.statusChip('Producing');
           const actions = mine
-            ? `<div class="nr-board-acts" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-                 <a href="#" data-act="submitted" data-id="${NR.esc(p.id)}" class="nr-mini">${p.status==='Submitted'?'Mark producing':'Mark submitted'}</a>
-                 <a href="#" data-act="remove" data-id="${NR.esc(p.id)}" class="nr-mini danger">Remove</a>
+            ? `<div class="nr-board-acts" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+                 <button type="button" data-act="submitted" data-id="${NR.esc(p.id)}" class="nr-mini">${p.status==='Submitted'?'Mark producing':'Mark submitted'}</button>
+                 <button type="button" data-act="remove" data-id="${NR.esc(p.id)}" class="nr-mini danger">Remove</button>
                </div>` : '';
           return `<tr>
             <td><strong>${NR.esc(p.title || 'Untitled piece')}</strong>${p.about ? `<div class="nr-board-about" style="color:var(--steel);font-size:12.5px;margin-top:3px;line-height:1.45">${NR.esc(p.about)}</div>` : ''}${actions}</td>
@@ -638,6 +631,12 @@
 
     NR.applyText(section);
     NR.mountLinks(document);
+    /* hide any "Explore the Newsroom" tile whose page is switched off in admin,
+       so a tile never links to a disabled page that just bounces back here */
+    $$('.nr-tile[data-sec]').forEach(function(t){
+      var key = t.getAttribute('data-sec');
+      if(key && !NR.sectionOn(key)) t.hidden = true;
+    });
     if(NR.sectionOn('myDashboard')) NR.myDesk(document.querySelector('[data-mydesk]'));
     NR.liveBoard(document.querySelector('[data-liveboard]'));
     NR.myGrades(document.querySelector('[data-mygrades]'));

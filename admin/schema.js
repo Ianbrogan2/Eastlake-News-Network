@@ -711,11 +711,8 @@ window.ENN_SCHEMA = [
         { key:'pageCalendar',   label:'Calendar tab', type:'toggleBool' },
         { key:'pageSubmit',     label:'Submit tab', type:'toggleBool' },
         { key:'pageMake',       label:'Make tab', type:'toggleBool' },
-        { key:'pageLearn',      label:'Learn tab', type:'toggleBool' },
         { key:'pageStudio',     label:'Studio tab', type:'toggleBool' },
-        { key:'pageDesk',       label:'Newsroom (desk) tab', type:'toggleBool' },
         { key:'pageCrew',       label:'Crew tab', type:'toggleBool' },
-        { key:'pageLeaderboard', label:'Leaderboard tab', type:'toggleBool' },
         { key:'pageLeadership', label:'Leadership tab', type:'toggleBool' },
 
         { key:'toolGrading',    label:'Leadership — grading', type:'toggleBool' },

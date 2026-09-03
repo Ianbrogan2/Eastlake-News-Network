@@ -9,15 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=12">
-<link rel="stylesheet" href="/newsroom/colors.css?v=12">
-<script src="/newsroom/config.js?v=12"></script>
-<script src="/EDIT/21-BULLETINS.js?v=12"></script>
-<script src="/EDIT/23-SECTIONS.js?v=12"></script>
-<script src="/EDIT/22-ROSTER.js?v=12"></script>
-<script src="/EDIT/24-ASSIGNMENTS.js?v=12"></script>
-<script src="/newsroom/assets/identity.js?v=12"></script>
-<script src="/newsroom/assets/grades.js?v=12"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=15">
+<link rel="stylesheet" href="/newsroom/colors.css?v=15">
+<script src="/newsroom/config.js?v=15"></script>
+<script src="/EDIT/21-BULLETINS.js?v=15"></script>
+<script src="/EDIT/23-SECTIONS.js?v=15"></script>
+<script src="/EDIT/22-ROSTER.js?v=15"></script>
+<script src="/EDIT/24-ASSIGNMENTS.js?v=15"></script>
+<script src="/newsroom/assets/identity.js?v=15"></script>
+<script src="/newsroom/assets/grades.js?v=15"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -27,7 +27,7 @@
   <section class="nr-hero nr-reveal">
     <div class="nr-eyebrow"><b>Live</b><span>Newsroom · This Week</span></div>
     <h1 class="nr-title">THIS WEEK<br>AT ENN</h1>
-    <p class="nr-lede">The desk is live. Here's what's due, who's on the anchor chair, and this week's challenge. Broadcast runs Monday–Thursday, 10:31–10:41 AM.</p>
+    <p class="nr-lede">The desk is live. Here's what every group's working on next, your own timeline, and who's on the anchor chair. Broadcast runs Monday–Thursday, 10:31–10:41 AM.</p>
   </section>
 
   <!-- Personal dashboard — only appears when someone signed in with a
@@ -76,23 +76,20 @@
   <!-- The six sections -->
   <h2 class="nr-h2 nr-reveal">Explore the Newsroom</h2>
   <div class="nr-grid nr-stagger">
-    <a class="nr-tile" href="/newsroom/calendar/"><div class="k">00 · When you air</div><h3>Calendar</h3><p>The full Fall 2026 bulletin schedule — all 60 shows, color-coded by period.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/submit/"><div class="k">01 · Turn it in</div><h3>Submit</h3><p>Drop your piece, run the pre-submit checklist, beat the deadline.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/make/"><div class="k">02 · Build it</div><h3>Make</h3><p>Piece guides, the idea bank, templates, brand kit, gear how-tos.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/learn/"><div class="k">03 · Get better</div><h3>Learn</h3><p>Lessons, the weekly challenge, and the grading rubric in the open.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/studio/"><div class="k">04 · Run it</div><h3>Studio</h3><p>Role hubs, equipment checkout, room booking, the daily rundown.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/newsroom/"><div class="k">05 · The desk</div><h3>Newsroom</h3><p>Pitch board, announcements, standards, release forms, tip line.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/crew/"><div class="k">06 · Who's who</div><h3>The Crew</h3><p>Every production group and leadership role, across all three periods.</p><span class="go">→</span></a>
-    <a class="nr-tile" href="/newsroom/make/#brand"><div class="k">07 · Look right</div><h3>Brand Kit</h3><p>Logos, lower thirds, stingers, fonts, colors, safe-title guidance.</p><span class="go">→</span></a>
-    <a class="nr-tile" id="tile-money" href="/newsroom/money-engine/"><div class="k">08 · Backend · Restricted 🔒</div><h3>Money Engine</h3><p>The full ENN revenue model as an interactive 3D pitch tool. Access code required.</p><span class="go">→</span></a>
+    <a class="nr-tile" data-sec="pageCalendar" href="/newsroom/calendar/"><div class="k">01 · When you air</div><h3>Calendar</h3><p>The full Fall 2026 bulletin schedule — every show, color-coded by period.</p><span class="go">→</span></a>
+    <a class="nr-tile" data-sec="pageSubmit" href="/newsroom/submit/"><div class="k">02 · Turn it in</div><h3>Submit</h3><p>Drop your piece, run the pre-submit checklist, beat the deadline.</p><span class="go">→</span></a>
+    <a class="nr-tile" data-sec="pageMake" href="/newsroom/make/"><div class="k">03 · Build it</div><h3>Make</h3><p>Piece guides, the idea bank, templates, brand kit, gear how-tos.</p><span class="go">→</span></a>
+    <a class="nr-tile" data-sec="pageStudio" href="/newsroom/studio/"><div class="k">04 · Run it</div><h3>Studio</h3><p>Role hubs, equipment checkout, room booking, the daily rundown.</p><span class="go">→</span></a>
+    <a class="nr-tile" data-sec="pageCrew" href="/newsroom/crew/"><div class="k">05 · Who's who</div><h3>The Crew</h3><p>Every production group and leadership role, across all three periods.</p><span class="go">→</span></a>
+    <a class="nr-tile" data-sec="pageMake" href="/newsroom/make/#brand"><div class="k">06 · Look right</div><h3>Brand Kit</h3><p>Logos, lower thirds, stingers, fonts, colors, safe-title guidance.</p><span class="go">→</span></a>
   </div>
 
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=12"></script>
-<script src="/newsroom/text.js?v=12"></script>
-<script src="/newsroom/assets/hub.js?v=12"></script>
+<script src="/newsroom/boards.js?v=15"></script>
+<script src="/newsroom/text.js?v=15"></script>
+<script src="/newsroom/assets/hub.js?v=15"></script>
 <script>
 /* Countdown to the next real bulletin.
    Reads EDIT/21-BULLETINS.js, so it counts to a day the show actually
