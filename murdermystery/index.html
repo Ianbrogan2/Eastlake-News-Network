@@ -281,6 +281,31 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
 @keyframes hp{50%{opacity:1}}
 .progress i{transition:background .3s}
 
+/* difficulty label on each exhibit */
+.eyebrow .level{color:var(--red-deep);font-weight:700}
+
+/* staged leads + skip */
+.leads{margin-top:16px;display:flex;flex-direction:column;gap:0}
+.hintbox{margin-bottom:12px;animation:swapIn .32s cubic-bezier(.2,.8,.2,1)}
+.hintbox .inner{border-left:3px solid var(--brass);background:rgba(200,162,74,.13);padding:10px 14px;border-radius:0 6px 6px 0}
+.hintbox .inner .lab{font-family:"Oswald",sans-serif;font-weight:600;font-size:10px;letter-spacing:.2em;color:var(--brass-soft);text-transform:uppercase}
+.hintbox .inner .txt{font-family:"Caveat",cursive;font-size:20px;color:var(--ink-soft);line-height:1.35}
+.hintbtn{display:inline-flex;align-items:center;gap:8px;margin-top:2px}
+.hintbtn .cost{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.02em;color:var(--red-deep);
+  text-decoration:none;border:1px solid rgba(168,17,36,.4);border-radius:20px;padding:1px 8px}
+.hintbtn.skip{color:var(--ink-soft);text-decoration-color:var(--ink-soft)}
+.hintbtn.skip .cost{color:var(--ink-soft);border-color:rgba(74,68,55,.4)}
+
+/* skipped state (like solved, but amber warning) */
+.tag.warn{background:var(--brass-soft)}
+.logged.skip{color:var(--brass-soft);border-color:var(--brass-soft);letter-spacing:.2em}
+.exhibit.skipped .det-say::before{background:var(--brass);opacity:.85}
+
+/* score ding when a lead/skip is taken */
+.hud.ding{animation:ding .5s ease}
+@keyframes ding{0%{transform:scale(1)}22%{transform:scale(1.08)}100%{transform:scale(1)}}
+.hud.ding .score{color:var(--red)}
+
 /* ══════════ suspect lineup on the win screen ══════════ */
 .lineup{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0 6px}
 .mug{position:relative;background:#fbf8ef;border:1px solid var(--paper-shadow);border-radius:7px;
@@ -399,7 +424,7 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
   <section class="view hidden" id="view-board" role="tabpanel" aria-labelledby="tab-board">
     <div class="board-head">
       <h2>THE BOARD</h2>
-      <span class="h-note">fastest to close the case sits up top</span>
+      <span class="h-note">highest score sits up top — fast, and no leads</span>
     </div>
     <ul class="lb" id="lbList"></ul>
     <div class="admin-bar">
@@ -453,42 +478,53 @@ const CONFIG = {
     "<p class='note'>Clock&rsquo;s been running since you scanned. Open the file and let&rsquo;s move.</p>"
   ].join(""),
 
-  // Each question: prompt (I tell you what to find) + hint + right/wrong (I react).
+  // Each question: prompt (I pose it) + two staged hints + skip (I explain it) + right/wrong.
+  // level is just a difficulty label shown to the player. The ramp goes easy -> hard.
   // Answer matching ignores case, spaces, $, colons &mdash; list a few forms to be safe.
   questions: [
-    { tag:"CODE 1 &middot; THE POT",
-      prompt:"Start with the money &mdash; you always start with the money. The whole pot vanished with the account. Read the case file up top and tell me, to the dollar, how much walked out the door.",
-      hint:"Case file, the <b>SUBJECT</b> line. It&rsquo;s the round number the whole class has been screaming about.",
-      right:"That&rsquo;s the number. Three grand, gone clean. Now let&rsquo;s find out where it went.",
-      wrong:"Not it. Case file, the SUBJECT line &mdash; give me the pot to the dollar.",
+    { tag:"CODE 1 &middot; THE POT", level:"Easy",
+      prompt:"Every case starts with the money. The whole pot walked off with the account &mdash; and I need the exact figure before we go anywhere. Read the file and tell me what vanished.",
+      hint:"It&rsquo;s printed on the case file up top. Find the <b>SUBJECT</b> line.",
+      hint2:"Round number, four digits &mdash; the same figure the whole class has been yelling about since the account went dark.",
+      skip:"The case file&rsquo;s SUBJECT line reads &lsquo;Unpaid tournament funds, $3,000.&rsquo; The pot we&rsquo;re chasing is <b>$3,000</b>.",
+      right:"That&rsquo;s the number. Three grand, gone clean. Now &mdash; where did it go?",
+      wrong:"That&rsquo;s not the pot. Read it off the file, to the dollar.",
       answers:["$3,000","3000","3,000","$3000","3 000","three thousand"] },
 
-    { tag:"CODE 2 &middot; THE HANDLE",
-      prompt:"Sixty buy-ins, one account. Everybody CashApp&rsquo;d the exact same handle. Pull the receipt off the board and give me the <b>@</b> the pot got paid into.",
-      hint:"The CashApp receipt &mdash; the <b>To:</b> line. Same name the tournament ran under. Starts with a dollar sign; I don&rsquo;t care if you type that part.",
+    { tag:"CODE 2 &middot; THE TRAIL", level:"Warmer",
+      prompt:"Three hundred buy-ins, and every dollar funneled into one account nobody can put a face to. Follow the money off the board and give me the exact handle the pot got paid into.",
+      hint:"There&rsquo;s a CashApp receipt pinned to the board. Somebody sent money &mdash; the question is <i>to whom.</i>",
+      hint2:"Read the <b>To:</b> line on that receipt. It&rsquo;s the same name the whole tournament ran under &mdash; the dollar sign in front doesn&rsquo;t matter.",
+      skip:"The CashApp receipt&rsquo;s <b>To:</b> line is <b>$lakeassassin27</b> &mdash; same name as the Instagram account. That&rsquo;s where all $3,000 landed. Answer: <b>lakeassassin27</b>.",
       right:"There it is &mdash; <b>lakeassassin27</b>. Anonymous on purpose. Whoever&rsquo;s behind that handle is sitting on the whole pot.",
-      wrong:"Look at the CashApp receipt again &mdash; the &lsquo;To:&rsquo; line. Type the handle just like the board has it.",
+      wrong:"Not the name I want. Find the CashApp receipt and read who the money went <i>to</i>.",
       answers:["lakeassassin27","$lakeassassin27","lakeassassin","lakeseniorassasin27","lakeseniorassassin27"] },
 
-    { tag:"CODE 3 &middot; THE SHORTFALL",
-      prompt:"Aaden Limon&rsquo;s swearing up and down he paid his buy-in in full. His own receipt is pinned right next to his face. What did he <b>actually</b> send?",
-      hint:"The CashApp receipt from <b>Saaden_lemons_12</b> &mdash; that&rsquo;s Aaden. Read the big number at the top.",
-      right:"Thirty bucks &mdash; nowhere near what he owed, and lying about it. He&rsquo;s dirty, sure. But a guy who <i>underpays</i> the pot isn&rsquo;t the guy who took it. Keep moving.",
-      wrong:"Check the receipt with his handle on it &mdash; Saaden_lemons_12. The big number up top is what he really sent.",
-      answers:["$30","30","$30.00","30.00","thirty"] },
+    { tag:"CODE 3 &middot; THE GAP", level:"Tricky",
+      prompt:"Miles Filamor swears he was knocked out around <b>9:15</b> that night. The Week&nbsp;2 bracket update logs his elimination a lot later. I don&rsquo;t want the logged time &mdash; I want the <b>gap</b>. How much time is missing between his story and the log?",
+      hint:"Two times, two exhibits. His <i>claimed</i> time is on his suspect card; the <i>logged</i> time is on the Week 2 bracket update photo.",
+      hint2:"Claimed 9:15 PM. Logged 11:45 PM. Subtract one from the other &mdash; give it to me in hours and minutes.",
+      skip:"9:15 PM to 11:45 PM is <b>2 hours 30 minutes</b>. That&rsquo;s the stretch nobody can explain &mdash; somebody kept his name alive in the bracket after he says he was out. Answer: <b>2:30</b>.",
+      right:"Two and a half hours unaccounted for. Somebody sat on his elimination &mdash; which makes Miles a victim, not the thief. Keep pulling.",
+      wrong:"That&rsquo;s not the gap. Take the logged time, subtract when he says he was out. Hours and minutes.",
+      answers:["2:30","230","2 hours 30 minutes","2hr30","2h30","2hrs30","2 hrs 30 min","150","150 minutes","150min","2 30"] },
 
-    { tag:"CODE 4 &middot; THE GAP",
-      prompt:"Miles Filamor says he got knocked out around 9:15 that night. Evidence E2 says he was still logged in a whole lot later. Give me the time the log actually puts him at.",
-      hint:"Miles Filamor&rsquo;s suspect card, the <b>LOGGED TIME</b> line. It&rsquo;s a hair before midnight.",
-      right:"11:45. Two and a half hours after he claims he was out. Somebody fudged his bracket &mdash; which makes him a victim, not the thief. One card left.",
-      wrong:"His suspect card, the &lsquo;LOGGED TIME&rsquo; line. Read it straight off the board &mdash; hours and minutes.",
-      answers:["11:45 PM","11:45","1145","11:45pm","1145pm"] },
+    { tag:"CODE 4 &middot; THE SAME NIGHT", level:"Hard",
+      prompt:"Here&rsquo;s where it turns. That bracket got quietly edited at <b>11:45 PM</b>. Earlier the <i>same night</i>, somebody was already in the DMs planting the &lsquo;it&rsquo;s ASB&rsquo; story &mdash; steering blame before the bracket even moved. How long <b>before</b> the edit did that message go out?",
+      hint:"Two timestamps, same date &mdash; Aug 16. One&rsquo;s on the bracket update; the other&rsquo;s on the Instagram DM.",
+      hint2:"The DM posted at 10:02 PM. The bracket was edited at 11:45 PM. How much time sits between them?",
+      skip:"The &lsquo;blame ASB&rsquo; DM went out at 10:02 PM; the bracket was rigged at 11:45 PM &mdash; same night. That&rsquo;s <b>1 hour 43 minutes</b> earlier. The account&rsquo;s loudest defender was working the story <i>before</i> the crime. Answer: <b>1:43</b>.",
+      right:"One hour, forty-three minutes <i>before</i> the bracket moved. Whoever sent that DM wasn&rsquo;t reacting &mdash; they were getting ahead of it. That&rsquo;s not a bystander.",
+      wrong:"Off. Find the DM&rsquo;s time and the bracket edit&rsquo;s time &mdash; same night &mdash; and give me the gap between them.",
+      answers:["1:43","143","1 hour 43 minutes","1hr43","1h43","1hrs43","1 hr 43 min","103","103 minutes","103min","1 43"] },
 
-    { tag:"CODE 5 &middot; THE DEFLECTION",
-      prompt:"Here&rsquo;s the tell. Three players lost money and they&rsquo;re furious about it. One player lost nothing &mdash; and won&rsquo;t stop insisting it&rsquo;s &lsquo;someone in ASB.&rsquo; No proof. Just noise. Guilty people build you a suspect. Log <b>his Player ID</b> and we close this.",
-      hint:"The DM screenshot &mdash; <b>@myles_rey07</b>, &lsquo;it&rsquo;s someone in ASB.&rsquo; Match it to his suspect card and read the Player ID.",
-      right:"PLR-07. Myles Reyes. That&rsquo;s our man.",
-      wrong:"Find the DM that says &lsquo;it&rsquo;s someone in ASB&rsquo; &mdash; @myles_rey07. His suspect card has the Player ID. That&rsquo;s the one I want.",
+    { tag:"CODE 5 &middot; THE ACCUSATION", level:"Hard",
+      prompt:"You&rsquo;ve got the account, the money, and a timeline that only points one way. Three of these players lost, and they&rsquo;re loud about it. One never lost a thing &mdash; and spent every breath aiming you at a suspect who doesn&rsquo;t exist. Name him the only way that&rsquo;ll hold up: give me his <b>Player ID</b>.",
+      hint:"Whoever sent that 10:02 PM DM is the one steering everything toward &lsquo;ASB.&rsquo; Start by finding that handle.",
+      hint2:"The DM is from <b>@myles_rey07</b> &mdash; Myles Reyes. Match that name to a suspect card and read the Player ID off it.",
+      skip:"The DM handle @myles_rey07 belongs to <b>Myles Reyes</b>, and his suspect card reads <b>PLR-07</b>. He ran the account, took the pot, and invented &lsquo;ASB&rsquo; to keep your eyes off him. Answer: <b>PLR-07</b>.",
+      right:"PLR-07. Myles Reyes. That&rsquo;s our man &mdash; close it.",
+      wrong:"Not him. The one who never lost, the one steering you at &lsquo;ASB&rsquo; &mdash; match the DM handle to a card and read the ID.",
       answers:["PLR-07","PLR07","07","7","plr 07","plr-7"] }
   ],
 
@@ -521,9 +557,20 @@ function isCorrect(q, raw){
   return v === norm(q.answer);
 }
 const mmss = s => String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-const scoreOf = s => Math.max(0, 1000 - s);
 
-let idx = 0, startAt = null, timer = null, elapsed = 0, done = false, adminOn = false, lastEntryId = null;
+/* ---------- scoring ----------
+   Start at BASE. Time drains slowly (1 point every TIME_DIV seconds) so a puzzle
+   you actually have to think about doesn't nuke your score. Leads and skips cost
+   a flat chunk each, tracked in `deductions`. */
+const BASE_SCORE = 1000;
+const TIME_DIV   = 5;                 // lose 1 pt every 5 seconds (gentle: real play is 8-15 min)
+const HINT1_COST = 40, HINT2_COST = 60, SKIP_COST = 150;
+const FINISH_FLOOR = 100;             // finishing the case never scores below this
+let deductions = 0;                   // running total from leads + skips
+const scoreNow = s => Math.max(0, BASE_SCORE - Math.floor(s/TIME_DIV) - deductions);
+
+let idx = 0, startAt = null, timer = null, elapsed = 0, done = false, adminOn = false, lastEntryId = null, finalScore = 0;
+let qState = null;                    // per-question lead/skip stage
 
 /* ---------- storage ---------- */
 function loadBoard(){ try{ return JSON.parse(localStorage.getItem(LB_KEY)) || []; }catch(e){ return []; } }
@@ -553,9 +600,16 @@ function startTimer(){
     elapsed = Math.floor((Date.now()-startAt)/1000);
     const c = $("#hudClock"); c.textContent = mmss(elapsed);
     c.classList.remove("tick"); void c.offsetWidth; c.classList.add("tick");
-    $("#hudScore").textContent = scoreOf(elapsed);
-    $("#hud").classList.toggle("hot", elapsed>=180);
+    $("#hudScore").textContent = scoreNow(elapsed);
+    $("#hud").classList.toggle("hot", scoreNow(elapsed)<=400);
   },1000);
+}
+/* recompute + flash the live score after a lead/skip deduction */
+function flashScore(){
+  if(startAt) elapsed = Math.floor((Date.now()-startAt)/1000);
+  const el = $("#hudScore"); if(!el) return;
+  el.textContent = scoreNow(elapsed);
+  const hud = $("#hud"); hud.classList.remove("ding"); void hud.offsetWidth; hud.classList.add("ding");
 }
 function stopTimer(){ clearInterval(timer); elapsed = Math.floor((Date.now()-startAt)/1000); }
 
@@ -570,6 +624,7 @@ function progressBar(solvedCurrent){
 }
 function renderQuestion(){
   const q = CONFIG.questions[idx];
+  qState = { stage:0 };   // 0 none, 1 lead shown, 2 both leads shown, 3 skipped
   const slot = $("#exhibitSlot");
   slot.innerHTML = `
     <div class="exhibit">
@@ -577,7 +632,7 @@ function renderQuestion(){
         <span class="tag">${q.tag}</span>
         ${progressBar()}
       </div>
-      <div class="eyebrow">Evidence ${idx+1} of ${CONFIG.questions.length}</div>
+      <div class="eyebrow">Evidence ${idx+1} of ${CONFIG.questions.length}${q.level?` &middot; <span class="level">${q.level}</span>`:""}</div>
       <p class="det-say prompt">${q.prompt}<span class="sig">&mdash; Det.</span></p>
       <div class="answer-row">
         <input class="code-in" id="ans" autocomplete="off" spellcheck="false"
@@ -585,21 +640,52 @@ function renderQuestion(){
         <button class="btn btn-primary" id="ansBtn">Log it</button>
       </div>
       <div class="err" id="ansErr"></div>
-      <button class="hintbtn" id="hintBtn" aria-expanded="false">Stuck? Ask me for a lead \u2193</button>
-      <div class="hint" id="hint"><div class="inner">
-        <div class="lab">Detective&rsquo;s note</div>
-        <div class="txt">${q.hint}</div>
-      </div></div>
+      <div class="leads" id="leads"></div>
     </div>`;
   $("#exhibitFile").classList.remove("swap-enter"); void $("#exhibitFile").offsetWidth;
   $("#exhibitFile").classList.add("swap-enter");
   const input = $("#ans"); input.focus();
   $("#ansBtn").onclick = check;
   input.addEventListener("keydown", e=>{ if(e.key==="Enter") check(); });
-  $("#hintBtn").onclick = ()=>{
-    const h=$("#hint"), b=$("#hintBtn"), open=h.classList.toggle("open");
-    b.setAttribute("aria-expanded",open); b.textContent = open ? "Cover it back up \u2191" : "Stuck? Ask me for a lead \u2193";
-  };
+  renderLeads();
+}
+/* staged leads: hint 1 (-40) -> hint 2 (-60) -> reveal & skip (-150) */
+function renderLeads(){
+  const q = CONFIG.questions[idx];
+  const box = $("#leads"); if(!box) return;
+  let h = "";
+  if(qState.stage>=1) h += `<div class="hintbox"><div class="inner"><div class="lab">Lead 1 &middot; &minus;${HINT1_COST}</div><div class="txt">${q.hint}</div></div></div>`;
+  if(qState.stage>=2) h += `<div class="hintbox"><div class="inner"><div class="lab">Lead 2 &middot; &minus;${HINT2_COST}</div><div class="txt">${q.hint2}</div></div></div>`;
+  if(qState.stage===0)      h += `<button class="hintbtn" id="leadBtn">Stuck? Ask me for a lead <span class="cost">&minus;${HINT1_COST}</span></button>`;
+  else if(qState.stage===1) h += `<button class="hintbtn" id="leadBtn">Still stuck? One more lead <span class="cost">&minus;${HINT2_COST}</span></button>`;
+  else if(qState.stage===2) h += `<button class="hintbtn skip" id="leadBtn">Can&rsquo;t crack it? Reveal &amp; skip <span class="cost">&minus;${SKIP_COST}</span></button>`;
+  box.innerHTML = h;
+  const lb = $("#leadBtn");
+  if(lb) lb.onclick = takeLead;
+}
+function takeLead(){
+  if(qState.stage===0){ deductions += HINT1_COST; qState.stage=1; flashScore(); renderLeads(); const a=$("#ans"); if(a) a.focus(); }
+  else if(qState.stage===1){ deductions += HINT2_COST; qState.stage=2; flashScore(); renderLeads(); const a=$("#ans"); if(a) a.focus(); }
+  else if(qState.stage===2){ deductions += SKIP_COST; qState.stage=3; flashScore(); showSkipped(CONFIG.questions[idx]); }
+}
+/* skip: I just tell them the answer + why, then move on. No solve credit. */
+function showSkipped(q){
+  const last = idx >= CONFIG.questions.length-1;
+  const slot = $("#exhibitSlot");
+  slot.innerHTML = `
+    <div class="exhibit solved skipped">
+      <div class="meta">
+        <span class="tag warn">${q.tag}</span>
+        ${progressBar(true)}
+      </div>
+      <div class="logged skip"><span class="chk">\u26a0</span> SKIPPED &middot; &minus;${SKIP_COST}</div>
+      <p class="det-say">${q.skip}<span class="sig">&mdash; Det.</span></p>
+      <button class="btn btn-primary" id="nextBtn">${last?"Close the case \u2192":"Next lead \u2192"}</button>
+    </div>`;
+  $("#exhibitFile").classList.remove("swap-enter"); void $("#exhibitFile").offsetWidth;
+  $("#exhibitFile").classList.add("swap-enter");
+  const nb = $("#nextBtn"); nb.focus();
+  nb.onclick = ()=>{ if(last){ finish(); } else { idx++; renderQuestion(); } };
 }
 function check(){
   const q = CONFIG.questions[idx];
@@ -642,7 +728,7 @@ function showSolved(q){
 $("#startBtn").onclick = ()=>{
   $("#screen-intro").classList.add("hidden");
   $("#screen-invest").classList.remove("hidden");
-  idx=0; done=false; startTimer(); renderQuestion();
+  idx=0; done=false; deductions=0; startTimer(); renderQuestion();
 };
 function finish(){
   done=true; stopTimer();
@@ -652,8 +738,9 @@ function finish(){
   $("#verdictLine").innerHTML = CONFIG.win.verdict;
   renderLineup();
   $("#resultBlurb").innerHTML = CONFIG.win.blurb;
+  finalScore = Math.max(FINISH_FLOOR, scoreNow(elapsed));   // finishing always beats a DNF
   $("#rTime").textContent = mmss(elapsed);
-  $("#rScore").textContent = scoreOf(elapsed);
+  $("#rScore").textContent = finalScore;
   $("#nameIn").focus();
 }
 /* suspect lineup on the win screen &mdash; the guilty one gets stamped last */
@@ -675,7 +762,7 @@ function renderLineup(){
 $("#submitScoreBtn").onclick = ()=>{
   const name = $("#nameIn").value.trim();
   if(!name){ $("#nameErr").textContent="Sign the file before posting."; $("#nameIn").focus(); return; }
-  const entry = { id: "e"+Date.now()+Math.floor(Math.random()*1000), name, seconds: elapsed, score: scoreOf(elapsed), ts: Date.now() };
+  const entry = { id: "e"+Date.now()+Math.floor(Math.random()*1000), name, seconds: elapsed, score: finalScore, ts: Date.now() };
   const board = loadBoard(); board.push(entry); saveBoard(board);
   lastEntryId = entry.id;
   showTab("board");
@@ -684,7 +771,8 @@ $("#submitScoreBtn").onclick = ()=>{
 
 /* ---------- leaderboard ---------- */
 function renderBoard(){
-  const board = loadBoard().slice().sort((a,b)=> a.seconds-b.seconds || a.ts-b.ts);
+  // rank by SCORE (so leads/skips actually cost you placement), tie-break on faster time
+  const board = loadBoard().slice().sort((a,b)=> (b.score||0)-(a.score||0) || a.seconds-b.seconds || a.ts-b.ts);
   const list = $("#lbList");
   if(!board.length){ list.innerHTML = `<div class="empty">No one has closed the case yet. Be the first name on the Board.</div>`; return; }
   list.innerHTML = board.map((e,i)=>{
@@ -749,12 +837,12 @@ $("#exportBtn").onclick = ()=>{
   }
   tick(); setInterval(tick,1000);
   var items=[
-    "NEON OUT &mdash; Titans host Morse High this Friday. Wear the brightest neon and light up the stands!",
-    "Homecoming voting is open &mdash; vote your Top Ten court on Jupiter",
-    "Love Lines Episode 2 is live &mdash; new episode out now",
+    "Homecoming Top 5 court voting is coming soon &mdash; keep an eye out for the ballot",
+    "Submit your Love Lines on the Contact page &mdash; it might get read live on the bulletin",
+    "2026&ndash;27 yearbooks are on sale &mdash; $90 now, going up to $95 on Oct 12",
     "Free zero-period peer tutoring &mdash; Library, Monday through Thursday mornings",
     "Parking permits are now required &mdash; get the info at the front office",
-    "A brand-new chapter is coming to eastlakenewsnetwork.com&hellip;"
+    "The Edge is here &mdash; grab the paper, scan the case, and close it before anyone else"
   ];
   var mv=document.getElementById("ennTkMove");
   if(mv){ var h=items.map(function(t){return '<span class="it">'+t+'</span>';}).join(""); mv.innerHTML=h+h; }

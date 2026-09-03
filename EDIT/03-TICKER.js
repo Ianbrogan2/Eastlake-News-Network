@@ -25,11 +25,10 @@
 // automatically from the Athletics schedule (EDIT/25-ATHLETICS.js) — you
 // don't need to add games here by hand.
 var ENN_TICKER = [
-  { k: 'Big Game',    t: '✨ NEON OUT — Titans host Morse High this Friday. Wear the brightest neon you own and light up the stands!' },
-  { k: 'Homecoming',  t: 'Homecoming voting starts TOMORROW — vote for your Top Ten court on Jupiter!' },
-  { k: 'ENN',         t: 'Love Lines Episode 2 drops tomorrow — the new episode goes live Thursday. Don\'t miss it.' },
-  { k: 'Campus',      t: 'Free zero-period peer tutoring is live — Library, Monday through Thursday mornings. Any subject, just drop in.' },
+  { k: 'Homecoming',  t: 'Homecoming Top 5 court voting is coming soon — keep an eye out for the ballot.' },
+  { k: 'ENN',         t: 'Submit your Love Lines on the Contact page — shoutouts, thank-yous, and crushes may be read live on the bulletin.' },
+  { k: 'Yearbook',    t: '2026–27 yearbooks are on sale — $90 now, going up to $95 on Oct 12. Order on Jostens.' },
+  { k: 'Campus',      t: 'Free zero-period peer tutoring — Library, Monday through Thursday mornings. Any subject, just drop in.' },
   { k: 'Campus',      t: 'Parking permits are now officially required — get all the info you need at the front office.' },
-  { k: 'Coming Soon', t: 'A brand-new chapter is coming to eastlakenewsnetwork.com… keep your eyes on the site.' },
   { k: 'Join',        t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN' },
 ];

@@ -21,21 +21,21 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_NEWS = {
   featured: {
-    tag: 'Friday Night Lights',
-    title: 'Neon Out: Titans Host Morse This Friday',
-    body: 'Coming off a 28–0 Boot Bonita shutout, the Titans are back home this Friday, Aug 28 to take on Morse High — and the student section is going NEON OUT. Wear the brightest neon you own, pack the stands, and get loud. Kickoff is 7:00 PM at Eastlake.',
-    byline: 'REPORTED BY TEAM ENN · WEDNESDAY, AUG 26, 2026'
+    tag: 'Homecoming',
+    title: 'Homecoming Season Is Here — Top 5 Court Voting Coming Soon',
+    body: 'Spirit season is officially underway at Eastlake. Top 5 court voting is coming soon — keep an eye out for the ballot and start rallying behind your picks. More Homecoming details, dress-up days, and the dance are on the way, so stay tuned to ENN.',
+    byline: 'REPORTED BY TEAM ENN · WEDNESDAY, SEP 2, 2026'
   },
   sidebar: [
     {
-      cat: 'Homecoming',
-      title: 'Homecoming voting starts tomorrow — vote for your Top Ten court on Jupiter starting Thursday.',
-      date: 'Starts Thu'
+      cat: 'ENN',
+      title: 'Submit your Love Lines on the Contact page — shoutouts, thank-yous, and crushes may be read live on the bulletin.',
+      date: 'Open'
     },
     {
-      cat: 'ENN',
-      title: 'Love Lines Episode 2 is live tomorrow — the new episode drops Thursday. Don\'t miss it.',
-      date: 'Thu'
+      cat: 'Yearbook',
+      title: '2026–27 yearbooks are on sale now — $90 through Oct 11, then $95. Order on Jostens.',
+      date: '$90 now'
     },
     {
       cat: 'Campus',
