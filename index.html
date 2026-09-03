@@ -362,10 +362,18 @@
 <script src="js/clock.js?v=3"></script>
 <script src="js/main.js?v=24"></script>
 
-<!-- "The Edge" nav button auto-appears once that page is live at THE_EDGE_URL. -->
+<!-- ══════════════════════════════════════════════════════════════════
+     "The Edge" LAUNCH SWITCH
+     The Edge page is built and ready at /theedge/ but kept OFF for now.
+     TO PUT IT LIVE: change  EDGE_LIVE = false  to  EDGE_LIVE = true  below,
+     then push. The "The Edge" button appears in the nav automatically.
+     (While false, the button stays hidden even though the page exists.)
+     ══════════════════════════════════════════════════════════════════ -->
 <script>
 (function(){
-  var THE_EDGE_URL = '/theedge/';   // ← set this to the real Edge page path once it's live
+  var EDGE_LIVE = false;            // ← flip to true to launch The Edge
+  if(!EDGE_LIVE) return;
+  var THE_EDGE_URL = '/theedge/';
   fetch(THE_EDGE_URL, {method:'HEAD'}).then(function(r){
     if(!r.ok) return;
     ['nav-theedge','mnav-theedge'].forEach(function(id){

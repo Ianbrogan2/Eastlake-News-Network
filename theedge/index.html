@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Edge — Eastlake News Network</title>
+<meta name="description" content="The Eastlake Edge — Eastlake High School's student newspaper. Read every issue.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Special+Elite&family=Caveat:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --board:#0d0f12; --board-2:#121519; --panel:#191d23; --line:#2c313a;
+  --paper:#e9e2d0; --paper-edge:#d8c9a4; --paper-shadow:#b7a878;
+  --ink:#1c1a17; --ink-soft:#4a4437;
+  --report:#d8d3c6; --report-mute:#8b8577;
+  --red:#d7263d; --red-deep:#a81124; --red-glow:rgba(215,38,61,.5);
+  --brass:#c8a24a; --brass-soft:#8a7434;
+  --blue:#1A56DB; --green:#16A34A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;background:var(--board);color:var(--report);
+  font-family:"Special Elite","Courier New",monospace;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;padding-bottom:48px;
+}
+/* film grain + vignette */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(60,66,78,.20), transparent 44%),
+    radial-gradient(circle at 84% 88%, rgba(60,66,78,.15), transparent 46%),
+    radial-gradient(130% 120% at 50% -10%, transparent 52%, rgba(0,0,0,.72) 100%)}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+.wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:0 20px 90px}
+
+/* ══════════ ENN nav chrome ══════════ */
+.enn-nav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  background:rgba(5,5,9,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);padding:10px 20px}
+.enn-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.enn-logo-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:8px;color:#fff;
+  font-family:"Oswald",sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;
+  background:linear-gradient(135deg,var(--blue),var(--green));box-shadow:0 3px 12px rgba(26,86,219,.35)}
+.enn-logo-txt{display:flex;flex-direction:column;line-height:1}
+.enn-logo-txt b{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.16em;font-size:17px;color:#fff}
+.enn-logo-txt small{font-family:"Oswald",sans-serif;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:3px}
+.enn-links{display:flex;gap:2px;flex-wrap:wrap}
+.enn-links a{font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.07em;font-size:12.5px;color:rgba(255,255,255,.6);
+  text-decoration:none;text-transform:uppercase;padding:8px 12px;border-radius:6px;transition:background .15s,color .15s}
+.enn-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.enn-links a.enn-cur{color:#fff;background:linear-gradient(92deg,var(--blue),var(--green))}
+.enn-navr{margin-left:auto;display:flex;align-items:center;gap:12px}
+.enn-clock{font-family:"Space Mono",monospace;font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px}
+.enn-clock i{font-style:normal;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.4)}
+.enn-clock b{color:#fff;font-variant-numeric:tabular-nums}
+.enn-onair{display:flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:5px 11px}
+.enn-onair b{font-family:"Oswald",sans-serif;font-weight:600;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#fff}
+.enn-onair .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:ennPulse 1.6s infinite}
+.enn-onair.off .dot{background:rgba(255,255,255,.35);box-shadow:none;animation:none}
+@keyframes ennPulse{50%{opacity:.35}}
+
+/* ══════════ hero masthead ══════════ */
+.hero{position:relative;text-align:center;padding:74px 16px 58px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(120% 90% at 50% 0%, rgba(215,38,61,.14), transparent 60%)}
+.hero .eyebrow{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.44em;font-size:12px;
+  color:var(--red);text-transform:uppercase}
+.hero h1{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.02em;margin:10px 0 4px;
+  font-size:clamp(58px,15vw,150px);line-height:.86;color:#f3efe6;
+  text-shadow:0 3px 0 #000,0 0 60px rgba(0,0,0,.7)}
+.hero .paper-name{font-family:"Caveat",cursive;font-size:clamp(22px,4vw,34px);color:var(--brass);transform:rotate(-1.2deg)}
+.hero .tag{max-width:52ch;margin:16px auto 0;color:var(--report-mute);font-size:15px;line-height:1.6}
+.hero .rule{width:120px;height:2px;margin:26px auto 0;background:linear-gradient(90deg,transparent,var(--brass),transparent);opacity:.7}
+
+/* ══════════ play the case feature ══════════ */
+.case-feat{position:relative;margin:6px 0 54px;border-radius:16px;overflow:hidden;
+  border:1px solid var(--line);background:
+    linear-gradient(105deg, rgba(168,17,36,.28), rgba(13,15,18,.6) 58%),
+    var(--board-2);
+  box-shadow:0 28px 60px rgba(0,0,0,.5)}
+.case-feat::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n2'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%25' height='100%25' filter='url(%23n2)'/></svg>")}
+.case-feat .inner{position:relative;z-index:1;display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:30px 34px}
+.case-feat .tape{position:absolute;top:14px;left:-38px;transform:rotate(-38deg);
+  background:var(--red);color:#fff;font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.24em;
+  font-size:10px;padding:5px 44px;text-transform:uppercase;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.case-feat .txt{flex:1;min-width:260px}
+.case-feat .kick{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.26em;font-size:11px;color:var(--red);text-transform:uppercase}
+.case-feat h2{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.02em;font-size:clamp(26px,4.4vw,40px);
+  margin:8px 0 8px;color:#f3efe6;line-height:1}
+.case-feat p{margin:0;color:var(--report);font-size:14.5px;line-height:1.6;max-width:56ch}
+.case-feat .who{font-family:"Caveat",cursive;font-size:19px;color:var(--brass);margin-top:8px}
+
+/* buttons */
+.btn{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;
+  font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  font-size:14px;border-radius:8px;padding:15px 28px;border:1px solid transparent;text-decoration:none;
+  transition:transform .12s ease,box-shadow .2s ease,background .2s}
+.btn-primary{background:var(--red);color:#fff;box-shadow:0 6px 0 var(--red-deep),0 12px 26px var(--red-glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 0 var(--red-deep),0 16px 30px var(--red-glow)}
+.btn-primary:active{transform:translateY(3px);box-shadow:0 2px 0 var(--red-deep)}
+.btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+/* ══════════ archive ══════════ */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:26px}
+.sec-head h2{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.05em;font-size:30px;margin:0;color:#f3efe6}
+.sec-head .count{font-family:"Space Mono",monospace;font-size:12.5px;color:var(--report-mute);letter-spacing:.04em}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.filters button{appearance:none;cursor:pointer;font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;font-size:11.5px;color:var(--report-mute);background:var(--board-2);
+  border:1px solid var(--line);border-radius:20px;padding:7px 15px;transition:.15s}
+.filters button:hover{color:var(--report);border-color:var(--report-mute)}
+.filters button.on{color:#04191d;background:var(--brass);border-color:var(--brass)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(226px,1fr));gap:26px}
+.issue{cursor:pointer;background:none;border:none;padding:0;text-align:left;font:inherit;color:inherit;
+  display:flex;flex-direction:column;gap:12px}
+.issue .coverwrap{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:17/22;
+  box-shadow:0 20px 40px rgba(0,0,0,.5),0 2px 0 var(--paper-shadow);
+  border:1px solid var(--paper-shadow);transition:transform .22s ease,box-shadow .22s ease}
+.issue:hover .coverwrap,.issue:focus-visible .coverwrap{transform:translateY(-6px) rotate(-.5deg);
+  box-shadow:0 30px 56px rgba(0,0,0,.6),0 0 0 1px var(--brass)}
+.issue:focus-visible{outline:none}
+.issue .coverwrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* generated placeholder cover */
+.cover-ph{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;
+  padding:20px 18px;background:linear-gradient(160deg,var(--paper) 0%,#efe9da 55%,var(--paper-edge) 100%);color:var(--ink)}
+.cover-ph .ph-top{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.2em;font-size:9px;color:var(--ink-soft);
+  text-transform:uppercase;display:flex;justify-content:space-between;border-bottom:1.5px solid var(--ink);padding-bottom:8px}
+.cover-ph .ph-name{font-family:"Oswald",sans-serif;font-weight:700;font-size:26px;line-height:.94;letter-spacing:.01em;margin-top:auto}
+.cover-ph .ph-sub{font-family:"Special Elite",monospace;font-size:11px;color:var(--ink-soft);margin-top:8px;line-height:1.4}
+.cover-ph .ph-issue{font-family:"Space Mono",monospace;font-size:11px;color:var(--red-deep);margin-top:12px;
+  border-top:1.5px solid var(--ink);padding-top:8px}
+.issue .badge{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;gap:5px;
+  background:var(--red);color:#fff;font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.1em;
+  font-size:9px;text-transform:uppercase;padding:4px 9px;border-radius:20px;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.issue .read{position:absolute;left:0;right:0;bottom:0;z-index:2;text-align:center;
+  font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.16em;text-transform:uppercase;font-size:11px;color:#fff;
+  padding:12px 8px 11px;background:linear-gradient(0deg,rgba(0,0,0,.78),transparent);opacity:0;transition:opacity .2s}
+.issue:hover .read,.issue:focus-visible .read{opacity:1}
+.issue .meta .t{font-family:"Oswald",sans-serif;font-weight:600;font-size:15px;color:var(--report);letter-spacing:.02em;line-height:1.15}
+.issue .meta .d{font-family:"Space Mono",monospace;font-size:11.5px;color:var(--report-mute);margin-top:3px;letter-spacing:.02em}
+.empty{grid-column:1/-1;text-align:center;padding:60px 16px;border:1px dashed var(--line);border-radius:12px;
+  color:var(--report-mute);font-family:"Special Elite",monospace;line-height:1.7}
+
+/* ══════════ reader overlay (PDF.js) ══════════ */
+.reader{position:fixed;inset:0;z-index:120;display:none;flex-direction:column;
+  background:rgba(6,7,9,.96);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.reader.open{display:flex;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reader-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;
+  border-bottom:1px solid rgba(255,255,255,.08);background:rgba(5,5,9,.7)}
+.reader-bar .r-title{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.04em;color:#f3efe6;font-size:15px}
+.reader-bar .r-title small{display:block;font-family:"Space Mono",monospace;font-weight:400;font-size:10.5px;color:var(--report-mute);letter-spacing:.02em;margin-top:2px}
+.reader-bar .spacer{margin-left:auto}
+.rbtn{appearance:none;cursor:pointer;font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;font-size:12px;color:var(--report);background:var(--board-2);border:1px solid var(--line);
+  border-radius:7px;padding:9px 13px;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.rbtn:hover{color:#fff;border-color:var(--report-mute)}
+.rbtn:disabled{opacity:.35;cursor:default}
+.rbtn.close:hover{border-color:var(--red);color:var(--red)}
+.rbtn.open-full{color:var(--brass);border-color:var(--brass-soft)}
+.r-page{font-family:"Space Mono",monospace;font-size:13px;color:var(--report);min-width:78px;text-align:center;font-variant-numeric:tabular-nums}
+.reader-stage{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:26px 16px 40px}
+.reader-stage canvas{max-width:100%;height:auto;border-radius:3px;
+  box-shadow:0 30px 70px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05);background:#fff}
+.reader-load{color:var(--report-mute);font-family:"Special Elite",monospace;font-size:14px;margin-top:60px;text-align:center;line-height:1.7}
+.reader-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:52px;height:88px;
+  display:grid;place-items:center;cursor:pointer;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);
+  color:#fff;font-size:26px;transition:.15s;user-select:none}
+.reader-nav:hover{background:rgba(215,38,61,.6)}
+.reader-nav.prev{left:10px;border-radius:0 10px 10px 0}
+.reader-nav.next{right:10px;border-radius:10px 0 0 10px}
+.reader-nav[disabled]{opacity:.2;pointer-events:none}
+
+/* ══════════ footer + ticker ══════════ */
+.enn-foot{border-top:1px solid rgba(255,255,255,.08);margin-top:56px;padding:26px 20px 8px;text-align:center;
+  font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.09em;color:rgba(255,255,255,.4);line-height:2.1}
+.enn-foot a{color:rgba(255,255,255,.62);text-decoration:none}
+.enn-foot .l1{color:rgba(255,255,255,.62)}
+.enn-ticker{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;height:40px;overflow:hidden;
+  background:#0A0A10;border-top:1px solid rgba(255,255,255,.08)}
+.enn-tk-lab{display:flex;align-items:center;gap:8px;background:linear-gradient(92deg,var(--blue),var(--green));color:#fff;
+  font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.12em;font-size:11px;text-transform:uppercase;padding:0 16px;height:100%;white-space:nowrap;z-index:2}
+.enn-tk-lab .d{width:8px;height:8px;border-radius:50%;background:#fff;animation:ennPulse 1.4s infinite}
+.enn-tk-track{flex:1;overflow:hidden;position:relative;height:100%}
+.enn-tk-move{position:absolute;top:0;display:flex;align-items:center;height:100%;white-space:nowrap;animation:ennMarq 46s linear infinite;will-change:transform}
+.enn-tk-move .it{font-family:"Special Elite",monospace;font-size:12.5px;color:rgba(255,255,255,.82);padding:0 30px;position:relative}
+.enn-tk-move .it::before{content:"";position:absolute;left:2px;top:50%;width:5px;height:5px;border-radius:50%;background:var(--blue);transform:translateY(-50%)}
+@keyframes ennMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* staging ribbon (only while EDGE is off) */
+.staging{position:fixed;top:64px;left:-52px;z-index:80;transform:rotate(-38deg);
+  background:var(--brass);color:#04191d;font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.16em;
+  font-size:10px;padding:5px 56px;text-transform:uppercase;box-shadow:0 3px 12px rgba(0,0,0,.5)}
+
+@media (max-width:640px){
+  .enn-links{order:3;width:100%;justify-content:flex-start}
+  .enn-navr{margin-left:auto}
+  .hero{padding:52px 12px 40px}
+  .case-feat .inner{padding:26px 22px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     THE EDGE — issue archive.  EDIT YOUR ISSUES in the ISSUES list near
+     the bottom of this file (one block per issue). Everything else is
+     automatic: newest issue sorts to the top, covers fall back to a clean
+     placeholder, and the reader opens the PDF right on the page.
+     ══════════════════════════════════════════════════════════════════ -->
+
+<nav class="enn-nav">
+  <a class="enn-logo" href="https://eastlakenewsnetwork.com/" aria-label="ENN home">
+    <span class="enn-logo-mark">E</span>
+    <span class="enn-logo-txt"><b>ENN</b><small>Eastlake News Network</small></span>
+  </a>
+  <div class="enn-links">
+    <a href="https://eastlakenewsnetwork.com/#home">Home</a>
+    <a href="https://eastlakenewsnetwork.com/#about">About</a>
+    <a href="https://eastlakenewsnetwork.com/#athletics">Athletics</a>
+    <a href="https://eastlakenewsnetwork.com/#yearbook">Yearbook</a>
+    <a class="enn-cur" href="/theedge/" aria-current="page">The Edge</a>
+    <a href="https://eastlakenewsnetwork.com/#calendar">Calendar</a>
+    <a href="https://eastlakenewsnetwork.com/#contact">Contact</a>
+  </div>
+  <div class="enn-navr">
+    <span class="enn-clock"><i>PST</i><b id="ennClock">--:--:--</b></span>
+    <span class="enn-onair" id="ennOnair"><span class="dot"></span><b>On Air</b></span>
+  </div>
+</nav>
+
+<div class="staging" id="stagingRibbon" hidden>Preview &middot; not public</div>
+
+<div class="wrap">
+
+  <!-- ── hero ── -->
+  <header class="hero">
+    <div class="eyebrow">Eastlake News Network</div>
+    <h1>THE EDGE</h1>
+    <div class="paper-name">The Eastlake Edge</div>
+    <p class="tag">Eastlake High&rsquo;s student newspaper &mdash; every issue, digitized and archived. Flip through the latest, or dig back through the stack.</p>
+    <div class="rule"></div>
+  </header>
+
+  <!-- ── play the case feature ── -->
+  <a class="case-feat" href="/murdermystery/" aria-label="Play the Eastlake Assassins case">
+    <span class="tape">The Edge</span>
+    <div class="inner">
+      <div class="txt">
+        <div class="kick">Interactive &middot; From the paper</div>
+        <h2>Play the Case</h2>
+        <p>A $3,000 tournament, an account gone dark, and a thief hiding in plain sight. Scan the corkboard, log the evidence, and close <b>The Eastlake Assassins</b> before anyone else does.</p>
+        <div class="who">start the clock &rarr;</div>
+      </div>
+      <span class="btn btn-primary">Play the Case &rarr;</span>
+    </div>
+  </a>
+
+  <!-- ── archive ── -->
+  <div class="sec-head">
+    <h2>The Archive</h2>
+    <span class="count" id="issueCount"></span>
+  </div>
+  <div class="filters" id="filters" hidden></div>
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- ── reader overlay ── -->
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-label="Newspaper reader">
+  <div class="reader-bar">
+    <div class="r-title" id="rTitle">&nbsp;<small id="rSub">&nbsp;</small></div>
+    <div class="spacer"></div>
+    <button class="rbtn" id="rZoomOut" aria-label="Zoom out">&minus;</button>
+    <button class="rbtn" id="rZoomIn" aria-label="Zoom in">+</button>
+    <a class="rbtn open-full" id="rOpen" target="_blank" rel="noopener">Open full PDF &#8599;</a>
+    <button class="rbtn close" id="rClose" aria-label="Close reader">Close &#10005;</button>
+  </div>
+  <div class="reader-stage" id="rStage" tabindex="-1">
+    <div class="reader-nav prev" id="rPrev" role="button" aria-label="Previous page">&#8249;</div>
+    <div class="reader-load" id="rLoad">Opening the issue&hellip;</div>
+    <canvas id="rCanvas" hidden></canvas>
+    <div class="reader-nav next" id="rNext" role="button" aria-label="Next page">&#8250;</div>
+  </div>
+  <div style="text-align:center;padding:10px;background:rgba(5,5,9,.7);border-top:1px solid rgba(255,255,255,.08)">
+    <span class="r-page" id="rPageLabel">&nbsp;</span>
+  </div>
+</div>
+
+<footer class="enn-foot">
+  <div class="l1">ENN &middot; EASTLAKE NEWS NETWORK &middot; EHS CHULA VISTA</div>
+  <div>BROADCASTING M&ndash;TH &middot; 10:31&ndash;10:41 AM PST &middot; <a href="https://www.youtube.com/@ennbulletin/" target="_blank" rel="noopener">@ENNBULLETIN</a></div>
+  <div>&copy; 2026 ENN &middot; ALL STORIES STUDENT-PRODUCED</div>
+</footer>
+
+<div class="enn-ticker" aria-label="Breaking news ticker">
+  <span class="enn-tk-lab"><span class="d"></span>ENN Breaking</span>
+  <div class="enn-tk-track"><div class="enn-tk-move" id="ennTkMove"></div></div>
+</div>
+
+<!-- PDF.js (Mozilla) from cdnjs for the on-site reader -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   ISSUES  —  EDIT HERE
+   One block per newspaper. Copy a block, paste it above the closing ],
+   and fill it in. Newest sorts to the top automatically (by `date`).
+
+     title : the paper's name (usually keep "The Eastlake Edge")
+     issue : the issue label shown on the cover (e.g. "Issue #9")
+     date  : YYYY-MM-DD  (used for sorting + the date shown)
+     cover : an image in  covers/  (e.g. "covers/issue-9.jpg").
+             Leave "" and a clean placeholder cover is drawn for you.
+     pdf   : the PDF in  issues/  (e.g. "issues/eastlake-edge-issue-9.pdf")
+     hasCase : true only on the issue that carries the murder-mystery
+     blurb : one short line (optional)
+   ══════════════════════════════════════════════════════════════════ */
+const ISSUES = [
+  {
+    title: "The Eastlake Edge",
+    issue: "Issue #9",
+    date:  "2026-08-29",
+    cover: "",
+    pdf:   "issues/eastlake-edge-issue-9.pdf",
+    hasCase: true,
+    blurb: "The Vanished Pot — a case you can crack."
+  }
+  // ,{ title:"The Eastlake Edge", issue:"Issue #10", date:"2026-09-26",
+  //    cover:"", pdf:"issues/eastlake-edge-issue-10.pdf", hasCase:false, blurb:"" }
+];
+/* ════════════════ end of editable list ════════════════ */
+
+const $ = s => document.querySelector(s);
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function parseDate(d){ const p=(d||"").split("-").map(Number); return new Date(p[0]||2000,(p[1]||1)-1,p[2]||1); }
+function fmtDate(d){ const t=parseDate(d); return MONTHS[t.getMonth()]+" "+t.getDate()+", "+t.getFullYear(); }
+function schoolYear(d){ const t=parseDate(d), y=t.getFullYear(); // Aug–Dec = start of that school year
+  return t.getMonth()>=7 ? (y+"–"+String((y+1)%100).padStart(2,"0"))
+                         : ((y-1)+"–"+String(y%100).padStart(2,"0")); }
+function esc(s){ return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+let activeYear = "all";
+
+function sortedIssues(){
+  return ISSUES.slice().sort((a,b)=> parseDate(b.date)-parseDate(a.date));
+}
+function coverHtml(it){
+  if(it.cover) return `<img src="${esc(it.cover)}" alt="${esc(it.title)} ${esc(it.issue)} cover" loading="lazy">`;
+  return `<div class="cover-ph">
+      <div class="ph-top"><span>The Eastlake Edge</span><span>ENN</span></div>
+      <div class="ph-name">THE<br>EDGE</div>
+      <div class="ph-sub">Eastlake&rsquo;s student newspaper</div>
+      <div class="ph-issue">${esc(it.issue||"")} &middot; ${fmtDate(it.date)}</div>
+    </div>`;
+}
+function renderFilters(){
+  const years = [...new Set(sortedIssues().map(it=>schoolYear(it.date)))];
+  const wrap = $("#filters");
+  if(years.length < 2){ wrap.hidden = true; return; }
+  wrap.hidden = false;
+  wrap.innerHTML = `<button data-y="all" class="${activeYear==='all'?'on':''}">All</button>` +
+    years.map(y=>`<button data-y="${y}" class="${activeYear===y?'on':''}">${y}</button>`).join("");
+  wrap.querySelectorAll("button").forEach(b=> b.onclick = ()=>{ activeYear=b.dataset.y; renderFilters(); renderGrid(); });
+}
+function renderGrid(){
+  const grid = $("#grid");
+  let list = sortedIssues();
+  if(activeYear!=="all") list = list.filter(it=>schoolYear(it.date)===activeYear);
+  $("#issueCount").textContent = ISSUES.length ? (ISSUES.length + (ISSUES.length===1?" issue":" issues")) : "";
+  if(!list.length){
+    grid.innerHTML = `<div class="empty">No issues here yet.<br>Add one in the ISSUES list inside this page&rsquo;s code &mdash; it&rsquo;ll appear right here.</div>`;
+    return;
+  }
+  grid.innerHTML = list.map((it,i)=>`
+    <button class="issue" data-i="${ISSUES.indexOf(it)}">
+      <div class="coverwrap">
+        ${it.hasCase?`<span class="badge">&#9873; The Case</span>`:""}
+        ${coverHtml(it)}
+        <span class="read">Read issue &rarr;</span>
+      </div>
+      <div class="meta">
+        <div class="t">${esc(it.issue||it.title)}</div>
+        <div class="d">${fmtDate(it.date)}${it.blurb?" &middot; "+esc(it.blurb):""}</div>
+      </div>
+    </button>`).join("");
+  grid.querySelectorAll(".issue").forEach(b=> b.onclick = ()=> openReader(ISSUES[+b.dataset.i]));
+}
+
+/* ---------- PDF.js reader ---------- */
+const hasPdfjs = !!(window.pdfjsLib);
+if(hasPdfjs){ pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; }
+
+let pdfDoc=null, pageNum=1, zoom=1, rendering=false, pendingPage=null;
+
+function openReader(it){
+  const R=$("#reader");
+  $("#rTitle").childNodes[0].nodeValue = (it.issue||it.title)+"  ";
+  $("#rSub").textContent = fmtDate(it.date);
+  $("#rOpen").href = it.pdf;
+  $("#rCanvas").hidden = true;
+  $("#rLoad").hidden = false;
+  $("#rLoad").textContent = "Opening the issue…";
+  $("#rPageLabel").textContent = "";
+  R.classList.add("open");
+  document.body.style.overflow="hidden";
+  pageNum=1; zoom=1; pdfDoc=null;
+
+  if(!hasPdfjs){                 // graceful fallback: open the raw PDF
+    $("#rLoad").innerHTML = `Reader couldn&rsquo;t load. <a class="rbtn open-full" style="margin-top:12px;display:inline-flex" href="${esc(it.pdf)}" target="_blank" rel="noopener">Open full PDF &#8599;</a>`;
+    return;
+  }
+  pdfjsLib.getDocument(it.pdf).promise.then(doc=>{
+    pdfDoc=doc; renderPage(1);
+  }).catch(err=>{
+    $("#rLoad").innerHTML = `Couldn&rsquo;t open this issue.<br><a class="rbtn open-full" style="margin-top:12px;display:inline-flex" href="${esc(it.pdf)}" target="_blank" rel="noopener">Open full PDF &#8599;</a>`;
+    console.error(err);
+  });
+}
+function renderPage(n){
+  if(!pdfDoc) return;
+  if(rendering){ pendingPage=n; return; }
+  rendering=true;
+  pdfDoc.getPage(n).then(page=>{
+    const stage=$("#rStage");
+    const dpr=Math.min(window.devicePixelRatio||1, 2);
+    const base=page.getViewport({scale:1});
+    const avail=Math.min(stage.clientWidth-32, 900);
+    const fit=Math.max(0.2, avail/base.width);
+    const vp=page.getViewport({scale:fit*zoom*dpr});
+    const canvas=$("#rCanvas"), ctx=canvas.getContext("2d");
+    canvas.width=vp.width; canvas.height=vp.height;
+    canvas.style.width=(vp.width/dpr)+"px"; canvas.style.height=(vp.height/dpr)+"px";
+    return page.render({canvasContext:ctx, viewport:vp}).promise;
+  }).then(()=>{
+    $("#rLoad").hidden=true; $("#rCanvas").hidden=false;
+    $("#rPageLabel").textContent = "Page "+n+" of "+pdfDoc.numPages;
+    $("#rPrev").toggleAttribute("disabled", n<=1);
+    $("#rNext").toggleAttribute("disabled", n>=pdfDoc.numPages);
+    $("#rStage").scrollTop=0;
+    rendering=false;
+    if(pendingPage!==null){ const p=pendingPage; pendingPage=null; renderPage(p); }
+  }).catch(e=>{ rendering=false; console.error(e); });
+}
+function go(delta){ if(!pdfDoc) return; const n=pageNum+delta; if(n<1||n>pdfDoc.numPages) return; pageNum=n; renderPage(n); }
+function setZoom(z){ zoom=Math.min(3,Math.max(.6,+z.toFixed(2))); if(pdfDoc) renderPage(pageNum); }
+function closeReader(){ $("#reader").classList.remove("open"); document.body.style.overflow=""; pdfDoc=null; }
+
+$("#rPrev").onclick=()=>go(-1);
+$("#rNext").onclick=()=>go(1);
+$("#rZoomIn").onclick=()=>setZoom(zoom+.2);
+$("#rZoomOut").onclick=()=>setZoom(zoom-.2);
+$("#rClose").onclick=closeReader;
+$("#reader").addEventListener("click",e=>{ if(e.target.id==="reader") closeReader(); });
+document.addEventListener("keydown",e=>{
+  if(!$("#reader").classList.contains("open")) return;
+  if(e.key==="Escape") closeReader();
+  else if(e.key==="ArrowRight") go(1);
+  else if(e.key==="ArrowLeft") go(-1);
+  else if(e.key==="+"||e.key==="=") setZoom(zoom+.2);
+  else if(e.key==="-") setZoom(zoom-.2);
+});
+let rz; window.addEventListener("resize",()=>{ clearTimeout(rz); rz=setTimeout(()=>{ if(pdfDoc && $("#reader").classList.contains("open")) renderPage(pageNum); },200); });
+
+renderFilters(); renderGrid();
+</script>
+
+<script>
+/* ENN chrome: live PST clock, on-air state, scrolling ticker, staging ribbon */
+(function(){
+  function two(n){return (n<10?"0":"")+n;}
+  function tick(){
+    try{
+      var pst=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Los_Angeles"}));
+      var h=pst.getHours();
+      var c=document.getElementById("ennClock");
+      if(c) c.textContent=two(h)+":"+two(pst.getMinutes())+":"+two(pst.getSeconds());
+      var oa=document.getElementById("ennOnair");
+      if(oa){ var on=(h>=7&&h<16); oa.classList.toggle("off",!on); oa.querySelector("b").textContent=on?"On Air":"Off Air"; }
+    }catch(e){}
+  }
+  tick(); setInterval(tick,1000);
+  var items=[
+    "The Eastlake Edge &mdash; every issue lives here now",
+    "Play the Case &mdash; scan the paper, close The Eastlake Assassins",
+    "Homecoming Top 5 court voting is coming soon &mdash; keep an eye out for the ballot",
+    "Submit your Love Lines on the Contact page &mdash; it might get read live on the bulletin",
+    "2026&ndash;27 yearbooks are on sale &mdash; $90 now, going up to $95 on Oct 12",
+    "Want to be on the crew? Talk to Mr. Nimmo about joining ENN"
+  ];
+  var mv=document.getElementById("ennTkMove");
+  if(mv){ var h=items.map(function(t){return '<span class="it">'+t+'</span>';}).join(""); mv.innerHTML=h+h; }
+  // show the "preview / not public" ribbon unless launched from the real domain nav
+  try{
+    var ribbon=document.getElementById("stagingRibbon");
+    if(ribbon && !/[?&]live=1/.test(location.search)) ribbon.hidden=false;
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
