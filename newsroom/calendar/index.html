@@ -9,13 +9,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=15">
-<script src="/newsroom/config.js?v=15"></script>
-<script src="/EDIT/21-BULLETINS.js?v=15"></script>
-<script src="/EDIT/23-SECTIONS.js?v=15"></script>
-<script src="/EDIT/22-ROSTER.js?v=15"></script>
-<script src="/newsroom/assets/identity.js?v=15"></script>
-<script src="/newsroom/assets/grades.js?v=15"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=16">
+<script src="/newsroom/config.js?v=16"></script>
+<script src="/EDIT/21-BULLETINS.js?v=16"></script>
+<script src="/EDIT/23-SECTIONS.js?v=16"></script>
+<script src="/EDIT/22-ROSTER.js?v=16"></script>
+<script src="/newsroom/assets/identity.js?v=16"></script>
+<script src="/newsroom/assets/grades.js?v=16"></script>
 <style>
 /* ── Bulletin calendar — scoped under .enncal so it never touches the hub shell ── */
 .enncal{
@@ -70,6 +70,14 @@
 .enncal .day.bull .time{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:10px;color:rgba(255,255,255,.9)}
 .enncal .day.bull{transition:transform .13s,box-shadow .13s;cursor:default}
 .enncal .day.bull:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15) inset}
+
+/* finished (past) days fade back; today gets a shiny ring */
+.enncal .day.past{opacity:.38}
+.enncal .day.bull.past{opacity:.4;filter:saturate(.65)}
+.enncal .day.today{border-color:var(--enn);box-shadow:0 0 0 2px var(--enn),0 0 18px 2px rgba(46,111,224,.55);z-index:3}
+.enncal .day.today::after{content:'TODAY';position:absolute;top:5px;left:7px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.14em;color:#fff;background:var(--enn);padding:1px 5px;border-radius:4px}
+.enncal .day.today .dnum{color:#fff}
 
 /* filtering */
 .enncal #cal[data-filter="p1"] .day.bull:not(.p1),
@@ -137,7 +145,7 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/assets/hub.js?v=15"></script>
+<script src="/newsroom/assets/hub.js?v=16"></script>
 <script>
   /* ===================== DATA — now lives in EDIT/21-BULLETINS.js ===================== */
   /* Everything below is read from EDIT/21-BULLETINS.js — the one place the
@@ -170,6 +178,7 @@
 
   const MAP = {};
   BULLETINS.forEach((iso,i)=>{ MAP[iso] = {period:ROTATION[i%3], num:i+1}; });
+  const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 
   const WD = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
   const MN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -199,6 +208,9 @@
         cell.className = "day empty";
         cell.innerHTML = `<span class="dnum">${d}</span>`;
       }
+      const cd = new Date(year, month, d); cd.setHours(0,0,0,0);
+      if(cd < TODAY) cell.classList.add('past');
+      else if(cd.getTime() === TODAY.getTime()) cell.classList.add('today');
       grid.appendChild(cell);
     }
     wrap.appendChild(grid);

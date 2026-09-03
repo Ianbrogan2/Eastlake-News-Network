@@ -260,6 +260,33 @@ var ENN_SEASON = (function(){
     return idx > 0 ? list[idx - 1] : null;
   }
 
+  /* The DUE day for a piece that airs on `iso`: the previous day the class
+     actually meets — i.e. the school day right before the air date, skipping
+     weekends and no-school off-days. (Airs Thursday → due Wednesday; airs
+     Monday → due Friday.) Returns {iso,date} or null. */
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function isoOf(dt){ return dt.getFullYear()+'-'+pad2(dt.getMonth()+1)+'-'+pad2(dt.getDate()); }
+  /* off-day labels that mean NO SCHOOL (so the class doesn't meet). "Full Day",
+     "Min Day", "Finals" still have class, so they can be a due day. */
+  function isNoSchool(label){
+    return /holiday|break|no school|thanksgiving|veterans/i.test(String(label||''));
+  }
+  function dueDayFor(iso){
+    var c = cfg(); if(!c) return null;
+    var air = airDate(iso); if(!air) return null;
+    var off = c.offDays || {};
+    var probe = new Date(air.getFullYear(), air.getMonth(), air.getDate());
+    for(var i=0;i<21;i++){
+      probe.setDate(probe.getDate() - 1);
+      var dow = probe.getDay();
+      if(dow === 0 || dow === 6) continue;             // weekend — no class
+      var k = isoOf(probe);
+      if(off[k] && isNoSchool(off[k])) continue;       // holiday / break — no class
+      return { iso:k, date:new Date(probe.getFullYear(), probe.getMonth(), probe.getDate(), c.airHour||0, c.airMinute||0) };
+    }
+    return null;
+  }
+
   /* All remaining bulletins for a period — used for "your air dates". */
   function upcomingFor(period){
     var now = Date.now();
@@ -305,6 +332,7 @@ var ENN_SEASON = (function(){
     waveDates:     waveDates,
     datesForGroup: datesForGroup,
     nextForGroup:  nextForGroup,
-    previousBulletin: previousBulletin
+    previousBulletin: previousBulletin,
+    dueDayFor:     dueDayFor
   };
 })();

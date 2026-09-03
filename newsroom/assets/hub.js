@@ -332,13 +332,13 @@
 
     const days = d => Math.max(0, Math.ceil((d - Date.now()) / 86400000));
 
-    /* Pieces are due the day of the PREVIOUS bulletin — one broadcast day
-       before the group airs, not the day it airs. */
+    /* Pieces are due the class day BEFORE the group airs (airs Thu → due Wed;
+       airs Mon → due Fri), skipping weekends and no-school days. */
     let dueLine = '—';
     if(next){
-      const due = (typeof ENN_SEASON !== 'undefined' && next.iso) ? ENN_SEASON.previousBulletin(next.iso) : null;
+      const due = (typeof ENN_SEASON !== 'undefined' && next.iso) ? ENN_SEASON.dueDayFor(next.iso) : null;
       dueLine = due
-        ? 'Before class on <strong>' + ENN_SEASON.longDate(due.date) + '</strong> (the bulletin before yours)'
+        ? 'Before class on <strong>' + ENN_SEASON.longDate(due.date) + '</strong> (the class before you air)'
         : 'Before class on <strong>' + ENN_SEASON.longDate(next.date) + '</strong>';
     }
 
@@ -469,6 +469,54 @@
     G.ready().then(() => { draw(); G.startSync(6000); });
   };
 
+  /* ── Due alert — flashes red on your desk until your group posts its
+     next piece to The Board, then flips to a calm "you're set" note.
+     Group members only; reactive to the shared store. [data-duealert] */
+  NR.dueAlert = function(host){
+    if(!host || !window.ENN_ID || !window.ENN_GRADES || typeof ENN_SEASON === 'undefined') return;
+    const me = NR.me();
+    if(!me || me.kind === 'guest' || !window.ENN_ID.inGroup(me)) return;
+    const G = window.ENN_GRADES;
+    const nx = window.ENN_ID.myNextAirDate(me);
+    if(!nx || !nx.iso) return;
+    const due = ENN_SEASON.dueDayFor(nx.iso);
+    const dueDate  = (due && due.date) ? due.date : nx.date;
+    const dueLabel = ENN_SEASON.longDate(dueDate);
+    const airLabel = ENN_SEASON.longDate(nx.date);
+
+    const posted = () => (G.board() || []).some(p =>
+      String(p.period) === String(me.period) &&
+      String(p.group)  === String(me.group)  &&
+      p.status !== 'Finished');
+
+    function draw(){
+      const done = posted();
+      const overdue = (dueDate - Date.now()) < 0;
+      host.innerHTML = done
+        ? `<div class="nr-due nr-due-ok nr-reveal">
+             <span class="nr-due-ic">✓</span>
+             <div><b>Your next piece is on The Board.</b>
+               <span>Due before class <strong>${NR.esc(dueLabel)}</strong> · airs ${NR.esc(airLabel)}.</span></div>
+           </div>`
+        : `<div class="nr-due nr-due-alert nr-reveal" role="alert">
+             <span class="nr-due-ic">⚠</span>
+             <div><b>Your piece is due before class ${NR.esc(dueLabel)}${overdue ? ' — overdue' : ''}.</b>
+               <span>${me.groupName ? NR.esc(me.groupName) + ' hasn’t' : 'You haven’t'} posted it to The Board yet — add it so the whole newsroom can see what’s coming.</span></div>
+             <a class="nr-btn" data-scrollboard href="#">Add it to The Board ↓</a>
+           </div>`;
+      const s = host.querySelector('[data-scrollboard]');
+      if(s) s.addEventListener('click', e => {
+        e.preventDefault();
+        const b = document.querySelector('[data-liveboard]');
+        if(b){ b.scrollIntoView({behavior:'smooth', block:'start'});
+          const t = document.querySelector('#nb-title'); if(t) setTimeout(() => t.focus(), 420); }
+      });
+      NR.observe(host);
+    }
+    G.onChange(draw);
+    G.ready().then(() => { draw(); G.startSync(6000); });
+  };
+
   /* ── The Board — live "what everyone's working on next" ─────────
      Every group posts their next piece (title, what it's about, due date);
      every period sees it live. Reading is open to all; posting is for
@@ -489,7 +537,7 @@
     if(canPost && window.ENN_ID.inGroup(me) && typeof ENN_SEASON !== 'undefined'){
       const nx = window.ENN_ID.myNextAirDate(me);
       if(nx && nx.iso){
-        const due = ENN_SEASON.previousBulletin(nx.iso);
+        const due = ENN_SEASON.dueDayFor(nx.iso);
         const d = (due && due.date) ? due.date : nx.date;
         if(d) prefillDue = d.toISOString().slice(0,10);
       }
@@ -536,35 +584,66 @@
           <p class="nr-sub" style="margin:0">Sign in with your <strong>student ID</strong> on the gate to post your group's next piece here.</p>
         </div>`;
 
-      let table;
-      if(!posts.length){
-        table = NR.emptyState('🗞️','The board is clear',
-          canPost ? 'Nothing posted yet — add your group’s next piece above so every period can see what’s coming.'
+      const mineOf = p => (canPost && idOf(me) === p.by) || isAdvisor;
+      const grpOf  = p => NR.esc(p.groupName || ('Group ' + (p.group||'?'))) + (p.period ? ' · P' + NR.esc(p.period) : '');
+      const safeUrl = u => /^https?:\/\//i.test(u||'') ? u : '';   // block javascript: etc.
+
+      const active   = posts.filter(x => x.p.status !== 'Finished');
+      const finished = posts.filter(x => x.p.status === 'Finished')
+                            .sort((a,b) => String(b.p.updatedAt||'').localeCompare(String(a.p.updatedAt||'')));
+
+      /* ── in-production table ── */
+      let activeHtml;
+      if(!active.length){
+        activeHtml = NR.emptyState('🗞️','Nothing in production',
+          canPost ? 'Add your group’s next piece above so every period can see what’s coming.'
                   : 'Once groups post what they’re working on, every period’s upcoming pieces show up here.');
       } else {
-        const rows = posts.map(({p,d}) => {
-          const mine = canPost && (idOf(me) === p.by) || isAdvisor;
-          const grp = NR.esc(p.groupName || ('Group ' + (p.group||'?'))) + (p.period ? ' · P' + NR.esc(p.period) : '');
-          const status = p.status ? NR.statusChip(p.status) : NR.statusChip('Producing');
-          const actions = mine
-            ? `<div class="nr-board-acts" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-                 <button type="button" data-act="submitted" data-id="${NR.esc(p.id)}" class="nr-mini">${p.status==='Submitted'?'Mark producing':'Mark submitted'}</button>
+        const rows = active.map(({p,d}) => {
+          const actions = mineOf(p)
+            ? `<div class="nr-board-acts" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+                 <button type="button" data-act="finish" data-id="${NR.esc(p.id)}" class="nr-mini">Mark finished</button>
                  <button type="button" data-act="remove" data-id="${NR.esc(p.id)}" class="nr-mini danger">Remove</button>
                </div>` : '';
           return `<tr>
             <td><strong>${NR.esc(p.title || 'Untitled piece')}</strong>${p.about ? `<div class="nr-board-about" style="color:var(--steel);font-size:12.5px;margin-top:3px;line-height:1.45">${NR.esc(p.about)}</div>` : ''}${actions}</td>
-            <td>${grp}</td>
+            <td>${grpOf(p)}</td>
             <td><span class="nr-chip ${d.cls}">${NR.esc(d.label)}</span></td>
-            <td>${status}</td>
+            <td>${NR.statusChip(p.status || 'Producing')}</td>
             <td><a class="nr-btn ghost" href="${submitHref}" style="padding:7px 12px">Turn in →</a></td>
           </tr>`;
         }).join('');
-        table = `<div class="nr-board-wrap"><table class="nr-board"><thead><tr>
+        activeHtml = `<div class="nr-board-wrap"><table class="nr-board"><thead><tr>
             <th>Piece</th><th>Group</th><th>Due</th><th>Status</th><th></th>
           </tr></thead><tbody>${rows}</tbody></table></div>`;
       }
 
-      host.innerHTML = form + table;
+      /* ── finished pieces (with the actual video, watchable by anyone) ── */
+      let finishedHtml = '';
+      if(finished.length){
+        finishedHtml = `<h3 class="nr-h3" style="margin-top:28px">Finished pieces</h3>
+          <div class="nr-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px">` +
+          finished.map(({p}) => {
+            const vid = safeUrl(p.videoUrl);
+            const watch = vid
+              ? `<a class="nr-btn" style="margin-top:12px;padding:9px 16px" href="${NR.esc(vid)}" target="_blank" rel="noopener">▶ Watch</a>`
+              : (mineOf(p) ? `<button type="button" data-act="addvideo" data-id="${NR.esc(p.id)}" class="nr-mini" style="margin-top:12px">+ Add the video link</button>`
+                           : `<div class="nr-sub" style="margin-top:12px">Video link coming soon</div>`);
+            const admin = mineOf(p)
+              ? `<div class="nr-board-acts" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">
+                   <button type="button" data-act="reopen" data-id="${NR.esc(p.id)}" class="nr-mini">Reopen</button>
+                   <button type="button" data-act="remove" data-id="${NR.esc(p.id)}" class="nr-mini danger">Remove</button>
+                 </div>` : '';
+            return `<div class="nr-panel" style="padding:16px">
+              <span class="nr-chip is-approved" style="margin-bottom:8px">✓ Finished</span>
+              <div style="font-family:var(--body);font-weight:700;font-size:15px;color:var(--ink);line-height:1.25">${NR.esc(p.title||'Untitled piece')}</div>
+              <div class="nr-sub" style="margin:4px 0 0">${grpOf(p)}</div>
+              ${watch}${admin}
+            </div>`;
+          }).join('') + `</div>`;
+      }
+
+      host.innerHTML = form + activeHtml + finishedHtml;
 
       /* wire the post form */
       const f = host.querySelector('#nr-board-form');
@@ -592,14 +671,24 @@
         });
       }
       /* wire row actions (author / advisor only) */
-      host.querySelectorAll('[data-act]').forEach(a => {
-        a.addEventListener('click', e => {
+      host.querySelectorAll('[data-act]').forEach(el => {
+        el.addEventListener('click', e => {
           e.preventDefault();
-          const id = a.getAttribute('data-id'), act = a.getAttribute('data-act');
-          if(act === 'remove'){ if(confirm('Remove this piece from the board?')) G.boardRemove(id, idOf(me)); }
-          else if(act === 'submitted'){
-            const cur = (G.board().filter(x => x.id === id)[0] || {}).status;
-            G.boardStatus(id, cur === 'Submitted' ? 'Producing' : 'Submitted', idOf(me));
+          const id = el.getAttribute('data-id'), act = el.getAttribute('data-act');
+          const cur = (G.board().filter(x => x.id === id)[0] || {});
+          const who = cur.by || idOf(me);              // keep the original author
+          if(act === 'remove'){
+            if(confirm('Remove this piece from the board?')) G.boardRemove(id, who);
+          } else if(act === 'finish'){
+            const url = prompt('Nice — mark it finished. Paste the video link (Google Drive or YouTube) so anyone can watch it. You can leave this blank and add it later:', cur.videoUrl || '');
+            if(url === null) return;                    // cancelled
+            G.boardPost({ id:id, status:'Finished', videoUrl:(url||'').trim() }, who);
+          } else if(act === 'addvideo'){
+            const url = prompt('Paste the video link (Google Drive or YouTube):', cur.videoUrl || '');
+            if(url === null || !url.trim()) return;
+            G.boardPost({ id:id, videoUrl:url.trim() }, who);
+          } else if(act === 'reopen'){
+            G.boardStatus(id, 'Producing', who);
           }
         });
       });
@@ -638,6 +727,7 @@
       if(key && !NR.sectionOn(key)) t.hidden = true;
     });
     if(NR.sectionOn('myDashboard')) NR.myDesk(document.querySelector('[data-mydesk]'));
+    NR.dueAlert(document.querySelector('[data-duealert]'));
     NR.liveBoard(document.querySelector('[data-liveboard]'));
     NR.myGrades(document.querySelector('[data-mygrades]'));
     NR.observe(document);
