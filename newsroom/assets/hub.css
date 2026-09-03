@@ -187,6 +187,20 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 .nr-btn.ghost:hover{border-color:var(--enn);background:rgba(26,86,219,0.08)}
 .nr-btn.success-pulse{animation:nr-tally-pulse 600ms var(--ease-out)}
 @keyframes nr-tally-pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,0.6)}100%{box-shadow:0 0 0 22px rgba(255,59,48,0)}}
+/* ══════════════ LIVE STATUS RIBBON (rack-equipment readouts) ══════════════ */
+.nr-statusbar{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin:0 0 26px;
+  background:var(--edge);border:1px solid var(--edge);border-radius:var(--radius);overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px -28px rgba(0,0,0,0.9)}
+.nr-statusbar .nr-stat{background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  padding:14px 18px;display:flex;flex-direction:column;gap:4px}
+.nr-stat-k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel)}
+.nr-stat-v{font-family:var(--display);font-size:30px;line-height:1;letter-spacing:.03em;color:var(--ink);font-variant-numeric:tabular-nums}
+.nr-stat-v.accent{color:#7DD8FF}
+.nr-stat-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--steel)}
+.nr-stat-anchors{display:flex;flex-direction:column;gap:1px;font-family:var(--display);font-size:19px;letter-spacing:.02em;color:var(--ink)}
+.nr-stat-anchors .nr-draft{font-size:10px;vertical-align:middle}
+@media (max-width:640px){ .nr-statusbar{grid-template-columns:1fr} }
+
 /* ══════════════ DUE ALERT (desk) ══════════════ */
 .nr-due{display:flex;align-items:flex-start;gap:14px;padding:15px 18px;border-radius:var(--radius);
   margin-bottom:24px;border:1px solid var(--edge);background:var(--panel)}

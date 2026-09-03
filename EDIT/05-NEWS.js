@@ -22,9 +22,9 @@
 var ENN_NEWS = {
   featured: {
     tag: 'Homecoming',
-    title: 'Homecoming Season Is Here — Top 5 Court Voting Coming Soon',
-    body: 'Spirit season is officially underway at Eastlake. Top 5 court voting is coming soon — keep an eye out for the ballot and start rallying behind your picks. More Homecoming details, dress-up days, and the dance are on the way, so stay tuned to ENN.',
-    byline: 'REPORTED BY TEAM ENN · WEDNESDAY, SEP 2, 2026'
+    title: 'Homecoming Court Voting Is Open — Vote Now on Jupiter',
+    body: 'Voting for the Homecoming Top 5 court is live right now on Jupiter. Log in, pick your court, and lock in your vote before it closes. Rally your friends — every vote counts.',
+    byline: 'REPORTED BY TEAM ENN · SEPTEMBER 2026'
   },
   sidebar: [
     {

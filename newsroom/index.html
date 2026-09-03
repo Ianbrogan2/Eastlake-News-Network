@@ -9,15 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=16">
-<link rel="stylesheet" href="/newsroom/colors.css?v=16">
-<script src="/newsroom/config.js?v=16"></script>
-<script src="/EDIT/21-BULLETINS.js?v=16"></script>
-<script src="/EDIT/23-SECTIONS.js?v=16"></script>
-<script src="/EDIT/22-ROSTER.js?v=16"></script>
-<script src="/EDIT/24-ASSIGNMENTS.js?v=16"></script>
-<script src="/newsroom/assets/identity.js?v=16"></script>
-<script src="/newsroom/assets/grades.js?v=16"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=17">
+<link rel="stylesheet" href="/newsroom/colors.css?v=17">
+<script src="/newsroom/config.js?v=17"></script>
+<script src="/EDIT/21-BULLETINS.js?v=17"></script>
+<script src="/EDIT/23-SECTIONS.js?v=17"></script>
+<script src="/EDIT/22-ROSTER.js?v=17"></script>
+<script src="/EDIT/24-ASSIGNMENTS.js?v=17"></script>
+<script src="/newsroom/assets/identity.js?v=17"></script>
+<script src="/newsroom/assets/grades.js?v=17"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -28,6 +28,24 @@
     <div class="nr-eyebrow"><b>Live</b><span>Newsroom · This Week</span></div>
     <h1 class="nr-title">THIS WEEK<br>AT ENN</h1>
     <p class="nr-lede">The desk is live. Here's what every group's working on next, your own timeline, and who's on the anchor chair. Broadcast runs Monday–Thursday, 10:31–10:41 AM.</p>
+  </section>
+
+  <!-- Live status ribbon: studio clock · next broadcast · anchor chair -->
+  <section data-clock-strip class="nr-statusbar nr-reveal">
+    <div class="nr-stat">
+      <span class="nr-stat-k">Studio clock · Pacific</span>
+      <span class="nr-stat-v" data-clock>--:--:-- PT</span>
+    </div>
+    <div class="nr-stat">
+      <span class="nr-stat-k">Next broadcast</span>
+      <span class="nr-stat-v accent" id="cd">—</span>
+      <span class="nr-stat-sub" id="cd-label">M–TH · 10:31 AM</span>
+    </div>
+    <div class="nr-stat">
+      <span class="nr-stat-k">On the chair</span>
+      <span class="nr-stat-anchors" id="anchors-mini"><span>A1 · <i class="nr-draft">TBA</i></span><span>A2 · <i class="nr-draft">TBA</i></span></span>
+      <span class="nr-stat-sub">Rotates every 2 weeks</span>
+    </div>
   </section>
 
   <!-- Personal dashboard — only appears when someone signed in with a
@@ -46,27 +64,6 @@
 
   <!-- A student's own grades (their group's pieces + feedback) -->
   <div data-mygrades></div>
-
-  <!-- Top strip: broadcast clock + next-airtime countdown -->
-  <section data-clock-strip class="nr-grid nr-stagger" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:8px">
-    <div class="nr-panel">
-      <div class="nr-tile-k" style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Studio Clock · Pacific</div>
-      <div class="nr-clock" data-clock style="font-family:var(--display);font-size:44px;letter-spacing:.04em;margin-top:6px">--:--:-- PT</div>
-    </div>
-    <div class="nr-panel">
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Next Broadcast</div>
-      <div id="cd" class="nr-clock" style="font-family:var(--display);font-size:44px;letter-spacing:.04em;margin-top:6px;color:#7DD8FF">—</div>
-      <div id="cd-label" style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--steel);margin-top:2px">M–TH · 10:31 AM</div>
-    </div>
-    <div class="nr-panel">
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">On the Chair</div>
-      <div id="anchors-mini" style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-        <div class="nr-lower3"><span style="font-family:var(--display);font-size:22px;letter-spacing:.02em">A1 · <span class="nr-draft" style="vertical-align:middle">TBA</span></span></div>
-        <div class="nr-lower3"><span style="font-family:var(--display);font-size:22px;letter-spacing:.02em">A2 · <span class="nr-draft" style="vertical-align:middle">TBA</span></span></div>
-      </div>
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--steel);margin-top:8px">Rotates every 2 weeks · announced Tuesdays</div>
-    </div>
-  </section>
 
   <!-- Skill challenge -->
   <h2 class="nr-h2 nr-reveal" data-sec-challenge>Skill Challenge of the Week</h2>
@@ -90,9 +87,9 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=16"></script>
-<script src="/newsroom/text.js?v=16"></script>
-<script src="/newsroom/assets/hub.js?v=16"></script>
+<script src="/newsroom/boards.js?v=17"></script>
+<script src="/newsroom/text.js?v=17"></script>
+<script src="/newsroom/assets/hub.js?v=17"></script>
 <script>
 /* Countdown to the next real bulletin.
    Reads EDIT/21-BULLETINS.js, so it counts to a day the show actually
