@@ -444,9 +444,9 @@ var ENN_ROSTER = {
       },
       {
         role: 'Camera Operator',
-        id: '',
-        first: '',
-        last: ''
+        id: '1608166',
+        first: 'Jayden',
+        last: 'Poblete'
       },
       {
         role: 'Camera Operator',
