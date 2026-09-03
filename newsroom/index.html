@@ -9,15 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/newsroom/assets/hub.css?v=10">
-<link rel="stylesheet" href="/newsroom/colors.css?v=10">
-<script src="/newsroom/config.js?v=10"></script>
-<script src="/EDIT/21-BULLETINS.js?v=10"></script>
-<script src="/EDIT/23-SECTIONS.js?v=10"></script>
-<script src="/EDIT/22-ROSTER.js?v=10"></script>
-<script src="/EDIT/24-ASSIGNMENTS.js?v=10"></script>
-<script src="/newsroom/assets/identity.js?v=10"></script>
-<script src="/newsroom/assets/grades.js?v=10"></script>
+<link rel="stylesheet" href="/newsroom/assets/hub.css?v=11">
+<link rel="stylesheet" href="/newsroom/colors.css?v=11">
+<script src="/newsroom/config.js?v=11"></script>
+<script src="/EDIT/21-BULLETINS.js?v=11"></script>
+<script src="/EDIT/23-SECTIONS.js?v=11"></script>
+<script src="/EDIT/22-ROSTER.js?v=11"></script>
+<script src="/EDIT/24-ASSIGNMENTS.js?v=11"></script>
+<script src="/newsroom/assets/identity.js?v=11"></script>
+<script src="/newsroom/assets/grades.js?v=11"></script>
 </head>
 <body class="nr" data-section="This Week">
 <div data-rail></div>
@@ -33,6 +33,13 @@
   <!-- Personal dashboard — only appears when someone signed in with a
        student ID. Guests using the plain call sign see nothing here. -->
   <div data-mydesk></div>
+
+  <!-- THE BOARD — live, cross-period "what everyone's working on next".
+       Groups post their next piece; every period sees it. (The admin
+       "What's Due" switch controls this section via data-sec-due.) -->
+  <h2 class="nr-h2 nr-reveal" data-sec-due>The Board</h2>
+  <p class="nr-sub nr-reveal" data-sec-due>What every group across all three periods is working on next. Post your piece so the whole newsroom can see what’s coming — and when it’s due. Sign in with your student ID to post.</p>
+  <div data-liveboard data-sec-due class="nr-reveal"></div>
 
   <!-- A student's own grades (their group's pieces + feedback) -->
   <div data-mygrades></div>
@@ -58,11 +65,6 @@
     </div>
   </section>
 
-  <!-- What's due / who airs -->
-  <h2 class="nr-h2 nr-reveal" data-sec-due>What's Due</h2>
-  <p class="nr-sub nr-reveal">Each group produces one piece per week — pieces are due <strong>before class starts</strong> on your air day. Sign in with your student ID to see your own group’s dates.</p>
-  <div id="board-due" class="nr-reveal" data-sec-due></div>
-
   <!-- Skill challenge -->
   <h2 class="nr-h2 nr-reveal" data-sec-challenge>Skill Challenge of the Week</h2>
   <div id="board-challenge" class="nr-reveal" data-sec-challenge></div>
@@ -72,7 +74,7 @@
   <div id="board-ann" class="nr-reveal" data-sec-ann></div>
 
   <!-- The six sections -->
-  <h2 class="nr-h2 nr-reveal">The Newsroom</h2>
+  <h2 class="nr-h2 nr-reveal">Explore the Newsroom</h2>
   <div class="nr-grid nr-stagger">
     <a class="nr-tile" href="/newsroom/calendar/"><div class="k">00 · When you air</div><h3>Calendar</h3><p>The full Fall 2026 bulletin schedule — all 60 shows, color-coded by period.</p><span class="go">→</span></a>
     <a class="nr-tile" href="/newsroom/submit/"><div class="k">01 · Turn it in</div><h3>Submit</h3><p>Drop your piece, run the pre-submit checklist, beat the deadline.</p><span class="go">→</span></a>
@@ -88,9 +90,9 @@
 </main>
 <div data-foot></div>
 
-<script src="/newsroom/boards.js?v=10"></script>
-<script src="/newsroom/text.js?v=10"></script>
-<script src="/newsroom/assets/hub.js?v=10"></script>
+<script src="/newsroom/boards.js?v=11"></script>
+<script src="/newsroom/text.js?v=11"></script>
+<script src="/newsroom/assets/hub.js?v=11"></script>
 <script>
 /* Countdown to the next real bulletin.
    Reads EDIT/21-BULLETINS.js, so it counts to a day the show actually
@@ -147,15 +149,6 @@ NR.board('announcements').then(function(res){
     columns:['Message','Category','Posted'],
     emptyIcon:'📣', emptyTitle:'No announcements right now', emptyBody:'Deadlines, extra-credit reminders, and anchor rotations post here.',
     row:function(r){ return ['<strong>'+NR.esc(r.Message||'—')+'</strong>', NR.statusChip(r.Category||''), NR.esc(r.Posted||'')]; }
-  });
-});
-NR.board('pitches').then(function(res){
-  // "What's due" reuses the pitch board's producing/claimed rows as the live work-in-progress view
-  if(res.state==='ok'){ res.records = res.records.filter(function(r){var s=String(r.Status||'').toLowerCase();return s.includes('claim')||s.includes('produc');}); }
-  NR.renderBoard('#board-due', res, {
-    columns:['Piece','Group','Status','Air Date'],
-    emptyIcon:'🗓️', emptyTitle:'No pieces in production yet', emptyBody:'Once groups claim pitches, their in-progress pieces show here so everyone can see what’s due.',
-    row:function(r){ return ['<strong>'+NR.esc(r['Story/Idea']||r.Story||'—')+'</strong>', NR.esc(r.Group||'—'), NR.statusChip(r.Status||''), NR.esc(r['Air Date']||'—')]; }
   });
 });
 </script>

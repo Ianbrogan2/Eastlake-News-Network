@@ -183,6 +183,10 @@ h3.nr-h3{font-size:19px;font-weight:700;margin:28px 0 8px;letter-spacing:-.01em}
 .nr-btn.ghost:hover{border-color:var(--enn);background:rgba(26,86,219,0.08)}
 .nr-btn.success-pulse{animation:nr-tally-pulse 600ms var(--ease-out)}
 @keyframes nr-tally-pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,0.6)}100%{box-shadow:0 0 0 22px rgba(255,59,48,0)}}
+/* small inline action links (board row author controls) */
+.nr-mini{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);text-decoration:none;border-bottom:1px dotted var(--edge);padding-bottom:1px;cursor:pointer}
+.nr-mini:hover{color:var(--ink)}
+.nr-mini.danger:hover{color:#ff8a84;border-color:#ff8a84}
 
 /* ══════════════ TABLES / BOARDS ══════════════ */
 .nr-board{width:100%;border-collapse:collapse;font-size:13.5px}

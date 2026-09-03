@@ -353,12 +353,6 @@
         '<strong>' + ENN_SEASON.longDate(next.date) + '</strong> · in ' + days(next.date) + ' days']);
       if(scope === 'group') rows.push(['Piece due', dueLine]);
     }
-    /* A leader with no group has nothing to hand in — say so plainly
-       rather than leaving a Submit button that files against no group. */
-    if(!window.ENN_ID.inGroup(me) && window.ENN_ID.isLeader(me) && !window.ENN_ID.isAdvisor(me)){
-      rows.push(['Submissions', 'Not applicable — you’re not on a production group']);
-    }
-
     /* The whole group, including them — their own name marked so the
        list reads as "here is my crew" rather than "here are the others". */
     const roster = me.groupRoster && me.groupRoster.length
@@ -477,6 +471,142 @@
     G.ready().then(() => { draw(); G.startSync(6000); });
   };
 
+  /* ── The Board — live "what everyone's working on next" ─────────
+     Every group posts their next piece (title, what it's about, due date);
+     every period sees it live. Reading is open to all; posting is for
+     signed-in crew. Backed by the shared grade store, so it syncs across
+     devices within a few seconds. Renders into [data-liveboard]. */
+  NR.liveBoard = function(host){
+    if(!host || !window.ENN_GRADES) return;
+    const G = window.ENN_GRADES;
+    const me = NR.me();
+    const idOf = m => m ? (m.id || m.kind || '') : '';
+    const canPost = !!(window.ENN_ID && me && me.kind !== 'guest');
+    const isAdvisor = !!(window.ENN_ID && window.ENN_ID.isAdvisor(me));
+    const submitHref = '/newsroom/submit/';
+
+    /* prefill the due date with the poster's own next air date, if known */
+    let prefillDue = '', myGroupLine = '';
+    if(canPost && window.ENN_ID.inGroup(me) && typeof ENN_SEASON !== 'undefined'){
+      const nx = window.ENN_ID.myNextAirDate(me);
+      if(nx && nx.date){ prefillDue = nx.date.toISOString().slice(0,10); }
+      myGroupLine = NR.esc(me.groupName) + ' · Period ' + NR.esc(me.period);
+    }
+
+    const fmtDue = iso => {
+      if(!iso) return {label:'No date set', cls:'', order: 8.64e15};
+      const d = new Date(iso + 'T00:00:00');
+      if(isNaN(d)) return {label:NR.esc(iso), cls:'', order: 8.64e15};
+      const today = new Date(); today.setHours(0,0,0,0);
+      const days = Math.round((d - today) / 86400000);
+      const nice = d.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
+      let tag = '';
+      if(days < 0) tag = 'overdue';
+      else if(days === 0) tag = 'today';
+      else if(days === 1) tag = 'tomorrow';
+      else tag = 'in ' + days + ' days';
+      return { label: nice + ' · ' + tag, cls: days < 0 ? 'is-out' : (days <= 1 ? 'is-claimed' : 'is-open'), order: d.getTime() };
+    };
+
+    function draw(){
+      const posts = (G.board() || []).slice().map(p => ({ p, d: fmtDue(p.due) }))
+        .sort((a,b) => a.d.order - b.d.order);
+
+      const form = canPost ? `
+        <form class="nr-panel nr-board-post" id="nr-board-form" style="margin-bottom:22px">
+          <div class="nr-eyebrow" style="margin-bottom:14px"><b>Post</b><span>${
+            myGroupLine ? 'Your group’s next piece' : 'Add a piece to the board'}</span></div>
+          ${myGroupLine ? `<p class="nr-sub" style="margin:-6px 0 14px">Posting as <strong style="color:#7DD8FF">${myGroupLine}</strong></p>` : `
+          <div class="nr-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">
+            <div class="nr-field"><label for="nb-group">Group / desk</label><input id="nb-group" maxlength="40" placeholder="e.g. Group 3, Anchor Desk"></div>
+            <div class="nr-field"><label for="nb-period">Period</label><select id="nb-period"><option value="1">Period 1</option><option value="4">Period 4</option><option value="6">Period 6</option></select></div>
+          </div>`}
+          <div class="nr-field"><label for="nb-title">Piece title</label><input id="nb-title" maxlength="90" placeholder="What's the piece called?"></div>
+          <div class="nr-field"><label for="nb-about">What's it about?</label><textarea id="nb-about" maxlength="280" placeholder="One or two lines — the angle, who's in it, what happens." style="min-height:80px"></textarea></div>
+          <div class="nr-field"><label for="nb-due">Due / air date</label><input id="nb-due" type="date" value="${NR.esc(prefillDue)}"></div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button type="submit" class="nr-btn">Post to the board →</button>
+            <span id="nb-msg" class="nr-sub" style="margin:0" role="status"></span>
+          </div>
+        </form>` : `
+        <div class="nr-panel" style="margin-bottom:22px">
+          <p class="nr-sub" style="margin:0">Sign in with your <strong>student ID</strong> on the gate to post your group's next piece here.</p>
+        </div>`;
+
+      let table;
+      if(!posts.length){
+        table = NR.emptyState('🗞️','The board is clear',
+          canPost ? 'Nothing posted yet — add your group’s next piece above so every period can see what’s coming.'
+                  : 'Once groups post what they’re working on, every period’s upcoming pieces show up here.');
+      } else {
+        const rows = posts.map(({p,d}) => {
+          const mine = canPost && (idOf(me) === p.by) || isAdvisor;
+          const grp = NR.esc(p.groupName || ('Group ' + (p.group||'?'))) + (p.period ? ' · P' + NR.esc(p.period) : '');
+          const status = p.status ? NR.statusChip(p.status) : NR.statusChip('Producing');
+          const actions = mine
+            ? `<div class="nr-board-acts" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+                 <a href="#" data-act="submitted" data-id="${NR.esc(p.id)}" class="nr-mini">${p.status==='Submitted'?'Mark producing':'Mark submitted'}</a>
+                 <a href="#" data-act="remove" data-id="${NR.esc(p.id)}" class="nr-mini danger">Remove</a>
+               </div>` : '';
+          return `<tr>
+            <td><strong>${NR.esc(p.title || 'Untitled piece')}</strong>${p.about ? `<div class="nr-board-about" style="color:var(--steel);font-size:12.5px;margin-top:3px;line-height:1.45">${NR.esc(p.about)}</div>` : ''}${actions}</td>
+            <td>${grp}</td>
+            <td><span class="nr-chip ${d.cls}">${NR.esc(d.label)}</span></td>
+            <td>${status}</td>
+            <td><a class="nr-btn ghost" href="${submitHref}" style="padding:7px 12px">Turn in →</a></td>
+          </tr>`;
+        }).join('');
+        table = `<div class="nr-board-wrap"><table class="nr-board"><thead><tr>
+            <th>Piece</th><th>Group</th><th>Due</th><th>Status</th><th></th>
+          </tr></thead><tbody>${rows}</tbody></table></div>`;
+      }
+
+      host.innerHTML = form + table;
+
+      /* wire the post form */
+      const f = host.querySelector('#nr-board-form');
+      if(f){
+        f.addEventListener('submit', e => {
+          e.preventDefault();
+          const msg = host.querySelector('#nb-msg');
+          const title = (host.querySelector('#nb-title')||{}).value || '';
+          const about = (host.querySelector('#nb-about')||{}).value || '';
+          const due   = (host.querySelector('#nb-due')||{}).value || '';
+          if(!title.trim()){ if(msg){ msg.textContent = 'Give the piece a title first.'; msg.style.color = '#ff8a84'; } return; }
+          let period = me.period, group = me.group, groupName = me.groupName;
+          if(!myGroupLine){
+            groupName = (host.querySelector('#nb-group')||{}).value || '';
+            period = (host.querySelector('#nb-period')||{}).value || me.period || '';
+            group = groupName || 'desk';
+            if(!groupName.trim()){ if(msg){ msg.textContent = 'Add a group or desk name.'; msg.style.color = '#ff8a84'; } return; }
+          }
+          G.boardPost({
+            period: period, group: group, groupName: groupName,
+            title: title.trim(), about: about.trim(), due: due,
+            byName: window.ENN_ID.displayName(me) || 'Crew', status: 'Producing'
+          }, idOf(me));
+          if(msg){ msg.textContent = 'Posted ✓'; msg.style.color = '#4ade80'; }
+        });
+      }
+      /* wire row actions (author / advisor only) */
+      host.querySelectorAll('[data-act]').forEach(a => {
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          const id = a.getAttribute('data-id'), act = a.getAttribute('data-act');
+          if(act === 'remove'){ if(confirm('Remove this piece from the board?')) G.boardRemove(id, idOf(me)); }
+          else if(act === 'submitted'){
+            const cur = (G.board().filter(x => x.id === id)[0] || {}).status;
+            G.boardStatus(id, cur === 'Submitted' ? 'Producing' : 'Submitted', idOf(me));
+          }
+        });
+      });
+      NR.observe(host);
+    }
+
+    G.onChange(draw);
+    G.ready().then(() => { draw(); G.startSync(6000); });
+  };
+
   /* Auto-init on DOM ready */
   function init(){
     if(!NR.enforceGate()) return;              // bounced to the gate — stop here
@@ -499,6 +629,7 @@
     NR.applyText(section);
     NR.mountLinks(document);
     if(NR.sectionOn('myDashboard')) NR.myDesk(document.querySelector('[data-mydesk]'));
+    NR.liveBoard(document.querySelector('[data-liveboard]'));
     NR.myGrades(document.querySelector('[data-mygrades]'));
     NR.observe(document);
     NR.startClock();

@@ -173,6 +173,7 @@
     db.categories  = db.categories || null;   // [{id,name,weight}] (null = defaults)
     db.audit       = db.audit || [];          // immutable change log
     db.gsettings   = db.gsettings || {};      // weighted:false, rolePeriods:{}, …
+    db.board       = db.board || [];           // live cross-period "upcoming pieces" board
 
     /* create / edit an assignment */
     if(op.op === 'asg.save'){
@@ -268,6 +269,27 @@
       db.leaderboards.unshift(op.board);          // newest first
       db.leaderboards = db.leaderboards.slice(0, 30);
     }
+    /* ── Live "upcoming pieces" board (cross-period) ──
+       Any signed-in group posts what they're working on next so every
+       period can see it. Upsert by id; keep the list bounded. */
+    else if(op.op === 'board.post'){
+      var post = op.post || {};
+      if(!post.id) post.id = 'b' + Date.now() + Math.floor(Math.random()*1000);
+      post.by = op.by || post.by || '';
+      post.ts = post.ts || nowISO();
+      post.updatedAt = nowISO();
+      var bi = db.board.map(function(x){ return x.id; }).indexOf(post.id);
+      if(bi >= 0) db.board[bi] = Object.assign({}, db.board[bi], post);
+      else db.board.unshift(post);
+      db.board = db.board.slice(0, 200);
+    }
+    else if(op.op === 'board.remove'){
+      db.board = db.board.filter(function(x){ return x.id !== op.id; });
+    }
+    else if(op.op === 'board.status'){
+      var bj = db.board.map(function(x){ return x.id; }).indexOf(op.id);
+      if(bj >= 0){ db.board[bj].status = op.status || ''; db.board[bj].updatedAt = nowISO(); }
+    }
     return db;
   }
 
@@ -275,7 +297,7 @@
      PUBLIC API
      ══════════════════════════════════════════════════════════════ */
   var store = isCloud() ? CloudStore : LocalStore;
-  var cache = { records:{}, votes:{}, leaderboards:[], assignments:{}, agrades:{}, categories:null, audit:[], gsettings:{} };
+  var cache = { records:{}, votes:{}, leaderboards:[], assignments:{}, agrades:{}, categories:null, audit:[], gsettings:{}, board:[] };
   var listeners = [];
 
   /* Default grading categories (used until the advisor customises them). */
@@ -349,6 +371,14 @@
     votesFor: function(windowId){ return (cache.votes || {})[windowId || this.windowId()] || {}; },
     publish: function(board){ return op({op:'publish', board:board}); },
     leaderboards: function(){ return cache.leaderboards || []; },
+
+    /* ── Live "upcoming pieces" board (cross-period) ──────────────────
+       Every group's next piece, visible to every period. Read is open to
+       anyone; posting/removing is gated to signed-in users in the UI. */
+    board:       function(){ return cache.board || []; },
+    boardPost:   function(post, by){ return op({op:'board.post', post:post, by:by}); },
+    boardRemove: function(id, by){ return op({op:'board.remove', id:id, by:by}); },
+    boardStatus: function(id, status, by){ return op({op:'board.status', id:id, status:status, by:by}); },
 
     /* ══════════════════════════════════════════════════════════════
        ADVANCED GRADEBOOK  (assignments · grades · analytics)

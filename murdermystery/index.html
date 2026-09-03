@@ -247,7 +247,7 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
 
 <style>
 /* ══════════ detective voice + reveal polish ══════════ */
-/* the detective is always "talking" — speech gets a red margin tick + a signature */
+/* the detective is always "talking", speech gets a red margin tick + a signature */
 .det-say{position:relative;font-family:"Special Elite",monospace;color:var(--ink);line-height:1.6;
   font-size:16px;margin:8px 0 0;padding:4px 2px 4px 16px}
 .det-say::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:3px;border-radius:2px;
@@ -409,7 +409,7 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
           <div class="stat big"><div class="k">Score</div><div class="v" id="rScore">0</div></div>
         </div>
         <div class="namewrap">
-          <label for="nameIn">Sign the file &mdash; name or initials</label>
+          <label for="nameIn">Sign the file, name or initials</label>
           <div class="answer-row">
             <input class="code-in" id="nameIn" maxlength="18" placeholder="e.g. J.R. / RILEY M." autocomplete="off">
             <button class="btn btn-primary" id="submitScoreBtn">Post to the Board</button>
@@ -424,7 +424,7 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
   <section class="view hidden" id="view-board" role="tabpanel" aria-labelledby="tab-board">
     <div class="board-head">
       <h2>THE BOARD</h2>
-      <span class="h-note">highest score sits up top — fast, and no leads</span>
+      <span class="h-note">highest score sits up top, fast, and no leads</span>
     </div>
     <ul class="lb" id="lbList"></ul>
     <div class="admin-bar">
@@ -454,11 +454,11 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
   <div class="score">SCORE <span id="hudScore">1000</span><span class="dn"> &#9660;</span></div>
 </div>
 
-<div class="testflag" title="Test build &mdash; confirm the QR target, real names, and event date before printing">Test Build</div>
+<div class="testflag" title="Test build, confirm the QR target, real names, and event date before printing">Test Build</div>
 
 <script>
 /* ══════════════════════════════════════════════════════════════════
-   CONFIG &mdash; EDIT EVERYTHING HERE
+   CONFIG, EDIT EVERYTHING HERE
    Edit the case copy + the five codes here. Nothing below this block
    needs editing. Answer matching ignores case, spaces, $ and colons.
    - answers: [..]  list every acceptable form of the code (recommended)
@@ -471,82 +471,82 @@ const CONFIG = {
 
   // ── the detective is talking to YOU the whole way through ──
   intro: [
-    "<span class='eyebrow'>Case #EHS-0342 &mdash; The Vanished Pot</span>",
+    "<span class='eyebrow'>Case #EHS-0342, The Vanished Pot</span>",
     "<div class='filehead'>Somebody walked off with three grand. Help me prove who.</div>",
-    "<p>My name would be on the last page &mdash; if they hadn&rsquo;t pulled me off this first. So read fast. The <b>Eastlake Assassins</b> ran all summer through one anonymous account. Three hundred players, ten bucks a head, <b>$3,000</b> in the pot. Then the bracket ended, the account went dark, and nobody got paid.</p>",
-    "<p>I logged <b>five things</b> before my clock ran out. Everything you need is pinned to the board in your hands &mdash; the one you scanned this off of. Work the five faster than I did, and the last one hands you the thief.</p>",
+    "<p>My name would be on the last page, if they hadn&rsquo;t pulled me off this first. So read fast. The <b>Eastlake Assassins</b> ran all summer through one anonymous account. Three hundred players, ten bucks a head, <b>$3,000</b> in the pot. Then the bracket ended, the account went dark, and nobody got paid.</p>",
+    "<p>I logged <b>five things</b> before my clock ran out. Everything you need is pinned to the board in your hands, the one you scanned this off of. Work the five faster than I did, and the last one hands you the thief.</p>",
     "<p class='note'>Clock&rsquo;s been running since you scanned. Open the file and let&rsquo;s move.</p>"
   ].join(""),
 
   // Each question: prompt (I pose it) + two staged hints + skip (I explain it) + right/wrong.
   // level is just a difficulty label shown to the player. The ramp goes easy -> hard.
-  // Answer matching ignores case, spaces, $, colons &mdash; list a few forms to be safe.
+  // Answer matching ignores case, spaces, $, colons, list a few forms to be safe.
   questions: [
     { tag:"CODE 1 &middot; THE POT", level:"Easy",
-      prompt:"Every case starts with the money. The whole pot walked off with the account &mdash; and I need the exact figure before we go anywhere. Read the file and tell me what vanished.",
+      prompt:"Every case starts with the money. The whole pot walked off with the account, and I need the exact figure before we go anywhere. Read the file and tell me what vanished.",
       hint:"It&rsquo;s printed on the case file up top. Find the <b>SUBJECT</b> line.",
-      hint2:"Round number, four digits &mdash; the same figure the whole class has been yelling about since the account went dark.",
+      hint2:"Round number, four digits, the same figure the whole class has been yelling about since the account went dark.",
       skip:"The case file&rsquo;s SUBJECT line reads &lsquo;Unpaid tournament funds, $3,000.&rsquo; The pot we&rsquo;re chasing is <b>$3,000</b>.",
-      right:"That&rsquo;s the number. Three grand, gone clean. Now &mdash; where did it go?",
+      right:"That&rsquo;s the number. Three grand, gone clean. Now, where did it go?",
       wrong:"That&rsquo;s not the pot. Read it off the file, to the dollar.",
       answers:["$3,000","3000","3,000","$3000","3 000","three thousand"] },
 
     { tag:"CODE 2 &middot; THE TRAIL", level:"Warmer",
       prompt:"Three hundred buy-ins, and every dollar funneled into one account nobody can put a face to. Follow the money off the board and give me the exact handle the pot got paid into.",
-      hint:"There&rsquo;s a CashApp receipt pinned to the board. Somebody sent money &mdash; the question is <i>to whom.</i>",
-      hint2:"Read the <b>To:</b> line on that receipt. It&rsquo;s the same name the whole tournament ran under &mdash; the dollar sign in front doesn&rsquo;t matter.",
-      skip:"The CashApp receipt&rsquo;s <b>To:</b> line is <b>$lakeassassin27</b> &mdash; same name as the Instagram account. That&rsquo;s where all $3,000 landed. Answer: <b>lakeassassin27</b>.",
-      right:"There it is &mdash; <b>lakeassassin27</b>. Anonymous on purpose. Whoever&rsquo;s behind that handle is sitting on the whole pot.",
+      hint:"There&rsquo;s a CashApp receipt pinned to the board. Somebody sent money, the question is <i>to whom.</i>",
+      hint2:"Read the <b>To:</b> line on that receipt. It&rsquo;s the same name the whole tournament ran under, the dollar sign in front doesn&rsquo;t matter.",
+      skip:"The CashApp receipt&rsquo;s <b>To:</b> line is <b>$lakeassassin27</b>, same name as the Instagram account. That&rsquo;s where all $3,000 landed. Answer: <b>lakeassassin27</b>.",
+      right:"There it is, <b>lakeassassin27</b>. Anonymous on purpose. Whoever&rsquo;s behind that handle is sitting on the whole pot.",
       wrong:"Not the name I want. Find the CashApp receipt and read who the money went <i>to</i>.",
       answers:["lakeassassin27","$lakeassassin27","lakeassassin","lakeseniorassasin27","lakeseniorassassin27"] },
 
     { tag:"CODE 3 &middot; THE GAP", level:"Tricky",
-      prompt:"Miles Filamor swears he was knocked out around <b>9:15</b> that night. The Week&nbsp;2 bracket update logs his elimination a lot later. I don&rsquo;t want the logged time &mdash; I want the <b>gap</b>. How much time is missing between his story and the log?",
+      prompt:"Miles Filamor swears he was knocked out around <b>9:15</b> that night. The Week&nbsp;2 bracket update logs his elimination a lot later. I don&rsquo;t want the logged time, I want the <b>gap</b>. How much time is missing between his story and the log?",
       hint:"Two times, two exhibits. His <i>claimed</i> time is on his suspect card; the <i>logged</i> time is on the Week 2 bracket update photo.",
-      hint2:"Claimed 9:15 PM. Logged 11:45 PM. Subtract one from the other &mdash; give it to me in hours and minutes.",
-      skip:"9:15 PM to 11:45 PM is <b>2 hours 30 minutes</b>. That&rsquo;s the stretch nobody can explain &mdash; somebody kept his name alive in the bracket after he says he was out. Answer: <b>2:30</b>.",
-      right:"Two and a half hours unaccounted for. Somebody sat on his elimination &mdash; which makes Miles a victim, not the thief. Keep pulling.",
+      hint2:"Claimed 9:15 PM. Logged 11:45 PM. Subtract one from the other, give it to me in hours and minutes.",
+      skip:"9:15 PM to 11:45 PM is <b>2 hours 30 minutes</b>. That&rsquo;s the stretch nobody can explain, somebody kept his name alive in the bracket after he says he was out. Answer: <b>2:30</b>.",
+      right:"Two and a half hours unaccounted for. Somebody sat on his elimination, which makes Miles a victim, not the thief. Keep pulling.",
       wrong:"That&rsquo;s not the gap. Take the logged time, subtract when he says he was out. Hours and minutes.",
       answers:["2:30","230","2 hours 30 minutes","2hr30","2h30","2hrs30","2 hrs 30 min","150","150 minutes","150min","2 30"] },
 
     { tag:"CODE 4 &middot; THE SAME NIGHT", level:"Hard",
-      prompt:"Here&rsquo;s where it turns. That bracket got quietly edited at <b>11:45 PM</b>. Earlier the <i>same night</i>, somebody was already in the DMs planting the &lsquo;it&rsquo;s ASB&rsquo; story &mdash; steering blame before the bracket even moved. How long <b>before</b> the edit did that message go out?",
-      hint:"Two timestamps, same date &mdash; Aug 16. One&rsquo;s on the bracket update; the other&rsquo;s on the Instagram DM.",
+      prompt:"Here&rsquo;s where it turns. That bracket got quietly edited at <b>11:45 PM</b>. Earlier the <i>same night</i>, somebody was already in the DMs planting the &lsquo;it&rsquo;s ASB&rsquo; story, steering blame before the bracket even moved. How long <b>before</b> the edit did that message go out?",
+      hint:"Two timestamps, same date, Aug 16. One&rsquo;s on the bracket update; the other&rsquo;s on the Instagram DM.",
       hint2:"The DM posted at 10:02 PM. The bracket was edited at 11:45 PM. How much time sits between them?",
-      skip:"The &lsquo;blame ASB&rsquo; DM went out at 10:02 PM; the bracket was rigged at 11:45 PM &mdash; same night. That&rsquo;s <b>1 hour 43 minutes</b> earlier. The account&rsquo;s loudest defender was working the story <i>before</i> the crime. Answer: <b>1:43</b>.",
-      right:"One hour, forty-three minutes <i>before</i> the bracket moved. Whoever sent that DM wasn&rsquo;t reacting &mdash; they were getting ahead of it. That&rsquo;s not a bystander.",
-      wrong:"Off. Find the DM&rsquo;s time and the bracket edit&rsquo;s time &mdash; same night &mdash; and give me the gap between them.",
+      skip:"The &lsquo;blame ASB&rsquo; DM went out at 10:02 PM; the bracket was rigged at 11:45 PM, same night. That&rsquo;s <b>1 hour 43 minutes</b> earlier. The account&rsquo;s loudest defender was working the story <i>before</i> the crime. Answer: <b>1:43</b>.",
+      right:"One hour, forty-three minutes <i>before</i> the bracket moved. Whoever sent that DM wasn&rsquo;t reacting, they were getting ahead of it. That&rsquo;s not a bystander.",
+      wrong:"Off. Find the DM&rsquo;s time and the bracket edit&rsquo;s time, same night, and give me the gap between them.",
       answers:["1:43","143","1 hour 43 minutes","1hr43","1h43","1hrs43","1 hr 43 min","103","103 minutes","103min","1 43"] },
 
     { tag:"CODE 5 &middot; THE ACCUSATION", level:"Hard",
-      prompt:"You&rsquo;ve got the account, the money, and a timeline that only points one way. Three of these players lost, and they&rsquo;re loud about it. One never lost a thing &mdash; and spent every breath aiming you at a suspect who doesn&rsquo;t exist. Name him the only way that&rsquo;ll hold up: give me his <b>Player ID</b>.",
+      prompt:"You&rsquo;ve got the account, the money, and a timeline that only points one way. Three of these players lost, and they&rsquo;re loud about it. One never lost a thing, and spent every breath aiming you at a suspect who doesn&rsquo;t exist. Name him the only way that&rsquo;ll hold up: give me his <b>Player ID</b>.",
       hint:"Whoever sent that 10:02 PM DM is the one steering everything toward &lsquo;ASB.&rsquo; Start by finding that handle.",
-      hint2:"The DM is from <b>@myles_rey07</b> &mdash; Myles Reyes. Match that name to a suspect card and read the Player ID off it.",
+      hint2:"The DM is from <b>@myles_rey07</b>, Myles Reyes. Match that name to a suspect card and read the Player ID off it.",
       skip:"The DM handle @myles_rey07 belongs to <b>Myles Reyes</b>, and his suspect card reads <b>PLR-07</b>. He ran the account, took the pot, and invented &lsquo;ASB&rsquo; to keep your eyes off him. Answer: <b>PLR-07</b>.",
-      right:"PLR-07. Myles Reyes. That&rsquo;s our man &mdash; close it.",
-      wrong:"Not him. The one who never lost, the one steering you at &lsquo;ASB&rsquo; &mdash; match the DM handle to a card and read the ID.",
+      right:"PLR-07. Myles Reyes. That&rsquo;s our man, close it.",
+      wrong:"Not him. The one who never lost, the one steering you at &lsquo;ASB&rsquo;, match the DM handle to a card and read the ID.",
       answers:["PLR-07","PLR07","07","7","plr 07","plr-7"] }
   ],
 
   // shown on the win screen as a lineup; the guilty one gets stamped.
   // img: drop a photo path here (e.g. "aaden.jpg") to fill the blank frame; leave "" for blank.
   suspects: [
-    { name:"Aaden Limon",   id:"PLR-08", tag:"Underpaid &mdash; not the thief", img:"" },
-    { name:"Miles Filamor", id:"PLR-04", tag:"Cheated out &mdash; a victim",     img:"" },
-    { name:"Ryan Hughes",   id:"PLR-11", tag:"Sore runner-up &mdash; cleared",   img:"" },
+    { name:"Aaden Limon",   id:"PLR-08", tag:"Underpaid, not the thief", img:"" },
+    { name:"Miles Filamor", id:"PLR-04", tag:"Cheated out, a victim",     img:"" },
+    { name:"Ryan Hughes",   id:"PLR-11", tag:"Sore runner-up, cleared",   img:"" },
     { name:"Myles Reyes",   id:"PLR-07", tag:"Ran $lakeassassin27", guilty:true, img:"" }
   ],
 
   win: {
-    verdict: "Case closed &mdash; it was Myles Reyes.",
-    blurb: "The account stayed anonymous for a reason. Myles Reyes wasn&rsquo;t guessing at the thief &mdash; he <b>was</b> the thief. He ran <b>$lakeassassin27</b>, collected all <b>$3,000</b>, paid out nobody, and spent two weeks aiming the whole school at &lsquo;ASB&rsquo; so nobody&rsquo;d look at PLR-07. The loudest theory in the room was the cover story. You closed it faster than I ever got to &mdash; sign the file. The Board&rsquo;s yours."
+    verdict: "Case closed, it was Myles Reyes.",
+    blurb: "The account stayed anonymous for a reason. Myles Reyes wasn&rsquo;t guessing at the thief, he <b>was</b> the thief. He ran <b>$lakeassassin27</b>, collected all <b>$3,000</b>, paid out nobody, and spent two weeks aiming the whole school at &lsquo;ASB&rsquo; so nobody&rsquo;d look at PLR-07. The loudest theory in the room was the cover story. You closed it faster than I ever got to, sign the file. The Board&rsquo;s yours."
   }
 };
 /* ════════════════ end of editable config ════════════════ */
 
 const LB_KEY = "edge_leaderboard_v1";   // ← leaderboard lives here (browser localStorage)
 const $ = s => document.querySelector(s);
-// Lenient match: drop everything but letters/digits, lowercase &mdash; so "$850",
+// Lenient match: drop everything but letters/digits, lowercase, so "$850",
 // "850", "2:14 AM", "214", "$shadowm23" etc. all resolve to their answer.
 const norm = v => (v||"").toLowerCase().replace(/[^a-z0-9]/g,"");
 function isCorrect(q, raw){
@@ -633,7 +633,7 @@ function renderQuestion(){
         ${progressBar()}
       </div>
       <div class="eyebrow">Evidence ${idx+1} of ${CONFIG.questions.length}${q.level?` &middot; <span class="level">${q.level}</span>`:""}</div>
-      <p class="det-say prompt">${q.prompt}<span class="sig">&mdash; Det.</span></p>
+      <p class="det-say prompt">${q.prompt}<span class="sig">Det.</span></p>
       <div class="answer-row">
         <input class="code-in" id="ans" autocomplete="off" spellcheck="false"
                placeholder="LOG IT&hellip;" aria-label="Answer for ${q.tag}">
@@ -679,7 +679,7 @@ function showSkipped(q){
         ${progressBar(true)}
       </div>
       <div class="logged skip"><span class="chk">\u26a0</span> SKIPPED &middot; &minus;${SKIP_COST}</div>
-      <p class="det-say">${q.skip}<span class="sig">&mdash; Det.</span></p>
+      <p class="det-say">${q.skip}<span class="sig">Det.</span></p>
       <button class="btn btn-primary" id="nextBtn">${last?"Close the case \u2192":"Next lead \u2192"}</button>
     </div>`;
   $("#exhibitFile").classList.remove("swap-enter"); void $("#exhibitFile").offsetWidth;
@@ -694,7 +694,7 @@ function check(){
   const ok = isCorrect(q, input.value);
   if(!ok){
     input.classList.add("bad");
-    err.innerHTML = `${q.wrong} <span class="sig">&mdash; Det.</span>`;
+    err.innerHTML = `${q.wrong} <span class="sig">Det.</span>`;
     setTimeout(()=>input.classList.remove("bad"),400);
     input.select(); return;
   }
@@ -712,7 +712,7 @@ function showSolved(q){
         ${progressBar(true)}
       </div>
       <div class="logged"><span class="chk">\u2713</span> LOGGED</div>
-      <p class="det-say good">${q.right}<span class="sig">&mdash; Det.</span></p>
+      <p class="det-say good">${q.right}<span class="sig">Det.</span></p>
       <button class="btn btn-primary" id="nextBtn">${last?"Close the case \u2192":"Next lead \u2192"}</button>
     </div>`;
   $("#exhibitFile").classList.remove("swap-enter"); void $("#exhibitFile").offsetWidth;
@@ -743,7 +743,7 @@ function finish(){
   $("#rScore").textContent = finalScore;
   $("#nameIn").focus();
 }
-/* suspect lineup on the win screen &mdash; the guilty one gets stamped last */
+/* suspect lineup on the win screen, the guilty one gets stamped last */
 function renderLineup(){
   const wrap = $("#suspectLineup");
   if(!wrap || !CONFIG.suspects) return;
@@ -805,7 +805,7 @@ $("#adminToggle").onclick = ()=>{
     $("#clearBtn").style.display=""; $("#exportBtn").style.display="";
     $("#adminNote").classList.remove("hidden");
     $("#adminNote").innerHTML = "You can delete any row, <b>Clear all</b>, or <b>Export JSON</b>. "+
-      "Entries are stored in this browser under localStorage key <code>"+LB_KEY+"</code> &mdash; you can also hand-edit them in DevTools &rarr; Application &rarr; Local Storage.";
+      "Entries are stored in this browser under localStorage key <code>"+LB_KEY+"</code>, you can also hand-edit them in DevTools &rarr; Application &rarr; Local Storage.";
   } else {
     adminOn = false; $("#adminToggle").textContent="Manage board";
     $("#clearBtn").style.display="none"; $("#exportBtn").style.display="none";
@@ -837,12 +837,12 @@ $("#exportBtn").onclick = ()=>{
   }
   tick(); setInterval(tick,1000);
   var items=[
-    "Homecoming Top 5 court voting is coming soon &mdash; keep an eye out for the ballot",
-    "Submit your Love Lines on the Contact page &mdash; it might get read live on the bulletin",
-    "2026&ndash;27 yearbooks are on sale &mdash; $90 now, going up to $95 on Oct 12",
-    "Free zero-period peer tutoring &mdash; Library, Monday through Thursday mornings",
-    "Parking permits are now required &mdash; get the info at the front office",
-    "The Edge is here &mdash; grab the paper, scan the case, and close it before anyone else"
+    "Homecoming Top 5 court voting is coming soon, keep an eye out for the ballot",
+    "Submit your Love Lines on the Contact page, it might get read live on the bulletin",
+    "2026&ndash;27 yearbooks are on sale, $90 now, going up to $95 on Oct 12",
+    "Free zero-period peer tutoring, Library, Monday through Thursday mornings",
+    "Parking permits are now required, get the info at the front office",
+    "The Edge is here, grab the paper, scan the case, and close it before anyone else"
   ];
   var mv=document.getElementById("ennTkMove");
   if(mv){ var h=items.map(function(t){return '<span class="it">'+t+'</span>';}).join(""); mv.innerHTML=h+h; }

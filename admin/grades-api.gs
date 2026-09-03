@@ -76,6 +76,7 @@ function applyOp_(db, op){
   db.categories = db.categories || null;
   db.audit = db.audit || [];
   db.gsettings = db.gsettings || {};
+  db.board = db.board || [];
   var now = new Date().toISOString();
 
   function blank(o){
@@ -146,7 +147,25 @@ function applyOp_(db, op){
     if(op.what==='all'||op.what==='grades'){ db.agrades = {}; db.records = {}; }
     if(op.what==='all'||op.what==='assignments'){ db.assignments = {}; }
     if(op.what==='all'){ db.votes = {}; db.leaderboards = []; }
+    if(op.what==='all'||op.what==='board'){ db.board = []; }
     db.audit.unshift({ ts:now, user:op.by, action:'reset', detail:op.what });
+  }
+  /* ── Live "upcoming pieces" board (mirror newsroom/assets/grades.js) ── */
+  else if(op.op === 'board.post'){
+    var post = op.post || {};
+    if(!post.id) post.id = 'b' + Date.now() + Math.floor(Math.random()*1000);
+    post.by = op.by || post.by || '';
+    post.ts = post.ts || now;
+    post.updatedAt = now;
+    var bi = db.board.map(function(x){ return x.id; }).indexOf(post.id);
+    if(bi >= 0){ var m = db.board[bi]; for(var pk in post){ m[pk] = post[pk]; } }
+    else db.board.unshift(post);
+    db.board = db.board.slice(0, 200);
+  } else if(op.op === 'board.remove'){
+    db.board = db.board.filter(function(x){ return x.id !== op.id; });
+  } else if(op.op === 'board.status'){
+    var bj = db.board.map(function(x){ return x.id; }).indexOf(op.id);
+    if(bj >= 0){ db.board[bj].status = op.status || ''; db.board[bj].updatedAt = now; }
   }
   return db;
 }

@@ -234,11 +234,14 @@
     me = me || load();
     return !!(me && me.group);
   }
+  /* Anyone who's signed in can turn in a piece — production groups, leaders,
+     and the advisor alike. (Leaders help make pieces too, and the submission
+     form captures name/period/group, so there's no reason to block anyone.)
+     A guest on the plain class code isn't identified, so they still don't get
+     a personal submit affordance. */
   function canSubmit(me){
     me = me || load();
-    if(!me || me.kind === 'guest') return false;
-    if(me.kind === 'advisor') return true;
-    return inGroup(me);
+    return !!me && me.kind !== 'guest';
   }
 
   /* ── The alternating waves, split by REAL groups ───────────────

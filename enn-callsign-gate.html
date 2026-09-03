@@ -58,7 +58,7 @@ button:active{transform:translateY(1px)}
 .back:hover{color:var(--steel)}
 a{text-decoration:none;color:inherit}
 
-/* SIGNAL LOCKED flourish + cut-to-feed wipe */
+/* SIGNAL LOCKED confirmation, then a subtle fade into the hub */
 /* full-screen confirmation — solid backdrop so it fully covers the form */
 .locked{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
   pointer-events:none;opacity:0;visibility:hidden;
@@ -69,22 +69,20 @@ a{text-decoration:none;color:inherit}
 .locked-logo{width:56px;height:56px;border-radius:12px;margin-bottom:14px;filter:drop-shadow(0 0 20px rgba(26,86,219,0.45))}
 .locked b{font-family:var(--display);font-size:clamp(40px,10vw,84px);letter-spacing:.06em;color:#fff;text-shadow:0 0 40px rgba(255,59,48,0.55)}
 .locked-sub{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--steel);margin-top:8px}
-.wipe{position:fixed;inset:0;z-index:10;background:var(--live);transform:scaleX(0);transform-origin:left;pointer-events:none}
-.wipe.cut{animation:wipe-cut .5s var(--ease-cut) forwards}
-@keyframes wipe-cut{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}50.01%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
-.wipe::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.14) 0 2px,transparent 2px 4px)}
+/* subtle fade-out into the hub (replaces the old red cut-to-feed wipe) */
+body.leaving{opacity:0;transition:opacity .26s var(--ease-out)}
 
 @media (prefers-reduced-motion: reduce){
   .gate,.tally.hot i{animation:none}
-  .wipe.cut{animation:none}
+  body.leaving{transition:none}
 }
 </style>
 </head>
 <body>
-<script src="newsroom/config.js?v=10"></script>
-<script src="EDIT/22-ROSTER.js?v=10"></script>
-<script src="newsroom/assets/identity.js?v=10"></script>
-<script src="newsroom/assets/grades.js?v=10"></script>
+<script src="newsroom/config.js?v=11"></script>
+<script src="EDIT/22-ROSTER.js?v=11"></script>
+<script src="newsroom/assets/identity.js?v=11"></script>
+<script src="newsroom/assets/grades.js?v=11"></script>
 
 <div class="gate" id="gate">
   <span class="tally" id="tally"><i></i>OFF AIR · STANDBY</span>
@@ -111,7 +109,6 @@ a{text-decoration:none;color:inherit}
   <b id="locked-title">SIGNAL LOCKED</b>
   <span class="locked-sub" id="locked-sub">Cutting to the feed…</span>
 </div>
-<div class="wipe" id="wipe" aria-hidden="true"></div>
 
 <script>
 (function(){
@@ -122,7 +119,7 @@ a{text-decoration:none;color:inherit}
 
   var gate=document.getElementById('gate'), form=document.getElementById('form'),
       input=document.getElementById('call'), tally=document.getElementById('tally'),
-      locked=document.getElementById('locked'), wipe=document.getElementById('wipe');
+      locked=document.getElementById('locked');
 
   var ID = window.ENN_ID;
   var lockedTitle = document.getElementById('locked-title'),
@@ -158,14 +155,14 @@ a{text-decoration:none;color:inherit}
     tally.classList.add('hot');
     tally.innerHTML = '<i></i>ON AIR';
     if(reduce){ window.location.href = HUB; return; }
-    /* 1) confirmation screen covers the form, 2) hold so it reads,
-       3) wipe cut, 4) redirect into the hub.
+    /* 1) confirmation screen fades in over the form, 2) hold so it reads,
+       3) a subtle full-page fade, 4) redirect into the hub.
        Named sign-ins hold a beat longer so the greeting is readable. */
     var named = identity && identity.kind !== 'guest';
-    var cutAt = named ? 1150 : 640, goAt = named ? 1600 : 1080;
+    var holdMs = named ? 1250 : 780;
     locked.classList.add('on');
-    setTimeout(function(){ wipe.classList.add('cut'); }, cutAt);
-    setTimeout(function(){ window.location.href = HUB; }, goAt);
+    setTimeout(function(){ document.body.classList.add('leaving'); }, holdMs);
+    setTimeout(function(){ window.location.href = HUB; }, holdMs + 260);
   }
 
   function reject(){
