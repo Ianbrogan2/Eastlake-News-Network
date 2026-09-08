@@ -52,11 +52,18 @@ var ENN_BULLETINS = {
   // ── Which months the calendar page draws ────────────────────────
   // [year, month]  — month is 1-12 (1 = January)
   months: [
+    [2026, 7],   // July (school starts Jul 22)
     [2026, 8],   // August
     [2026, 9],   // September
     [2026, 10],  // October
     [2026, 11],  // November
     [2026, 12],  // December
+    [2027, 1],   // January
+    [2027, 2],   // February
+    [2027, 3],   // March
+    [2027, 4],   // April
+    [2027, 5],   // May
+    [2027, 6],   // June
   ],
 
   // ── The period rotation ─────────────────────────────────────────
@@ -109,33 +116,65 @@ var ENN_BULLETINS = {
 
   // ── No-school / no-broadcast days shown on the calendar ─────────
   // Format:  'YYYY-MM-DD': 'Label shown in the box'
+  // School-CLOSED days (greyed on the calendar). Official 2026-27 closures.
   offDays: {
-    '2026-09-07': 'Holiday',
-    '2026-09-08': 'Full Day',
-    '2026-09-21': 'Fall Break',
-    '2026-09-22': 'Fall Break',
-    '2026-09-23': 'Fall Break',
-    '2026-09-24': 'Fall Break',
-    '2026-09-25': 'Fall Break',
-    '2026-09-28': 'Fall Break',
-    '2026-09-29': 'Fall Break',
-    '2026-09-30': 'Fall Break',
-    '2026-10-01': 'Fall Break',
-    '2026-10-02': 'Fall Break',
+    // ── Fall semester ──
+    '2026-09-07': 'Labor Day',
+    '2026-09-21': 'Fall Recess', '2026-09-22': 'Fall Recess', '2026-09-23': 'Fall Recess',
+    '2026-09-24': 'Fall Recess', '2026-09-25': 'Fall Recess', '2026-09-28': 'Fall Recess',
+    '2026-09-29': 'Fall Recess', '2026-09-30': 'Fall Recess', '2026-10-01': 'Fall Recess',
+    '2026-10-02': 'Fall Recess',
     '2026-10-05': 'No School',
-    '2026-10-06': 'Full Day',
     '2026-11-11': 'Veterans Day',
-    '2026-11-23': 'No School',
-    '2026-11-24': 'No School',
-    '2026-11-25': 'No School',
-    '2026-11-26': 'Thanksgiving',
-    '2026-11-27': 'Holiday',
-    '2026-12-14': 'Full Day',
-    '2026-12-15': 'Finals',
-    '2026-12-16': 'Finals',
-    '2026-12-17': 'Finals',
-    '2026-12-18': 'Min Day',
+    '2026-11-23': 'Thanksgiving', '2026-11-24': 'Thanksgiving', '2026-11-25': 'Thanksgiving',
+    '2026-11-26': 'Thanksgiving', '2026-11-27': 'Thanksgiving',
+    '2026-12-21': 'Winter Recess', '2026-12-22': 'Winter Recess', '2026-12-23': 'Winter Recess',
+    '2026-12-24': 'Winter Recess', '2026-12-25': 'Winter Recess', '2026-12-28': 'Winter Recess',
+    '2026-12-29': 'Winter Recess', '2026-12-30': 'Winter Recess', '2026-12-31': 'Winter Recess',
+    // ── Spring semester ──
+    '2027-01-01': 'Winter Recess', '2027-01-04': 'Winter Recess', '2027-01-05': 'Winter Recess',
+    '2027-01-06': 'Winter Recess', '2027-01-07': 'Winter Recess', '2027-01-08': 'Winter Recess',
+    '2027-01-11': 'No School',
+    '2027-01-18': 'MLK Day',
+    '2027-02-12': 'Lincoln Day',
+    '2027-02-15': 'Washington Day',
+    '2027-03-22': 'Spring Recess', '2027-03-23': 'Spring Recess', '2027-03-24': 'Spring Recess',
+    '2027-03-25': 'Spring Recess', '2027-03-26': 'Spring Recess', '2027-03-29': 'Spring Recess',
+    '2027-03-30': 'Spring Recess', '2027-03-31': 'Spring Recess', '2027-04-01': 'Spring Recess',
+    '2027-04-02': 'Spring Recess',
+    '2027-05-31': 'Memorial Day',
   },
+
+  // Notable SCHOOL-DAY events (shown with a marker, school still in session).
+  events: {
+    '2026-07-22': 'First day of school',
+    '2026-08-13': 'Open House',
+    '2026-08-14': 'Minimum day',
+    '2026-09-04': 'Progress reports',
+    '2026-10-30': 'Progress reports',
+    '2026-12-15': 'Finals', '2026-12-16': 'Finals', '2026-12-17': 'Finals',
+    '2026-12-18': 'Last day · Sem 1 · Sendoff',
+    '2027-01-13': 'Second semester begins',
+    '2027-02-26': 'Progress reports',
+    '2027-04-23': 'Progress reports',
+    '2027-05-28': 'Minimum day',
+    '2027-06-01': 'Finals', '2027-06-02': 'Finals', '2027-06-03': 'Finals',
+    '2027-06-04': 'Last day of school',
+  },
+
+  // Pro Hour / assembly days (2:49 PM release) — a light marker on the calendar.
+  proHours: [
+    '2026-07-22','2026-07-23','2026-07-24','2026-07-31',
+    '2026-08-07','2026-08-21','2026-08-28',
+    '2026-09-04','2026-09-11','2026-09-18',
+    '2026-10-09','2026-10-16','2026-10-23','2026-10-30',
+    '2026-11-06','2026-11-20','2026-12-04','2026-12-11',
+    '2027-01-15','2027-01-22','2027-01-29',
+    '2027-02-05','2027-02-19','2027-02-26',
+    '2027-03-05','2027-03-12','2027-03-19',
+    '2027-04-09','2027-04-16','2027-04-23','2027-04-30',
+    '2027-05-07','2027-05-14','2027-05-21',
+  ],
 
   // ── The note printed under the calendar ─────────────────────────
   calendarNote: 'A bulletin airs only on days whose bell schedule includes the 10:31–10:41 slot (schedule types A, B, and N). Periods rotate P1 → P4 → P6 down the list, landing exactly 20 each.',
@@ -266,22 +305,17 @@ var ENN_SEASON = (function(){
      Monday → due Friday.) Returns {iso,date} or null. */
   function pad2(n){ return String(n).padStart(2,'0'); }
   function isoOf(dt){ return dt.getFullYear()+'-'+pad2(dt.getMonth()+1)+'-'+pad2(dt.getDate()); }
-  /* off-day labels that mean NO SCHOOL (so the class doesn't meet). "Full Day",
-     "Min Day", "Finals" still have class, so they can be a due day. */
-  function isNoSchool(label){
-    return /holiday|break|no school|thanksgiving|veterans/i.test(String(label||''));
-  }
   function dueDayFor(iso){
     var c = cfg(); if(!c) return null;
     var air = airDate(iso); if(!air) return null;
-    var off = c.offDays || {};
+    var off = c.offDays || {};        // offDays are all real school closures now
     var probe = new Date(air.getFullYear(), air.getMonth(), air.getDate());
     for(var i=0;i<21;i++){
       probe.setDate(probe.getDate() - 1);
       var dow = probe.getDay();
-      if(dow === 0 || dow === 6) continue;             // weekend — no class
+      if(dow === 0 || dow === 6) continue;   // weekend — no class
       var k = isoOf(probe);
-      if(off[k] && isNoSchool(off[k])) continue;       // holiday / break — no class
+      if(off[k]) continue;                   // school closed — no class
       return { iso:k, date:new Date(probe.getFullYear(), probe.getMonth(), probe.getDate(), c.airHour||0, c.airMinute||0) };
     }
     return null;
