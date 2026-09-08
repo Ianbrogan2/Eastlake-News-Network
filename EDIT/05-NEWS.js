@@ -21,10 +21,10 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_NEWS = {
   featured: {
-    tag: 'Homecoming',
-    title: 'Homecoming Court Voting Is Open — Vote Now on Jupiter',
-    body: 'Voting for the Homecoming Top 5 court is live right now on Jupiter. Log in, pick your court, and lock in your vote before it closes. Rally your friends — every vote counts.',
-    byline: 'REPORTED BY TEAM ENN · SEPTEMBER 2026'
+    tag: 'Homecoming Football Game',
+    title: 'Vista High School Blackout ',
+    body: 'Wear black to the home game on September 18th at 5:00 PM, where the Homecoming King and Queen will be announced at halftime',
+    byline: 'REPORTED BY TEAM ENN · SEPTEMBER 8, 2026'
   },
   sidebar: [
     {
@@ -38,14 +38,14 @@ var ENN_NEWS = {
       date: '$90 now'
     },
     {
-      cat: 'Campus',
-      title: 'Free zero-period peer tutoring is still live — Library, Monday through Thursday mornings, any subject, just drop in.',
-      date: 'Mon–Thu'
+      cat: 'Homecoming Dance',
+      title: '6:00 PM to 10:00 PM',
+      date: 'September 19th'
     },
     {
-      cat: 'Campus',
-      title: 'Parking permits are now officially required — stop by the front office for all the details and to get yours.',
-      date: 'Now'
+      cat: 'Assembly',
+      title: 'There will be an assembly in the gym after second period!',
+      date: 'September 19th'
     }
   ]
 };
