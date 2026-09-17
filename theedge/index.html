@@ -251,6 +251,7 @@ a{color:inherit}
 <script>
 /* ── ISSUES (generated from the digitized archive) ── */
 const ISSUES = [
+  {id:'2026-09-17',date:'2026-09-17',dateLabel:'Sep 17, 2026',year:2026,volume:36,issue:1,title:'Issue 1',pages:12,featured:true},
   {id:'2025-09-18',date:'2025-09-18',dateLabel:'Sep 18, 2025',year:2025,volume:35,issue:1,title:'Issue 1',pages:8,featured:true},
   {id:'2025-05-22',date:'2025-05-22',dateLabel:'May 22, 2025',year:2025,volume:34,issue:6,title:'Issue 6',pages:16,featured:false},
   {id:'2025-03-20',date:'2025-03-20',dateLabel:'Mar 20, 2025',year:2025,volume:34,issue:5,title:'Issue 5',pages:16,featured:false},
@@ -324,7 +325,7 @@ function openIssue(id){
   for(let p=1;p<=it.pages;p++){
     const n = String(p).padStart(2,'0');
     html += `<div class="reader-page-n">Page ${p} of ${it.pages}</div>`
-          + `<img src="issues/${it.id}/p${n}.webp" alt="Page ${p}" loading="lazy">`;
+          + `<img src="issues/${it.id}/p${n}.webp" alt="Page ${p}" loading="${p<=2?'eager':'lazy'}">`;
   }
   const stage = $('#rStage'); stage.innerHTML = html; stage.scrollTop = 0;
   $('#reader').classList.add('open'); document.body.style.overflow='hidden'; stage.focus();
@@ -345,6 +346,16 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', ()=>{
   $('#tab-game').hidden  = which!=='game';
   window.scrollTo({top:0, behavior:'smooth'});
 }));
+
+/* Deep link — /theedge/?issue=<id> (or #issue-<id>) opens that issue
+   full-screen straight away. This is what the printed QR codes point to. */
+(function(){
+  try{
+    var id = new URLSearchParams(location.search).get('issue');
+    if(!id){ var h=(location.hash||'').replace(/^#/,''); if(/^issue-/.test(h)) id=h.slice(6); }
+    if(id && ISSUES.some(function(x){return x.id===id;})) openIssue(id);
+  }catch(e){}
+})();
 </script>
 
 <script>
@@ -363,7 +374,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', ()=>{
   tick(); setInterval(tick,1000);
   var items=[
     "The Eastlake Edge &mdash; every issue back to 1992 lives here now",
-    "Newest issue: Vol. 35, Issue 1 &mdash; September 2025",
+    "Newest issue: Vol. 36, Issue 1 &mdash; September 2026",
     "Play the Case &mdash; scan the paper, close The Eastlake Assassins",
     "2026&ndash;27 yearbooks are on sale &mdash; $90 now, going up to $95 on Oct 12",
     "Want to be on the crew? Talk to Mr. Nimmo about joining ENN"
