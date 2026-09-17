@@ -18,6 +18,16 @@
 .edge-hero .serif{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--muted);font-size:clamp(18px,3vw,26px);margin-top:2px}
 .edge-hero .sec-sub{margin-top:14px;max-width:60ch}
 
+/* about the edge — intro block */
+.edge-about{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));
+  border:1px solid var(--border);border-radius:14px;padding:clamp(24px,3.6vw,38px) clamp(22px,3.6vw,40px);margin:24px 0 4px}
+.edge-about::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--grad-bg)}
+.edge-about .ea-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4.2vw,46px);letter-spacing:.02em;line-height:1;margin:8px 0 16px;color:var(--text)}
+.edge-about .ea-title span{background:var(--grad-bg);-webkit-background-clip:text;background-clip:text;color:transparent}
+.edge-about p{color:var(--muted);font-size:15.5px;line-height:1.75;max-width:78ch;margin:0 0 14px}
+.edge-about p:last-child{margin-bottom:0}
+.edge-about p b{color:var(--text);font-weight:600}
+
 /* tab switcher — same button shapes as the rest of the site */
 .edge-tabs{display:flex;gap:8px;margin:26px 0 36px;flex-wrap:wrap}
 .edge-tab{font-family:'DM Mono',monospace;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
@@ -144,6 +154,13 @@
     <div class="serif">the eastlake edge</div>
     <p class="sec-sub">Eastlake High's student newspaper — every issue we've digitized, back to 1992. Read the latest, dig through the archive, or crack the case.</p>
   </header>
+
+  <section class="edge-about">
+    <div class="eyebrow">About the Edge</div>
+    <h2 class="ea-title">Eastlake Edge: <span>Voice of the Students</span></h2>
+    <p>Welcome to the Eastlake Edge! We strive to amplify <b>YOUR</b> voices, perspectives, and experiences that connect our community. The Edge is committed to honest reporting and telling the stories that matter to our students.</p>
+    <p>As a student-run club, we cover a variety of topics, from world politics to student life. To be in Eastlake Edge means to capture the Titan spirit and put it down on paper. We photograph the intense moments between athletic opponents in the hot fields. We craft articles that dive into the topics that are captivating students. We are more than just a newspaper, we are the voice of Eastlake High School.</p>
+  </section>
 
   <div class="edge-tabs" role="tablist">
     <button class="edge-tab active" data-tab="paper" role="tab">📰 The Eastlake Edge</button>
