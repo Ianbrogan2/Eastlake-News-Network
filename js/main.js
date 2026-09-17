@@ -495,7 +495,9 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
     requestAnimationFrame(() => requestAnimationFrame(runReveals));
   }
   $$('.nav-link').forEach(a => a.addEventListener('click', e => {
-    e.preventDefault(); const r = a.dataset.route;
+    const r = a.dataset.route;
+    if(!r) return;                 // real links (e.g. The Edge → /theedge/) navigate normally
+    e.preventDefault();
     if(location.hash !== '#'+r) location.hash = r; route(r);
   }));
   const logoLink = $('.nav-logo-link');
@@ -2957,7 +2959,9 @@ window._ennSessionStart = Date.now(); // capture page-load time for time-on-page
       document.body.style.overflow = opening ? 'hidden' : '';
     });
     $$('.mobile-link').forEach(a => a.addEventListener('click', e => {
-      e.preventDefault(); const r = a.dataset.route; closeMobile();
+      const r = a.dataset.route;
+      if(!r){ closeMobile(); return; }   // real links (The Edge) navigate normally
+      e.preventDefault(); closeMobile();
       if(location.hash !== '#'+r) location.hash = r; route(r);
     }));
     const origRoute = route;
