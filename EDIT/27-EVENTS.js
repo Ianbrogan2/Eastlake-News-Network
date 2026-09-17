@@ -28,6 +28,8 @@
 var ENN_EVENTS = [
 
   // ── Fall 2026 ──
+  { date:'2026-07-22', days:1, time:'', title:'First Day of School', category:'Campus',
+    desc:'Welcome back, Titans — the first day of the 2026–27 school year and Semester I.' },
   { date:'2026-08-07', days:1, time:'', title:'Lu-Wow Assembly & Dance', category:'Spirit',
     desc:'The finale of Lu-Wow Spirit Week — a spirit assembly during the day and the Lu-Wow dance in the evening. Wear your best luau fit.' },
   { date:'2026-08-10', days:1, time:'7:15 AM', title:'Peer Tutoring Begins', category:'Academics',

@@ -371,7 +371,7 @@
      ══════════════════════════════════════════════════════════════════ -->
 <script>
 (function(){
-  var EDGE_LIVE = false;            // ← flip to true to launch The Edge
+  var EDGE_LIVE = true;             // ← LIVE — The Edge is public
   if(!EDGE_LIVE) return;
   var THE_EDGE_URL = '/theedge/';
   fetch(THE_EDGE_URL, {method:'HEAD'}).then(function(r){

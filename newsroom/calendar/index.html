@@ -71,17 +71,6 @@
 .enncal .day.bull{transition:transform .13s,box-shadow .13s;cursor:default}
 .enncal .day.bull:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15) inset}
 
-/* school-day EVENTS (finals, progress reports, open house, first/last day…) */
-.enncal .day.evt{border-color:#33436a;background:linear-gradient(180deg,#101725,#0C0F16)}
-.enncal .day.evt .dnum{color:#9db4e6}
-.enncal .day.evt .evt-note{position:absolute;left:0;right:0;top:50%;transform:translateY(-46%);
-  text-align:center;color:#a9c1f0;font-size:9.5px;font-weight:700;line-height:1.15;padding:0 4px}
-.enncal .day.bull .evt-flag{position:absolute;top:5px;left:7px;font-size:10px;color:#ffe08a}
-/* Pro Hour / assembly days (light marker) */
-.enncal .day .pro{position:absolute;left:0;right:0;bottom:5px;text-align:center;
-  font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:#66718a}
-.enncal .day.prohour .dnum{color:var(--clight)}
-
 /* finished (past) days fade back; today gets a shiny ring */
 .enncal .day.past{opacity:.38}
 .enncal .day.bull.past{opacity:.4;filter:saturate(.65)}
@@ -146,13 +135,11 @@
     <div id="cal" data-filter="all"></div>
 
     <div class="notes">
-      <b>Reading this calendar.</b> Colored cells are <b>bulletin days</b> (P1 · P4 · P6). Greyed cells are
-      <b>school closures</b> — holidays and recesses. Blue-outlined cells are <b>school-day events</b>: first
-      and last day, finals, progress reports, open house, and minimum days. <b>Pro Hour</b> marks the
-      2:49&nbsp;PM assembly-release days.<br>
-      <span id="cal-note"></span><br>
-      School hours: regular day 8:30&nbsp;AM–3:40&nbsp;PM · minimum day 8:30&nbsp;AM–1:18&nbsp;PM.
-      Dates from the official 2026–27 school calendar.
+      <b>How it's built.</b> <span id="cal-note"></span><br>
+      <b>No bulletins on:</b> Labor Day (Sep 7), Fall Break (Sep 21–Oct 2), Veterans Day (Nov 11),
+      Thanksgiving week (Nov 23–27), finals &amp; minimum days (Dec 14–18), and “Full Day” Tuesdays
+      (Sep 8, Oct 6, Dec 14). Fridays have no bulletin — except <b>Nov 13</b>, an “N” schedule day
+      that includes the slot, counted here as Period 4.
     </div>
   </div>
 </main>
@@ -168,8 +155,6 @@
   const BULLETINS = (SEASON && SEASON.dates)    ? SEASON.dates    : [];
   const ROTATION  = (SEASON && SEASON.rotation) ? SEASON.rotation : ["P1","P4","P6"];
   const ANNOT     = (SEASON && SEASON.offDays)  ? SEASON.offDays  : {};
-  const EVENTS    = (SEASON && SEASON.events)   ? SEASON.events   : {};
-  const PROSET    = {}; ((SEASON && SEASON.proHours) || []).forEach(function(d){ PROSET[d] = true; });
 
   // months are stored 1-12 in the edit file; JS wants 0-11 here
   const MONTHS = (SEASON && SEASON.months)
@@ -211,22 +196,14 @@
       const key = iso(year,month,d);
       const cell = document.createElement("div");
       const hit = MAP[key];
-      var ev = EVENTS[key], pro = PROSET[key];
       if(hit){
         var mineCls = MY_DATES[key] ? ' mine' : '';
         cell.className = `day bull ${hit.period.toLowerCase()}${mineCls}`;
         cell.innerHTML = `<span class="dnum">${d}</span><span class="bnum">#${hit.num}</span><span class="plabel">${hit.period}</span><span class="time">10:31 AM</span>`
-          + (MY_DATES[key] ? `<span class="mytag">${MY_LABEL}</span>` : '')
-          + (ev ? `<span class="evt-flag" title="${ev}">★</span>` : '');
+          + (MY_DATES[key] ? `<span class="mytag">${MY_LABEL}</span>` : '');
       } else if(ANNOT[key]){
         cell.className = "day off";
         cell.innerHTML = `<span class="dnum">${d}</span><span class="note">${ANNOT[key]}</span>`;
-      } else if(ev){
-        cell.className = "day evt";
-        cell.innerHTML = `<span class="dnum">${d}</span><span class="evt-note">${ev}</span>` + (pro ? `<span class="pro">Pro Hour</span>` : '');
-      } else if(pro){
-        cell.className = "day prohour";
-        cell.innerHTML = `<span class="dnum">${d}</span><span class="pro">Pro Hour</span>`;
       } else {
         cell.className = "day empty";
         cell.innerHTML = `<span class="dnum">${d}</span>`;
