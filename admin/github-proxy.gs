@@ -229,7 +229,8 @@ var SECTION_AREA = {
   nrboards:'newsroom', nrtext:'newsroom', nrconfig:'newsroom', nrcolors:'newsroom', assign:'newsroom',
   roster1:'team', roster4:'team', roster6:'team', rosteradv:'team',
   secmain:'sections', secnews:'sections',
-  athletics:'athletics', events:'events', yearbook:'yearbook'
+  athletics:'athletics', events:'events', yearbook:'yearbook',
+  theedge:'theedge', edgeissues:'theedge'
 };
 function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }
 function can(perms, area, cap, feature){

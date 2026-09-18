@@ -85,6 +85,15 @@
         { key:'ordering',      label:'Ordering link & info' },
       ]},
 
+    /* ── THE EDGE — the newspaper hub (its own area) ── */
+    { key:'theedge',   label:'The Edge',          icon:'📄', caps:['view','create','edit','delete','publish'],
+      desc:'The Edge newspaper — upload & manage issues, PDFs, covers, QR codes, and publication status.',
+      features:[
+        { key:'issues', label:'Issues (upload, edit, publish)' },
+        { key:'pages',  label:'Individual pages' },
+        { key:'media',  label:'Issue PDFs & covers' },
+      ]},
+
     /* ── MASTER-LEVEL AREAS ── */
     { key:'settings',  label:'Site Settings',    icon:'⚙️', caps:['view','edit'], sensitive:true,
       desc:'Colors, on-air hours, YouTube channel, social links, intro, maintenance mode.' },
@@ -123,8 +132,8 @@
     bulletins:'settings', bellschedule:'settings',
     // Yearbook hub
     yearbook:'yearbook',
-    // The Edge (falls under Settings — master-only — matching the backend default)
-    theedge:'settings'
+    // The Edge — its own area (issues manager + announcement bar)
+    theedge:'theedge', edgeissues:'theedge'
   };
 
   function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }

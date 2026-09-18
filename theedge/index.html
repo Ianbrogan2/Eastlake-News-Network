@@ -96,7 +96,7 @@
 .rclose{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 15px;transition:.18s var(--ease)}
 .rclose:hover{color:#fff;border-color:var(--red)}
 .reader-stage{flex:1;overflow:auto;padding:24px 16px 70px;text-align:center}
-.reader-stage img{display:block;max-width:min(920px,100%);width:100%;margin:0 auto 14px;border-radius:4px;box-shadow:0 20px 50px rgba(0,0,0,.6);background:#fff;min-height:120px}
+.reader-stage img,.reader-stage canvas{display:block;max-width:min(920px,100%);width:100%;margin:0 auto 14px;border-radius:4px;box-shadow:0 20px 50px rgba(0,0,0,.6);background:#fff;min-height:120px}
 .reader-pn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--muted-2);margin:2px 0 12px;text-transform:uppercase}
 
 @media (max-width:640px){
@@ -227,50 +227,38 @@
 </div>
 
 <script src="/EDIT/03-TICKER.js?v=7"></script>
+<script src="/EDIT/30-EDGE.js?v=1"></script>
 <script>
-/* ── ISSUES (generated from the digitized archive) ── */
-const ISSUES = [
-  {id:'2026-09-17',date:'2026-09-17',dateLabel:'Sep 17, 2026',year:2026,volume:36,issue:1,title:'Issue 1',pages:12,featured:true},
-  {id:'2025-09-18',date:'2025-09-18',dateLabel:'Sep 18, 2025',year:2025,volume:35,issue:1,title:'Issue 1',pages:8,featured:true},
-  {id:'2025-05-22',date:'2025-05-22',dateLabel:'May 22, 2025',year:2025,volume:34,issue:6,title:'Issue 6',pages:16,featured:false},
-  {id:'2025-03-20',date:'2025-03-20',dateLabel:'Mar 20, 2025',year:2025,volume:34,issue:5,title:'Issue 5',pages:16,featured:false},
-  {id:'2025-02-13',date:'2025-02-13',dateLabel:'Feb 13, 2025',year:2025,volume:34,issue:4,title:'Issue 4',pages:16,featured:false},
-  {id:'2024-12-12',date:'2024-12-12',dateLabel:'Dec 12, 2024',year:2024,volume:34,issue:3,title:'Issue 3',pages:16,featured:false},
-  {id:'2024-11-07',date:'2024-11-07',dateLabel:'Nov 7, 2024',year:2024,volume:34,issue:2,title:'Issue 2',pages:16,featured:false},
-  {id:'2024-09-19',date:'2024-09-19',dateLabel:'Sep 19, 2024',year:2024,volume:34,issue:1,title:'Issue 1',pages:16,featured:true},
-  {id:'2024-05-21',date:'2024-05-21',dateLabel:'May 21, 2024',year:2024,volume:33,issue:5,title:'Issue 5',pages:16,featured:false},
-  {id:'2024-03-12',date:'2024-03-12',dateLabel:'Mar 12, 2024',year:2024,volume:33,issue:4,title:'Issue 4',pages:16,featured:false},
-  {id:'2024-02-13',date:'2024-02-13',dateLabel:'Feb 13, 2024',year:2024,volume:33,issue:3,title:'Issue 3',pages:16,featured:false},
-  {id:'2023-12-07',date:'2023-12-07',dateLabel:'Dec 7, 2023',year:2023,volume:33,issue:2,title:'Issue 2',pages:16,featured:false},
-  {id:'2023-10-19',date:'2023-10-19',dateLabel:'Oct 19, 2023',year:2023,volume:33,issue:1,title:'Issue 1',pages:16,featured:true},
-  {id:'2023-05-17',date:'2023-05-17',dateLabel:'May 17, 2023',year:2023,volume:32,issue:6,title:'Issue 6',pages:16,featured:false},
-  {id:'2023-03-15',date:'2023-03-15',dateLabel:'Mar 15, 2023',year:2023,volume:32,issue:5,title:'Issue 5',pages:16,featured:false},
-  {id:'2022-12-07',date:'2022-12-07',dateLabel:'Dec 7, 2022',year:2022,volume:32,issue:3,title:'Issue 3',pages:16,featured:false},
-  {id:'2022-11-02',date:'2022-11-02',dateLabel:'Nov 2, 2022',year:2022,volume:32,issue:2,title:'Issue 2',pages:16,featured:false},
-  {id:'2022-09-14',date:'2022-09-14',dateLabel:'Sep 14, 2022',year:2022,volume:32,issue:1,title:'Issue 1',pages:16,featured:true},
-  {id:'2022-05-18',date:'2022-05-18',dateLabel:'May 18, 2022',year:2022,volume:31,issue:99,title:'Senior Edition',pages:16,featured:false},
-  {id:'2022-03-16',date:'2022-03-16',dateLabel:'Mar 16, 2022',year:2022,volume:31,issue:5,title:'Issue 5',pages:16,featured:false},
-  {id:'2022-02-09',date:'2022-02-09',dateLabel:'Feb 9, 2022',year:2022,volume:31,issue:4,title:'Issue 4',pages:16,featured:false},
-  {id:'2021-12-15',date:'2021-12-15',dateLabel:'Dec 15, 2021',year:2021,volume:31,issue:3,title:'Issue 3',pages:16,featured:false},
-  {id:'2021-09-15',date:'2021-09-15',dateLabel:'Sep 15, 2021',year:2021,volume:31,issue:1,title:'Issue 1',pages:12,featured:true},
-  {id:'2020-02-12',date:'2020-02-12',dateLabel:'Feb 12, 2020',year:2020,volume:29,issue:4,title:'Issue 4',pages:16,featured:true},
-  {id:'1993-08-27',date:'1993-08-27',dateLabel:'Aug 27, 1993',year:1993,volume:2,issue:1,title:'Issue 1',pages:8,featured:true},
-  {id:'1992-12-18',date:'1992-12-18',dateLabel:'Dec 18, 1992',year:1992,volume:1,issue:3,title:'Issue 3',pages:12,featured:true}
-];
+/* ── ISSUES — loaded from EDIT/30-EDGE.js (managed in the Site Manager → The Edge) ── */
+const _RAW = (window.ENN_EDGE && Array.isArray(ENN_EDGE.issues)) ? ENN_EDGE.issues : [];
+const ISSUES = _RAW
+  .filter(it => (it.status || 'published') === 'published')
+  .map(it => Object.assign({}, it, {
+    slug: it.slug || it.id,
+    title: it.issueTitle || it.title || ('Issue ' + (it.issue || '')),
+    dateLabel: it.dateLabel || it.date || '',
+    year: it.year || (parseInt(String(it.date||'').slice(0,4), 10) || 0)
+  }))
+  .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const cover = it => 'issues/'+it.id+'/cover.webp';
-const NEWEST = ISSUES.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+const cover = it => it.cover || ('issues/'+it.id+'/cover.webp');
+const NEWEST = ISSUES[0] || null;
+const bySlug = k => ISSUES.filter(x => x.slug===k || x.id===k)[0];
+
+if(!ISSUES.length){
+  var _s=$('#slider'); if(_s) _s.innerHTML='<div class="cap" style="padding:20px 2px"><div class="d">No issues published yet — check back soon.</div></div>';
+}
 
 /* featured slider — premieres, newest year first */
 (function(){
   const feat = ISSUES.filter(i=>i.featured).sort((a,b)=>b.date.localeCompare(a.date));
   $('#slider').innerHTML = feat.map(it=>`
-    <button class="slide" data-id="${it.id}">
+    <button class="slide" data-id="${it.slug}">
       <div class="cov">
         <span class="yr">${it.year}</span>
-        ${it.id===NEWEST.id?'<span class="newest">Newest</span>':''}
+        ${(NEWEST&&it.id===NEWEST.id)?'<span class="newest">Newest</span>':''}
         <img src="${cover(it)}" alt="${esc(it.title)} — ${esc(it.dateLabel)}" loading="lazy">
         <span class="read">Read issue →</span>
       </div>
@@ -287,7 +275,7 @@ const NEWEST = ISSUES.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
     return `<div class="catyear">
       <div class="yhead"><h3>${y}</h3><span class="meta">Vol. ${vols} · ${items.length} issue${items.length===1?'':'s'}</span></div>
       <div class="catgrid">${items.map(it=>`
-        <button class="issue" data-id="${it.id}">
+        <button class="issue" data-id="${it.slug}">
           <div class="cov"><img src="${cover(it)}" alt="${esc(it.title)} — ${esc(it.dateLabel)}" loading="lazy"><span class="read">Read →</span></div>
           <div><div class="t">${esc(it.title)}</div><div class="d">${esc(it.dateLabel)}</div></div>
         </button>`).join('')}</div>
@@ -296,18 +284,59 @@ const NEWEST = ISSUES.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
 })();
 
 /* issue reader — scroll through the pages */
-function openIssue(id){
-  const it = ISSUES.filter(x=>x.id===id)[0]; if(!it) return;
+function pdfUrl(it){ var u=it.pdf||''; if(!u) return ''; if(u.charAt(0)==='/'||/^https?:/.test(u)) return u; while(u.charAt(0)==='/') u=u.slice(1); return '/'+u; }
+function ensurePdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  return new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=function(){ try{ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }catch(e){} res(window.pdfjsLib); };
+    s.onerror=function(){ rej(new Error('viewer')); };
+    document.head.appendChild(s);
+  });
+}
+function openIssue(key, page){
+  const it = bySlug(key); if(!it) return;
   $('#rTitle').childNodes[0].nodeValue = 'Vol. '+it.volume+' · '+it.title+'  ';
-  $('#rSub').textContent = 'The Eastlake Edge · '+it.dateLabel+' · '+it.pages+' pages';
+  $('#rSub').textContent = [ (it.mainTitle||'The Eastlake Edge'), it.dateLabel, it.pdf?'':(it.pages+' pages') ].filter(Boolean).join(' · ');
+  const stage = $('#rStage'); stage.scrollTop = 0;
+  $('#reader').classList.add('open'); document.body.style.overflow='hidden';
+  if(it.pdf) renderPdf(it, stage, page); else renderImages(it, stage, page);
+  stage.focus();
+}
+function goToPage(stage, n){ if(!n) return; var els=stage.querySelectorAll('[data-pg]'); var t=els[n-1]; if(t) t.scrollIntoView({block:'start'}); }
+function renderImages(it, stage, page){
   let html='';
   for(let p=1;p<=it.pages;p++){
     const n = String(p).padStart(2,'0');
-    html += `<div class="reader-pn">Page ${p} of ${it.pages}</div>`
+    html += `<div class="reader-pn" data-pg="${p}">Page ${p} of ${it.pages}</div>`
           + `<img src="issues/${it.id}/p${n}.webp" alt="Page ${p}" loading="${p<=2?'eager':'lazy'}">`;
   }
-  const stage = $('#rStage'); stage.innerHTML = html; stage.scrollTop = 0;
-  $('#reader').classList.add('open'); document.body.style.overflow='hidden'; stage.focus();
+  stage.innerHTML = html;
+  if(page) setTimeout(function(){ goToPage(stage, +page); }, 60);
+}
+function renderPdf(it, stage, page){
+  stage.innerHTML = '<div class="reader-pn">Loading issue…</div>';
+  var url = pdfUrl(it);
+  ensurePdfJs().then(function(pdfjs){ return pdfjs.getDocument(url).promise; }).then(function(doc){
+    stage.innerHTML='';
+    var sub=$('#rSub'); if(sub) sub.textContent=[(it.mainTitle||'The Eastlake Edge'), it.dateLabel, doc.numPages+' pages'].filter(Boolean).join(' · ');
+    var maxW=function(){ return Math.min(920, (stage.clientWidth||920)-32); };
+    var chain=Promise.resolve();
+    for(let p=1;p<=doc.numPages;p++){ (function(p){
+      chain=chain.then(function(){ return doc.getPage(p); }).then(function(pg){
+        var lbl=document.createElement('div'); lbl.className='reader-pn'; lbl.setAttribute('data-pg',p); lbl.textContent='Page '+p+' of '+doc.numPages; stage.appendChild(lbl);
+        var base=pg.getViewport({scale:1}); var css=maxW(); var dpr=Math.min(2, window.devicePixelRatio||1);
+        var vp=pg.getViewport({scale:(css/base.width)*dpr});
+        var cv=document.createElement('canvas'); cv.width=vp.width; cv.height=vp.height; cv.style.width=css+'px';
+        stage.appendChild(cv);
+        return pg.render({canvasContext:cv.getContext('2d'), viewport:vp}).promise;
+      });
+    })(p); }
+    return chain.then(function(){ if(page) goToPage(stage, +page); });
+  }).catch(function(){
+    stage.innerHTML='<div class="reader-pn" style="color:var(--red)">Could not load this issue. <a style="color:var(--cyan)" href="'+esc(url)+'" target="_blank" rel="noopener">Open the PDF ↗</a></div>';
+  });
 }
 function closeIssue(){ $('#reader').classList.remove('open'); document.body.style.overflow=''; $('#rStage').innerHTML=''; }
 document.addEventListener('click', e=>{ const b = e.target.closest('[data-id]'); if(b) openIssue(b.getAttribute('data-id')); });
@@ -330,7 +359,8 @@ document.querySelectorAll('.edge-tab').forEach(t=>t.addEventListener('click', ()
   try{
     var id = new URLSearchParams(location.search).get('issue');
     if(!id){ var h=(location.hash||'').replace(/^#/,''); if(/^issue-/.test(h)) id=h.slice(6); }
-    if(id && ISSUES.some(function(x){return x.id===id;})) openIssue(id);
+    var pg = new URLSearchParams(location.search).get('page');
+    if(id && bySlug(id)) openIssue(id, pg);
   }catch(e){}
 })();
 </script>
