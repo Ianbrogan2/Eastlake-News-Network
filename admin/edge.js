@@ -537,9 +537,9 @@
       body.appendChild(urlRow);
       m.body.appendChild(body);
 
-      var dlPng=el('button','btn','⬇ PNG'), dlSvg=el('button','btn-ghost','⬇ SVG'), regen=el('button','btn-ghost','↻ Regenerate');
-      m.footer.appendChild(regen); m.footer.appendChild(spacer2()); m.footer.appendChild(dlSvg); m.footer.appendChild(dlPng);
-      dlPng.disabled=dlSvg.disabled=true;
+      var dlPng=el('button','btn','⬇ PNG'), dlSvg=el('button','btn-ghost','⬇ SVG'), dlPoster=el('button','btn-ghost','⬇ Poster'), regen=el('button','btn-ghost','↻ Regenerate');
+      m.footer.appendChild(regen); m.footer.appendChild(spacer2()); m.footer.appendChild(dlPoster); m.footer.appendChild(dlSvg); m.footer.appendChild(dlPng);
+      dlPng.disabled=dlSvg.disabled=dlPoster.disabled=true;
 
       var state={};
       function build(){
@@ -553,12 +553,32 @@
           cv.className='edge-qr-img'; canvasHost.innerHTML=''; canvasHost.appendChild(cv);
           var rects=''; for(var r2=0;r2<n;r2++) for(var c2=0;c2<n;c2++){ if(qr.isDark(r2,c2)) rects+='<rect x="'+(c2+margin)+'" y="'+(r2+margin)+'" width="1" height="1"/>'; }
           state.svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(n+margin*2)+' '+(n+margin*2)+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#ffffff"/><g fill="#0b0d10">'+rects+'</g></svg>';
-          state.png=cv.toDataURL('image/png'); dlPng.disabled=dlSvg.disabled=false;
+          state.png=cv.toDataURL('image/png'); state.qr=qr; dlPng.disabled=dlSvg.disabled=dlPoster.disabled=false;
         }).catch(function(err){ canvasHost.innerHTML='<div class="notice">Couldn’t generate the QR code: '+esc(err.message)+'</div>'; });
       }
       function fileBase(){ return (it.slug||it.id||'issue')+(page?('-p'+page):'')+'-qr'; }
+      function makePoster(qr){
+        var W=1200,H=1560, c=document.createElement('canvas'); c.width=W; c.height=H;
+        var g=c.getContext('2d'); g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
+        g.fillStyle='#d7263d'; g.fillRect(0,0,W,16); g.fillRect(0,H-16,W,16);
+        g.textAlign='center';
+        g.fillStyle='#111111'; g.font='700 96px Georgia,"Times New Roman",serif'; g.fillText('the eastlake edge', W/2, 154);
+        g.fillStyle='#111111'; g.fillRect(150,200,W-300,4);
+        g.fillStyle='#d7263d'; g.font='700 30px "DM Mono",monospace'; g.fillText(page?('SCAN FOR PAGE '+page):'STUDENT NEWSPAPER', W/2, 252);
+        var n=qr.getModuleCount(), margin=2, qs=720, cell=qs/(n+margin*2), qx=(W-qs)/2, qy=312;
+        g.strokeStyle='#111111'; g.lineWidth=6; g.strokeRect(qx-22,qy-22,qs+44,qs+44);
+        g.fillStyle='#111111';
+        for(var r=0;r<n;r++) for(var col=0;col<n;col++){ if(qr.isDark(r,col)) g.fillRect(Math.round(qx+(col+margin)*cell), Math.round(qy+(r+margin)*cell), Math.ceil(cell), Math.ceil(cell)); }
+        var y=qy+qs+98;
+        g.fillStyle='#111111'; g.font='700 46px "DM Sans",Arial,sans-serif'; g.fillText('SCAN TO READ', W/2, y); y+=70;
+        g.fillStyle='#d7263d'; g.font='700 40px "DM Sans",Arial,sans-serif';
+        g.fillText('Vol. '+(it.volume||'—')+'  ·  '+(it.issueTitle||('Issue '+it.issue))+'  ·  '+(it.dateLabel||dateLabel(it.date)||''), W/2, y); y+=58;
+        g.fillStyle='#555555'; g.font='400 28px "DM Sans",Arial,sans-serif'; g.fillText('Opens on eastlakenewsnetwork.com', W/2, y);
+        return c;
+      }
       dlPng.onclick=function(){ if(state.png) downloadHref(state.png, fileBase()+'.png'); };
       dlSvg.onclick=function(){ if(state.svg) downloadHref('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(state.svg), fileBase()+'.svg'); };
+      dlPoster.onclick=function(){ if(state.qr){ try{ downloadHref(makePoster(state.qr).toDataURL('image/png'), fileBase()+'-poster.png'); }catch(e){ toast('Poster failed: '+e.message,'err'); } } };
       regen.onclick=build;
       build();
     }

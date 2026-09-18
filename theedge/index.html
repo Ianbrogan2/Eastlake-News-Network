@@ -52,6 +52,21 @@
 .edge-sechead{margin:6px 0 20px}
 .edge-sechead .sec-title{font-size:clamp(30px,4.5vw,46px)}
 
+/* latest-issue spotlight */
+.spot{display:flex;gap:24px;align-items:center;width:100%;text-align:left;cursor:pointer;
+  background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border:1px solid var(--border);border-radius:14px;
+  padding:22px;color:inherit;font:inherit;margin:2px 0 30px;transition:border-color .2s,transform .2s}
+.spot:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+.spot-cov{flex:0 0 150px;width:150px;aspect-ratio:17/22;border-radius:8px;overflow:hidden;border:1px solid var(--border-hi);box-shadow:0 18px 40px -14px rgba(0,0,0,.6)}
+.spot-cov img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.spot-kick{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+.spot-meta{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:6px}
+.spot-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,4vw,40px);letter-spacing:.02em;line-height:1.02;color:var(--text);margin:8px 0}
+.spot-desc{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:14px;max-width:62ch;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.spot-btn{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-weight:600;letter-spacing:.05em;font-size:13.5px;color:#fff;background:var(--grad-bg);border-radius:8px;padding:11px 18px}
+@media (max-width:640px){ .spot{flex-direction:column;align-items:flex-start} .spot-cov{width:120px;flex-basis:120px} }
+
 /* featured slider */
 .slider{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 22px;scrollbar-width:thin}
 .slider::-webkit-scrollbar{height:8px}
@@ -183,6 +198,7 @@
 
   <!-- ══════════ NEWSPAPER TAB ══════════ -->
   <section id="tab-paper" class="edge-panel" role="tabpanel">
+    <div id="edgeSpotlight"></div>
     <div class="edge-sechead">
       <div class="eyebrow">Latest &amp; premieres</div>
       <h2 class="sec-title">This year, back to '92</h2>
@@ -291,6 +307,22 @@ if(!ISSUES.length){
       </div>
       <div class="cap"><div class="t">Vol. ${it.volume} · ${esc(it.title)}</div><div class="d">${esc(it.dateLabel)}</div></div>
     </button>`).join('');
+})();
+
+/* latest-issue spotlight — surfaces the newest issue's headline & description */
+(function(){
+  var host=$('#edgeSpotlight'); if(!host || !NEWEST) return;
+  var it=NEWEST, head = it.headline ? esc(it.headline) : esc(it.title);
+  host.innerHTML =
+    '<button class="spot" data-id="'+esc(it.slug)+'">'
+    + '<span class="spot-cov"><img src="'+cover(it)+'" alt="'+esc(it.title)+'" loading="eager"></span>'
+    + '<span class="spot-txt">'
+    +   '<span class="spot-kick">Latest issue</span>'
+    +   '<span class="spot-meta">Vol. '+esc(it.volume)+' · '+esc(it.title)+' · '+esc(it.dateLabel)+'</span>'
+    +   '<span class="spot-head">'+head+'</span>'
+    +   (it.description?'<span class="spot-desc">'+esc(it.description)+'</span>':'')
+    +   '<span class="spot-btn">Read the latest issue →</span>'
+    + '</span></button>';
 })();
 
 /* catalog grouped by year (newest first) */
