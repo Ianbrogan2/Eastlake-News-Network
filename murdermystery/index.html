@@ -1,5 +1,7 @@
 <!-- Google Analytics 4 — one shared tag for the whole site (see /js/analytics.js) -->
 <script src="/js/analytics.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Eastlake Assassins</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -187,11 +189,6 @@ body::after{
 .admin-note{font-family:"Special Elite",monospace;font-size:12px;color:var(--report-mute);margin-top:12px;line-height:1.6}
 .admin-note code{color:var(--brass);background:var(--board-2);padding:1px 6px;border-radius:3px}
 
-/* ── test build stamp ── */
-.testflag{position:fixed;left:14px;bottom:12px;z-index:40;font-family:"Oswald",sans-serif;font-weight:600;
-  letter-spacing:.2em;font-size:10px;color:var(--brass);border:1.5px solid var(--brass-soft);border-radius:4px;
-  padding:4px 10px;transform:rotate(-2deg);opacity:.7;text-transform:uppercase;background:rgba(0,0,0,.35)}
-
 @media (max-width:560px){
   .file{padding:28px 20px 24px}
   .lb li{grid-template-columns:40px 1fr auto;grid-row-gap:6px}
@@ -207,7 +204,6 @@ body::after{
 /* ══════════ ENN SITE CHROME (so this previews like a real site page) ══════════ */
 body{padding-bottom:48px}                 /* clear the fixed ticker */
 .hud{top:70px}                            /* drop timer below the nav */
-.testflag{bottom:50px}                    /* lift test flag above ticker */
 .enn-nav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
   background:rgba(5,5,10,.78);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
   border-bottom:1px solid rgba(255,255,255,.06);padding:11px 20px}
@@ -251,7 +247,21 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
 .enn-tk-move .it{font-family:"DM Sans",sans-serif;font-weight:500;font-size:14px;color:#fff;padding:0 30px 0 38px;position:relative}
 .enn-tk-move .it::before{content:"";position:absolute;left:14px;top:50%;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);transform:translateY(-50%)}
 @keyframes ennMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media (max-width:640px){ .enn-links{order:3;width:100%;justify-content:flex-start} .enn-navr{margin-left:auto} .enn-logo-img{height:32px} }
+/* mobile hamburger + slide-in menu (matches the rest of the site) */
+.enn-ham{display:none;flex-direction:column;justify-content:center;gap:5px;padding:9px 8px;border-radius:8px;cursor:pointer;background:none;border:0;flex-shrink:0}
+.enn-ham:hover{background:rgba(255,255,255,.06)}
+.enn-ham span{display:block;width:20px;height:2px;background:rgba(255,255,255,.55);border-radius:2px;transition:transform .28s,opacity .2s,width .2s}
+.enn-ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.enn-ham.open span:nth-child(2){opacity:0;width:0}
+.enn-ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.enn-mmenu{position:fixed;top:62px;left:0;right:0;bottom:0;z-index:98;background:rgba(3,3,6,.97);backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%);display:flex;flex-direction:column;padding:28px clamp(18px,6vw,48px) 80px;transform:translateX(100%);transition:transform .32s cubic-bezier(.22,.61,.36,1);border-top:1px solid rgba(255,255,255,.06)}
+.enn-mmenu.open{transform:translateX(0)}
+.enn-mlink{font-family:"Bebas Neue",sans-serif;font-size:clamp(42px,10vw,56px);letter-spacing:.02em;color:rgba(255,255,255,.55);padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);text-decoration:none;transition:color .18s,padding-left .22s}
+.enn-mlink:hover,.enn-mlink.active{color:#fff;padding-left:10px}
+.enn-mmeta{margin-top:auto;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.38);text-transform:uppercase}
+@media (max-width:1080px){ .enn-clock{display:none} }
+@media (max-width:900px){ .enn-links{display:none} .enn-ham{display:flex} }
+@media (max-width:640px){ .enn-logo-img{height:32px} }
 </style>
 
 <style>
@@ -359,12 +369,25 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
     <a class="enn-cur" href="/theedge/">The Edge</a>
     <a href="https://eastlakenewsnetwork.com/#calendar">Calendar</a>
     <a href="https://eastlakenewsnetwork.com/#contact">Contact</a>
+    <a href="https://eastlakenewsnetwork.com/#bullpen">Games</a>
   </div>
   <div class="enn-navr">
     <span class="enn-clock"><i>PST</i><b id="ennClock">--:--:--</b></span>
     <span class="enn-onair" id="ennOnair"><span class="dot"></span><b>On Air</b></span>
+    <button class="enn-ham" id="ennHam" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<div class="enn-mmenu" id="ennMmenu" aria-hidden="true">
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#home">Home</a>
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#about">About</a>
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#athletics">Athletics</a>
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#yearbook">Yearbook</a>
+  <a class="enn-mlink active" href="/theedge/">The Edge</a>
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#calendar">Calendar</a>
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#contact">Contact</a>
+  <a class="enn-mlink" href="https://eastlakenewsnetwork.com/#bullpen">Games</a>
+  <div class="enn-mmeta">ENN · Eastlake News Network · @ennbulletin</div>
+</div>
 
 <div class="wrap">
   <header class="mast">
@@ -463,7 +486,6 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
   <div class="score">SCORE <span id="hudScore">1000</span><span class="dn"> &#9660;</span></div>
 </div>
 
-<div class="testflag" title="Test build, confirm the QR target, real names, and event date before printing">Test Build</div>
 
 <script>
 /* ══════════════════════════════════════════════════════════════════
@@ -858,5 +880,19 @@ $("#exportBtn").onclick = ()=>{
   // keep the timer HUD clear of the (possibly wrapped) sticky nav
   function placeHud(){ var nav=document.querySelector(".enn-nav"), hud=document.getElementById("hud"); if(nav&&hud) hud.style.top=(nav.offsetHeight+10)+"px"; }
   placeHud(); window.addEventListener("resize",placeHud); setTimeout(placeHud,400);
+
+  // Hamburger / mobile menu (matches the rest of the site)
+  var ham=document.getElementById("ennHam"), menu=document.getElementById("ennMmenu");
+  if(ham && menu){
+    var setMenu=function(open){
+      ham.classList.toggle("open",open); ham.setAttribute("aria-expanded",open);
+      menu.classList.toggle("open",open); menu.setAttribute("aria-hidden",!open);
+      document.body.style.overflow=open?"hidden":"";
+    };
+    ham.addEventListener("click", function(){ setMenu(!ham.classList.contains("open")); });
+    Array.prototype.forEach.call(menu.querySelectorAll("a"), function(a){
+      a.addEventListener("click", function(){ setMenu(false); });
+    });
+  }
 })();
 </script>
