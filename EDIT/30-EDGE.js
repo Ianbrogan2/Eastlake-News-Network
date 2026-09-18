@@ -22,7 +22,27 @@ var ENN_EDGE = {
     aboutBody: [
       'Welcome to the Eastlake Edge! We strive to amplify <b>YOUR</b> voices, perspectives, and experiences that connect our community. The Edge is committed to honest reporting and telling the stories that matter to our students.',
       'As a student-run club, we cover a variety of topics, from world politics to student life. To be in Eastlake Edge means to capture the Titan spirit and put it down on paper. We photograph the intense moments between athletic opponents in the hot fields. We craft articles that dive into the topics that are captivating students. We are more than just a newspaper, we are the voice of Eastlake High School.'
-    ]
+    ],
+    // ── section headings & labels ──
+    paperKicker: 'Latest & premieres',
+    paperTitle: "This year, back to '92",
+    paperSub: 'The first issue of every year, newest first. Tap a cover to read the whole issue — straight through every page.',
+    archiveKicker: 'The Archive',
+    archiveTitle: "Every issue we've scanned",
+    archiveSub: 'Grouped by year and volume.',
+    spotlightKicker: 'Latest issue',
+    spotlightButton: 'Read the latest issue →',
+    tabPaper: 'The Eastlake Edge',
+    tabGame: 'Murder Mystery',
+    tickerLead: 'The Eastlake Edge is live — every issue back to 1992, plus the murder mystery. Read it here.',
+    // ── the Murder Mystery panel (the box on the game tab) ──
+    gameTape: 'The Edge',
+    gameKick: 'Interactive · From the paper',
+    gameTitle: 'The Eastlake Assassins',
+    gameDesc: 'A $3,000 tournament, an account gone dark, and a thief hiding in plain sight. Work the corkboard, log the evidence, and close the case before anyone else does. This is the game the newspaper\'s QR code drops you into.',
+    gameButton: 'Play the Case →',
+    gameNote: 'Scanned the QR code on the paper? It brings you straight here.',
+    gameHref: '/murdermystery/'
   },
 
   // ── ANNOUNCEMENT BAR — a slim notice at the very top (turn on to show) ──

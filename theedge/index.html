@@ -192,42 +192,42 @@
   </section>
 
   <div class="edge-tabs" role="tablist">
-    <button class="edge-tab active" data-tab="paper" role="tab">📰 The Eastlake Edge</button>
-    <button class="edge-tab" data-tab="game" role="tab">🕵 Murder Mystery</button>
+    <button class="edge-tab active" data-tab="paper" role="tab" id="edgeTabPaper">📰 The Eastlake Edge</button>
+    <button class="edge-tab" data-tab="game" role="tab" id="edgeTabGame">🕵 Murder Mystery</button>
   </div>
 
   <!-- ══════════ NEWSPAPER TAB ══════════ -->
   <section id="tab-paper" class="edge-panel" role="tabpanel">
     <div id="edgeSpotlight"></div>
     <div class="edge-sechead">
-      <div class="eyebrow">Latest &amp; premieres</div>
-      <h2 class="sec-title">This year, back to '92</h2>
-      <p class="sec-sub">The first issue of every year, newest first. Tap a cover to read the whole issue — straight through every page.</p>
+      <div class="eyebrow" id="edgePaperKicker">Latest &amp; premieres</div>
+      <h2 class="sec-title" id="edgePaperTitle">This year, back to '92</h2>
+      <p class="sec-sub" id="edgePaperSub">The first issue of every year, newest first. Tap a cover to read the whole issue — straight through every page.</p>
     </div>
     <div class="slider" id="slider"></div>
 
     <div class="edge-sechead" style="margin-top:40px">
-      <div class="eyebrow">The Archive</div>
-      <h2 class="sec-title">Every issue we've scanned</h2>
-      <p class="sec-sub">Grouped by year and volume.</p>
+      <div class="eyebrow" id="edgeArchiveKicker">The Archive</div>
+      <h2 class="sec-title" id="edgeArchiveTitle">Every issue we've scanned</h2>
+      <p class="sec-sub" id="edgeArchiveSub">Grouped by year and volume.</p>
     </div>
     <div id="catalog"></div>
   </section>
 
   <!-- ══════════ MURDER MYSTERY TAB ══════════ -->
   <section id="tab-game" class="edge-panel" role="tabpanel" hidden>
-    <a class="case" href="/murdermystery/" aria-label="Play the Eastlake Assassins case">
-      <span class="tape">The Edge</span>
+    <a class="case" id="edgeGameLink" href="/murdermystery/" aria-label="Play the case">
+      <span class="tape" id="edgeGameTape">The Edge</span>
       <div class="in">
         <div class="txt">
-          <div class="kick">Interactive · From the paper</div>
-          <h2>The Eastlake Assassins</h2>
-          <p>A $3,000 tournament, an account gone dark, and a thief hiding in plain sight. Work the corkboard, log the evidence, and close the case before anyone else does. This is the game the newspaper's QR code drops you into.</p>
+          <div class="kick" id="edgeGameKick">Interactive · From the paper</div>
+          <h2 id="edgeGameTitle">The Eastlake Assassins</h2>
+          <p id="edgeGameDesc">A $3,000 tournament, an account gone dark, and a thief hiding in plain sight. Work the corkboard, log the evidence, and close the case before anyone else does. This is the game the newspaper's QR code drops you into.</p>
         </div>
-        <span class="btn">Play the Case →</span>
+        <span class="btn" id="edgeGameBtn">Play the Case →</span>
       </div>
     </a>
-    <p class="case-note">Scanned the QR code on the paper? It brings you straight here.</p>
+    <p class="case-note" id="edgeGameNote">Scanned the QR code on the paper? It brings you straight here.</p>
   </section>
 </main>
 
@@ -287,6 +287,12 @@ if(!ISSUES.length){
   setT('edgeAboutEyebrow',P.aboutEyebrow);
   if(P.aboutTitleLead!=null || P.aboutTitleAccent!=null){ var at=document.getElementById('edgeAboutTitle'); if(at) at.innerHTML=esc(P.aboutTitleLead||'')+' <span>'+esc(P.aboutTitleAccent||'')+'</span>'; }
   if(Array.isArray(P.aboutBody) && P.aboutBody.length){ var ab=document.getElementById('edgeAboutBody'); if(ab) ab.innerHTML=P.aboutBody.map(function(t){ return '<p>'+t+'</p>'; }).join(''); }
+  setT('edgePaperKicker',P.paperKicker); setT('edgePaperTitle',P.paperTitle); setT('edgePaperSub',P.paperSub);
+  setT('edgeArchiveKicker',P.archiveKicker); setT('edgeArchiveTitle',P.archiveTitle); setT('edgeArchiveSub',P.archiveSub);
+  setT('edgeGameTape',P.gameTape); setT('edgeGameKick',P.gameKick); setT('edgeGameTitle',P.gameTitle); setT('edgeGameDesc',P.gameDesc); setT('edgeGameBtn',P.gameButton); setT('edgeGameNote',P.gameNote);
+  if(P.tabPaper){ var tp=document.getElementById('edgeTabPaper'); if(tp) tp.innerHTML='📰 '+esc(P.tabPaper); }
+  if(P.tabGame){ var tg=document.getElementById('edgeTabGame'); if(tg) tg.innerHTML='🕵 '+esc(P.tabGame); }
+  if(P.gameHref){ var gl=document.getElementById('edgeGameLink'); if(gl) gl.setAttribute('href', P.gameHref); }
   var A=(window.ENN_EDGE && ENN_EDGE.announce)||{}, box=document.getElementById('edgeAnnounce');
   if(box && A.on===true && (A.text||'')){
     box.innerHTML='<div class="ea-inner"><span class="ea-tag">'+esc(A.tag||'The Edge')+'</span><span class="ea-text">'+A.text+'</span>'+(A.link?' <a class="ea-link" href="'+esc(A.link)+'" target="_blank" rel="noopener">'+esc(A.linkText||'Read more')+' →</a>':'')+'</div>';
@@ -317,11 +323,11 @@ if(!ISSUES.length){
     '<button class="spot" data-id="'+esc(it.slug)+'">'
     + '<span class="spot-cov"><img src="'+cover(it)+'" alt="'+esc(it.title)+'" loading="eager"></span>'
     + '<span class="spot-txt">'
-    +   '<span class="spot-kick">Latest issue</span>'
+    +   '<span class="spot-kick">'+esc((ENN_EDGE.page&&ENN_EDGE.page.spotlightKicker)||'Latest issue')+'</span>'
     +   '<span class="spot-meta">Vol. '+esc(it.volume)+' · '+esc(it.title)+' · '+esc(it.dateLabel)+'</span>'
     +   '<span class="spot-head">'+head+'</span>'
     +   (it.description?'<span class="spot-desc">'+esc(it.description)+'</span>':'')
-    +   '<span class="spot-btn">Read the latest issue →</span>'
+    +   '<span class="spot-btn">'+esc((ENN_EDGE.page&&ENN_EDGE.page.spotlightButton)||'Read the latest issue →')+'</span>'
     + '</span></button>';
 })();
 
@@ -451,7 +457,8 @@ document.querySelectorAll('.edge-tab').forEach(t=>t.addEventListener('click', ()
   // Ticker — shared editorial items from EDIT/03-TICKER.js, with an Edge lead-in
   (function(){
     var track=document.getElementById('ticker-track'); if(!track) return;
-    var items=[{k:'The Edge', t:'The Eastlake Edge is live — every issue back to 1992, plus the murder mystery. Read it here.'}];
+    var _lead=(window.ENN_EDGE && ENN_EDGE.page && ENN_EDGE.page.tickerLead) || 'The Eastlake Edge is live — every issue back to 1992, plus the murder mystery. Read it here.';
+    var items=[{k:'The Edge', t:_lead}];
     if(typeof ENN_TICKER!=='undefined' && ENN_TICKER.length) items=items.concat(ENN_TICKER);
     function esc2(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
     var one=items.map(function(it){

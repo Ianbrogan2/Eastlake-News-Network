@@ -500,6 +500,47 @@
       drawParas();
       bc.appendChild(paras); form.appendChild(bc);
 
+      var nc=el('div','edge-card');
+      nc.appendChild(sectionHead('Newspaper sections','The small headings above the issue slider and the archive.'));
+      var ng=el('div','edge-grid');
+      ng.appendChild(field('Slider — kicker','', textInput(P,'paperKicker',''), 'third'));
+      ng.appendChild(field('Slider — title','', textInput(P,'paperTitle',''), 'third'));
+      ng.appendChild(field('Spotlight — kicker','Label above the newest issue.', textInput(P,'spotlightKicker',''), 'third'));
+      ng.appendChild(field('Slider — subtitle','', textArea(P,'paperSub'), 'full'));
+      ng.appendChild(field('Archive — kicker','', textInput(P,'archiveKicker',''), 'third'));
+      ng.appendChild(field('Archive — title','', textInput(P,'archiveTitle',''), 'third'));
+      ng.appendChild(field('Spotlight — button','', textInput(P,'spotlightButton',''), 'third'));
+      ng.appendChild(field('Archive — subtitle','', textInput(P,'archiveSub',''), 'full'));
+      nc.appendChild(ng); form.appendChild(nc);
+
+      var tc=el('div','edge-card');
+      tc.appendChild(sectionHead('Tabs & ticker',''));
+      tc.appendChild(instr('How to use this', [
+        'The <b>tab labels</b> are the two buttons that switch between the newspaper and the game.',
+        'The <b>ticker lead</b> is the first message in the scrolling bar at the bottom of the page.'
+      ]));
+      var tg2=el('div','edge-grid');
+      tg2.appendChild(field('Newspaper tab label','', textInput(P,'tabPaper',''), 'half'));
+      tg2.appendChild(field('Game tab label','', textInput(P,'tabGame',''), 'half'));
+      tg2.appendChild(field('Ticker lead message','', textArea(P,'tickerLead'), 'full'));
+      tc.appendChild(tg2); form.appendChild(tc);
+
+      var gc=el('div','edge-card');
+      gc.appendChild(sectionHead('Murder Mystery panel','The box on the game tab that links to the murder-mystery game.'));
+      gc.appendChild(instr('How to use this', [
+        'This is the <b>“Play the Case”</b> box shown on the Murder Mystery tab.',
+        '<b>Link</b> is where the button sends people — leave it as <code>/murdermystery/</code> for the current game.'
+      ]));
+      var gg=el('div','edge-grid');
+      gg.appendChild(field('Corner tag','', textInput(P,'gameTape',''), 'quarter'));
+      gg.appendChild(field('Kicker','', textInput(P,'gameKick',''), 'half'));
+      gg.appendChild(field('Title','', textInput(P,'gameTitle',''), 'full'));
+      gg.appendChild(field('Description','', textArea(P,'gameDesc'), 'full'));
+      gg.appendChild(field('Button text','', textInput(P,'gameButton',''), 'third'));
+      gg.appendChild(field('Link','Where the button goes.', textInput(P,'gameHref',''), 'third'));
+      gg.appendChild(field('Note under the box','', textInput(P,'gameNote',''), 'full'));
+      gc.appendChild(gg); form.appendChild(gc);
+
       var actions=el('div','edge-actions');
       var left=el('div','edge-actions-l');
       var pv=el('button','btn-ghost','↗ Preview page'); pv.onclick=function(){ window.open(PUBLIC,'_blank','noopener'); }; left.appendChild(pv);
