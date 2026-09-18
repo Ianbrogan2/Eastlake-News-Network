@@ -105,8 +105,20 @@
       var head=el('div','page-head edge-head');
       var h=el('div'); h.innerHTML='<div class="eyebrow">📄 The Edge</div><h1>Issues</h1><p class="lede">Every issue of The Eastlake Edge. Upload a new PDF, edit details, generate a QR code, or open the public page. Only <b>Published</b> issues appear on the site.</p>';
       head.appendChild(h);
-      if(canEdit){ var addTop=el('button','btn','＋ Upload New Issue'); addTop.onclick=function(){ showEditor(null); }; head.appendChild(addTop); }
+      if(canEdit){
+        var acts=el('div','edge-head-acts');
+        var pageBtn=el('button','btn-ghost','⚙ Page & Announcement'); pageBtn.onclick=function(){ showPageEditor(); }; acts.appendChild(pageBtn);
+        var addTop=el('button','btn','＋ Upload New Issue'); addTop.onclick=function(){ showEditor(null); }; acts.appendChild(addTop);
+        head.appendChild(acts);
+      }
       mount.appendChild(head);
+      mount.appendChild(instr('How The Edge works', [
+        '<b>Upload New Issue</b> → drop in the PDF → fill the details → Submit. The cover image and page count are read from the PDF for you.',
+        'Click any issue to <b>edit</b> it, <b>replace its PDF</b>, or change its status. Use <b>Save Changes</b> when done.',
+        'Only issues set to <b>Published</b> appear on the public site. Use <b>Draft</b> while you\'re still working on one.',
+        'Hit <b>QR</b> (on a row, or inside the editor) to get a scannable code that opens that exact issue — download it as PNG or SVG.',
+        'Use <b>⚙ Page &amp; Announcement</b> (top right) to change the page title, tagline, the About section, or post an announcement bar.'
+      ]));
 
       var bar=el('div','edge-toolbar');
       var search=el('input','edge-search'); search.type='search'; search.placeholder='Search issues, volume, date…'; search.value=S.filters.q;
@@ -384,6 +396,8 @@
 
     /* ── field builders ── */
     function sectionHead(t, s){ var d=el('div','edge-sechead'); d.innerHTML='<h2>'+esc(t)+'</h2>'+(s?'<p>'+esc(s)+'</p>':''); return d; }
+    function instr(title, items){ var d=el('div','edge-instr'); d.innerHTML='<div class="edge-instr-h">'+esc(title)+'</div><ul>'+items.map(function(t){ return '<li>'+t+'</li>'; }).join('')+'</ul>'; return d; }
+    function labelText(t){ var l=el('label','edge-label'); l.textContent=t; return l; }
     function field(label, hint, input, span){
       var w=el('div','edge-field'+(span?(' sp-'+span):''));
       var l=el('label','edge-label'); l.textContent=label; w.appendChild(l);
@@ -411,6 +425,91 @@
       ['dragleave','dragend'].forEach(function(ev){ z.addEventListener(ev,function(e){ e.preventDefault(); z.classList.remove('drag'); }); });
       z.addEventListener('drop',function(e){ e.preventDefault(); z.classList.remove('drag'); var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) onFile(f); });
       return z;
+    }
+
+    /* ══════════ PAGE & ANNOUNCEMENT ══════════ */
+    function showPageEditor(){
+      mount.innerHTML='';
+      ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'The Edge',go:'edge'},{t:'Page & Announcement'}]);
+      var head=el('div','page-head');
+      head.innerHTML='<div class="eyebrow">📄 The Edge</div><h1>Page &amp; Announcement</h1><p class="lede">The words at the top of The Edge page — title, tagline, the About section, and an optional announcement bar. Changes appear on the public page after you save.</p>';
+      mount.appendChild(head);
+
+      var P = S.data.page = S.data.page || {};
+      var A = S.data.announce = S.data.announce || {};
+      if(!Array.isArray(P.aboutBody)) P.aboutBody = P.aboutBody ? [String(P.aboutBody)] : [];
+
+      var form=el('div','edge-form');
+
+      var ac=el('div','edge-card');
+      ac.appendChild(sectionHead('Announcement bar','A slim notice at the very top of the page.'));
+      ac.appendChild(instr('How to use this', [
+        'Flip <b>Show the announcement</b> ON to display the bar; OFF hides it completely.',
+        '<b>Message</b> is the sentence people read. You can make words bold with &lt;b&gt;…&lt;/b&gt;.',
+        'Add a <b>Link</b> only if you want a “Read more →” button — otherwise leave it blank.'
+      ]));
+      var ag=el('div','edge-grid');
+      ag.appendChild(field('Show the announcement','', toggleInput(A,'on'), 'quarter'));
+      ag.appendChild(field('Tag','Small label on the left.', textInput(A,'tag','The Edge'), 'quarter'));
+      ag.appendChild(field('Message','The announcement text.', textArea(A,'text'), 'full'));
+      ag.appendChild(field('Link (optional)','Where “Read more” goes.', textInput(A,'link',''), 'half'));
+      ag.appendChild(field('Link text','', textInput(A,'linkText','Read more'), 'half'));
+      ac.appendChild(ag); form.appendChild(ac);
+
+      var hc=el('div','edge-card');
+      hc.appendChild(sectionHead('Header','The big title area at the very top.'));
+      hc.appendChild(instr('How to use this', [
+        '<b>Title</b> is the huge word (currently “THE EDGE”).',
+        '<b>Kicker</b> is the small line above it; <b>Script subtitle</b> is the cursive line under it.',
+        '<b>Tagline</b> is the sentence that introduces the page.'
+      ]));
+      var hg=el('div','edge-grid');
+      hg.appendChild(field('Kicker','Small line above the title.', textInput(P,'heroEyebrow',''), 'half'));
+      hg.appendChild(field('Title','The big headline.', textInput(P,'heroTitle',''), 'half'));
+      hg.appendChild(field('Script subtitle','The cursive line under the title.', textInput(P,'heroSerif',''), 'half'));
+      hg.appendChild(field('Tagline','One or two sentences introducing the page.', textArea(P,'heroTagline'), 'full'));
+      hc.appendChild(hg); form.appendChild(hc);
+
+      var bc=el('div','edge-card');
+      bc.appendChild(sectionHead('About the Edge','The intro block below the header.'));
+      bc.appendChild(instr('How to use this', [
+        'The heading is split in two: a <b>plain part</b> and a <b>coloured part</b> (shown in the blue→green gradient).',
+        '<b>Paragraphs</b> are the body text — add as many as you like, and use &lt;b&gt;…&lt;/b&gt; for emphasis.'
+      ]));
+      var bg=el('div','edge-grid');
+      bg.appendChild(field('Kicker','Small label (e.g. “About the Edge”).', textInput(P,'aboutEyebrow',''), 'half'));
+      bg.appendChild(field('Heading — plain part','', textInput(P,'aboutTitleLead',''), 'quarter'));
+      bg.appendChild(field('Heading — coloured part','', textInput(P,'aboutTitleAccent',''), 'quarter'));
+      bc.appendChild(bg);
+      var paras=el('div','edge-field'); paras.appendChild(labelText('Paragraphs'));
+      var plist=el('div','edge-paras'); paras.appendChild(plist);
+      function drawParas(){
+        plist.innerHTML='';
+        P.aboutBody.forEach(function(txt,i){
+          var row=el('div','edge-para');
+          var ta=el('textarea','edge-input edge-textarea'); ta.value=txt; ta.oninput=function(){ P.aboutBody[i]=ta.value; };
+          row.appendChild(ta);
+          var rm=el('button','edge-iact danger'); rm.innerHTML='<span class="ei-g">🗑</span><span class="ei-l">Remove</span>'; rm.title='Remove paragraph';
+          rm.onclick=function(){ P.aboutBody.splice(i,1); drawParas(); };
+          row.appendChild(rm);
+          plist.appendChild(row);
+        });
+        var add=el('button','btn-ghost sm','＋ Add paragraph'); add.onclick=function(){ P.aboutBody.push(''); drawParas(); };
+        plist.appendChild(add);
+      }
+      drawParas();
+      bc.appendChild(paras); form.appendChild(bc);
+
+      var actions=el('div','edge-actions');
+      var left=el('div','edge-actions-l');
+      var pv=el('button','btn-ghost','↗ Preview page'); pv.onclick=function(){ window.open(PUBLIC,'_blank','noopener'); }; left.appendChild(pv);
+      actions.appendChild(left);
+      var right=el('div','edge-actions-r');
+      var cancel=el('button','btn-ghost','Cancel'); cancel.onclick=function(){ showLibrary(); }; right.appendChild(cancel);
+      var save=el('button','btn','Save Changes'); if(!canEdit){ save.disabled=true; save.title='You have read-only access.'; }
+      save.onclick=function(){ save.disabled=true; save.textContent='Saving…'; saveData('Update The Edge page & announcement').then(function(){ save.disabled=false; save.textContent='Save Changes'; toast('Page saved','ok'); }).catch(function(e){ save.disabled=false; save.textContent='Save Changes'; toast('Save failed: '+e.message,'err'); }); };
+      right.appendChild(save); actions.appendChild(right); form.appendChild(actions);
+      mount.appendChild(form);
     }
 
     /* ══════════ QR MODAL ══════════ */

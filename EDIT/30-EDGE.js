@@ -9,6 +9,31 @@
 // ║           cover + pages (pNN.webp) under theedge/issues/<id>/     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_EDGE = {
+
+  // ── PAGE CONTENT — the words at the top of The Edge page ──
+  page: {
+    heroEyebrow: 'The Eastlake Edge · Student Newspaper',
+    heroTitle: 'THE EDGE',
+    heroSerif: 'the eastlake edge',
+    heroTagline: 'Eastlake High\'s student newspaper — every issue we\'ve digitized, back to 1992. Read the latest, dig through the archive, or crack the case.',
+    aboutEyebrow: 'About the Edge',
+    aboutTitleLead: 'Eastlake Edge:',
+    aboutTitleAccent: 'Voice of the Students',
+    aboutBody: [
+      'Welcome to the Eastlake Edge! We strive to amplify <b>YOUR</b> voices, perspectives, and experiences that connect our community. The Edge is committed to honest reporting and telling the stories that matter to our students.',
+      'As a student-run club, we cover a variety of topics, from world politics to student life. To be in Eastlake Edge means to capture the Titan spirit and put it down on paper. We photograph the intense moments between athletic opponents in the hot fields. We craft articles that dive into the topics that are captivating students. We are more than just a newspaper, we are the voice of Eastlake High School.'
+    ]
+  },
+
+  // ── ANNOUNCEMENT BAR — a slim notice at the very top (turn on to show) ──
+  announce: {
+    on: false,
+    tag: 'The Edge',
+    text: '',
+    link: '',
+    linkText: ''
+  },
+
   issues: [
   { id:'2026-09-17', slug:'2026-09-17', status:'published', issueTitle:'Issue 1', mainTitle:'The Eastlake Edge', subtitle:'', issue:1, volume:36, year:2026, date:'2026-09-17', dateLabel:'Sep 17, 2026', author:'', editor:'', description:'', headline:'', featured:true, pages:12, pdf:'', cover:'issues/2026-09-17/cover.webp', updatedAt:'' },
   { id:'2025-09-18', slug:'2025-09-18', status:'published', issueTitle:'Issue 1', mainTitle:'The Eastlake Edge', subtitle:'', issue:1, volume:35, year:2025, date:'2025-09-18', dateLabel:'Sep 18, 2025', author:'', editor:'', description:'', headline:'', featured:true, pages:8, pdf:'', cover:'issues/2025-09-18/cover.webp', updatedAt:'' },

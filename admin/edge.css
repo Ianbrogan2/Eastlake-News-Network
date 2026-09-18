@@ -118,3 +118,14 @@
   .edge-actions-r{width:100%;margin-left:0}
   .edge-actions-r .btn{flex:1}
 }
+
+/* ── page editor + instructions ── */
+.edge-head-acts{display:flex;gap:8px;flex-wrap:wrap}
+.edge-instr{background:var(--panel-2);border:1px solid var(--edge);border-left:3px solid var(--cyan);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:18px}
+.edge-instr-h{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.edge-instr ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.edge-instr li{color:var(--muted);font-size:13.5px;line-height:1.5}
+.edge-instr li b{color:var(--ink)}
+.edge-paras{display:flex;flex-direction:column;gap:10px}
+.edge-para{display:flex;gap:8px;align-items:flex-start}
+.edge-para textarea{flex:1;min-height:70px}

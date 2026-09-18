@@ -20,6 +20,15 @@
 .edge-hero .serif{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--muted);font-size:clamp(18px,3vw,26px);margin-top:2px}
 .edge-hero .sec-sub{margin-top:14px;max-width:60ch}
 
+/* announcement bar */
+.edge-announce{margin:0 0 22px;border:1px solid var(--border);border-left:3px solid var(--red);border-radius:12px;
+  background:linear-gradient(180deg,var(--bg-2),var(--bg-1));padding:14px 18px}
+.edge-announce .ea-inner{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.edge-announce .ea-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);
+  border:1px solid rgba(215,38,61,.4);border-radius:999px;padding:3px 10px;flex:none}
+.edge-announce .ea-text{color:var(--report);font-size:14.5px;line-height:1.5}
+.edge-announce .ea-link{color:var(--cyan);font-weight:600;text-decoration:none;white-space:nowrap}
+.edge-announce .ea-link:hover{text-decoration:underline}
 /* about the edge — intro block */
 .edge-about{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));
   border:1px solid var(--border);border-radius:14px;padding:clamp(24px,3.6vw,38px) clamp(22px,3.6vw,40px);margin:24px 0 4px}
@@ -150,18 +159,21 @@
 </div>
 
 <main class="edge-wrap">
+  <div class="edge-announce" id="edgeAnnounce" hidden></div>
   <header class="edge-hero">
-    <div class="eyebrow">The Eastlake Edge · Student Newspaper</div>
-    <h1 class="sec-title">THE EDGE</h1>
-    <div class="serif">the eastlake edge</div>
-    <p class="sec-sub">Eastlake High's student newspaper — every issue we've digitized, back to 1992. Read the latest, dig through the archive, or crack the case.</p>
+    <div class="eyebrow" id="edgeHeroEyebrow">The Eastlake Edge · Student Newspaper</div>
+    <h1 class="sec-title" id="edgeHeroTitle">THE EDGE</h1>
+    <div class="serif" id="edgeHeroSerif">the eastlake edge</div>
+    <p class="sec-sub" id="edgeHeroTagline">Eastlake High's student newspaper — every issue we've digitized, back to 1992. Read the latest, dig through the archive, or crack the case.</p>
   </header>
 
   <section class="edge-about">
-    <div class="eyebrow">About the Edge</div>
-    <h2 class="ea-title">Eastlake Edge: <span>Voice of the Students</span></h2>
+    <div class="eyebrow" id="edgeAboutEyebrow">About the Edge</div>
+    <h2 class="ea-title" id="edgeAboutTitle">Eastlake Edge: <span>Voice of the Students</span></h2>
+    <div id="edgeAboutBody">
     <p>Welcome to the Eastlake Edge! We strive to amplify <b>YOUR</b> voices, perspectives, and experiences that connect our community. The Edge is committed to honest reporting and telling the stories that matter to our students.</p>
     <p>As a student-run club, we cover a variety of topics, from world politics to student life. To be in Eastlake Edge means to capture the Titan spirit and put it down on paper. We photograph the intense moments between athletic opponents in the hot fields. We craft articles that dive into the topics that are captivating students. We are more than just a newspaper, we are the voice of Eastlake High School.</p>
+    </div>
   </section>
 
   <div class="edge-tabs" role="tablist">
@@ -250,6 +262,21 @@ const bySlug = k => ISSUES.filter(x => x.slug===k || x.id===k)[0];
 if(!ISSUES.length){
   var _s=$('#slider'); if(_s) _s.innerHTML='<div class="cap" style="padding:20px 2px"><div class="d">No issues published yet — check back soon.</div></div>';
 }
+
+/* page content + announcement — from EDIT/30-EDGE.js (editable in the CMS) */
+(function(){
+  var P=(window.ENN_EDGE && ENN_EDGE.page)||{};
+  function setT(id,v){ var e=document.getElementById(id); if(e && v!=null && String(v)!=='') e.textContent=v; }
+  setT('edgeHeroEyebrow',P.heroEyebrow); setT('edgeHeroTitle',P.heroTitle); setT('edgeHeroSerif',P.heroSerif); setT('edgeHeroTagline',P.heroTagline);
+  setT('edgeAboutEyebrow',P.aboutEyebrow);
+  if(P.aboutTitleLead!=null || P.aboutTitleAccent!=null){ var at=document.getElementById('edgeAboutTitle'); if(at) at.innerHTML=esc(P.aboutTitleLead||'')+' <span>'+esc(P.aboutTitleAccent||'')+'</span>'; }
+  if(Array.isArray(P.aboutBody) && P.aboutBody.length){ var ab=document.getElementById('edgeAboutBody'); if(ab) ab.innerHTML=P.aboutBody.map(function(t){ return '<p>'+t+'</p>'; }).join(''); }
+  var A=(window.ENN_EDGE && ENN_EDGE.announce)||{}, box=document.getElementById('edgeAnnounce');
+  if(box && A.on===true && (A.text||'')){
+    box.innerHTML='<div class="ea-inner"><span class="ea-tag">'+esc(A.tag||'The Edge')+'</span><span class="ea-text">'+A.text+'</span>'+(A.link?' <a class="ea-link" href="'+esc(A.link)+'" target="_blank" rel="noopener">'+esc(A.linkText||'Read more')+' →</a>':'')+'</div>';
+    box.hidden=false;
+  }
+})();
 
 /* featured slider — premieres, newest year first */
 (function(){
