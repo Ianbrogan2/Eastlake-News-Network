@@ -129,3 +129,12 @@
 .edge-paras{display:flex;flex-direction:column;gap:10px}
 .edge-para{display:flex;gap:8px;align-items:flex-start}
 .edge-para textarea{flex:1;min-height:70px}
+
+/* ── nested sub-cards (questions / suspects) ── */
+.edge-subs{display:flex;flex-direction:column;gap:12px}
+.edge-sub{background:var(--panel-2);border:1px solid var(--edge);border-radius:var(--radius-sm);padding:14px 16px}
+.edge-sub-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.edge-sub-n{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--cyan);background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);border-radius:6px;padding:2px 8px;flex:none}
+.edge-sub-t{font-weight:600;font-size:14px;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.edge-sub-tools{display:flex;gap:2px;flex:none}
+.edge-sub-tools .edge-iact{min-width:34px;flex-direction:row;padding:5px 8px}

@@ -216,17 +216,7 @@
 
   <!-- ══════════ MURDER MYSTERY TAB ══════════ -->
   <section id="tab-game" class="edge-panel" role="tabpanel" hidden>
-    <a class="case" id="edgeGameLink" href="/murdermystery/" aria-label="Play the case">
-      <span class="tape" id="edgeGameTape">The Edge</span>
-      <div class="in">
-        <div class="txt">
-          <div class="kick" id="edgeGameKick">Interactive · From the paper</div>
-          <h2 id="edgeGameTitle">The Eastlake Assassins</h2>
-          <p id="edgeGameDesc">A $3,000 tournament, an account gone dark, and a thief hiding in plain sight. Work the corkboard, log the evidence, and close the case before anyone else does. This is the game the newspaper's QR code drops you into.</p>
-        </div>
-        <span class="btn" id="edgeGameBtn">Play the Case →</span>
-      </div>
-    </a>
+    <div id="edgeGames"></div>
     <p class="case-note" id="edgeGameNote">Scanned the QR code on the paper? It brings you straight here.</p>
   </section>
 </main>
@@ -256,6 +246,7 @@
 
 <script src="/EDIT/03-TICKER.js?v=7"></script>
 <script src="/EDIT/30-EDGE.js?v=1"></script>
+<script src="/EDIT/31-CASES.js?v=1"></script>
 <script>
 /* ── ISSUES — loaded from EDIT/30-EDGE.js (managed in the Site Manager → The Edge) ── */
 const _RAW = (window.ENN_EDGE && Array.isArray(ENN_EDGE.issues)) ? ENN_EDGE.issues : [];
@@ -329,6 +320,27 @@ if(!ISSUES.length){
     +   (it.description?'<span class="spot-desc">'+esc(it.description)+'</span>':'')
     +   '<span class="spot-btn">'+esc((ENN_EDGE.page&&ENN_EDGE.page.spotlightButton)||'Read the latest issue →')+'</span>'
     + '</span></button>';
+})();
+
+/* murder-mystery game boxes — newest published game on top */
+(function(){
+  var host=$('#edgeGames'); if(!host) return;
+  var P=(window.ENN_EDGE&&ENN_EDGE.page)||{};
+  var tape=P.gameTape||'The Edge', kick=P.gameKick||'Interactive · From the paper', btn=P.gameButton||'Play the Case →';
+  var games=(window.ENN_CASES&&ENN_CASES.games)||[];
+  var pub=games.filter(function(g){ return (g.status||'draft')==='published'; });
+  pub.sort(function(a,b){ return String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')); });
+  if(!pub.length){ host.innerHTML='<p class="sub">No cases published yet.</p>'; return; }
+  host.innerHTML = pub.map(function(g){
+    var href = g.isDefault ? '/murdermystery/' : ('/murdermystery/?game='+encodeURIComponent(g.slug));
+    return '<a class="case" href="'+href+'">'
+      + '<span class="tape">'+esc(tape)+'</span>'
+      + '<div class="in"><div class="txt">'
+      +   '<div class="kick">'+esc(kick)+'</div>'
+      +   '<h2>'+esc(g.title||'Untitled case')+'</h2>'
+      +   '<p>'+esc(g.tagline||'')+'</p>'
+      + '</div><span class="btn">'+esc(btn)+'</span></div></a>';
+  }).join('');
 })();
 
 /* catalog grouped by year (newest first) */

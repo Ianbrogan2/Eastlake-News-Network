@@ -133,7 +133,7 @@
     // Yearbook hub
     yearbook:'yearbook',
     // The Edge — its own area (issues manager + announcement bar)
-    theedge:'theedge', edgeissues:'theedge'
+    theedge:'theedge', edgeissues:'theedge', edgecases:'theedge'
   };
 
   function areaFor(sectionId){ return SECTION_AREA[sectionId] || 'settings'; }
