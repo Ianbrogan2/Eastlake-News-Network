@@ -2,6 +2,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Special+Elite&family=Caveat:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap">
 
 <style>
 :root{
@@ -206,43 +207,49 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
 .hud{top:70px}                            /* drop timer below the nav */
 .testflag{bottom:50px}                    /* lift test flag above ticker */
 .enn-nav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-  background:rgba(5,5,9,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,.08);padding:10px 20px}
-.enn-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.enn-logo-img{height:36px;width:auto;display:block}
-.enn-logo-txt{display:flex;flex-direction:column;line-height:1}
-.enn-logo-txt b{font-family:"Oswald",sans-serif;font-weight:700;letter-spacing:.16em;font-size:17px;color:#fff}
-.enn-logo-txt small{font-family:"Oswald",sans-serif;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:3px}
-.enn-links{display:flex;gap:2px;flex-wrap:wrap}
-.enn-links a{font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.07em;font-size:12.5px;color:rgba(255,255,255,.6);
-  text-decoration:none;text-transform:uppercase;padding:8px 12px;border-radius:6px;transition:background .15s,color .15s}
-.enn-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
-.enn-links a.enn-cur{color:#fff;background:linear-gradient(92deg,#1A56DB,#16A34A)}
-.enn-navr{margin-left:auto;display:flex;align-items:center;gap:12px}
-.enn-clock{font-family:"Space Mono",monospace;font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px}
-.enn-clock i{font-style:normal;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.4)}
-.enn-clock b{color:#fff;font-variant-numeric:tabular-nums}
-.enn-onair{display:flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:5px 11px}
-.enn-onair b{font-family:"Oswald",sans-serif;font-weight:600;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#fff}
-.enn-onair .dot{width:8px;height:8px;border-radius:50%;background:#EF4444;box-shadow:0 0 8px #EF4444;animation:ennPulse 1.6s infinite}
+  background:rgba(5,5,10,.78);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  border-bottom:1px solid rgba(255,255,255,.06);padding:11px 20px}
+.enn-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.enn-logo-img{height:40px;width:auto;display:block;filter:drop-shadow(0 0 8px rgba(26,86,219,.35))}
+.enn-logo-txt{display:flex;flex-direction:column;line-height:1.2}
+.enn-logo-txt b{font-family:"Bebas Neue",sans-serif;font-weight:400;letter-spacing:1px;font-size:16px;color:#F2F2F7}
+.enn-logo-txt small{font-family:"DM Sans",sans-serif;font-size:10px;letter-spacing:.04em;color:rgba(255,255,255,.38);text-transform:uppercase;margin-top:2px}
+.enn-links{display:flex;gap:4px;flex-wrap:wrap}
+.enn-links a{font-family:"DM Sans",sans-serif;font-weight:500;letter-spacing:.16em;font-size:13px;color:rgba(255,255,255,.55);
+  text-decoration:none;text-transform:uppercase;padding:9px 14px;border-radius:8px;transition:background .18s,color .18s}
+.enn-links a:hover{color:#fff;background:rgba(255,255,255,.04)}
+.enn-links a.enn-cur{color:#fff;background:rgba(255,255,255,.06)}
+.enn-navr{margin-left:auto;display:flex;align-items:center;gap:14px}
+.enn-clock{font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.55);
+  display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06)}
+.enn-clock i{font-style:normal;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.38)}
+.enn-clock b{color:#F2F2F7;font-variant-numeric:tabular-nums}
+.enn-onair{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.06);border-radius:999px;padding:7px 12px;cursor:pointer}
+.enn-onair b{font-family:"DM Mono",monospace;font-weight:500;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#fff}
+.enn-onair .dot{width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:ennPulse 1.6s infinite}
 .enn-onair.off .dot{background:rgba(255,255,255,.35);box-shadow:none;animation:none}
-@keyframes ennPulse{50%{opacity:.35}}
-.enn-foot{border-top:1px solid rgba(255,255,255,.08);margin-top:44px;padding:26px 20px 8px;text-align:center;
-  font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.09em;color:rgba(255,255,255,.4);line-height:2.1}
-.enn-foot a{color:rgba(255,255,255,.62);text-decoration:none}
+@keyframes ennPulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 10px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.enn-foot{border-top:1px solid rgba(255,255,255,.06);margin-top:44px;padding:30px 20px 12px;text-align:center;
+  font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);line-height:2.2}
+.enn-foot a{color:#fff;text-decoration:none}
 .enn-foot .l1{color:rgba(255,255,255,.62)}
-.enn-ticker{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;height:40px;overflow:hidden;
-  background:#0A0A10;border-top:1px solid rgba(255,255,255,.08)}
-.enn-tk-lab{display:flex;align-items:center;gap:8px;background:linear-gradient(92deg,#1A56DB,#16A34A);color:#fff;
-  font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.12em;font-size:11px;text-transform:uppercase;padding:0 16px;height:100%;white-space:nowrap;z-index:2}
-.enn-tk-lab .d{width:8px;height:8px;border-radius:50%;background:#fff;animation:ennPulse 1.4s infinite}
+.enn-ticker{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:stretch;height:44px;overflow:hidden;
+  background:linear-gradient(92deg,#1A56DB 0%,#1E7ACB 45%,#16A34A 100%);box-shadow:0 -10px 30px -10px rgba(0,0,0,.6)}
+.enn-tk-lab{flex-shrink:0;display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.25);color:#fff;
+  font-family:"Bebas Neue",sans-serif;letter-spacing:.2em;font-size:16px;padding:0 18px;height:100%;white-space:nowrap;
+  border-right:1px solid rgba(255,255,255,.15);z-index:3;position:relative}
+.enn-tk-lab .d{width:7px;height:7px;border-radius:50%;background:#fff;animation:ennBlink 1.6s infinite}
+@keyframes ennBlink{50%{opacity:.35}}
 .enn-tk-track{flex:1;overflow:hidden;position:relative;height:100%}
+.enn-tk-track::before,.enn-tk-track::after{content:"";position:absolute;top:0;bottom:0;width:48px;z-index:2;pointer-events:none}
+.enn-tk-track::before{left:0;background:linear-gradient(90deg,rgba(26,86,219,.95),transparent)}
+.enn-tk-track::after{right:0;background:linear-gradient(-90deg,rgba(22,163,74,.95),transparent)}
 .enn-tk-move{position:absolute;top:0;display:flex;align-items:center;height:100%;white-space:nowrap;animation:ennMarq 46s linear infinite;will-change:transform}
 .enn-ticker:hover .enn-tk-move{animation-play-state:paused}
-.enn-tk-move .it{font-family:"Special Elite",monospace;font-size:12.5px;color:rgba(255,255,255,.82);padding:0 30px;position:relative}
-.enn-tk-move .it::before{content:"";position:absolute;left:2px;top:50%;width:5px;height:5px;border-radius:50%;background:#1A56DB;transform:translateY(-50%)}
+.enn-tk-move .it{font-family:"DM Sans",sans-serif;font-weight:500;font-size:14px;color:#fff;padding:0 30px 0 38px;position:relative}
+.enn-tk-move .it::before{content:"";position:absolute;left:14px;top:50%;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);transform:translateY(-50%)}
 @keyframes ennMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media (max-width:640px){ .enn-links{order:3;width:100%;justify-content:flex-start} .enn-navr{margin-left:auto} .enn-logo-img{height:30px} }
+@media (max-width:640px){ .enn-links{order:3;width:100%;justify-content:flex-start} .enn-navr{margin-left:auto} .enn-logo-img{height:32px} }
 </style>
 
 <style>
