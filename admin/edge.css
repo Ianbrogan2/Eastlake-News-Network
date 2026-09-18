@@ -138,3 +138,9 @@
 .edge-sub-t{font-weight:600;font-size:14px;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .edge-sub-tools{display:flex;gap:2px;flex:none}
 .edge-sub-tools .edge-iact{min-width:34px;flex-direction:row;padding:5px 8px}
+
+/* ── module tab bar (Issues / Murder Mystery / Page & Settings) ── */
+.edge-modtabs{display:flex;gap:2px;border-bottom:1px solid var(--edge);margin-bottom:22px;flex-wrap:wrap}
+.edge-modtab{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);font-family:var(--sans);font-weight:600;font-size:14px;padding:11px 16px;cursor:pointer;transition:color .12s,border-color .12s;margin-bottom:-1px}
+.edge-modtab:hover{color:var(--ink)}
+.edge-modtab.active{color:var(--ink);border-bottom-color:var(--blue)}

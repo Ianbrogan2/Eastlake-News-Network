@@ -16,9 +16,8 @@
   var QR_CDN='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
   var STATUS=[['published','Published'],['draft','Draft'],['unpublished','Unpublished']];
 
-  (window.ENN_CMS_MODULES = window.ENN_CMS_MODULES || []).push({
-    key:'edgegames', area:AREA, icon:'🕵', label:'Murder Mystery', render:render
-  });
+  // Rendered as a TAB inside The Edge module (not its own sidebar item).
+  window.ENN_EDGE_GAMES = { render: render };
 
   function ensureQr(){ if(window.qrcode) return Promise.resolve(); return new Promise(function(res,rej){ var s=document.createElement('script'); s.src=QR_CDN; s.onload=res; s.onerror=function(){ rej(new Error('Could not load the QR library.')); }; document.head.appendChild(s); }); }
 
@@ -28,7 +27,7 @@
     var mount=ctx.mount;
     var S={ data:{games:[]}, text:'' };
 
-    ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'Murder Mystery'}]);
+    ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'The Edge',go:'edge'},{t:'Murder Mystery'}]);
     var loading=el('div','muted','Loading games…'); mount.appendChild(loading);
     api('read',{ path:FILE, sectionId:SECTION }).then(function(r){
       loading.remove(); S.text=r.text;
@@ -50,7 +49,7 @@
     /* ══════════ LIBRARY ══════════ */
     function showLibrary(){
       mount.innerHTML='';
-      ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'Murder Mystery'}]);
+      ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'The Edge',go:'edge'},{t:'Murder Mystery'}]);
       var head=el('div','page-head edge-head');
       var h=el('div'); h.innerHTML='<div class="eyebrow">🕵 The Edge</div><h1>Murder Mystery</h1><p class="lede">Build and manage the whodunit games. Each published game gets its own box on The Edge and its own QR code. Only <b>Published</b> games appear publicly.</p>';
       head.appendChild(h);
@@ -119,7 +118,7 @@
       var slugEdited=!isNew;
 
       mount.innerHTML='';
-      ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'Murder Mystery',go:'edgegames'},{t:isNew?'New game':(g.title||'Edit game')}]);
+      ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'The Edge',go:'edge'},{t:'Murder Mystery'},{t:isNew?'New game':(g.title||'Edit game')}]);
       var head=el('div','page-head'); head.innerHTML='<div class="eyebrow">🕵 The Edge</div><h1>'+(isNew?'Create New Game':'Edit Game')+'</h1>'; mount.appendChild(head);
       var form=el('div','edge-form');
 

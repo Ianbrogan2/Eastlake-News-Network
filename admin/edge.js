@@ -43,7 +43,20 @@
   function render(ctx){
     var el=ctx.el, esc=ctx.esc, api=ctx.api, toast=ctx.toast, modal=ctx.modal;
     var canEdit = (ctx.ME && ctx.ME.isMaster) || ctx.can(AREA,'edit') || ctx.can(AREA,'create');
-    var mount = ctx.mount;
+    var realMount = ctx.mount;
+    var tabBtns = {};
+    var TABS = [['issues','📰 Issues'],['games','🕵 Murder Mystery'],['page','⚙ Page & Settings']];
+    var modtabs = el('div','edge-modtabs');
+    TABS.forEach(function(t){ var b=el('button','edge-modtab'); b.textContent=t[1]; b.onclick=function(){ openTab(t[0]); }; modtabs.appendChild(b); tabBtns[t[0]]=b; });
+    realMount.appendChild(modtabs);
+    var mount = el('div','edge-tabhost'); realMount.appendChild(mount);
+    function markTab(which){ Object.keys(tabBtns).forEach(function(k){ tabBtns[k].classList.toggle('active', k===which); }); }
+    function openTab(which){
+      markTab(which);
+      if(which==='page') return showPageEditor();
+      if(which==='games'){ if(window.ENN_EDGE_GAMES){ window.ENN_EDGE_GAMES.render(Object.assign({}, ctx, {mount:mount})); } else { mount.innerHTML='<div class="notice">Murder Mystery didn’t load — refresh the page.</div>'; } return; }
+      return showLibrary();
+    }
 
     var S = { data:{issues:[]}, text:'', filters:{q:'',status:''} };
 
@@ -55,7 +68,7 @@
       try{ S.data = ctx.extractLiteral(r.text, VAR) || {issues:[]}; }
       catch(e){ mount.appendChild(el('div','notice','Could not read the Edge data file: '+esc(e.message))); return; }
       if(!Array.isArray(S.data.issues)) S.data.issues=[];
-      showLibrary();
+      openTab('issues');
     }).catch(function(err){ loading.textContent=''; mount.appendChild(el('div','notice','Couldn’t open The Edge: '+esc(err.message))); });
 
     /* ── helpers ── */
@@ -105,19 +118,14 @@
       var head=el('div','page-head edge-head');
       var h=el('div'); h.innerHTML='<div class="eyebrow">📄 The Edge</div><h1>Issues</h1><p class="lede">Every issue of The Eastlake Edge. Upload a new PDF, edit details, generate a QR code, or open the public page. Only <b>Published</b> issues appear on the site.</p>';
       head.appendChild(h);
-      if(canEdit){
-        var acts=el('div','edge-head-acts');
-        var pageBtn=el('button','btn-ghost','⚙ Page & Announcement'); pageBtn.onclick=function(){ showPageEditor(); }; acts.appendChild(pageBtn);
-        var addTop=el('button','btn','＋ Upload New Issue'); addTop.onclick=function(){ showEditor(null); }; acts.appendChild(addTop);
-        head.appendChild(acts);
-      }
+      if(canEdit){ var addTop=el('button','btn','＋ Upload New Issue'); addTop.onclick=function(){ showEditor(null); }; head.appendChild(addTop); }
       mount.appendChild(head);
       mount.appendChild(instr('How The Edge works', [
         '<b>Upload New Issue</b> → drop in the PDF → fill the details → Submit. The cover image and page count are read from the PDF for you.',
         'Click any issue to <b>edit</b> it, <b>replace its PDF</b>, or change its status. Use <b>Save Changes</b> when done.',
         'Only issues set to <b>Published</b> appear on the public site. Use <b>Draft</b> while you\'re still working on one.',
         'Hit <b>QR</b> (on a row, or inside the editor) to get a scannable code that opens that exact issue — download it as PNG or SVG.',
-        'Use <b>⚙ Page &amp; Announcement</b> (top right) to change the page title, tagline, the About section, or post an announcement bar.'
+        'Use the <b>Page &amp; Settings</b> tab to change the title, tagline, About section, or announcement bar. The <b>Murder Mystery</b> tab manages the games.'
       ]));
 
       var bar=el('div','edge-toolbar');
@@ -546,7 +554,7 @@
       var pv=el('button','btn-ghost','↗ Preview page'); pv.onclick=function(){ window.open(PUBLIC,'_blank','noopener'); }; left.appendChild(pv);
       actions.appendChild(left);
       var right=el('div','edge-actions-r');
-      var cancel=el('button','btn-ghost','Cancel'); cancel.onclick=function(){ showLibrary(); }; right.appendChild(cancel);
+      var cancel=el('button','btn-ghost','Back to Issues'); cancel.onclick=function(){ openTab('issues'); }; right.appendChild(cancel);
       var save=el('button','btn','Save Changes'); if(!canEdit){ save.disabled=true; save.title='You have read-only access.'; }
       save.onclick=function(){ save.disabled=true; save.textContent='Saving…'; saveData('Update The Edge page & announcement').then(function(){ save.disabled=false; save.textContent='Save Changes'; toast('Page saved','ok'); }).catch(function(e){ save.disabled=false; save.textContent='Save Changes'; toast('Save failed: '+e.message,'err'); }); };
       right.appendChild(save); actions.appendChild(right); form.appendChild(actions);
