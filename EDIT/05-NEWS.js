@@ -21,10 +21,10 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 var ENN_NEWS = {
   featured: {
-    tag: 'Homecoming Football Game',
-    title: 'Vista High School Blackout ',
-    body: 'Wear black to the home game on September 18th at 5:00 PM, where the Homecoming King and Queen will be announced at halftime',
-    byline: 'REPORTED BY TEAM ENN · SEPTEMBER 8, 2026'
+    tag: 'Senior Night Football Game',
+    title: 'Senior Night October 30th',
+    body: 'Wear Greek attire to the home game on October 30th at 6:30 PM, where we will celebrate our seniors!',
+    byline: 'REPORTED BY TEAM ENN · OCTOBER 6, 2026'
   },
   sidebar: [
     {
@@ -38,14 +38,14 @@ var ENN_NEWS = {
       date: '$90 now'
     },
     {
-      cat: 'Homecoming Dance',
-      title: '6:00 PM to 10:00 PM',
-      date: 'September 19th'
+      cat: 'Unified Sports Game',
+      title: '4th and 5th period',
+      date: 'October 13th'
     },
     {
       cat: 'Assembly',
-      title: 'There will be an assembly in the gym after second period!',
-      date: 'September 19th'
+      title: 'There will be a Fall sports assembly in the gym after second period!',
+      date: 'October 23rd'
     }
   ]
 };
