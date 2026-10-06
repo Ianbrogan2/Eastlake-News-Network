@@ -25,10 +25,28 @@
 // automatically from the Athletics schedule (EDIT/25-ATHLETICS.js) — you
 // don't need to add games here by hand.
 var ENN_TICKER = [
-  { k: 'Homecoming',  t: 'Homecoming Top 5 court voting is OPEN — vote right now on Jupiter!' },
-  { k: 'ENN',         t: 'Submit your Love Lines on the Contact page — shoutouts, thank-yous, and crushes may be read live on the bulletin.' },
-  { k: 'Yearbook',    t: '2026–27 yearbooks are on sale — $90 now, going up to $95 on Oct 12. Order on Jostens.' },
-  { k: 'Campus',      t: 'Free zero-period peer tutoring — Library, Monday through Thursday mornings. Any subject, just drop in.' },
-  { k: 'Campus',      t: 'Parking permits are now officially required — get all the info you need at the front office.' },
-  { k: 'Join',        t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN' },
+  {
+    k: 'Homecoming',
+    t: 'Homecoming is officially over!'
+  },
+  {
+    k: 'ENN',
+    t: 'Submit your Love Lines on the Contact page — shoutouts, thank-yous, and crushes may be read live on the bulletin.'
+  },
+  {
+    k: 'Yearbook',
+    t: '2026–27 yearbooks are on sale — $90 now, going up to $95 on Oct 12. Order on Jostens.'
+  },
+  {
+    k: 'Campus',
+    t: 'Free zero-period peer tutoring — Library, Monday through Thursday mornings. Any subject, just drop in.'
+  },
+  {
+    k: 'Campus',
+    t: 'Parking permits are now officially required — get all the info you need at the front office.'
+  },
+  {
+    k: 'Join',
+    t: 'Want to be on the crew? Talk to Mr. Nimmo about joining ENN'
+  }
 ];
