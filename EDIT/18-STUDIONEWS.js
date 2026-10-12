@@ -56,11 +56,11 @@ var ENN_STUDIO_NEWS = {
     },
     {
       type: 'news',
-      category: 'STREAMING',
-      badge: 'DISNEY+ · STAR WARS',
-      headline: 'The Mandalorian & Grogu',
-      subhead: 'Streaming on Disney+ starting Sept 2.',
-      body: 'Missed it in theaters? Din Djarin and Grogu\'s big-screen adventure lands on Disney+ September 2 — the first Star Wars movie in years, finally available to stream at home.',
+      category: 'FILM',
+      badge: 'DC STUDIOS',
+      headline: 'Clayface',
+      subhead: 'Directed by James Watkins, Screenplay by Mike Flanagan.',
+      body: 'DC Studios\' third feature film, "Clayface," releases in theatres on October 23rd, it stars Tom Rhys Harries as Matt Hagen and Naomi Ackie as Dr. Caitlin Bates. Produced by Matt Reeves and written by Mike Flanagan, this film has a star-studded crew in front and behind the camera.',
       link: '',
       theme: 'red'
     },
