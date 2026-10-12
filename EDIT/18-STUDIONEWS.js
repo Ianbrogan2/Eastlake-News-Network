@@ -67,10 +67,10 @@ var ENN_STUDIO_NEWS = {
     {
       type: 'news',
       category: 'FILM',
-      badge: 'LIONSGATE',
-      headline: 'The Hunger Games: Sunrise on the Reaping',
-      subhead: 'Return to Panem this November.',
-      body: 'The next Hunger Games hits theaters this November, telling the story of a young Haymitch Abernathy and his brutal trip to the arena. Expect this prequel to dominate the fall.',
+      badge: 'BLUMHOUSE',
+      headline: 'Anything But Ghosts',
+      subhead: 'New horror filmmaking prodigy, Curry Barker, along with Cooper Tomlinson, announces their next project. ',
+      body: 'Directly after the critical and commercial success of "Obsession", Director, Editor, and Producer Curry Barker takes on one more challenge for his sophomore film, recently announced at Blumfest with Cooper Tomlinson, "Anything But Ghosts". Barker has shown his versatility before with his genre-bending ideas between horror and comedy, and now continues to do so as he stars alongside Cooper Tomlinson, Bryce Dallas Howard, and Aaron Paul. He joins a prestigious list of directors who direct and star in their own films, such as Spike Lee, Ben Affleck, Clint Eastwood, and many more. Seth Rogen has spoken highly about Barker in his new film saying he is, "just as good an actor as he is a director"',
       link: '',
       theme: 'gold'
     }
