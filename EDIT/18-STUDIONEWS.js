@@ -32,7 +32,7 @@ var ENN_STUDIO_NEWS = {
       subhead: 'Brand New Day is the biggest movie of the year, and maybe next year too?',
       body: 'After Spider-Man: Brand New Day, directed by Destin Daniel Cretton (our hometown hero), swings past box office records, it releases on digital while also announcing a re-release with extra footage coming next year.',
       link: '',
-      theme: 'blue'
+      theme: 'red'
     },
     {
       type: 'news',
@@ -49,10 +49,10 @@ var ENN_STUDIO_NEWS = {
       category: 'FILM',
       badge: 'MARVEL',
       headline: 'Avengers: Doomsday',
-      subhead: 'The Avengers assemble this winter — Dec 18.',
-      body: 'Marvel\'s massive Phase Six event storms into theaters December 18. Doctor Doom takes center stage in the most stacked Avengers lineup yet. Winter break just got a lot bigger.',
+      subhead: 'The Avengers assemble this winter on December 18th',
+      body: 'Marvel Studios takes a big swing this December, with former face and hero of the franchise, Robert Downey Jr., starring as Doctor Doom in Avengers: Doomsday. With over 30 returning actors and many not yet announced, the anticipation for the first Avengers film in over 7 years grows by the second.',
       link: '',
-      theme: 'purple'
+      theme: 'green'
     },
     {
       type: 'news',
@@ -72,7 +72,7 @@ var ENN_STUDIO_NEWS = {
       subhead: 'New horror filmmaking prodigy, Curry Barker, along with Cooper Tomlinson, announces their next project. ',
       body: 'Directly after the critical and commercial success of "Obsession", Director, Editor, and Producer Curry Barker takes on one more challenge for his sophomore film, recently announced at Blumfest with Cooper Tomlinson, "Anything But Ghosts". Barker has shown his versatility before with his genre-bending ideas between horror and comedy, and now continues to do so as he stars alongside Cooper Tomlinson, Bryce Dallas Howard, and Aaron Paul. He joins a prestigious list of directors who direct and star in their own films, such as Spike Lee, Ben Affleck, Clint Eastwood, and many more. Seth Rogen has spoken highly about Barker in his new film saying he is, "just as good an actor as he is a director"',
       link: '',
-      theme: 'gold'
+      theme: 'blue'
     }
   ]
 };
