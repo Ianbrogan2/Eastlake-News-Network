@@ -28,9 +28,9 @@ var ENN_STUDIO_NEWS = {
       type: 'news',
       category: 'BOX OFFICE',
       badge: 'MARVEL · SONY',
-      headline: 'Spider-Man Smashes $2 Billion',
-      subhead: 'Brand New Day is the biggest movie of the year.',
-      body: 'Tom Holland\'s web-slinger is rewriting the record books — Spider-Man: Brand New Day blew past $2 billion worldwide in just three weeks and set a new domestic record on the way. If you haven\'t caught it on the big screen yet, now\'s the time.',
+      headline: 'Spider-Man on digital, re-release coming soon?',
+      subhead: 'Brand New Day is the biggest movie of the year, and maybe next year too?',
+      body: 'After Spider-Man: Brand New Day, directed by Destin Daniel Cretton (our hometown hero), swings past box office records, it releases on digital while also announcing a re-release with extra footage coming next year.',
       link: '',
       theme: 'blue'
     },
