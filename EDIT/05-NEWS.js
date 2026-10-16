@@ -38,11 +38,6 @@ var ENN_NEWS = {
       date: '$90 now'
     },
     {
-      cat: 'Unified Sports Game',
-      title: '4th and 5th period',
-      date: 'October 13th'
-    },
-    {
       cat: 'Assembly',
       title: 'There will be a Fall sports assembly in the gym after second period!',
       date: 'October 23rd'
