@@ -520,20 +520,19 @@
       ng.appendChild(field('Archive — title','', textInput(P,'archiveTitle',''), 'third'));
       ng.appendChild(field('Spotlight — button','', textInput(P,'spotlightButton',''), 'third'));
       ng.appendChild(field('Archive — subtitle','', textInput(P,'archiveSub',''), 'full'));
-      ng.appendChild(field('Articles — kicker','', textInput(P,'artKicker',''), 'third'));
-      ng.appendChild(field('Articles — title','', textInput(P,'artTitle',''), 'third'));
-      ng.appendChild(field('Articles — subtitle','', textInput(P,'artSub',''), 'full'));
+      ng.appendChild(field('Latest Story — kicker','', textInput(P,'artKicker',''), 'third'));
+      ng.appendChild(field('Latest Story — title','', textInput(P,'artTitle',''), 'third'));
+      ng.appendChild(field('Latest Story — subtitle','', textInput(P,'artSub',''), 'full'));
       nc.appendChild(ng); form.appendChild(nc);
 
       var tc=el('div','edge-card');
       tc.appendChild(sectionHead('Tabs & ticker',''));
       tc.appendChild(instr('How to use this', [
-        'The <b>tab labels</b> are the two buttons that switch between the newspaper and the game.',
+        'The <b>tab labels</b> are the buttons that switch between the newspaper and the Murder Mystery game.',
         'The <b>ticker lead</b> is the first message in the scrolling bar at the bottom of the page.'
       ]));
       var tg2=el('div','edge-grid');
       tg2.appendChild(field('Newspaper tab label','', textInput(P,'tabPaper',''), 'half'));
-      tg2.appendChild(field('Articles tab label','', textInput(P,'tabArticles',''), 'half'));
       tg2.appendChild(field('Game tab label','', textInput(P,'tabGame',''), 'half'));
       tg2.appendChild(field('Ticker lead message','', textArea(P,'tickerLead'), 'full'));
       tc.appendChild(tg2); form.appendChild(tc);
