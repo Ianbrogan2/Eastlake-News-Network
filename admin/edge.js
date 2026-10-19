@@ -45,7 +45,7 @@
     var canEdit = (ctx.ME && ctx.ME.isMaster) || ctx.can(AREA,'edit') || ctx.can(AREA,'create');
     var realMount = ctx.mount;
     var tabBtns = {};
-    var TABS = [['issues','📰 Issues'],['games','🕵 Murder Mystery'],['page','⚙ Page & Settings']];
+    var TABS = [['issues','📰 Issues'],['articles','✍ Articles'],['games','🕵 Murder Mystery'],['page','⚙ Page & Settings']];
     var modtabs = el('div','edge-modtabs');
     TABS.forEach(function(t){ var b=el('button','edge-modtab'); b.textContent=t[1]; b.onclick=function(){ openTab(t[0]); }; modtabs.appendChild(b); tabBtns[t[0]]=b; });
     realMount.appendChild(modtabs);
@@ -54,6 +54,7 @@
     function openTab(which){
       markTab(which);
       if(which==='page') return showPageEditor();
+      if(which==='articles'){ if(window.ENN_EDGE_ARTICLES){ window.ENN_EDGE_ARTICLES.render(Object.assign({}, ctx, {mount:mount})); } else { mount.innerHTML='<div class="notice">Articles didn’t load — refresh the page.</div>'; } return; }
       if(which==='games'){ if(window.ENN_EDGE_GAMES){ window.ENN_EDGE_GAMES.render(Object.assign({}, ctx, {mount:mount})); } else { mount.innerHTML='<div class="notice">Murder Mystery didn’t load — refresh the page.</div>'; } return; }
       return showLibrary();
     }
@@ -519,6 +520,9 @@
       ng.appendChild(field('Archive — title','', textInput(P,'archiveTitle',''), 'third'));
       ng.appendChild(field('Spotlight — button','', textInput(P,'spotlightButton',''), 'third'));
       ng.appendChild(field('Archive — subtitle','', textInput(P,'archiveSub',''), 'full'));
+      ng.appendChild(field('Articles — kicker','', textInput(P,'artKicker',''), 'third'));
+      ng.appendChild(field('Articles — title','', textInput(P,'artTitle',''), 'third'));
+      ng.appendChild(field('Articles — subtitle','', textInput(P,'artSub',''), 'full'));
       nc.appendChild(ng); form.appendChild(nc);
 
       var tc=el('div','edge-card');
@@ -529,6 +533,7 @@
       ]));
       var tg2=el('div','edge-grid');
       tg2.appendChild(field('Newspaper tab label','', textInput(P,'tabPaper',''), 'half'));
+      tg2.appendChild(field('Articles tab label','', textInput(P,'tabArticles',''), 'half'));
       tg2.appendChild(field('Game tab label','', textInput(P,'tabGame',''), 'half'));
       tg2.appendChild(field('Ticker lead message','', textArea(P,'tickerLead'), 'full'));
       tc.appendChild(tg2); form.appendChild(tc);

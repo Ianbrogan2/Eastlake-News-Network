@@ -32,8 +32,12 @@ var ENN_EDGE = {
     archiveSub: 'Grouped by year and volume.',
     spotlightKicker: 'Latest issue',
     spotlightButton: 'Read the latest issue →',
+    artKicker: 'Read online',
+    artTitle: 'Stories from the Edge',
+    artSub: 'Every article, by section — tap one to read it right here.',
     tabPaper: 'The Eastlake Edge',
     tabGame: 'Murder Mystery',
+    tabArticles: 'Articles',
     tickerLead: 'The Eastlake Edge is live — every issue back to 1992, plus the murder mystery. Read it here.',
     // ── the Murder Mystery panel (the box on the game tab) ──
     gameTape: 'The Edge',

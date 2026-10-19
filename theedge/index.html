@@ -110,6 +110,45 @@
 .case-note{margin-top:16px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted-2);text-transform:uppercase}
 
 /* issue reader */
+/* ── articles ── */
+.art-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.artchip{font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.08em;color:var(--muted);background:var(--bg-2);
+  border:1px solid var(--border);border-radius:999px;padding:7px 14px;cursor:pointer;transition:.15s}
+.artchip:hover{color:#fff;border-color:var(--border-hi)}
+.artchip.on{color:#fff;background:var(--grad-bg);border-color:transparent}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.artcard{position:relative;text-align:left;cursor:pointer;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));
+  border:1px solid var(--border);border-left:3px solid var(--acc,#888);border-radius:12px;padding:20px 20px 18px;
+  display:flex;flex-direction:column;gap:8px;color:inherit;font:inherit;transition:border-color .18s,transform .18s}
+.artcard:hover{border-color:var(--border-hi);transform:translateY(-3px)}
+.artcard-sec{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc,#999)}
+.artcard-title{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.12;color:#f3efe6}
+.artcard-sub{color:var(--muted);font-size:13.5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.artcard-by{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted-2);margin-top:2px}
+.artcard-by .dot{margin:0 6px}
+.artcard.s-life{--acc:#22c55e}.artcard.s-news{--acc:#ef4444}.artcard.s-op{--acc:#f59e0b}
+.artcard.s-sport{--acc:#3b82f6}.artcard.s-vapa{--acc:#38bdf8}.artcard.s-ent{--acc:#ec4899}
+
+.artreader{position:fixed;inset:0;z-index:210;display:none;flex-direction:column;background:rgba(6,7,9,.98);backdrop-filter:blur(6px)}
+.artreader.open{display:flex;animation:edgeFade .25s ease}
+@keyframes edgeFade{from{opacity:0}to{opacity:1}}
+.artreader-bar{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--border);background:rgba(5,5,9,.7)}
+.ac-sec{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc,#999);border:1px solid currentColor;border-radius:999px;padding:3px 10px;opacity:.9}
+.ac-sec.s-life{--acc:#22c55e}.ac-sec.s-news{--acc:#ef4444}.ac-sec.s-op{--acc:#f59e0b}.ac-sec.s-sport{--acc:#3b82f6}.ac-sec.s-vapa{--acc:#38bdf8}.ac-sec.s-ent{--acc:#ec4899}
+.artreader .spacer{flex:1}
+.artreader-stage{flex:1;overflow:auto;padding:48px 20px 90px}
+.art{max-width:680px;margin:0 auto}
+.art-kick{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,#999);margin-bottom:12px}
+.art-kick.s-life{--acc:#22c55e}.art-kick.s-news{--acc:#ef4444}.art-kick.s-op{--acc:#f59e0b}.art-kick.s-sport{--acc:#3b82f6}.art-kick.s-vapa{--acc:#38bdf8}.art-kick.s-ent{--acc:#ec4899}
+.art-h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.08;color:#f6f2e9;margin:0 0 14px}
+.art-dek{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(17px,2.4vw,21px);line-height:1.5;color:var(--muted);margin:0 0 20px}
+.art-byline{font-family:'DM Mono',monospace;font-size:12.5px;color:var(--muted);padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid var(--border);display:flex;align-items:center;flex-wrap:wrap}
+.art-byline b{color:#f3efe6;font-weight:600}
+.art-byline .art-pos{color:var(--muted-2);margin-left:8px}
+.art-byline .dot{margin:0 8px;color:var(--muted-2)}
+.art-body{font-size:17px;line-height:1.75;color:#d8d3c6}
+.art-body p{margin:0 0 18px}
+
 .reader{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:rgba(3,3,6,.975);backdrop-filter:blur(6px)}
 .reader.open{display:flex;animation:edgeFade .25s var(--ease)}
 @keyframes edgeFade{from{opacity:0}to{opacity:1}}
@@ -193,6 +232,7 @@
 
   <div class="edge-tabs" role="tablist">
     <button class="edge-tab active" data-tab="paper" role="tab" id="edgeTabPaper">📰 The Eastlake Edge</button>
+    <button class="edge-tab" data-tab="articles" role="tab" id="edgeTabArticles">✍ Articles</button>
     <button class="edge-tab" data-tab="game" role="tab" id="edgeTabGame">🕵 Murder Mystery</button>
   </div>
 
@@ -219,6 +259,17 @@
     <div id="edgeGames"></div>
     <p class="case-note" id="edgeGameNote">Scanned the QR code on the paper? It brings you straight here.</p>
   </section>
+
+  <!-- ══════════ ARTICLES TAB ══════════ -->
+  <section id="tab-articles" class="edge-panel" role="tabpanel" hidden>
+    <div class="edge-sechead">
+      <div class="eyebrow" id="edgeArtKicker">Read online</div>
+      <h2 class="sec-title" id="edgeArtTitle">Stories from the Edge</h2>
+      <p class="sec-sub" id="edgeArtSub">Every article, by section — tap one to read it right here.</p>
+    </div>
+    <div class="art-filters" id="artFilters"></div>
+    <div class="art-grid" id="artGrid"></div>
+  </section>
 </main>
 
 <!-- Footer — shared chrome -->
@@ -238,6 +289,15 @@
   <div class="reader-stage" id="rStage" tabindex="-1"></div>
 </div>
 
+<div class="artreader" id="artReader" role="dialog" aria-modal="true" aria-label="Article">
+  <div class="artreader-bar">
+    <div class="artreader-crumb" id="artCrumb"></div>
+    <div class="spacer"></div>
+    <button class="rclose" id="artClose" aria-label="Close article">Close ✕</button>
+  </div>
+  <div class="artreader-stage" id="artStage" tabindex="-1"></div>
+</div>
+
 <!-- Ticker — shared chrome -->
 <div class="ticker">
   <div class="tk-label"><span class="d"></span>ENN Breaking</div>
@@ -245,8 +305,9 @@
 </div>
 
 <script src="/EDIT/03-TICKER.js?v=7"></script>
-<script src="/EDIT/30-EDGE.js?v=1"></script>
+<script src="/EDIT/30-EDGE.js?v=2"></script>
 <script src="/EDIT/31-CASES.js?v=1"></script>
+<script src="/EDIT/32-ARTICLES.js?v=1"></script>
 <script>
 /* ── ISSUES — loaded from EDIT/30-EDGE.js (managed in the Site Manager → The Edge) ── */
 const _RAW = (window.ENN_EDGE && Array.isArray(ENN_EDGE.issues)) ? ENN_EDGE.issues : [];
@@ -283,6 +344,8 @@ if(!ISSUES.length){
   setT('edgeGameTape',P.gameTape); setT('edgeGameKick',P.gameKick); setT('edgeGameTitle',P.gameTitle); setT('edgeGameDesc',P.gameDesc); setT('edgeGameBtn',P.gameButton); setT('edgeGameNote',P.gameNote);
   if(P.tabPaper){ var tp=document.getElementById('edgeTabPaper'); if(tp) tp.innerHTML='📰 '+esc(P.tabPaper); }
   if(P.tabGame){ var tg=document.getElementById('edgeTabGame'); if(tg) tg.innerHTML='🕵 '+esc(P.tabGame); }
+  if(P.tabArticles){ var tar=document.getElementById('edgeTabArticles'); if(tar) tar.innerHTML='✍ '+esc(P.tabArticles); }
+  setT('edgeArtKicker',P.artKicker); setT('edgeArtTitle',P.artTitle); setT('edgeArtSub',P.artSub);
   if(P.gameHref){ var gl=document.getElementById('edgeGameLink'); if(gl) gl.setAttribute('href', P.gameHref); }
   var A=(window.ENN_EDGE && ENN_EDGE.announce)||{}, box=document.getElementById('edgeAnnounce');
   if(box && A.on===true && (A.text||'')){
@@ -341,6 +404,65 @@ if(!ISSUES.length){
       +   '<p>'+esc(g.tagline||'')+'</p>'
       + '</div><span class="btn">'+esc(btn)+'</span></div></a>';
   }).join('');
+})();
+
+/* articles — filterable grid + readable overlay */
+(function(){
+  var grid=$('#artGrid'), filt=$('#artFilters'); if(!grid) return;
+  var DATA=window.ENN_ARTICLES||{};
+  var SECTIONS=DATA.sections||['Student Life','News & Politics','Opinion','Sports','VAPA & College Corner','Entertainment & Photo Journal'];
+  var SEC_CLASS={'Student Life':'s-life','News & Politics':'s-news','Opinion':'s-op','Sports':'s-sport','VAPA & College Corner':'s-vapa','Entertainment & Photo Journal':'s-ent'};
+  function sc(x){ return SEC_CLASS[x]||'s-other'; }
+  var all=(DATA.articles||[]).filter(function(a){ return (a.status||'draft')==='published'; })
+    .sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); });
+  var active='';
+  function draw(){
+    if(!all.length){ grid.innerHTML='<p class="sub">No articles published yet — check back soon.</p>'; return; }
+    var items=active?all.filter(function(a){return a.section===active;}):all;
+    grid.innerHTML = items.map(function(a){
+      return '<button class="artcard '+sc(a.section)+'" data-art="'+esc(a.slug)+'">'
+        + '<span class="artcard-sec">'+esc(a.section||'')+'</span>'
+        + '<span class="artcard-title">'+esc(a.title||'Untitled')+'</span>'
+        + (a.subtitle?'<span class="artcard-sub">'+esc(a.subtitle)+'</span>':'')
+        + '<span class="artcard-by">'+(a.author?'By '+esc(a.author):'')+(a.dateLabel?'<span class="dot">\u00b7</span>'+esc(a.dateLabel):'')+'</span>'
+        + '</button>';
+    }).join('') || '<p class="sub">No articles in this section yet.</p>';
+  }
+  filt.innerHTML = [['','All']].concat(SECTIONS.map(function(x){return [x,x];})).map(function(c){
+    return '<button class="artchip'+(c[0]===active?' on':'')+'" data-sec="'+esc(c[0])+'">'+esc(c[1])+'</button>';
+  }).join('');
+  filt.addEventListener('click', function(e){ var b=e.target.closest('[data-sec]'); if(!b) return; active=b.getAttribute('data-sec'); filt.querySelectorAll('.artchip').forEach(function(x){ x.classList.toggle('on', x.getAttribute('data-sec')===active); }); draw(); });
+  draw();
+
+  function bySlug(sl){ return (DATA.articles||[]).filter(function(a){return a.slug===sl && (a.status||'draft')==='published';})[0]; }
+  function paras(t){ return String(t||'').split(/\n\s*\n/).map(function(x){ return '<p>'+x.replace(/\n/g,'<br>')+'</p>'; }).join(''); }
+  window.openArticle=function(sl){
+    var a=bySlug(sl); if(!a) return;
+    $('#artCrumb').innerHTML='<span class="ac-sec '+sc(a.section)+'">'+esc(a.section||'')+'</span>';
+    $('#artStage').innerHTML='<article class="art">'
+      + '<div class="art-kick '+sc(a.section)+'">'+esc(a.section||'')+'</div>'
+      + '<h1 class="art-h1">'+esc(a.title||'')+'</h1>'
+      + (a.subtitle?'<p class="art-dek">'+esc(a.subtitle)+'</p>':'')
+      + '<div class="art-byline">'+(a.author?'By <b>'+esc(a.author)+'</b>':'')+(a.position?'<span class="art-pos">'+esc(a.position)+'</span>':'')+(a.dateLabel?'<span class="dot">\u00b7</span>'+esc(a.dateLabel):'')+'</div>'
+      + '<div class="art-body">'+paras(a.content)+'</div></article>';
+    $('#artStage').scrollTop=0;
+    $('#artReader').classList.add('open'); document.body.style.overflow='hidden'; $('#artStage').focus();
+  };
+  function closeArt(){ $('#artReader').classList.remove('open'); document.body.style.overflow=''; $('#artStage').innerHTML=''; }
+  document.addEventListener('click', function(e){ var b=e.target.closest('[data-art]'); if(b) openArticle(b.getAttribute('data-art')); });
+  $('#artClose').onclick=closeArt;
+  $('#artReader').addEventListener('click', function(e){ if(e.target.id==='artReader') closeArt(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && $('#artReader').classList.contains('open')) closeArt(); });
+
+  try{
+    var asl=new URLSearchParams(location.search).get('article');
+    if(asl && bySlug(asl)){
+      document.querySelectorAll('.edge-tab').forEach(function(x){ x.classList.toggle('active', x.getAttribute('data-tab')==='articles'); });
+      var tp=$('#tab-paper'), ta=$('#tab-articles'), tg=$('#tab-game');
+      if(tp) tp.hidden=true; if(ta) ta.hidden=false; if(tg) tg.hidden=true;
+      openArticle(asl);
+    }
+  }catch(e){}
 })();
 
 /* catalog grouped by year (newest first) */
@@ -426,6 +548,7 @@ document.querySelectorAll('.edge-tab').forEach(t=>t.addEventListener('click', ()
   document.querySelectorAll('.edge-tab').forEach(x=>x.classList.toggle('active', x===t));
   const which = t.getAttribute('data-tab');
   $('#tab-paper').hidden = which!=='paper';
+  $('#tab-articles').hidden = which!=='articles';
   $('#tab-game').hidden  = which!=='game';
   window.scrollTo({top:0, behavior:'smooth'});
 }));
