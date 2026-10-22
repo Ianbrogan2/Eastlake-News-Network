@@ -146,13 +146,16 @@ img{display:block;max-width:100%}
 }
 .nav-link:hover{color:#fff;background:rgba(255,255,255,0.04)}
 .nav-link.active{color:#fff;background:rgba(255,255,255,0.06)}
-/* Home nav button — always the brand gradient; grey outline when inactive, white when on it */
+/* Home nav button — gradient TEXT with a grey outline (white when on it); no background pill */
 .nav-link[data-route="home"],
 .nav-link[data-route="home"]:hover,
-.nav-link[data-route="home"].active{background:var(--grad-bg);color:#fff}
-.nav-link[data-route="home"]{box-shadow:inset 0 0 0 1px var(--muted-2)}
-.nav-link[data-route="home"]:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,0.6)}
-.nav-link[data-route="home"].active{box-shadow:inset 0 0 0 1px #fff}
+.nav-link[data-route="home"].active{
+  background:var(--grad-bg);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.nav-link[data-route="home"]{-webkit-text-stroke:.6px var(--muted-2);text-stroke:.6px var(--muted-2)}
+.nav-link[data-route="home"]:hover{-webkit-text-stroke:.6px rgba(255,255,255,.65);text-stroke:.6px rgba(255,255,255,.65)}
+.nav-link[data-route="home"].active{-webkit-text-stroke:.7px #fff;text-stroke:.7px #fff}
 .nav-right{display:flex;align-items:center;gap:14px}
 .onair{
   display:inline-flex;align-items:center;gap:8px;
