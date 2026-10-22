@@ -11,7 +11,8 @@ var ENN_ARTICLES = {
     'Opinion',
     'Sports',
     'VAPA & College Corner',
-    'Entertainment & Photo Journal'
+    'Entertainment & Photo Journal',
+    'Staff Picks'
   ],
   articles: [
     {
