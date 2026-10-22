@@ -468,6 +468,9 @@ if(!ISSUES.length){
   var SECTIONS=DATA.sections||['Student Life','News & Politics','Opinion','Sports','VAPA & College Corner','Entertainment & Photo Journal'];
   var SEC_CLASS={'Student Life':'s-life','News & Politics':'s-news','Opinion':'s-op','Sports':'s-sport','VAPA & College Corner':'s-vapa','Entertainment & Photo Journal':'s-ent'};
   function sc(x){ return SEC_CLASS[x]||'s-other'; }
+  var SEC_COLOR={'Student Life':'#2fd27a','News & Politics':'#f05454','Opinion':'#f6a623','Sports':'#5b9bff','VAPA & College Corner':'#3fc6f5','Entertainment & Photo Journal':'#f070b0'};
+  var SEC_PALETTE=['#8b7cf6','#2dd4bf','#fb923c','#e879f9','#a3e635','#f43f5e','#22d3ee','#facc15','#34d399','#fb7185','#c084fc','#60a5fa'];
+  function secColor(x){ if(!x) return '#9aa'; if(SEC_COLOR[x]) return SEC_COLOR[x]; var h=0,s=String(x); for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return SEC_PALETTE[h%SEC_PALETTE.length]; }
   function excerpt(t){ var s=String(t||'').replace(/\s+/g,' ').trim(); if(s.length<=190) return s; var cut=s.slice(0,190); var sp=cut.lastIndexOf(' '); if(sp>120) cut=cut.slice(0,sp); return cut.replace(/[.,;:\s]+$/,'')+'…'; }
 
   var all=(DATA.articles||[]).filter(function(a){ return (a.status||'draft')==='published'; })
@@ -479,6 +482,7 @@ if(!ISSUES.length){
   /* lead = the most recent story, as a typographic poster */
   var lead=all[0], lede=$('#artLede');
   lede.className='artlede art-acc '+sc(lead.section);
+  lede.style.setProperty('--acc', secColor(lead.section));
   lede.setAttribute('data-art', lead.slug);
   lede.innerHTML=''
     + '<div class="lede-kick"><span class="latest">Latest story</span>'+(lead.section?' — '+esc(lead.section):'')+'</div>'
@@ -499,7 +503,7 @@ if(!ISSUES.length){
     var active='', shown=0, PAGE=6;
     function filtered(){ return active?rest.filter(function(a){return a.section===active;}):rest; }
     function rowHTML(a){
-      return '<div class="artrow art-acc '+sc(a.section)+'" data-art="'+esc(a.slug)+'" role="button" tabindex="0">'
+      return '<div class="artrow art-acc '+sc(a.section)+'" style="--acc:'+secColor(a.section)+'" data-art="'+esc(a.slug)+'" role="button" tabindex="0">'
         + '<div class="artrow-kick">'+esc(a.section||'')+'</div>'
         + '<div class="artrow-t">'+esc(a.title||'Untitled')+'</div>'
         + '<div class="artrow-by">'+(a.author?'By '+esc(a.author):'')+(a.dateLabel?'<span class="dot">·</span>'+esc(a.dateLabel):'')+'</div>'
@@ -513,7 +517,7 @@ if(!ISSUES.length){
       count.textContent = items.length ? ('Showing '+Math.min(shown,items.length)+' of '+items.length) : '';
     }
     filt.innerHTML=[['','All']].concat(SECTIONS.map(function(x){return [x,x];})).map(function(c){
-      var cls=c[0]?(' '+sc(c[0])):''; return '<button class="artchip art-acc'+cls+(c[0]===active?' on':'')+'" data-sec="'+esc(c[0])+'" type="button">'+esc(c[1])+'</button>';
+      var cls=c[0]?(' '+sc(c[0])):''; var stl=c[0]?(' style="--acc:'+secColor(c[0])+'"'):''; return '<button class="artchip art-acc'+cls+(c[0]===active?' on':'')+'"'+stl+' data-sec="'+esc(c[0])+'" type="button">'+esc(c[1])+'</button>';
     }).join('');
     filt.addEventListener('click', function(e){ var b=e.target.closest('[data-sec]'); if(!b) return; active=b.getAttribute('data-sec'); filt.querySelectorAll('.artchip').forEach(function(x){ x.classList.toggle('on', x.getAttribute('data-sec')===active); }); draw(true); });
     moreBtn.addEventListener('click', function(){ shown+=PAGE; draw(false); });
@@ -526,9 +530,9 @@ if(!ISSUES.length){
   function paras(t){ return String(t||'').split(/\n\s*\n/).map(function(x){ return '<p>'+x.replace(/\n/g,'<br>')+'</p>'; }).join(''); }
   window.openArticle=function(sl){
     var a=bySlug(sl); if(!a) return;
-    $('#artCrumb').innerHTML='<span class="ac-sec '+sc(a.section)+'">'+esc(a.section||'')+'</span>';
+    $('#artCrumb').innerHTML='<span class="ac-sec '+sc(a.section)+'" style="--acc:'+secColor(a.section)+'">'+esc(a.section||'')+'</span>';
     $('#artStage').innerHTML='<article class="art">'
-      + '<div class="art-kick '+sc(a.section)+'">'+esc(a.section||'')+'</div>'
+      + '<div class="art-kick '+sc(a.section)+'" style="--acc:'+secColor(a.section)+'">'+esc(a.section||'')+'</div>'
       + '<h1 class="art-h1">'+esc(a.title||'')+'</h1>'
       + (a.subtitle?'<p class="art-dek">'+esc(a.subtitle)+'</p>':'')
       + '<div class="art-byline">'+(a.author?'By <b>'+esc(a.author)+'</b>':'')+(a.position?'<span class="art-pos">'+esc(a.position)+'</span>':'')+(a.dateLabel?'<span class="dot">·</span>'+esc(a.dateLabel):'')+'</div>'
