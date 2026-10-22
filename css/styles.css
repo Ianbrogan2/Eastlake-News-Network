@@ -146,8 +146,9 @@ img{display:block;max-width:100%}
 }
 .nav-link:hover{color:#fff;background:rgba(255,255,255,0.04)}
 .nav-link.active{color:#fff;background:rgba(255,255,255,0.06)}
-/* Home nav button — identical size/font/weight to the other nav links,
-   just filled with a deep royal-blue -> kelly-green gradient. No outline, no pill.
+/* Home nav button — identical size/font/weight to the other nav links, text filled with a
+   deep royal-blue -> kelly-green gradient. No outline. Keeps the light-gray pill on hover/active
+   like the other links (painted via inset box-shadow, since `background` carries the text gradient).
    Matches both the main site (data-route/#home) and the standalone Edge page (href="/#home"). */
 .nav-link[data-route="home"],
 .nav-link[href$="#home"],
@@ -160,11 +161,11 @@ img{display:block;max-width:100%}
   -webkit-text-fill-color:transparent;color:transparent;
 }
 .nav-link[data-route="home"],
-.nav-link[href$="#home"]{opacity:.8;transition:opacity .18s var(--ease)}
+.nav-link[href$="#home"]{opacity:.8;font-weight:600;transition:opacity .18s var(--ease),box-shadow .18s var(--ease)}
 .nav-link[data-route="home"]:hover,
-.nav-link[href$="#home"]:hover,
+.nav-link[href$="#home"]:hover{opacity:1;box-shadow:inset 0 0 0 100px rgba(255,255,255,0.04)}
 .nav-link[data-route="home"].active,
-.nav-link[href$="#home"].active{opacity:1}
+.nav-link[href$="#home"].active{opacity:1;box-shadow:inset 0 0 0 100px rgba(255,255,255,0.06)}
 .nav-right{display:flex;align-items:center;gap:14px}
 .onair{
   display:inline-flex;align-items:center;gap:8px;
