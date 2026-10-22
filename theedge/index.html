@@ -364,6 +364,20 @@
 <script src="/EDIT/30-EDGE.js?v=2"></script>
 <script src="/EDIT/31-CASES.js?v=1"></script>
 <script src="/EDIT/32-ARTICLES.js?v=2"></script>
+<script src="/EDIT/23-SECTIONS.js?v=2"></script>
+<script>
+/* Keep the shared top nav in sync with the site's page on/off switches (EDIT/23-SECTIONS.js).
+   The Edge page is standalone, so it mirrors the same toggles the main site uses — e.g. if Games
+   is switched off, its nav link is removed here too. */
+(function(){
+  if(typeof ENN_TOGGLE==='undefined') return;
+  var MAP={'/#about':'pageAbout','/#athletics':'pageAthletics','/#calendar':'pageCalendar','/#contact':'pageContact','/#bullpen':'pageGames'};
+  Object.keys(MAP).forEach(function(href){
+    if(ENN_TOGGLE.main(MAP[href])) return;
+    document.querySelectorAll('.nav-link[href="'+href+'"], .mobile-link[href="'+href+'"]').forEach(function(a){ a.remove(); });
+  });
+})();
+</script>
 <script>
 /* ── ISSUES — loaded from EDIT/30-EDGE.js (managed in the Site Manager → The Edge) ── */
 const _RAW = (window.ENN_EDGE && Array.isArray(ENN_EDGE.issues)) ? ENN_EDGE.issues : [];
