@@ -13,7 +13,9 @@
   var QR_CDN='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
   var STATUS=[['published','Published'],['draft','Draft'],['unpublished','Unpublished']];
   var DEFAULT_SECTIONS=['Student Life','News & Politics','Opinion','Sports','VAPA & College Corner','Entertainment & Photo Journal'];
-  var SEC_COLOR={'Student Life':'#22c55e','News & Politics':'#ef4444','Opinion':'#f59e0b','Sports':'#3b82f6','VAPA & College Corner':'#38bdf8','Entertainment & Photo Journal':'#ec4899'};
+  var SEC_COLOR={'Student Life':'#2fd27a','News & Politics':'#f05454','Opinion':'#f6a623','Sports':'#5b9bff','VAPA & College Corner':'#3fc6f5','Entertainment & Photo Journal':'#f070b0'};
+  var SEC_PALETTE=['#8b7cf6','#2dd4bf','#fb923c','#e879f9','#a3e635','#f43f5e','#22d3ee','#facc15','#34d399','#fb7185','#c084fc','#60a5fa'];
+  function secColor(x){ if(!x) return 'var(--muted)'; if(SEC_COLOR[x]) return SEC_COLOR[x]; var h=0,s=String(x); for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return SEC_PALETTE[h%SEC_PALETTE.length]; }
   var SORTS=[['new','Newest first'],['old','Oldest first'],['title','Title A–Z'],['section','Section'],['author','Writer A–Z']];
 
   window.ENN_EDGE_ARTICLES = { render: render };
@@ -52,12 +54,12 @@
       var head=el('div','page-head edge-head');
       var h=el('div'); h.innerHTML='<div class="eyebrow">✍ The Edge</div><h1>Articles</h1><p class="lede">Write and publish online articles. Sort and filter by section, writer, date, or status. Only <b>Published</b> articles appear on the site.</p>';
       head.appendChild(h);
-      if(canEdit){ var add=el('button','btn','＋ New Article'); add.onclick=function(){ showEditor(null); }; head.appendChild(add); }
+      if(canEdit){ var add=el('button','btn','＋ New Article'); add.onclick=function(){ showEditor(null); }; head.appendChild(add); var secb=el('button','btn-ghost','⚙ Sections'); secb.onclick=function(){ showSections(); }; head.appendChild(secb); }
       mount.appendChild(head);
       mount.appendChild(instr('How articles work', [
         '<b>New Article</b> → fill the title, writer, section, date, and the content → <b>Save Draft</b> or <b>Publish</b>.',
         'In the content box, leave a <b>blank line between paragraphs</b>. Basic HTML like &lt;b&gt; works.',
-        'Pick a <b>section</b> (Student Life, News &amp; Politics, Opinion, Sports, VAPA &amp; College Corner, Entertainment &amp; Photo Journal) — it colour-codes the article on the site.',
+        'Pick a <b>section</b> — it colour-codes the article on the site. Add or rename sections with <b>⚙ Sections</b>.',
         'Use the <b>search, section, status</b> and <b>sort</b> controls to find anything fast.'
       ]));
 
@@ -101,7 +103,7 @@
       var row=el('div','edge-row clickable');
       var mid=el('div','edge-row-main');
       var tr=el('div','edge-row-title');
-      var sp=el('span'); sp.className='edge-pill'; var col=SEC_COLOR[a.section]||'var(--muted)'; sp.style.color=col; sp.style.borderColor=col; sp.textContent=(a.section||'—'); tr.appendChild(sp);
+      var sp=el('span'); sp.className='edge-pill'; var col=secColor(a.section); sp.style.color=col; sp.style.borderColor=col; sp.textContent=(a.section||'—'); tr.appendChild(sp);
       tr.appendChild(el('span','ert-name', a.title||'Untitled'));
       var st=el('span','edge-pill st-'+(a.status||'draft')); st.textContent=statusLabel(a.status||'draft'); tr.appendChild(st);
       mid.appendChild(tr);
@@ -143,7 +145,7 @@
       g2.appendChild(field('Writer name','', textInput(a,'author',''), 'third'));
       g2.appendChild(field('Position','e.g. Staff Writer, Managing Editor.', textInput(a,'position',''), 'third'));
       g2.appendChild(field('Publication date','', dateInput(a,'date'), 'third'));
-      g2.appendChild(field('Section','', sectionSelect(a), 'half'));
+      g2.appendChild(field('Section','Choose one, or add a new section.', sectionControl(a), 'half'));
       g2.appendChild(field('Status','Only Published shows on the site.', statusSelect(a), 'quarter'));
       g2.appendChild(field('Featured','', toggleInput(a,'featured'), 'quarter'));
       c2.appendChild(g2); form.appendChild(c2);
@@ -190,6 +192,92 @@
           .catch(function(e){ btns.forEach(function(b){ b.disabled=false; }); toast('Save failed: '+e.message,'err'); });
       }
     }
+    /* ── sections: add / rename / remove ── */
+    function sectionControl(o){
+      var wrap=el('div'); wrap.style.display='flex'; wrap.style.gap='8px'; wrap.style.alignItems='center';
+      var s=el('select','edge-input'); s.style.flex='1';
+      function fill(){ s.innerHTML=''; sections().forEach(function(x){ var op=el('option'); op.value=x; op.textContent=x; s.appendChild(op); }); if(!o.section) o.section=sections()[0]||''; s.value=o.section; }
+      fill(); s.onchange=function(){ o.section=s.value; };
+      var add=el('button','btn-ghost sm','＋ New'); add.type='button';
+      add.onclick=function(){ addSectionDialog(function(name){ o.section=name; fill(); s.value=name; o.section=s.value; }); };
+      wrap.appendChild(s); wrap.appendChild(add);
+      return wrap;
+    }
+
+    function addSectionDialog(onAdded){
+      var m=modal('Add a section');
+      var f=el('div','edge-field'); f.appendChild(labelText('Section name'));
+      var i=el('input','edge-input'); i.type='text'; i.placeholder='e.g. Culture, Health, Tech'; f.appendChild(i);
+      f.appendChild(el('div','edge-hint','It appears in every article’s Section menu and gets its own colour on the site.'));
+      m.body.appendChild(f);
+      var add=el('button','btn','Add section');
+      add.onclick=function(){
+        var name=String(i.value||'').trim().replace(/\s+/g,' ');
+        if(!name){ i.focus(); return; }
+        if(sections().some(function(x){ return x.toLowerCase()===name.toLowerCase(); })){ toast('That section already exists.','err'); return; }
+        add.disabled=true;
+        S.data.sections=sections().concat([name]);
+        saveData('Add article section: '+name).then(function(){ toast('Section “'+name+'” added','ok'); m.close(); if(onAdded) onAdded(name); })
+          .catch(function(e){ add.disabled=false; S.data.sections=sections().filter(function(x){ return x!==name; }); toast('Save failed: '+e.message,'err'); });
+      };
+      i.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); add.onclick(); } });
+      m.footer.appendChild(add);
+      setTimeout(function(){ i.focus(); }, 30);
+    }
+
+    function showSections(){
+      mount.innerHTML='';
+      ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'The Edge',go:'edge'},{t:'Articles'},{t:'Sections'}]);
+      var head=el('div','page-head edge-head');
+      var h=el('div'); h.innerHTML='<div class="eyebrow">✍ The Edge</div><h1>Sections</h1><p class="lede">Add, rename, or remove the sections writers can file articles under. Each one colour-codes on the site.</p>';
+      head.appendChild(h);
+      var back=el('button','btn-ghost','← Back to articles'); back.onclick=function(){ showLibrary(); }; head.appendChild(back);
+      mount.appendChild(head);
+      mount.appendChild(instr('About sections',[
+        'These are the choices in each article’s <b>Section</b> menu.',
+        'Renaming a section updates every article already filed under it.',
+        'Removing a section won’t delete its articles — they keep the label, but it’s no longer selectable.'
+      ]));
+      var W=sections().map(function(n){ return {orig:n, val:n}; });
+      function count(name){ return S.data.articles.filter(function(a){ return a.section===name; }).length; }
+      var card=el('div','edge-card'); card.appendChild(sectionHead('Your sections',''));
+      var listHost=el('div'); card.appendChild(listHost);
+      function drawList(){
+        listHost.innerHTML='';
+        W.forEach(function(item,ix){
+          var row=el('div'); row.style.display='flex'; row.style.alignItems='center'; row.style.gap='10px'; row.style.marginBottom='8px';
+          var sw=el('span'); sw.style.width='14px'; sw.style.height='14px'; sw.style.borderRadius='4px'; sw.style.flex='none'; sw.style.background=secColor(String(item.val||'').trim()); row.appendChild(sw);
+          var inp=el('input','edge-input'); inp.type='text'; inp.value=item.val; inp.style.flex='1'; inp.oninput=function(){ item.val=inp.value; sw.style.background=secColor(inp.value.trim()); }; row.appendChild(inp);
+          var c=count(item.orig); if(c){ var cc=el('span','edge-hint', c+' article'+(c===1?'':'s')); cc.style.flex='none'; row.appendChild(cc); }
+          var rm=el('button','edge-iact danger'); rm.type='button'; rm.title='Remove'; rm.innerHTML='<span class="ei-g">🗑</span>'; rm.onclick=function(){ W.splice(ix,1); drawList(); }; row.appendChild(rm);
+          listHost.appendChild(row);
+        });
+        if(!W.length) listHost.appendChild(el('div','muted','No sections yet — add one below.'));
+      }
+      drawList();
+      var addRow=el('div'); addRow.style.display='flex'; addRow.style.gap='10px'; addRow.style.marginTop='12px';
+      var ni=el('input','edge-input'); ni.type='text'; ni.placeholder='Add a section — e.g. Culture'; ni.style.flex='1'; addRow.appendChild(ni);
+      var addb=el('button','btn-ghost','＋ Add'); addb.type='button';
+      addb.onclick=function(){ var name=String(ni.value||'').trim().replace(/\s+/g,' '); if(!name) return; if(W.some(function(x){ return String(x.val||'').trim().toLowerCase()===name.toLowerCase(); })){ toast('Already in the list.','err'); return; } W.push({orig:null,val:name}); ni.value=''; drawList(); ni.focus(); };
+      ni.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); addb.onclick(); } });
+      addRow.appendChild(addb); card.appendChild(addRow);
+      mount.appendChild(card);
+      var actions=el('div','edge-actions'); var right=el('div','edge-actions-r');
+      var cancel=el('button','btn-ghost','Cancel'); cancel.onclick=function(){ showLibrary(); }; right.appendChild(cancel);
+      var save=el('button','btn','Save sections');
+      save.onclick=function(){
+        var final=[], seen={}, renames=[];
+        for(var i=0;i<W.length;i++){ var v=String(W[i].val||'').trim().replace(/\s+/g,' '); if(!v) continue; var key=v.toLowerCase(); if(seen[key]) continue; seen[key]=1; final.push(v); if(W[i].orig && W[i].orig!==v) renames.push([W[i].orig,v]); }
+        if(!final.length){ toast('Keep at least one section.','err'); return; }
+        renames.forEach(function(p){ S.data.articles.forEach(function(a){ if(a.section===p[0]) a.section=p[1]; }); });
+        S.data.sections=final;
+        save.disabled=true;
+        saveData('Update article sections').then(function(){ toast('Sections saved','ok'); showLibrary(); }).catch(function(e){ save.disabled=false; toast('Save failed: '+e.message,'err'); });
+      };
+      if(!canEdit) save.disabled=true;
+      right.appendChild(save); actions.appendChild(right); mount.appendChild(actions);
+    }
+
     function cleanArt(a){ return { slug:a.slug, status:a.status||'draft', section:a.section||'', title:a.title||'', subtitle:a.subtitle||'', author:a.author||'', position:a.position||'', date:a.date||'', dateLabel:a.dateLabel||'', content:a.content||'', featured:a.featured===true, updatedAt:a.updatedAt||'' }; }
 
     /* ── field builders ── */
