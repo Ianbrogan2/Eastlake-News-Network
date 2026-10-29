@@ -27,13 +27,23 @@ var ENN_YEARBOOK = {
   },
   buy: {
     on: 'T',
-    price: '90',
+    price: '95',
     jostensUrl: 'https://www.jostens.com/apps/store/productDetail/1015698/Eastlake-High-School/Yearbook/20260702121505630151/CATALOG_SHOP/Yearbook/20260702121505650151',
-    nextBumpDate: '2026-10-12',
-    nextBumpPrice: '95',
+    nextBumpDate: '2027-01-30',
+    nextBumpPrice: '100',
     history: [
-      { price: '85', when: 'Through Aug' },
-      { price: '90', when: 'Now' }
+      {
+        price: '85',
+        when: 'Through Aug'
+      },
+      {
+        price: '90',
+        when: 'October'
+      },
+      {
+        price: '95',
+        when: 'Now'
+      }
     ],
     remind: {
       on: 'F',
@@ -95,7 +105,11 @@ var ENN_YEARBOOK = {
     photos: {
       on: 'T',
       categories: [
-        'Sports', 'Clubs & Activities', 'Spirit Weeks', 'Dances & Events', 'Candids & Everyday'
+        'Sports',
+        'Clubs & Activities',
+        'Spirit Weeks',
+        'Dances & Events',
+        'Candids & Everyday'
       ],
       studentUrl: 'https://drive.google.com/drive/folders/1nsVIGHKPmPVdgQoFc0vskQVMQoliArXg?usp=sharing',
       parentUrl: ''
