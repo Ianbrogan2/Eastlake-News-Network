@@ -34,13 +34,14 @@ var ENN_NEWS = {
     },
     {
       cat: 'Yearbook',
-      title: '2026–27 yearbooks are on sale now — $90 through Oct 11, then $95. Order on Jostens.',
-      date: '$90 now'
+      title: '2026–27 yearbooks are on sale now — $95 through January 1st, then $95. Order on Jostens.',
+      date: '$95 now'
     },
     {
-      cat: 'Assembly',
-      title: 'There will be a Fall sports assembly in the gym after second period!',
-      date: 'October 23rd'
+      cat: 'Vacation',
+      title: 'Next vacation is the week of Thanksgiving - Nov 23 through 27',
+      date: 'October 23rd',
+      article: 'Be sure to get caught up on all your assignments and studying! Semester Grades come out 3 weeks after we return!'
     }
   ]
 };
