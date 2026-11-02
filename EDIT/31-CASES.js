@@ -14,7 +14,7 @@ var ENN_CASES = {
       status: 'published',
       isDefault: true,
       title: 'The Eastlake Assassins',
-      subtitle: 'Whodunit · The Vanished Pot',
+      subtitle: 'Murder Mystery · The Vanished Pot',
       kick: 'The Eastlake Edge',
       tagline: 'A $3,000 tournament, an account gone dark, and a thief hiding in plain sight. Work the corkboard, log the evidence, and close the case before anyone else does. This is the game the newspaper’s QR code drops you into.',
       caseNumber: 'EHS-0342',
@@ -166,9 +166,9 @@ var ENN_CASES = {
       status: 'draft',
       isDefault: false,
       title: 'Murder on Proctor Valley Road',
-      subtitle: 'Whodunit &middot; Two Dead, One Dinner Party',
+      subtitle: 'Murder Mystery · Two Dead, One Dinner Party',
       kick: 'The Eastlake Edge',
-      tagline: 'Two bodies, nine suspects, one dinner party on the valley&rsquo;s most haunted road. Read the case file, follow the claw marks and the feather, and cross the guests off one by one until only the killer is left. Scan, and the clock starts.',
+      tagline: 'Two bodies, nine suspects, one dinner party on the valley’s most haunted road. Read the case file, follow the claw marks and the feather, and cross the guests off one by one until only the killer is left. Scan, and the clock starts.',
       caseNumber: 'EHS-1031',
       adminPass: 'edge-admin',
       updatedAt: '2026-11-01',
@@ -177,7 +177,7 @@ var ENN_CASES = {
         headline: 'Two dead on the valley road. Nine at the table. Name the one who did it.',
         body: [
           'Husky turned up dead on <b>Proctor Valley Road</b>, torn up by claws, the same night the whole crew sat down to dinner. Everybody liked <b>Coyote</b> for it, coyotes and dogs don&rsquo;t mix, and he was the last one seen with Husky. Then the lights went out at the party. When they came back, Coyote was dead on the bathroom floor with a <b>feather</b> on his body, and the easy answer died with him.',
-          'The case file is in your hands, the one you scanned this off of: the floor plan, every guest&rsquo;s statement, and four pieces of evidence. Work the <b>four clues</b> in order. Each one crosses somebody off. The last one hands you the killer, if you&rsquo;re fast enough to beat the clock.'
+          'The case file is in your hands, the one you scanned this off of: the floor plan, every guest&rsquo;s statement, and three pieces of evidence. Work the <b>three clues</b> in order. Each one crosses somebody off. The last one hands you the killer, if you&rsquo;re fast enough to beat the clock.'
         ],
         note: 'Clock&rsquo;s been running since you scanned. Open the file and start crossing off suspects.'
       },
@@ -224,7 +224,7 @@ var ENN_CASES = {
           skip: 'A metal feather only comes off one guest: <b>RoboGriffin</b>. Eagle and Golden Eagle have real feathers, so they&rsquo;re cleared. It&rsquo;s down to RoboGriffin and Bert. Answer: <b>RoboGriffin</b>.',
           right: 'RoboGriffin, metal feathers, metal everything. And he did say he&rsquo;d have killed Coyote. Looks airtight&hellip; except he swears he was with Bert in the dark. Two left. One of them is being set up.',
           wrong: 'Not a real-feathered bird. The feather is <i>metal</i>, match it to the one guest made of metal.',
-          answers: ['robogriffin','rg','robo griffin','griffin','robogryphon','robogriffon','robo griffon']
+          answers: ['robogriffin','rg','robo griffin','griffin','robogriffins','robo griffins','griffins','camarena','robogryphon','robogriffon','robo griffon']
         },
         {
           tag: 'EVIDENCE 5 &middot; THE FOOTPRINT',

@@ -2,7 +2,7 @@
    ENN SITE MANAGER — THE EDGE · MURDER MYSTERY GAMES
    ──────────────────────────────────────────────────────────────────
    Registers as its own section under The Edge. Build and edit playable
-   whodunit games, save as draft or publish, preview, and get a QR code
+   murder mystery games, save as draft or publish, preview, and get a QR code
    per game. Data lives in EDIT/31-CASES.js (ENN_CASES = { games:[…] }).
 
    The default game (isDefault) is the one the printed QR — which points
@@ -51,7 +51,7 @@
       mount.innerHTML='';
       ctx.crumbs([{t:'Dashboard',go:'dashboard'},{t:'The Edge',go:'edge'},{t:'Murder Mystery'}]);
       var head=el('div','page-head edge-head');
-      var h=el('div'); h.innerHTML='<div class="eyebrow">🕵 The Edge</div><h1>Murder Mystery</h1><p class="lede">Build and manage the whodunit games. Each published game gets its own box on The Edge and its own QR code. Only <b>Published</b> games appear publicly.</p>';
+      var h=el('div'); h.innerHTML='<div class="eyebrow">🕵 The Edge</div><h1>Murder Mystery</h1><p class="lede">Build and manage the murder mystery games. Each published game gets its own box on The Edge and its own QR code. Only <b>Published</b> games appear publicly.</p>';
       head.appendChild(h);
       if(canEdit){ var add=el('button','btn','＋ Create New Game'); add.onclick=function(){ showEditor(null); }; head.appendChild(add); }
       mount.appendChild(head);
@@ -127,7 +127,7 @@
       var g1=el('div','edge-grid');
       var titleInput=textInput(g,'title','The Eastlake Assassins');
       g1.appendChild(field('Title','The name of the case.', titleInput, 'half'));
-      g1.appendChild(field('Subtitle','The cursive line under the title (e.g. “Whodunit · The Vanished Pot”).', textInput(g,'subtitle',''), 'half'));
+      g1.appendChild(field('Subtitle','The cursive line under the title (e.g. “Murder Mystery · The Vanished Pot”).', textInput(g,'subtitle',''), 'half'));
       g1.appendChild(field('Case number','Shown in the case-file chip (e.g. “EHS-0342”).', textInput(g,'caseNumber',''), 'third'));
       g1.appendChild(field('Kicker','Small label above the title.', textInput(g,'kick',''), 'third'));
       g1.appendChild(field('Status','Only Published games show publicly.', statusSelect(g), 'third'));
