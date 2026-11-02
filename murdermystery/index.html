@@ -487,7 +487,19 @@ body{padding-bottom:48px}                 /* clear the fixed ticker */
 </div>
 
 
-<script src="/EDIT/31-CASES.js?v=4"></script>
+<script src="/EDIT/31-CASES.js?v=6"></script>
+<script src="/EDIT/23-SECTIONS.js?v=2"></script>
+<script>
+/* Keep this standalone page's nav in sync with the site's page on/off switches. */
+(function(){
+  if(typeof ENN_TOGGLE==='undefined') return;
+  var MAP={'#about':'pageAbout','#athletics':'pageAthletics','#calendar':'pageCalendar','#contact':'pageContact','#bullpen':'pageGames'};
+  Object.keys(MAP).forEach(function(suf){
+    if(ENN_TOGGLE.main(MAP[suf])) return;
+    document.querySelectorAll('a[href$="'+suf+'"]').forEach(function(a){ a.remove(); });
+  });
+})();
+</script>
 <script>
 /* ══════════════════════════════════════════════════════════════════
    CONFIG, EDIT EVERYTHING HERE
@@ -702,7 +714,7 @@ function showSolved(q){
         <span class="tag ok">${q.tag}</span>
         ${progressBar(true)}
       </div>
-      <div class="logged"><span class="chk">\u2713</span> LOGGED</div>
+      <div class="logged"><span class="chk">\u2713</span> CORRECT</div>
       <p class="det-say good">${q.right}<span class="sig">Det.</span></p>
       <button class="btn btn-primary" id="nextBtn">${last?"Close the case \u2192":"Next lead \u2192"}</button>
     </div>`;
