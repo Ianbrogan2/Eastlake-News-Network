@@ -166,7 +166,7 @@ var ENN_CASES = {
       status: 'published',
       isDefault: false,
       title: 'Murder on Proctor Valley Road',
-      subtitle: 'Murder Mystery &middot; Two Dead, One Dinner Party',
+      subtitle: 'Murder Mystery · Two Dead, One Dinner Party',
       kick: 'The Eastlake Edge',
       tagline: 'Somebody killed two guests the night of the dinner party, and the only witness is a road with an eighty-year-old ghost story. You get the case file, the floor plan, and three pieces of evidence. Beat the clock and name the killer.',
       caseNumber: 'EHS-1105',
