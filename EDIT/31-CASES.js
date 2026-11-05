@@ -250,7 +250,7 @@ var ENN_CASES = {
         }
       ],
       suspects: [
-        { name: 'Bert', id: 'THE MONSTER', tag: 'Liberty Elementary · the Proctor Valley Monster', guilty: true },
+        { name: 'Bert', id: 'THE MONSTER', tag: 'Liberty Elementary', guilty: true },
         { name: 'Camarena RoboGriffin', id: 'RG', tag: 'Framed with his own feather', guilty: false },
         { name: 'Eastlake Eagle', id: 'GUEST', tag: 'Found the body', guilty: false },
         { name: 'Olympic View Golden Eagle', id: 'GUEST', tag: 'Rejected, not a killer', guilty: false },

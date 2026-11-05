@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css?v=33">
+<link rel="stylesheet" href="/css/styles.css?v=34">
 <style>
 /* ── The Edge — page-specific components, built on the shared tokens ── */
 .edge-wrap{max-width:1360px;margin:0 auto;padding:calc(var(--nav-h) + 40px) clamp(18px,4.4vw,60px) 44px}
@@ -40,12 +40,12 @@
 .edge-about p b{color:var(--text);font-weight:600}
 
 /* tab switcher — same button shapes as the rest of the site */
-.edge-tabs{display:flex;gap:8px;margin:26px 0 36px;flex-wrap:wrap}
+.edge-tabs{display:flex;gap:14px;margin:26px 0 40px;flex-wrap:wrap}
 .edge-tab{font-family:'DM Mono',monospace;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
   padding:12px 20px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);
   display:inline-flex;align-items:center;gap:9px;transition:color .18s var(--ease),background .18s var(--ease),border-color .18s var(--ease)}
 .edge-tab:hover{color:#fff;border-color:var(--border-hi)}
-.edge-tab.active{background:var(--grad-bg);color:#fff;border-color:transparent;box-shadow:0 6px 20px -6px rgba(26,86,219,0.5)}
+.edge-tab.active{background:linear-gradient(120deg, var(--blue) 0%, var(--green) 100%);color:#fff;border-color:transparent;box-shadow:0 6px 18px -8px rgba(0,0,0,0.55)}
 .edge-panel[hidden]{display:none}
 
 /* section head reused: .eyebrow + .sec-title + .sec-sub from styles.css */
@@ -362,7 +362,7 @@
 
 <script src="/EDIT/03-TICKER.js?v=7"></script>
 <script src="/EDIT/30-EDGE.js?v=3"></script>
-<script src="/EDIT/31-CASES.js?v=9"></script>
+<script src="/EDIT/31-CASES.js?v=10"></script>
 <script src="/EDIT/32-ARTICLES.js?v=2"></script>
 <script src="/EDIT/23-SECTIONS.js?v=2"></script>
 <script>

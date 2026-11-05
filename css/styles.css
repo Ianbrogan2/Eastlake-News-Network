@@ -121,6 +121,7 @@ img{display:block;max-width:100%}
 
 /* --- NAV --- */
 .nav{
+  font-family:'DM Sans',system-ui,sans-serif;
   position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:100;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 clamp(18px,3.2vw,40px);
@@ -210,7 +211,7 @@ img{display:block;max-width:100%}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* Mobile slide-in menu */
-.mobile-menu{
+.mobile-menu{font-family:'DM Sans',system-ui,sans-serif;
   position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;z-index:98;
   background:rgba(3,3,6,0.97);backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%);
   display:flex;flex-direction:column;padding:28px clamp(18px,6vw,48px) 80px;
@@ -1666,7 +1667,7 @@ body.cal-modal-open{ overflow:hidden; }
 .info-card strong{color:#fff;font-weight:600}
 
 /* --- TICKER — label is a proper flex sibling, track is clipped inside viewport --- */
-.ticker{
+.ticker{font-family:'DM Sans',system-ui,sans-serif;
   position:fixed;left:0;right:0;bottom:0;height:var(--ticker-h);z-index:90;
   background: var(--grad-bg);
   display:flex;align-items:stretch;overflow:hidden;
