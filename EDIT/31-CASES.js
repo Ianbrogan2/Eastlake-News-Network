@@ -176,7 +176,7 @@ var ENN_CASES = {
         caseTag: 'Case #EHS-1105, Murder on Proctor Valley Road',
         headline: 'Two dead on the valley road. Nine at the table. Name the one who did it.',
         body: [
-          'For eighty years people on Proctor Valley Road have sworn there is a monster out there. Big thing, covered in fur, leaves footprints the size of dinner plates with the fur still printed into the dirt. The valley keeps a plaster cast of one in a glass case like a trophy. Most nights it is just a story you tell to scare freshmen. Tonight it stopped being a story. Husky was found dead on <b>that road</b>, torn up by claws, the same night the whole crew came over for dinner. Everybody blamed <b>Coyote</b> right away. Coyotes and dogs never got along, and Coyote was the last one seen with Husky before he died. Then the lights cut out in the middle of dinner. When they came back on, Coyote was dead on the bathroom floor with a <b>feather</b> lying on him, and the easy answer was gone.',
+          'For eighty years people on Proctor Valley Road have sworn there is a monster out there. Big thing, covered in fur, leaves footprints the size of dinner plates with the fur still printed into the dirt. The valley keeps a plaster cast of one in a glass case like a trophy. Most nights it is just a story you tell to scare freshmen. Tonight it stopped being a story. The Hedenkamp Husky was found dead on <b>that road</b>, torn up by claws, the same night the whole crew came over for dinner. Everybody blamed the Arroyo Vista <b>Coyote</b> right away. Coyotes and dogs never got along, and Coyote was the last one seen with Husky before he died. Then the lights cut out in the middle of dinner. When they came back on, Coyote was dead on the bathroom floor with a <b>feather</b> lying on him, and the easy answer was gone.',
           'You are holding the case file now, the same one you scanned this off of. Inside is the floor plan, a statement from every guest, and three pieces of evidence. Take the <b>three clues</b> in order. Each one knocks a name off the list. Get through all three and the last clue leaves you looking right at the killer, as long as you are quick enough to beat the clock.'
         ],
         note: 'The clock started the second you scanned. Open the file and start cutting names.'
@@ -188,10 +188,10 @@ var ENN_CASES = {
           prompt: 'Clue #1 is a close-up of the marks on Husky, deep clean slashes from a set of claws. Do not worry about motive yet. Go down the list of all nine guests and look at their <i>feet</i>. Eight of them have claws or talons that could rip a mark like that. One does not. Soft paws, nothing sharp, and it spent the whole night running in circles after its own tail. That is the one you cross off.',
           hint: 'Look at anatomy, not alibi. Which guest physically could not have left a sharp slash?',
           hint2: 'Floppy ears, no real claws, and its whole statement is basically &ldquo;idk, I was chasing my tail.&rdquo;',
-          skip: 'Claw marks need claws, and one guest does not have any. That is <b>Beagle</b>, who was busy chasing its tail all night. Eight left.',
-          right: 'Right. A beagle&rsquo;s paws cannot cut like that. <b>Beagle</b> is out. Eight to go, and every one of them is armed.',
+          skip: 'Claw marks need claws, and one guest does not have any. That is the <b>McMillin Beagle</b>, who was busy chasing its tail all night. Eight left.',
+          right: 'Right. A beagle&rsquo;s paws cannot cut like that. The <b>McMillin Beagle</b> is out. Eight to go, and every one of them is armed.',
           wrong: 'Think about the <i>feet</i>, not the story. Who physically could not leave a sharp claw slash?',
-          answers: ['beagle','the beagle','beagal','beagel']
+          answers: ['beagle','the beagle','beagal','beagel','mcmillin beagle','mcmillin']
         },
         {
           tag: 'EVIDENCE 2 &middot; THE BLACKOUT',
@@ -202,7 +202,7 @@ var ENN_CASES = {
           skip: 'The guest everybody blamed, <b>Coyote</b>, is the one found dead in the bathroom. Answer: <b>Coyote</b>.',
           right: 'Coyote. The easy answer is lying on the bathroom floor now. Two bodies, and somebody wanted him quiet before he said too much.',
           wrong: 'No. The second body is the one everybody had already blamed, the one who left Husky out on the road.',
-          answers: ['coyote','the coyote','coyete','cayote','kyote']
+          answers: ['coyote','the coyote','coyete','cayote','kyote','arroyo vista coyote','arroyo vista']
         },
         {
           tag: 'EVIDENCE 3 &middot; THE DIFFERENCE',
@@ -210,8 +210,8 @@ var ENN_CASES = {
           prompt: 'Both bodies have the <i>same</i> claw marks, so the claws do not tell you anything new. But there is one thing on the second body that was never on the first. Three guests sat packed together at the table through the entire blackout, so they clear themselves right here. Put the two crime scenes side by side and name the one piece of evidence that is on Coyote but was never on Husky.',
           hint: 'Compare Husky&rsquo;s scene to Coyote&rsquo;s. What shows up in one and not the other?',
           hint2: 'It is not a claw mark, and a clawed animal would not drop it. Birds have them.',
-          skip: 'The new thing on Coyote, and not on Husky, is a single <b>feather</b>. Tiger, Mountain Lion and Wolf were alibiing each other at the table, so they are out. Answer: <b>feather</b>.',
-          right: 'A feather, and only on the second body. The three at the table (Tiger, Mountain Lion, Wolf) back each other up, so cross them off. Four left: Bert, RoboGriffin, Eagle and Golden Eagle.',
+          skip: 'The new thing on Coyote, and not on Husky, is a single <b>feather</b>. the Tiffany Tiger, the Salt Creek Mountain Lion and the Wolf Canyon Wolf were alibiing each other at the table, so they are out. Answer: <b>feather</b>.',
+          right: 'A feather, and only on the second body. The three at the table (the Tiffany Tiger, the Salt Creek Mountain Lion and the Wolf Canyon Wolf) back each other up, so cross them off. Four left: Liberty&rsquo;s Bert, the Camarena RoboGriffin, the Eastlake Eagle and the Olympic View Golden Eagle.',
           wrong: 'The claw marks are on <i>both</i> of them. I want the thing that is only on the second body. Compare the two scenes.',
           answers: ['feather','a feather','feathers','thefeather','bird feather']
         },
@@ -221,10 +221,10 @@ var ENN_CASES = {
           prompt: 'Hold the feather under a flashlight and it is not soft at all. It is metal. Rivets, panel seams, a couple of snapped wires where it got torn loose. That rules out the guests with real feathers. It points straight at the one guest built out of metal, which is a little too convenient, since he had just finished telling the whole room he would have killed Coyote himself. Before you work out who planted it, name the guest this feather is trying to pin it on.',
           hint: 'Two of your four are real birds with real feathers, so they clear. Who is actually made of metal?',
           hint2: 'Metal feathers, metal talons, Bert&rsquo;s best friend, and a motive he announced out loud. Almost too easy.',
-          skip: 'A metal feather points right at the one metal guest, <b>RoboGriffin</b>. Eagle and Golden Eagle have real feathers, so they clear. Just keep in mind how clean this all looks. Answer: <b>RoboGriffin</b>.',
+          skip: 'A metal feather points right at the one metal guest, <b>RoboGriffin</b>. The Eastlake Eagle and the Olympic View Golden Eagle have real feathers, so they clear. Just keep in mind how clean this all looks. Answer: <b>RoboGriffin</b>.',
           right: 'RoboGriffin, who even said out loud he would have done it. It looks airtight, and that is the problem. Somebody wants you to stop reading right here. Two left.',
           wrong: 'Not a real bird. A <i>metal</i> feather only comes off the one guest made of metal.',
-          answers: ['robogriffin','rg','robo griffin','griffin','robogriffins','robo griffins','griffins','camarena','robogryphon','robogriffon','robo griffon']
+          answers: ['robogriffin','rg','robo griffin','griffin','robogriffins','robo griffins','griffins','camarena','camarena robogriffin','robogryphon','robogriffon','robo griffon']
         },
         {
           tag: 'EVIDENCE 5 &middot; THE FOOTPRINT',
@@ -246,22 +246,22 @@ var ENN_CASES = {
           skip: 'It was <b>Bert</b>, the Proctor Valley Monster, the only furry clawed guest with no feathers and the only feet that fit the print. Answer: <b>Bert</b>.',
           right: 'Bert. The Proctor Valley Monster, sitting at the table the entire time. Case closed. Sign the file.',
           wrong: 'Not him. The killer is the furry, clawed, featherless one who called the fight &ldquo;roadwork.&rdquo; Name the monster.',
-          answers: ['bert','the proctor valley monster','proctor valley monster','monster','bert the monster','proctorvalleymonster','the monster']
+          answers: ['bert','liberty bert','liberty','the proctor valley monster','proctor valley monster','monster','bert the monster','proctorvalleymonster','the monster']
         }
       ],
       suspects: [
-        { name: 'Bert', id: 'THE MONSTER', tag: 'The Proctor Valley Monster', guilty: true },
-        { name: 'RoboGriffin', id: 'RG', tag: 'Framed with his own feather', guilty: false },
-        { name: 'Eagle', id: 'GUEST', tag: 'Found the body', guilty: false },
-        { name: 'Golden Eagle', id: 'GUEST', tag: 'Rejected, not a killer', guilty: false },
-        { name: 'Tiger', id: 'GUEST', tag: 'Table alibi', guilty: false },
-        { name: 'Mountain Lion', id: 'GUEST', tag: 'Table alibi', guilty: false },
-        { name: 'Wolf', id: 'GUEST', tag: 'Table alibi', guilty: false },
-        { name: 'Beagle', id: 'GUEST', tag: 'Chasing its tail', guilty: false }
+        { name: 'Bert', id: 'THE MONSTER', tag: 'Liberty Elementary · the Proctor Valley Monster', guilty: true },
+        { name: 'Camarena RoboGriffin', id: 'RG', tag: 'Framed with his own feather', guilty: false },
+        { name: 'Eastlake Eagle', id: 'GUEST', tag: 'Found the body', guilty: false },
+        { name: 'Olympic View Golden Eagle', id: 'GUEST', tag: 'Rejected, not a killer', guilty: false },
+        { name: 'Tiffany Tiger', id: 'GUEST', tag: 'Table alibi', guilty: false },
+        { name: 'Salt Creek Mountain Lion', id: 'GUEST', tag: 'Table alibi', guilty: false },
+        { name: 'Wolf Canyon Wolf', id: 'GUEST', tag: 'Table alibi', guilty: false },
+        { name: 'McMillin Beagle', id: 'GUEST', tag: 'Chasing its tail', guilty: false }
       ],
       win: {
         verdict: 'Case closed. It was Bert, the Proctor Valley Monster.',
-        blurb: 'Two bodies, and the reason was the noise. Husky and Coyote&rsquo;s fight out on Proctor Valley Road was the &ldquo;roadwork&rdquo; <b>Bert</b> kept complaining about all night. Once Coyote stormed off, Bert went outside and killed Husky to get his quiet back. Then the questions started closing in, so he waited for the blackout, pulled a <b>metal feather</b> off his best friend <b>RoboGriffin</b> (that is the prick RG felt in the dark), killed Coyote in the bathroom, and dropped the feather to frame the one guest who had just said he would do it. The claws matched everybody. The feather pointed at RG. But the big furry <b>bloody footprint</b> running away from the body only ever fit one set of feet. You beat the clock and you beat the cover story. The Board is yours.'
+        blurb: 'Two bodies, and the reason was the noise. The fight between the Hedenkamp Husky and the Arroyo Vista Coyote out on Proctor Valley Road was the &ldquo;roadwork&rdquo; <b>Bert</b> kept complaining about all night. Once Coyote stormed off, Bert went outside and killed Husky to get his quiet back. Then the questions started closing in, so he waited for the blackout, pulled a <b>metal feather</b> off his best friend the <b>Camarena RoboGriffin</b> (that is the prick RG felt in the dark), killed Coyote in the bathroom, and dropped the feather to frame the one guest who had just said he would do it. The claws matched everybody. The feather pointed at RG. But the big furry <b>bloody footprint</b> running away from the body only ever fit one set of feet. You beat the clock and you beat the cover story. The Board is yours.'
       }
     }
   ]
