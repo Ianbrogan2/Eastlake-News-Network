@@ -163,88 +163,88 @@ var ENN_CASES = {
     },
     {
       slug: 'proctor-valley-road',
-      status: 'draft',
+      status: 'published',
       isDefault: false,
       title: 'Murder on Proctor Valley Road',
-      subtitle: 'Murder Mystery · Two Dead, One Dinner Party',
+      subtitle: 'Murder Mystery &middot; Two Dead, One Dinner Party',
       kick: 'The Eastlake Edge',
-      tagline: 'Two bodies, nine suspects, one dinner party on the valley’s most haunted road. Read the case file, follow the claw marks and the feather, and cross the guests off one by one until only the killer is left. Scan, and the clock starts.',
+      tagline: 'Somebody killed two guests the night of the dinner party, and the only witness is a road with an eighty-year-old ghost story. You get the case file, the floor plan, and three pieces of evidence. Beat the clock and name the killer.',
       caseNumber: 'EHS-1105',
       adminPass: 'edge-admin',
-      updatedAt: '2026-11-01',
+      updatedAt: '2026-11-05',
       intro: {
         caseTag: 'Case #EHS-1105, Murder on Proctor Valley Road',
         headline: 'Two dead on the valley road. Nine at the table. Name the one who did it.',
         body: [
-          'Proctor Valley Road has carried a legend for eighty years &mdash; a hulking, hairy monster that leaves giant, fur-edged footprints out in the dark; the valley even keeps a plaster cast of one. Tonight the story stopped being a story. Husky turned up dead on <b>that road</b>, torn up by claws, the same night the whole crew sat down to dinner. Everybody liked <b>Coyote</b> for it, coyotes and dogs don&rsquo;t mix, and he was the last one seen with Husky. Then the lights went out at the party. When they came back, Coyote was dead on the bathroom floor with a <b>feather</b> on his body, and the easy answer died with him.',
-          'The case file is in your hands, the one you scanned this off of: the floor plan, every guest&rsquo;s statement, and three pieces of evidence. Work the <b>three clues</b> in order. Each one crosses somebody off. The last one hands you the killer, if you&rsquo;re fast enough to beat the clock.'
+          'For eighty years people on Proctor Valley Road have sworn there is a monster out there. Big thing, covered in fur, leaves footprints the size of dinner plates with the fur still printed into the dirt. The valley keeps a plaster cast of one in a glass case like a trophy. Most nights it is just a story you tell to scare freshmen. Tonight it stopped being a story. Husky was found dead on <b>that road</b>, torn up by claws, the same night the whole crew came over for dinner. Everybody blamed <b>Coyote</b> right away. Coyotes and dogs never got along, and Coyote was the last one seen with Husky before he died. Then the lights cut out in the middle of dinner. When they came back on, Coyote was dead on the bathroom floor with a <b>feather</b> lying on him, and the easy answer was gone.',
+          'You are holding the case file now, the same one you scanned this off of. Inside is the floor plan, a statement from every guest, and three pieces of evidence. Take the <b>three clues</b> in order. Each one knocks a name off the list. Get through all three and the last clue leaves you looking right at the killer, as long as you are quick enough to beat the clock.'
         ],
-        note: 'Clock&rsquo;s been running since you scanned. Open the file and start crossing off suspects.'
+        note: 'The clock started the second you scanned. Open the file and start cutting names.'
       },
       questions: [
         {
           tag: 'EVIDENCE 1 &middot; THE CLAWS',
           level: 'Easy',
-          prompt: 'Clue #1 is a close-up of the marks on Husky: deep, clean claw slashes. Forget motive and run through all nine guests by their <i>feet</i>. Eight of them are armed with claws or talons that could tear a mark like that. One simply isn&rsquo;t &mdash; soft paws, no edge, and it spent the whole night going in circles. Cross that one off.',
-          hint: 'Anatomy, not alibi. Which guest physically could not have left a sharp slash?',
-          hint2: 'Floppy ears, no real claws, and its whole statement is &ldquo;idk, I was chasing my tail.&rdquo;',
-          skip: 'Claw marks need claws, and one guest hasn&rsquo;t got any: <b>Beagle</b>, who was just chasing its tail. Eight left.',
-          right: 'Right &mdash; a beagle&rsquo;s paws can&rsquo;t cut like that. <b>Beagle</b>&rsquo;s out. Eight to go, and every one of them is armed.',
-          wrong: 'Think about the <i>feet</i>, not the story. Who physically couldn&rsquo;t leave a sharp claw slash?',
+          prompt: 'Clue #1 is a close-up of the marks on Husky, deep clean slashes from a set of claws. Do not worry about motive yet. Go down the list of all nine guests and look at their <i>feet</i>. Eight of them have claws or talons that could rip a mark like that. One does not. Soft paws, nothing sharp, and it spent the whole night running in circles after its own tail. That is the one you cross off.',
+          hint: 'Look at anatomy, not alibi. Which guest physically could not have left a sharp slash?',
+          hint2: 'Floppy ears, no real claws, and its whole statement is basically &ldquo;idk, I was chasing my tail.&rdquo;',
+          skip: 'Claw marks need claws, and one guest does not have any. That is <b>Beagle</b>, who was busy chasing its tail all night. Eight left.',
+          right: 'Right. A beagle&rsquo;s paws cannot cut like that. <b>Beagle</b> is out. Eight to go, and every one of them is armed.',
+          wrong: 'Think about the <i>feet</i>, not the story. Who physically could not leave a sharp claw slash?',
           answers: ['beagle','the beagle','beagal','beagel']
         },
         {
           tag: 'EVIDENCE 2 &middot; THE BLACKOUT',
           level: 'Warmer',
-          prompt: 'The lights cut out and the room panics. When they come back, the guest the whole table had already convicted &mdash; coyotes don&rsquo;t like dogs, and he was the last one with Husky &mdash; is dead on the bathroom floor. His own murder is what clears him: a dead man didn&rsquo;t pull this off. Who went from prime suspect to second body?',
-          hint: 'Everyone was sure he did it, right up until he couldn&rsquo;t have.',
+          prompt: 'The lights cut out and the whole room panics. When they come back, the guest everybody at the table had already decided was guilty is dead on the bathroom floor. He had the obvious motive, coyotes and dogs do not mix, and he was the last one seen with Husky. His own murder is what clears him, because a dead man did not pull this off. Who went from prime suspect to second body?',
+          hint: 'Everybody was sure he did it, right up until he could not have.',
           hint2: 'His chair is the one pushed back and left empty on the floor plan.',
-          skip: 'The prime suspect, <b>Coyote</b>, is the one found dead in the bathroom. Answer: <b>Coyote</b>.',
-          right: 'Coyote. The easy answer&rsquo;s on the bathroom floor now &mdash; two bodies, and somebody wanted him quiet before he talked.',
-          wrong: 'No. The second body is the one everybody had already blamed &mdash; the one who left Husky on the road.',
+          skip: 'The guest everybody blamed, <b>Coyote</b>, is the one found dead in the bathroom. Answer: <b>Coyote</b>.',
+          right: 'Coyote. The easy answer is lying on the bathroom floor now. Two bodies, and somebody wanted him quiet before he said too much.',
+          wrong: 'No. The second body is the one everybody had already blamed, the one who left Husky out on the road.',
           answers: ['coyote','the coyote','coyete','cayote','kyote']
         },
         {
           tag: 'EVIDENCE 3 &middot; THE DIFFERENCE',
           level: 'Tricky',
-          prompt: 'Both bodies wear the <i>same</i> claw marks, so the claws tell you nothing new. But the second body has one thing on it the first one never did. Three guests who sat locked together at the table all through the blackout clear themselves right here. Put the two crime scenes side by side and name the one piece of evidence that&rsquo;s on Coyote but was never on Husky.',
-          hint: 'Compare Husky&rsquo;s scene to Coyote&rsquo;s. What is in one and not the other?',
-          hint2: 'It&rsquo;s not a claw mark, and a clawed animal wouldn&rsquo;t shed it. Birds have them.',
-          skip: 'The new thing on Coyote &mdash; and not on Husky &mdash; is a single <b>feather</b>. And Tiger, Mountain Lion and Wolf alibi each other at the table, so they&rsquo;re out. Answer: <b>feather</b>.',
-          right: 'A feather &mdash; on the second body only. The table trio (Tiger, Mountain Lion, Wolf) vouch for each other, so cross them off. Four left: Bert, RoboGriffin, Eagle and Golden Eagle.',
-          wrong: 'The claw marks are on <i>both</i>. I want the thing that&rsquo;s only on the second body &mdash; compare the two scenes.',
+          prompt: 'Both bodies have the <i>same</i> claw marks, so the claws do not tell you anything new. But there is one thing on the second body that was never on the first. Three guests sat packed together at the table through the entire blackout, so they clear themselves right here. Put the two crime scenes side by side and name the one piece of evidence that is on Coyote but was never on Husky.',
+          hint: 'Compare Husky&rsquo;s scene to Coyote&rsquo;s. What shows up in one and not the other?',
+          hint2: 'It is not a claw mark, and a clawed animal would not drop it. Birds have them.',
+          skip: 'The new thing on Coyote, and not on Husky, is a single <b>feather</b>. Tiger, Mountain Lion and Wolf were alibiing each other at the table, so they are out. Answer: <b>feather</b>.',
+          right: 'A feather, and only on the second body. The three at the table (Tiger, Mountain Lion, Wolf) back each other up, so cross them off. Four left: Bert, RoboGriffin, Eagle and Golden Eagle.',
+          wrong: 'The claw marks are on <i>both</i> of them. I want the thing that is only on the second body. Compare the two scenes.',
           answers: ['feather','a feather','feathers','thefeather','bird feather']
         },
         {
           tag: 'EVIDENCE 4 &middot; THE FRAME',
           level: 'Hard',
-          prompt: 'Under a flashlight the feather isn&rsquo;t soft at all &mdash; it&rsquo;s metal: rivets, panel seams, snapped wires where it was torn loose. Real-feathered birds are out. It reads like a signed confession from the one guest built of metal &mdash; almost <i>too</i> neat, considering he&rsquo;d just announced he&rsquo;d have killed Coyote. Before you work out who planted it, name the guest this feather is trying to pin it on.',
-          hint: 'Two of your four are real-feathered birds &mdash; they clear. Who is literally made of metal?',
-          hint2: 'Metal feathers, metal talons, Bert&rsquo;s best friend, and a fresh motive on record. Convenient, isn&rsquo;t it?',
-          skip: 'A metal feather points straight at the one metal guest: <b>RoboGriffin</b>. Eagle and Golden Eagle have real feathers, so they clear &mdash; but &ldquo;too neat&rdquo; is the tell. Answer: <b>RoboGriffin</b>.',
-          right: 'RoboGriffin &mdash; and he even said he&rsquo;d have done it. Looks airtight, which is exactly the problem: somebody wanted you to stop right here. Two left.',
-          wrong: 'Not a real-feathered bird. A <i>metal</i> feather only comes off the one guest made of metal.',
+          prompt: 'Hold the feather under a flashlight and it is not soft at all. It is metal. Rivets, panel seams, a couple of snapped wires where it got torn loose. That rules out the guests with real feathers. It points straight at the one guest built out of metal, which is a little too convenient, since he had just finished telling the whole room he would have killed Coyote himself. Before you work out who planted it, name the guest this feather is trying to pin it on.',
+          hint: 'Two of your four are real birds with real feathers, so they clear. Who is actually made of metal?',
+          hint2: 'Metal feathers, metal talons, Bert&rsquo;s best friend, and a motive he announced out loud. Almost too easy.',
+          skip: 'A metal feather points right at the one metal guest, <b>RoboGriffin</b>. Eagle and Golden Eagle have real feathers, so they clear. Just keep in mind how clean this all looks. Answer: <b>RoboGriffin</b>.',
+          right: 'RoboGriffin, who even said out loud he would have done it. It looks airtight, and that is the problem. Somebody wants you to stop reading right here. Two left.',
+          wrong: 'Not a real bird. A <i>metal</i> feather only comes off the one guest made of metal.',
           answers: ['robogriffin','rg','robo griffin','griffin','robogriffins','robo griffins','griffins','camarena','robogryphon','robogriffon','robo griffon']
         },
         {
           tag: 'EVIDENCE 5 &middot; THE FOOTPRINT',
           level: 'Hard',
-          prompt: 'Now the road&rsquo;s old legend earns its keep. For eighty years the Proctor Valley Monster has been blamed for one calling card above all &mdash; the giant, fur-edged tracks it leaves behind, the kind the valley keeps a plaster cast of. Clue #3 is exactly that: huge, furry prints, nothing like a sleek metal talon. So the metal feather was a plant. Name the one thing the real killer left at the scene &mdash; the legend&rsquo;s signature that can&rsquo;t be faked.',
+          prompt: 'Now that old legend finally matters. For eighty years people have blamed the Proctor Valley Monster for one thing more than anything else, the giant footprints with the fur printed around the edges, the same ones the valley keeps a plaster cast of. Clue #3 is a photo of exactly that. Huge furry tracks, nothing like a thin metal talon. So the metal feather was planted. Name the one thing the real killer left behind at the scene, the mark the legend is known for and nobody could fake.',
           hint: 'What is the Proctor Valley Monster <i>famous</i> for leaving behind? Clue #3 is a picture of it.',
-          hint2: 'Huge, furry, on the floor and running from the body. One word for the mark a foot leaves.',
-          skip: 'The legend&rsquo;s calling card &mdash; and Clue #3 &mdash; is a giant <b>footprint</b>. RoboGriffin has thin metal talons, so the prints clear him and prove the feather was a frame. Answer: <b>footprint</b>.',
-          right: 'The footprint &mdash; exactly what the monster&rsquo;s left on this road for eighty years, and nothing a metal talon could make. RoboGriffin&rsquo;s cleared. Only one guest has feet like that.',
-          wrong: 'Think about what the Proctor Valley Monster is famous for leaving &mdash; then look at Clue #3. One word.',
+          hint2: 'Huge, furry, on the floor, headed away from the body. One word for the mark a foot leaves.',
+          skip: 'The legend&rsquo;s calling card, and Clue #3, is a giant <b>footprint</b>. RoboGriffin walks on thin metal talons, so the prints clear him and prove the feather was a setup. Answer: <b>footprint</b>.',
+          right: 'The footprint. The exact mark that monster has left on this road for eighty years, and nothing a metal talon could ever make. RoboGriffin is cleared. Only one guest has feet like that.',
+          wrong: 'Think about what the Proctor Valley Monster is known for leaving behind, then look at Clue #3. One word.',
           answers: ['footprint','footprints','a footprint','the footprint','foot print','paw print','pawprint','paw prints','pawprints','prints','print','tracks','track','paw','paws']
         },
         {
           tag: 'EVIDENCE 6 &middot; THE MONSTER',
           level: 'Hard',
-          prompt: 'One set of feet in that house makes a huge, furry, clawed paw print &mdash; and matches every description of the thing this road is haunted by. He sat at the dinner table calling the fight outside his window &ldquo;roadwork,&rdquo; while Husky and Coyote screamed at each other on the road. The footprint is the legend&rsquo;s, and the legend was at dinner. Name the Proctor Valley Monster.',
-          hint: 'Big, furry, clawed, no feathers, holds a book, best friends with the guy he framed. The &ldquo;roadwork&rdquo; was the fight.',
-          hint2: 'He <i>is</i> the Proctor Valley Monster. First name is enough.',
-          skip: 'It was <b>Bert</b>, the Proctor Valley Monster &mdash; the only furry, clawed, featherless guest, and the only feet that fit the print. Answer: <b>Bert</b>.',
-          right: 'Bert. The Proctor Valley Monster himself, sitting at the table the whole time. Case closed &mdash; sign the file.',
+          prompt: 'Only one set of feet in that house leaves a huge, furry, clawed paw print, and it matches every story ever told about the thing that haunts this road. He sat at the dinner table calling the fight outside his window &ldquo;roadwork&rdquo; while Husky and Coyote screamed at each other out there. The footprint belongs to the legend, and the legend was eating dinner with everybody. Name the Proctor Valley Monster.',
+          hint: 'Big, furry, clawed, no feathers, always carrying a book, best friends with the guy he framed. The &ldquo;roadwork&rdquo; was the fight.',
+          hint2: 'He <i>is</i> the Proctor Valley Monster. First name does it.',
+          skip: 'It was <b>Bert</b>, the Proctor Valley Monster, the only furry clawed guest with no feathers and the only feet that fit the print. Answer: <b>Bert</b>.',
+          right: 'Bert. The Proctor Valley Monster, sitting at the table the entire time. Case closed. Sign the file.',
           wrong: 'Not him. The killer is the furry, clawed, featherless one who called the fight &ldquo;roadwork.&rdquo; Name the monster.',
           answers: ['bert','the proctor valley monster','proctor valley monster','monster','bert the monster','proctorvalleymonster','the monster']
         }
@@ -260,8 +260,8 @@ var ENN_CASES = {
         { name: 'Beagle', id: 'GUEST', tag: 'Chasing its tail', guilty: false }
       ],
       win: {
-        verdict: 'Case closed, it was Bert, the Proctor Valley Monster.',
-        blurb: 'Two bodies, one reason: the noise. Husky and Coyote&rsquo;s fight on Proctor Valley Road was the &ldquo;roadwork&rdquo; Bert kept griping about, so once Coyote stormed off, <b>Bert</b> came out and killed Husky to get his quiet back. When the questioning closed in, he waited for the blackout, plucked a <b>metal feather</b> from his best friend <b>RoboGriffin</b> (that&rsquo;s the prick RG felt), killed Coyote in the bathroom, and left the feather to frame the one guest who&rsquo;d just said he&rsquo;d have done it. The claws fit anyone; the feather pointed at RG, but the big, furry, <b>bloody footprint</b> running from the body only ever fit one set of feet. You beat the clock and the cover story. The Board&rsquo;s yours.'
+        verdict: 'Case closed. It was Bert, the Proctor Valley Monster.',
+        blurb: 'Two bodies, and the reason was the noise. Husky and Coyote&rsquo;s fight out on Proctor Valley Road was the &ldquo;roadwork&rdquo; <b>Bert</b> kept complaining about all night. Once Coyote stormed off, Bert went outside and killed Husky to get his quiet back. Then the questions started closing in, so he waited for the blackout, pulled a <b>metal feather</b> off his best friend <b>RoboGriffin</b> (that is the prick RG felt in the dark), killed Coyote in the bathroom, and dropped the feather to frame the one guest who had just said he would do it. The claws matched everybody. The feather pointed at RG. But the big furry <b>bloody footprint</b> running away from the body only ever fit one set of feet. You beat the clock and you beat the cover story. The Board is yours.'
       }
     }
   ]
