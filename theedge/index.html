@@ -42,10 +42,10 @@
 /* tab switcher — same button shapes as the rest of the site */
 .edge-tabs{display:flex;gap:14px;margin:26px 0 40px;flex-wrap:wrap}
 .edge-tab{font-family:'DM Mono',monospace;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
-  padding:12px 20px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);
+  padding:12px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.045);background:rgba(255,255,255,0.02);
   display:inline-flex;align-items:center;gap:9px;transition:color .18s var(--ease),background .18s var(--ease),border-color .18s var(--ease)}
 .edge-tab:hover{color:#fff;border-color:var(--border-hi)}
-.edge-tab.active{background:linear-gradient(120deg, var(--blue) 0%, var(--green) 100%);color:#fff;border-color:transparent;box-shadow:0 6px 18px -8px rgba(0,0,0,0.55)}
+.edge-tab.active{background:linear-gradient(180deg, #3b72e8 0%, #1a56db 100%);color:#fff;border-color:transparent;box-shadow:0 6px 16px -9px rgba(0,0,0,0.5)}
 .edge-panel[hidden]{display:none}
 
 /* section head reused: .eyebrow + .sec-title + .sec-sub from styles.css */
@@ -100,10 +100,11 @@
 .case{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--border);text-decoration:none;color:inherit;display:block;
   background:linear-gradient(105deg,rgba(239,68,68,.16),rgba(10,10,16,.5) 60%),linear-gradient(180deg,var(--bg-2),var(--bg-1))}
 .case:hover{border-color:var(--border-hi)}
+#edgeGames{display:flex;flex-direction:column;gap:24px}
 .case .in{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:38px 34px}
 .case .tape{position:absolute;top:15px;left:-42px;transform:rotate(-38deg);background:var(--red);color:#fff;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.22em;font-size:10px;padding:5px 48px;text-transform:uppercase}
 .case .txt{flex:1;min-width:280px}
-.case .kick{font-family:'DM Mono',monospace;letter-spacing:.26em;font-size:11px;color:var(--cyan);text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.case .kick{font-family:'DM Mono',monospace;letter-spacing:.26em;font-size:11px;color:var(--cyan);text-transform:uppercase;display:flex;align-items:center;gap:10px;padding-left:62px}
 .case .kick::before{content:"";width:22px;height:1px;background:var(--cyan);opacity:.8}
 .case h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,64px);letter-spacing:.02em;margin:10px 0 12px;line-height:.95}
 .case p{margin:0;color:var(--muted);font-size:15px;line-height:1.6;max-width:60ch}
