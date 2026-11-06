@@ -150,6 +150,20 @@ var ENN_BELL = {
       { name:'Period 7', start:'3:47 PM',  end:'4:47 PM'  },
     ]},
 
+    S: { label:'Special Survey Schedule', blocks:[
+      { name:'Period 1', start:'8:30 AM',  end:'9:14 AM'  },
+      { name:'Period 2', start:'9:21 AM',  end:'10:02 AM' },
+      { name:'Survey', start:'10:09 AM', end:'10:48 AM' },
+      { name:'Nutrition Break', start:'10:48 AM', end:'11:00 AM' },
+      { name:'Period 3', start:'11:07 AM', end:'11:48 AM' },
+      { name:'Period 4', start:'11:55 AM', end:'12:36 PM' },
+      { name:'Lunch',    start:'12:43 PM', end:'1:13 PM'  },
+      { name:'Period 5', start:'1:20 PM',  end:'2:01 PM'  },
+      { name:'Period 6', start:'2:08 PM',  end:'2:49 PM'  },
+      { name:'Pro Hour', start:'2:49 PM',  end:'3:40 PM'  },
+      { name:'Period 7', start:'3:47 PM',  end:'4:47 PM'  },
+    ]},
+
   },
 
   // ── THE CALENDAR ──────────────────────────────────────────────────
@@ -166,7 +180,7 @@ var ENN_BELL = {
     '2026-08-07':'E', '2026-08-14':'F',
     '2026-09-08':'C', '2026-09-18':'E',
     '2026-10-06':'C', '2026-10-23':'E',
-    '2026-11-13':'N',
+    '2026-11-06':'S', '2026-11-13':'N',
     '2026-12-14':'C', '2026-12-15':'G', '2026-12-16':'H', '2026-12-17':'I', '2026-12-18':'F',
     // ── Semester II ──
     '2027-01-12':'M', '2027-01-19':'C', '2027-01-22':'E',
